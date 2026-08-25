@@ -1,7 +1,7 @@
 {
   "name": "@openreachtech/hora-skills-ort-js-core",
   "version": "0.0.0",
-  "description": "TODO: fulfill here",
+  "description": "Distributes the ORT JavaScript coding skills used to develop with Hora Kit.",
   "type": "module",
   "main": "index.js",
   "files": [
