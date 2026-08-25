@@ -8,6 +8,9 @@
     "docs/",
     "lib/"
   ],
+  "bin": {
+    "hora-skills-ort-js-core": "lib/equip/hora-skills-ort-js-core.js"
+  },
   "keywords": [
     "hora",
     "hora-kit",
