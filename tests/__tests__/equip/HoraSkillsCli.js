@@ -363,7 +363,7 @@ describe('HoraSkillsCli', () => {
           override: {
             installResult: {
               installedSkillNames: [
-                'hc-query-resolver',
+                'hoc-query-resolver',
               ],
               removedSkillNames: [],
             },
@@ -374,11 +374,11 @@ describe('HoraSkillsCli', () => {
           override: {
             installResult: {
               installedSkillNames: [
-                'hc-naming',
-                'hc-jsdoc',
+                'hoc-naming',
+                'hoc-jsdoc',
               ],
               removedSkillNames: [
-                'hc-css',
+                'hoc-css',
               ],
             },
           },
@@ -1166,7 +1166,7 @@ describe('HoraSkillsCli', () => {
               'install',
             ],
           },
-          expected: '/consumer/.hora/hora-skills-ort-js-core.json',
+          expected: '/consumer/.hora/hora-skills-ort-core.json',
         },
         {
           input: {
@@ -1176,7 +1176,7 @@ describe('HoraSkillsCli', () => {
               'tools/skills',
             ],
           },
-          expected: '/consumer/.hora/hora-skills-ort-js-core.json',
+          expected: '/consumer/.hora/hora-skills-ort-core.json',
         },
       ]
 
@@ -1206,17 +1206,17 @@ describe('HoraSkillsCli', () => {
             ],
           },
           expected: [
-            '/consumer/.hora/hora-skills-ort-js-core.json',
+            '/consumer/.hora/hora-skills-ort-core.json',
           ],
         },
         {
           override: {
             linkedPaths: [
-              '/consumer/.hora/hora-skills-ort-js-core.json',
+              '/consumer/.hora/hora-skills-ort-core.json',
             ],
           },
           expected: [
-            '/consumer/.hora/hora-skills-ort-js-core.json',
+            '/consumer/.hora/hora-skills-ort-core.json',
           ],
         },
         {
@@ -1254,10 +1254,10 @@ describe('HoraSkillsCli', () => {
         {
           override: {
             linkedManifestFilePaths: [
-              '/consumer/.hora/hora-skills-ort-js-core.json',
+              '/consumer/.hora/hora-skills-ort-core.json',
             ],
           },
-          expected: '/consumer/.hora/hora-skills-ort-js-core.json is reached through a symbolic link.',
+          expected: '/consumer/.hora/hora-skills-ort-core.json is reached through a symbolic link.',
         },
       ]
 
@@ -1297,7 +1297,7 @@ describe('HoraSkillsCli', () => {
         {
           override: {
             distributedSkillNames: [
-              'hc-query-resolver',
+              'hoc-query-resolver',
             ],
           },
           expected: '1 skills distributed',
@@ -1305,8 +1305,8 @@ describe('HoraSkillsCli', () => {
         {
           override: {
             distributedSkillNames: [
-              'hc-query-resolver',
-              'hc-stub-api',
+              'hoc-query-resolver',
+              'hoc-stub-api',
             ],
           },
           expected: '2 skills distributed',
@@ -1348,7 +1348,7 @@ describe('HoraSkillsCli', () => {
           override: {
             uninstallResult: {
               removedSkillNames: [
-                'hc-query-resolver',
+                'hoc-query-resolver',
               ],
             },
           },
