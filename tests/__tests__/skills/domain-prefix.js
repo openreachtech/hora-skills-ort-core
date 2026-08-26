@@ -26,7 +26,7 @@ describe('Skill domain prefix table', () => {
       const content = readFileSync(join(repoRoot, scriptPath), 'utf8')
 
       expect(content)
-        .toContain("const DOMAIN_PREFIX = {\n  core: 'hc',\n}")
+        .toContain("const DOMAIN_PREFIX = {\n  core: 'hoc',\n}")
     })
   })
 })
