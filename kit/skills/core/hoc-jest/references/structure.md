@@ -535,7 +535,7 @@ Lay out the seams and put a check on each:
 | :-- | :-- |
 | A case's own fields against each other | A typo in the data every other test trusts |
 | Each case against the declaration | A declaration missing, or carrying the wrong severity |
-| The case count against the declaration count | A case quietly dropped from the array |
+| The **unique** case count against the declaration count | A case dropped from the array, or written twice |
 | The declaration total against the catalogue | An entry the catalogue holds and nothing declares |
 
 Miss one seam and a gap opens that every remaining test passes over. Without the third,
@@ -546,6 +546,52 @@ the total still reconciles.
 catalogue side and confirm the failure; then delete one on the declaration side and confirm
 it again. A chain that only catches one direction is half a chain, and which half is
 missing is not visible from reading it.
+
+**Count the entries left after duplicates are dropped, never `cases.length`.** Write the
+same identifier into two rows and the length still matches, while the entry it displaced
+goes unverified — and a duplicate is not something a reader finds. In a table of seventy
+rows, whether two of them are the same cannot be seen by looking.
+
+Dropping duplicates is a transformation, so it does not belong inside the test
+([anti-pattern.md](./anti-pattern.md)). Put it in a helper under `tests/tools/`, give the
+helper its own test
+([directory.md](./directory.md#test-tools-where-to-place-helper-functions)), and call it
+from the assertion.
+
+```js
+const received = extractUniqueIds({ values: cases })
+
+expect(received)
+  .toHaveLength(Object.keys(core.rules).length)
+```
+
+**The data's own consistency is a behavior of its own**, and goes in its own behavior
+describe rather than folded into the one that checks the declaration.
+
+```js
+describe('should prefix each id with the plugin namespace', () => {
+  test.each(cases)('input: $input', ({ input, expected }) => {
+    const received = `plugin/${input}`
+
+    expect(received)
+      .toBe(expected)
+  })
+})
+
+describe('should declare each rule of the plugin as an error', () => {
+  // the same cases, checked against the declaration
+})
+```
+
+- **What is under test here is the case data itself**, which is why it reads oddly at
+  first: nothing of the subject is called, and the assertion compares two literals through
+  one interpolation. That is the point. Every other seam trusts these literals, and whether
+  a literal is right cannot be seen by reading it — a namespace misspelt in one row of
+  seventy looks exactly like the sixty-nine that are correct.
+- **Folding it into the declaration check hides which of the two failed.** Split, a failure
+  names its own cause: either the data is wrong, or the declaration is. Together, every
+  failure looks like a missing declaration, and the first move is to go looking in the
+  wrong file.
 
 #### Reconcile totals by summing the parts, never by merging them
 
