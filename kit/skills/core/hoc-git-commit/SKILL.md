@@ -357,6 +357,20 @@ Tidy up the JSDoc of BaseRestfulApiLauncher.get:ResponseBodyParser
 This is the same notation used throughout documentation and error messages; see the
 documentation convention.
 
+### Referring to a skill
+
+A skill named in a subject or body carries the **leading slash it is invoked with**.
+
+```
+Author /hoc-git-branch skill
+Fulfill the article rule for a branch name in /hoc-git-branch
+Add the notation for a skill name in /hoc-git-commit
+```
+
+The slash is what marks the word as a skill. Without it the same string reads as a directory,
+a package, or a branch prefix — all of which a repository of skills is full of — and a reader
+scanning subjects for where a convention changed has to work out which one each mention was.
+
 ### Body
 
 - The body is **optional**. Omit it when the subject already says everything — most small,
