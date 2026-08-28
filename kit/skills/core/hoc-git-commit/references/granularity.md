@@ -77,6 +77,13 @@ reviewed. This is test-driven development written into the history rather than i
     proves nothing about the rest: the same change split the other way round often passes
     through every intermediate state intact. Before concluding that no seam exists, reverse the
     order and try again.
+  - **What counts as broken is what the work actually runs at that point, not everything that
+    could be run there.** A commit that would fail a command nobody issues between it and the
+    next one has not broken anything. Turning a check on before the entries that satisfy it are
+    recorded looks like the wrong order, and is the right one where the install that would trip
+    over it comes after both — the setting and its entries are configured together, and the
+    command runs once they are. Judging the seam against an imagined invocation rules out
+    orders that hold perfectly well, and pushes the split somewhere worse.
   - **Take a removal apart from the outside in** — the callers first, then the registration,
     then the thing itself. Each step deletes something nothing else points at any more, so no
     intermediate state refers to what is gone. Going the other way breaks at the first commit,
@@ -96,6 +103,14 @@ reviewed. This is test-driven development written into the history rather than i
     it, and `Purge <path>` for the file that goes. That pair is the tool for splitting one
     removal across several commits; a single `Remove` would hide the seam it makes visible.
 - A rename and **every call site it touches**. Half a rename is a broken tree.
+- **One document's translations, where the edit is the same edit.** A `README.md` and its
+  `README.ja.md` carry one decision written twice, so a reviewer given them apart has to take
+  both or neither, and the split has bought nothing while doubling the commits. The subject
+  drops the extension and names the document: `Kick out the registry setting from README`.
+  - **What stays split is a different edit that happens to land in the same pair of files.**
+    Correcting a default that one example states wrongly, and supplying an option that another
+    example omits, are two decisions in both languages — that is two commits, each touching two
+    files, not one commit touching four.
 
 ## Staging a mixed working tree
 
@@ -118,9 +133,9 @@ git diff              # confirm what is being left for the next commit
 - **Checkpoint commits.** `wip`, `save progress`, `saving` — a commit holding real changes
   whose message records that time passed rather than what changed. If a checkpoint is needed
   mid-work, use `git stash` or a local branch, and squash before the work is shared.
-  - This does **not** apply to the branch-opening `Start …` marker described in `SKILL.md`.
-    That commit is deliberately empty, so it makes no claim about granularity at all — there
-    is no change in it to have scoped correctly.
+  - This does **not** apply to the branch-opening `Start …` marker, which the git branch
+    convention describes. That commit is deliberately empty, so it makes no claim about
+    granularity at all — there is no change in it to have scoped correctly.
   - Nor to the `Merge …` commit that closes a branch. It carries no change of its own either.
     What a reviewer weighs there is the branch it brings in, and that was already scoped commit
     by commit inside the branch.
