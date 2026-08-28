@@ -45,7 +45,7 @@ own level-2 notation
 | subject | level 1 | level 2 | notation |
 | :-- | :-- | :-- | :-- |
 | module of exported constants | module name | exported name | as the source writes it (`ERROR_CODE_HASH`) |
-| data file, a part asserted | the file's path | the part's key path | as the file writes it (`lead-search.leads`) |
+| data file, a part asserted | the file's path | the part's key path | as the file writes it (`message.form`) |
 | data file, the whole asserted | the file's path | the reading | a bare lower-case noun phrase (`key set`) |
 
 The last row carries no `#` or `.` by design: the absence is what tells a reading
