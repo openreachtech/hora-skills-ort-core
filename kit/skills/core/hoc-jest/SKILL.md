@@ -122,11 +122,8 @@ codebase.
   (`// same reference` / `// neutral value; not under test` /
   `// all omitted → default; keep last`, etc. — `//` or `/* */` written in
   `.js` files). These are generated artifacts, hence English.
-- The prose in this skill's own documentation (the body text of each Markdown
-  file) remains in Japanese.
-- Comments inside **this skill's own examples** (` ```js ``` ` blocks) are
-  *explanations* of the skill, so they are written in the same **Japanese**
-  as the body text.
+- Comments inside **this skill's own examples** (` ```js ``` ` blocks) follow the
+  same rule, since they illustrate the very code the rule governs.
 
 ## Detail files
 
