@@ -409,6 +409,82 @@ describe('when schema is array', () => {
 })
 ```
 
+## When the subject is not a class
+
+The rule above fixes level 1 to a class name and level 2 to a member name. Some
+tests have neither: a module that exports constants, or a data file such as a
+message catalogue. The index rule still holds — only what is indexed changes.
+
+### A module is indexed by its exported names
+
+Level 1 = the module name, level 2 = the exported name. Nothing else changes,
+because an exported name is as greppable as a member name.
+
+```js
+describe('constants-error', () => {
+  describe('ERROR_CODE_HASH', () => {
+    describe('should map every code to a locale path', () => {
+      test.each(cases)('code: $input.code', ({ input, expected }) => {
+        // ...
+      })
+    })
+  })
+})
+```
+
+### A data file is indexed by its path
+
+When the subject is a data file — a message catalogue, a fixture set, a generated
+manifest — level 1 is **the data file's path**: written from the mirroring base,
+carrying the extension as the source spells it, with a varying segment written as
+`*`.
+
+Level 2 is one of two things.
+
+**The key path of the part under assertion**, when the assertion is about one part
+of the file:
+
+```js
+describe('i18n/locales/*/lead-search.json', () => {
+  describe('lead-search.leads', () => {
+    describe('should hold the same keys in every locale', () => {
+      test.each(cases)('locale: $input.locale', ({ input, expected }) => {
+        // ...
+      })
+    })
+  })
+})
+```
+
+**A bare noun phrase naming the reading**, when the assertion is about the file as
+a whole and no part can be named:
+
+```js
+describe('i18n/locales/*/leads.json', () => {
+  describe('key set', () => {
+    describe('should be identical in every locale', () => {
+      test('with the two locales this product ships', () => {
+        // ...
+      })
+    })
+  })
+})
+```
+
+- **The key path comes first.** Reach for a noun phrase only when the assertion
+  covers the whole file.
+- **Why the path sits at level 1**: for a class the target of a fix is a member,
+  but for a data file it is the file, and what a person greps is its path. Level 1
+  therefore carries the index, and level 2 says which reading of the file is
+  asserted.
+- **Why a bare noun phrase**: every class and module member carries a sigil —
+  `#`, `.`, or an upper-case export name — so a lower-case noun phrase at level 2
+  marks a reading of a data file rather than a definition, without a new symbol.
+- **Do not borrow `.` for a reading.** `.keys` claims a static property that does
+  not exist, and whoever greps for it finds nothing. `.` is for definitions only.
+- One reading per path describe(), repeated per reading — the same consequence
+  the class rule has.
+
 ## Define shared fixtures directly under the member describe
 
 If the same fixture variable (e.g. `alphaReplacer`) is used by **multiple behavior
