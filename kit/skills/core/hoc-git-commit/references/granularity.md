@@ -118,9 +118,9 @@ git diff              # confirm what is being left for the next commit
 - **Checkpoint commits.** `wip`, `save progress`, `saving` — a commit holding real changes
   whose message records that time passed rather than what changed. If a checkpoint is needed
   mid-work, use `git stash` or a local branch, and squash before the work is shared.
-  - This does **not** apply to the branch-opening `Start …` marker described in `SKILL.md`.
-    That commit is deliberately empty, so it makes no claim about granularity at all — there
-    is no change in it to have scoped correctly.
+  - This does **not** apply to the branch-opening `Start …` marker, which the git branch
+    convention describes. That commit is deliberately empty, so it makes no claim about
+    granularity at all — there is no change in it to have scoped correctly.
   - Nor to the `Merge …` commit that closes a branch. It carries no change of its own either.
     What a reviewer weighs there is the branch it brings in, and that was already scoped commit
     by commit inside the branch.
