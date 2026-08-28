@@ -77,6 +77,13 @@ reviewed. This is test-driven development written into the history rather than i
     proves nothing about the rest: the same change split the other way round often passes
     through every intermediate state intact. Before concluding that no seam exists, reverse the
     order and try again.
+  - **What counts as broken is what the work actually runs at that point, not everything that
+    could be run there.** A commit that would fail a command nobody issues between it and the
+    next one has not broken anything. Turning a check on before the entries that satisfy it are
+    recorded looks like the wrong order, and is the right one where the install that would trip
+    over it comes after both — the setting and its entries are configured together, and the
+    command runs once they are. Judging the seam against an imagined invocation rules out
+    orders that hold perfectly well, and pushes the split somewhere worse.
   - **Take a removal apart from the outside in** — the callers first, then the registration,
     then the thing itself. Each step deletes something nothing else points at any more, so no
     intermediate state refers to what is gone. Going the other way breaks at the first commit,
