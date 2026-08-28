@@ -104,7 +104,9 @@ test()`.
 - **When the subject is not a class** — a module of exported constants, or a
   data file such as a message catalogue — the index rule still holds, but what
   sits at each level changes: a module is indexed by its exported names, a data
-  file by its path. See
+  file by its path. **A reconciliation between two collections is the one case
+  where the rule cannot hold**, because neither side is the subject; it is
+  indexed by the relation instead. See
   [structure.md](./references/structure.md#when-the-subject-is-not-a-class).
 - For details on nesting structure and notation, see
   [structure.md](./references/structure.md#describe-structure) /
@@ -120,11 +122,8 @@ codebase.
   (`// same reference` / `// neutral value; not under test` /
   `// all omitted → default; keep last`, etc. — `//` or `/* */` written in
   `.js` files). These are generated artifacts, hence English.
-- The prose in this skill's own documentation (the body text of each Markdown
-  file) remains in Japanese.
-- Comments inside **this skill's own examples** (` ```js ``` ` blocks) are
-  *explanations* of the skill, so they are written in the same **Japanese**
-  as the body text.
+- Comments inside **this skill's own examples** (` ```js ``` ` blocks) follow the
+  same rule, since they illustrate the very code the rule governs.
 
 ## Detail files
 

@@ -47,11 +47,12 @@ own level-2 notation
 | module of exported constants | module name | exported name | as the source writes it (`ERROR_CODE_HASH`) |
 | data file, a part asserted | the file's path | the part's key path | as the file writes it (`message.form`) |
 | data file, the whole asserted | the file's path | the reading | a bare lower-case noun phrase (`key set`) |
+| reconciliation of two collections | the relation | a collection | a bare lower-case plural (`core rules`) |
 
-The last row carries no `#` or `.` by design: the absence is what tells a reading
-of a file from a definition on a class. This notation governs the `describe()`
-name only — the governing "Notation of Class Members" table covers class members
-alone and is unchanged by it.
+The last two rows carry no `#` or `.` by design: the absence is what tells a reading
+of a file, or a collection being reconciled, from a definition on a class. This
+notation governs the `describe()` name only — the governing "Notation of Class
+Members" table covers class members alone and is unchanged by it.
 
 ## Test Case Variables
 

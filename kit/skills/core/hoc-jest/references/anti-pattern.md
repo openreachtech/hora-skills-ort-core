@@ -84,9 +84,10 @@ function createSamples ({ options }) {
 ### If a Helper Function Is Truly Necessary
 
 1. **Define** the helper function under `tests/tools/`.
-2. **Write tests** for the helper function under `tests/__tests__/test-tools/`,
-   **mirroring the directory structure** of `tests/tools/` (the same mirroring
-   concept as [directory.md](./directory.md)).
+2. **Write tests** for the helper function at that same path mirrored under
+   `tests/__tests__/`, with the path carried across whole:
+   `tests/tools/makeSample.js` ↔ `tests/__tests__/tests/tools/makeSample.js`
+   (the same mirroring concept as [directory.md](./directory.md)).
 3. Once a helper function has tests this way, it becomes a **tested helper
    function** that may be used freely inside test files.
 

@@ -60,6 +60,30 @@ expect(received)
   .toBeInstanceOf(WeakMap)
 ```
 
+### `expect.any(<concrete type>)` Where the Type Is the Discrimination
+
+What is prohibited is a matcher that **constrains nothing** — `expect.anything()`, and
+`expect.any(Object)` because nearly every value in JS is an `Object`. `expect.any()` itself
+is not prohibited. Where a **concrete** type is exactly the distinction under test, and the
+value is pinned by the assertion beside it, it is the right matcher.
+
+```js
+// An explicit declaration is an array; a value backfilled from a spread config is a bare
+// string. Array-ness is the discrimination, and the value is pinned on the next assertion.
+expect(core.rules)
+  .toHaveProperty(expected, expect.any(Array))
+expect(core.rules)
+  .toHaveProperty([expected, 0], 'error')
+```
+
+- The test is whether the type **excludes the wrong value**. `Array` excludes the bare
+  string, so it discriminates; `Object` excludes almost nothing, so it does not.
+- Reach for it only where `toBeInstanceOf()` cannot go — nested inside `toHaveProperty()`,
+  or anywhere else the type is a value handed to another matcher rather than the subject of
+  one. Where `toBeInstanceOf()` fits, use it.
+- **Never let it stand as the whole assertion.** Pinning the type is half the check; the
+  concrete value is pinned by the assertion next to it. Alone, it is a loose matcher again.
+
 ## Do Not Write `jest.fn()` Directly Inline Inside `test()`
 
 Creating and using a `jest.fn()` inside `test()` (injecting it into args,
