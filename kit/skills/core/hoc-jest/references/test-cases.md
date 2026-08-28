@@ -555,6 +555,34 @@ const cases = [
 ]
 ```
 
+### A flat enumeration may put one element per line
+
+The rule above assumes an element with structure. **Where the elements are flat — no
+container, the same two or three scalar fields on every one — and the array is long, write
+one element per line.**
+
+```js
+const cases = [
+  { input: 'check-access', expected: 'jsdoc/check-access' },
+  { input: 'check-alignment', expected: 'jsdoc/check-alignment' },
+  { input: 'check-indentation', expected: 'jsdoc/check-indentation' },
+  // ... dozens more
+]
+```
+
+- The condition is **flat and long**, and both halves carry weight. Expanded, an array of
+  seventy-odd elements runs to several hundred lines, and reading it means scrolling past
+  the same two keys again and again. One element per line makes it a table, where a missing
+  or misspelt entry shows up by shape.
+- **Flat** means no structural container — no `input:` holding an object. The moment an
+  element nests, the general rule applies again: what makes an expanded element readable is
+  that its structure is visible, and inlining a container hides exactly that.
+- The reserved property names still apply ([naming.md](./naming.md#property-names-of-case-objects)).
+  A flat element carries `input` as a **scalar** rather than an object; it does not license
+  a field named after the data.
+- Do not reach for this to compress a short array. With a handful of elements there is no
+  scrolling to save, and the expanded form stays easier to edit.
+
 ## Don't put branches into sample functions
 
 For **sample callback functions** passed into `cases` (`replacer` /
