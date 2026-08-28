@@ -1,11 +1,12 @@
 ---
 name: hoc-jest
-description: "Write Jest unit tests for JavaScript classes. Use this skill whenever the user asks to create or update Jest tests for a class."
+description: "Write Jest unit tests for JavaScript classes, and for the modules and data files a project tests alongside them. Use this skill whenever the user asks to create or update Jest tests — for a class, for a module of exported constants, or for a data file such as a message catalogue."
 ---
 
-# Jest Class Testing
+# Jest Testing
 
-A skill for writing Jest unit tests for JavaScript classes.
+A skill for writing Jest unit tests for JavaScript classes, and for the modules
+and data files a project tests alongside them.
 The conventions are split across the detail files below. Refer to them as needed.
 
 > **Notation convention**: Throughout this skill, when we simply write
@@ -100,6 +101,11 @@ test()`.
   member `describe()`, so "which class, which member am I looking at" always
   stays on screen (a syntactically achieved sticky header). We accept that the
   class name is duplicated in Jest's output, in favor of human explorability.
+- **When the subject is not a class** — a module of exported constants, or a
+  data file such as a message catalogue — the index rule still holds, but what
+  sits at each level changes: a module is indexed by its exported names, a data
+  file by its path. See
+  [structure.md](./references/structure.md#when-the-subject-is-not-a-class).
 - For details on nesting structure and notation, see
   [structure.md](./references/structure.md#describe-structure) /
   [naming.md](./references/naming.md#notation-of-class-members).
