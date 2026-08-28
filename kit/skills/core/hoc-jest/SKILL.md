@@ -101,6 +101,11 @@ test()`.
   member `describe()`, so "which class, which member am I looking at" always
   stays on screen (a syntactically achieved sticky header). We accept that the
   class name is duplicated in Jest's output, in favor of human explorability.
+- **When the subject is not a class** — a module of exported constants, or a
+  data file such as a message catalogue — the index rule still holds, but what
+  sits at each level changes: a module is indexed by its exported names, a data
+  file by its path. See
+  [structure.md](./references/structure.md#when-the-subject-is-not-a-class).
 - For details on nesting structure and notation, see
   [structure.md](./references/structure.md#describe-structure) /
   [naming.md](./references/naming.md#notation-of-class-members).
