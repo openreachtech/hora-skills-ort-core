@@ -85,6 +85,18 @@ What the finished line is looked at for:
   each; what makes the trunk worth having is that at least one merge names a piece of work
   assembled from parts.
 
+### The same work across sibling repositories takes the same order
+
+Where one piece of work lands in two repositories at once, the sub-branches under each trunk
+are cut in the same sequence, so the two histories read alike. Put whatever is peculiar to one
+repository first and whatever both share last: the shared part then sits at the same depth in
+both, and a reader comparing them has the differences gathered at one end rather than
+interleaved.
+
+Where a repository has nothing to put in the position its sibling fills, it skips that position
+rather than filling it with something else. A gap in one of two matching sequences still reads
+as a match; a substitution does not.
+
 ## Naming a general branch
 
 A general branch is named `<verb | category>/xxxx`. Before the slash goes a verb for what the
