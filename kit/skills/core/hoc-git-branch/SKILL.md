@@ -49,6 +49,42 @@ The shape of the name settles nothing. `release/x.x.x` is a trunk and
     the marker that opens it, and the `Merge …` commit that brings a sub-branch in. Both are
     described below, and neither carries a change of its own.
 
+## When the structure is decided
+
+**Commit the work in one line first, and shape the branches once it is finished.** How many
+sub-branches the work wants, and whether it wants a trunk at all, are answers the work itself
+gives — and it cannot give them before it exists. A structure chosen in advance is a guess, and
+a guess that turns out wrong costs a rebuild of everything already committed under it.
+
+This is the opposite timing from granularity, which the git commit convention has decided
+*while working*: by the time the tree holds six unrelated edits, the cheap moment for that one
+has passed. Both rules say the same thing — decide at the point where the answer is knowable —
+and the answers become knowable at different points.
+
+So the order is: commit in a meaningful sequence until the work is ready for review, fold
+together whatever turns out to be one decision after all, and only then cut the markers and
+split the line into sub-branches.
+
+- **This holds only while the commits are unshared.** Folding and splitting both rewrite
+  history. Once the work has been pushed, the line stands as it is, and a structure it did not
+  get is a structure it does not get.
+- **The marker is cut as part of that shaping**, which is why there is no separate rule for
+  rewinding a trunk to insert one that was forgotten. A marker cannot be forgotten by a process
+  that ends with cutting it.
+
+What the finished line is looked at for:
+
+- **One sub-branch's worth of work needs no trunk.** A single branch carrying the commits
+  reaches the same pull request. A trunk earns its two extra commits — the marker and the merge
+  — by grouping several pieces of work, and there is nothing to group.
+- **Sub-branches that each carry one commit need no trunk either.** The merge commit's subject
+  then restates the single commit beneath it, and the structure costs more commits than the work
+  contains. A trunk is worth its cost when a merge commit names something its commits do not say
+  individually.
+- **One sub-branch with something to group is enough.** The others may carry a single commit
+  each; what makes the trunk worth having is that at least one merge names a piece of work
+  assembled from parts.
+
 ## Naming a general branch
 
 A general branch is named `<verb | category>/xxxx`. Before the slash goes a verb for what the
