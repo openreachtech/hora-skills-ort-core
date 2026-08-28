@@ -117,7 +117,7 @@ Conventional Commits.
 
 **A verb of two words joins into one where it sits in a single-token slot, and takes no hyphen
 in its place.** `Kick out`, `Tidy up`, `Turn on` and `Turn off` stay two words in a subject and
-become one before the slash of a branch name — `tidyup/the-environment-files` — and the same
+become one before the slash of a branch name — `tidyup/environment-files` — and the same
 holds wherever a project puts this vocabulary in the `type:` slot of Conventional Commits rather
 than the types listed in [format-conventional.md](./references/format-conventional.md). The
 slash and the colon already end the token, so a hyphen inside it marks nothing.

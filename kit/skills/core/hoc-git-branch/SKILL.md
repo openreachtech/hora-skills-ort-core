@@ -109,7 +109,7 @@ define/sendMessage-of-AlphaClass
 rename/FormElementClerk
 fix/type-errors-reported-by-the-client-package
 install/date-fns-4.1.0
-tidyup/the-environment-files
+tidyup/environment-files
 ```
 
 **The name is written for whoever scans `git branch` while the work is still in flight**, so it
@@ -131,6 +131,9 @@ is deliberately descriptive. Nothing reads it after the branch is gone.
 - **A sub-branch cut from a general branch acting as a trunk is named the same way**, and the
   nesting adds no constraint of its own: `<verb | category>/xxxx`, free. The narrow verbs
   belong here, where each branch really does carry one thing.
+- **Leave out the article.** `kickout/the-copied-rules` and `kickout/copied-rules` point at the
+  same work, and the shorter one is what a reader scanning `git branch` gets through faster.
+  What comes after the slash is a label, not a sentence.
 
 ## The branch-opening marker commit
 
@@ -148,7 +151,7 @@ git switch -c feature/equip-tools-for-each-application
 git commit --allow-empty -m 'Start adding the skills installer'
 
 # opening a nested trunk: cut from the branch above, and carrying sub-branches of its own
-git switch -c update/the-domains-a-repository-selects
+git switch -c update/domains-a-repository-selects
 git commit --allow-empty -m 'Start updating the domains a repository selects'
 ```
 
