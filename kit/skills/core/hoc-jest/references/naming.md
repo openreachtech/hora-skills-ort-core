@@ -36,6 +36,23 @@ describe('should call JSON.stringify() with value and replacer', () => {})
 describe('should call JSON.stringify with value and replacer', () => {})
 ```
 
+## Notation When the Subject Is Not a Class
+
+The table above covers class members. Two other subjects appear, and each has its
+own level-2 notation
+([structure.md](./structure.md#when-the-subject-is-not-a-class)).
+
+| subject | level 1 | level 2 | notation |
+| :-- | :-- | :-- | :-- |
+| module of exported constants | module name | exported name | as the source writes it (`ERROR_CODE_HASH`) |
+| data file, a part asserted | the file's path | the part's key path | as the file writes it (`lead-search.leads`) |
+| data file, the whole asserted | the file's path | the reading | a bare lower-case noun phrase (`key set`) |
+
+The last row carries no `#` or `.` by design: the absence is what tells a reading
+of a file from a definition on a class. This notation governs the `describe()`
+name only — the governing "Notation of Class Members" table covers class members
+alone and is unchanged by it.
+
 ## Test Case Variables
 
 - Name the array of test cases `cases`.
