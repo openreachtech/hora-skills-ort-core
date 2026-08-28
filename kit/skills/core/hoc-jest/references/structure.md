@@ -643,6 +643,13 @@ behavior.
 
 - A variable used by only one behavior belongs inside that behavior's describe (do not
   force-hoist it). Only lift it up to the member level when sharing actually occurs.
+- **When one behavior audits another's data, sharing is not a convenience — it is what
+  makes the audit true.** A `cases` array that a sibling describe counts, or checks for
+  completeness, has to be **the same array**, declared once where both can reach it. Give
+  each describe its own copy and the audit checks a copy of itself, while the array
+  actually driving the tests goes unchecked; the two then drift with nothing to reveal it.
+  A `const` declared inside one describe is not visible from a sibling, so the choice here
+  is never "share or repeat" — it is **share or verify nothing**.
 
 ```js
 describe('BaseRequestBodyStringifier', () => {
