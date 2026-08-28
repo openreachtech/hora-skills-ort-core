@@ -82,13 +82,14 @@ Incorrect example: `tests/__tests__/lib/tools/PathnameBuilder.js`
 (must not include `lib/`)
 
 A test whose subject is a **data file** mirrors that file's path the same way,
-with the varying segment collapsed into a single test file. The describe name at
-level 1 then matches the source path it mirrors
+with the varying segment — written `*` — collapsed into a single test file. The
+describe name at level 1 then matches the source path it mirrors
 ([structure.md](./structure.md#a-data-file-is-indexed-by-its-path)).
 
 | Source | Test |
 | --- | --- |
-| `lib/i18n/locales/{en,ja}/leads.json` | `tests/__tests__/i18n/locales/leads.js` |
+| `lib/i18n/locales/*/message.json` | `tests/__tests__/i18n/locales/message.js` |
+| `lib/fixtures/*/user.json` | `tests/__tests__/fixtures/user.js` |
 
 ## Splitting Large Test Files
 

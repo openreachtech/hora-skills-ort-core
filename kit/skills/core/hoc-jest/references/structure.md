@@ -417,13 +417,15 @@ message catalogue. The index rule still holds — only what is indexed changes.
 
 ### A module is indexed by its exported names
 
-Level 1 = the module name, level 2 = the exported name. Nothing else changes,
-because an exported name is as greppable as a member name.
+Level 1 = the module name, level 2 = the exported name. The module name is the
+file's basename without its extension, standing for the file the way a class name
+stands for its own. Nothing else changes, because an exported name is as
+greppable as a member name.
 
 ```js
 describe('constants-error', () => {
   describe('ERROR_CODE_HASH', () => {
-    describe('should map every code to a locale path', () => {
+    describe('should map every code to a message', () => {
       test.each(cases)('code: $input.code', ({ input, expected }) => {
         // ...
       })
@@ -439,15 +441,19 @@ manifest — level 1 is **the data file's path**: written from the mirroring bas
 carrying the extension as the source spells it, with a varying segment written as
 `*`.
 
+The varying segment is whatever a family of files differs by, and nothing about
+the rule is tied to what that is: `i18n/locales/*/message.json`,
+`fixtures/*/user.json`, `manifests/*.json`.
+
 Level 2 is one of two things.
 
 **The key path of the part under assertion**, when the assertion is about one part
 of the file:
 
 ```js
-describe('i18n/locales/*/lead-search.json', () => {
-  describe('lead-search.leads', () => {
-    describe('should hold the same keys in every locale', () => {
+describe('i18n/locales/*/message.json', () => {
+  describe('message.form', () => {
+    describe('should hold the same keys in every file', () => {
       test.each(cases)('locale: $input.locale', ({ input, expected }) => {
         // ...
       })
@@ -457,13 +463,14 @@ describe('i18n/locales/*/lead-search.json', () => {
 ```
 
 **A bare noun phrase naming the reading**, when the assertion is about the file as
-a whole and no part can be named:
+a whole and no part can be named. The precondition layer takes `when …` and the
+assertion moves into `test()`, as it does for a fixed value:
 
 ```js
-describe('i18n/locales/*/leads.json', () => {
+describe('i18n/locales/*/message.json', () => {
   describe('key set', () => {
-    describe('should be identical in every locale', () => {
-      test('with the two locales this product ships', () => {
+    describe('when every file is read', () => {
+      test('should be identical across them', () => {
         // ...
       })
     })
