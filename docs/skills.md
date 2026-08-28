@@ -26,7 +26,7 @@ Each skill lives at `kit/skills/core/<name>/`, one level under the domain direct
 | `hoc-functions` | Function conventions. Parameters follow method parameters: named arguments as a principle. |
 | `hoc-git-commit` | Commit conventions — what belongs in a single commit, the message format (imperative or Conventional Commits, chosen per project), the verb vocabulary shared by both, and the branches commits land on: the trunk role, naming, and the subjects that open and close one. |
 | `hoc-implementation-progress` | Track an in-flight implementation in a progress document anchored to requirement ids, advancing a status only against recorded evidence. |
-| `hoc-jest` | Write Jest unit tests for JavaScript classes. |
+| `hoc-jest` | Write Jest unit tests for JavaScript classes, modules of exported constants, and data files such as message catalogues. |
 | `hoc-jsdoc` | JSDoc writing conventions shared by backend and frontend — type annotations, `@returns`, `@typedef` and type-only imports, with the Vue/Nuxt-specific conventions in its references. |
 | `hoc-license` | Write and update a project's LICENSE file. |
 | `hoc-methods` | Method definition conventions — named arguments, passing properties into private methods, and factory methods. |
