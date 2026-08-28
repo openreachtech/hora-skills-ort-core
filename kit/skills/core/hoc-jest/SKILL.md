@@ -104,7 +104,9 @@ test()`.
 - **When the subject is not a class** — a module of exported constants, or a
   data file such as a message catalogue — the index rule still holds, but what
   sits at each level changes: a module is indexed by its exported names, a data
-  file by its path. See
+  file by its path. **A reconciliation between two collections is the one case
+  where the rule cannot hold**, because neither side is the subject; it is
+  indexed by the relation instead. See
   [structure.md](./references/structure.md#when-the-subject-is-not-a-class).
 - For details on nesting structure and notation, see
   [structure.md](./references/structure.md#describe-structure) /
