@@ -103,6 +103,14 @@ reviewed. This is test-driven development written into the history rather than i
     it, and `Purge <path>` for the file that goes. That pair is the tool for splitting one
     removal across several commits; a single `Remove` would hide the seam it makes visible.
 - A rename and **every call site it touches**. Half a rename is a broken tree.
+- **One document's translations, where the edit is the same edit.** A `README.md` and its
+  `README.ja.md` carry one decision written twice, so a reviewer given them apart has to take
+  both or neither, and the split has bought nothing while doubling the commits. The subject
+  drops the extension and names the document: `Kick out the registry setting from README`.
+  - **What stays split is a different edit that happens to land in the same pair of files.**
+    Correcting a default that one example states wrongly, and supplying an option that another
+    example omits, are two decisions in both languages — that is two commits, each touching two
+    files, not one commit touching four.
 
 ## Staging a mixed working tree
 
