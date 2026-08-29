@@ -1,6 +1,6 @@
 ---
 name: hoc-jest
-description: "Write Jest unit tests for JavaScript classes, and for the modules and data files a project tests alongside them. Use this skill whenever the user asks to create or update Jest tests — for a class, for a module of exported constants, or for a data file such as a message catalogue."
+description: "Write Jest unit tests for JavaScript classes, and for the modules, data files and reconciliations a project tests alongside them. Use this skill whenever the user asks to create or update Jest tests — for a class, for a module of exported constants, for a data file such as a message catalogue, or for a test that two collections still agree with each other."
 ---
 
 # Jest Testing
