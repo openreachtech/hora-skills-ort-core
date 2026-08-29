@@ -152,6 +152,45 @@ reviewed. This is test-driven development written into the history rather than i
     example omits, are two decisions in both languages — that is two commits, each touching two
     files, not one commit touching four.
 
+## Order
+
+Splitting settles what each commit holds, not which one comes first. **The sequence is behavior
+change, then structural change, then addition.**
+
+- **A change to how an existing rule behaves leads the branch**, however small it is. One line
+  earns a commit of its own here. At the head it stands directly against the state it changed,
+  so a reviewer compares the two with nothing structural in between, and it reverts on its own
+  if the behavior turns out wrong.
+- **Structural change comes next** — a section renamed, two of them folded into one, a module
+  moved. It carries the tree from one shape to another and claims no new ground.
+- **Addition comes last**, into the shape that is settled by then.
+
+**What separates the three is nature, not size.** A single line that changes what an existing
+entry matches is a behavior change; a hundred lines of new entries are an addition. Ordering by
+how much a commit touches buries the one risky line in the middle of the branch, which is the
+one place it must not be.
+
+**An addition does not go inside a structural change.** A new section is structure rather than
+addition, so whatever belongs in it waits for a later commit. Filled as it is created, the
+structural change comes apart around its contents, and a reader watches the same shape being
+assembled twice.
+
+```
+Anchor dist to the repository root                                behavior
+Move .env into a new Secrets section                              structure
+Rename environment to Regenerable output and absorb Build output  structure
+Add coverage, tgz and eslintcache to Regenerable output           addition
+Add key and certificate patterns to Secrets                       addition
+```
+
+The first commit is one line of a `.gitignore`, and it leads because it is the only one that
+changes what an existing entry matches. The two `Add` commits fill sections the two structural
+commits put there, and they wait until both are in place.
+
+**Coherence bounds the sequence.** Where this order would leave a commit referring to what is
+not there yet, the seam is what is wrong, not the order — find the seam first, and sequence
+what comes out of it.
+
 ## Staging a mixed working tree
 
 When the tree already holds several unrelated changes, do not resolve it by committing

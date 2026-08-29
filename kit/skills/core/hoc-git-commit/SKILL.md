@@ -413,11 +413,11 @@ whether one plain subject line states everything it does. Everything — a subje
 leaving something out has failed the test rather than passed it, and "and" joining two
 decisions is only the most visible way it fails.
 
-The full heuristic — what to split, what to keep together, and how to stage a mixed working
-tree — is in [granularity.md](./references/granularity.md).
+The full heuristic — what to split, what to keep together, the order the commits land in, and
+how to stage a mixed working tree — is in [granularity.md](./references/granularity.md).
 
 ## Detail files
 
-- [granularity.md](./references/granularity.md) — what belongs in one commit, splitting a mixed working tree
+- [granularity.md](./references/granularity.md) — what belongs in one commit, the order the commits land in, splitting a mixed working tree
 - [format-imperative.md](./references/format-imperative.md) — capitalized imperative subject, no type prefix
 - [format-conventional.md](./references/format-conventional.md) — Conventional Commits (`type: summary`)
