@@ -39,7 +39,7 @@ generate ({
 `${<class name>}<member-notation> must be inherited`
 ```
 
-- `<member-notation>` follows "Notation of Class Members" from the documentation convention (instance method `#method()` / static getter `.get:name` / static method `.method()`, etc.).
+- `<member-notation>` follows "Notation of Class Members" from the documentation convention (instance method `#instanceMethod()` / static getter `.get:staticGetter` / static method `.staticMethod()`, etc.).
 - `<class name>` is resolved dynamically, embedding the actual runtime class (subclass) name.
   - Instance member: `this.constructor.name`
   - Static member: `this.name` (in a static context, `this` is the class itself)
