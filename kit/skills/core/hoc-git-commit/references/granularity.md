@@ -18,7 +18,33 @@ Two consequences follow.
 - A later reader bisecting for a regression lands on a commit that changes **one** thing, so
   the answer to "what broke it" is the commit itself, not a subset of it.
 
-## The "and" test
+## The one-line test
+
+A commit is scoped right when **one plain subject line states everything it does**. That one
+question runs in both directions.
+
+- **It lets a mixed-looking commit through.** Items resting on different justifications may
+  travel together, so long as one line takes them all without strain. What a commit holds is
+  one decision, and a decision often lands as a list.
+- **It turns away a commit that will not fit.** A subject that cannot be written in one line is
+  reporting that the changes beneath it never cohered into a decision — the line is long
+  because the commit is several.
+
+**Everything, or the line has not been written yet.** The question is not whether the subject
+fits one line; it is whether it fits once it has said all of what the commit did. A subject
+that fits by leaving something out has failed the test rather than passed it, and what it
+leaves out is reliably the part worth reviewing.
+
+```
+Bad: Move dist into Regenerable output and add coverage, tgz, eslintcache
+```
+
+That subject fits, and the commit under it also changed `dist/` to `/dist/` — an existing rule
+re-anchored to the repository root, and the only risky change on its branch. Nothing in the
+line points at it. Said as well, the subject runs past one line, which is the answer: the
+behavior change is its own commit.
+
+### The "and" test
 
 If an accurate subject line needs the word "and", the commit is two commits.
 
@@ -28,9 +54,23 @@ Good: Add LockEmployeeSignInInputValidator
       Tidy up the JSDoc of EmployeeSignInMutationResolver#resolve()
 ```
 
+**Unless the two sides it joins belong to one decision.** The word is a symptom often enough to
+be worth noticing, and it settles nothing on its own.
+
+```
+Good: Add coverage, tgz and eslintcache to Regenerable output
+Good: Rename environment to Regenerable output and absorb Build output
+```
+
+The first is one decision — everything confirmed regenerable goes in — written as a list. The
+second is one structural change, where the rename and the absorption cannot be taken apart:
+half of it leaves a section named for what it no longer holds.
+
 The same applies to a subject that reaches for a vague umbrella noun to cover several
 changes — `Update auth handling`, `Various fixes`, `Cleanup`. The umbrella is the "and" in
-disguise.
+disguise, and it is also how a subject fits one line without saying everything.
+
+So `and` is a prompt to look, never the verdict. The verdict comes from the test it sits under.
 
 ## Scale
 
