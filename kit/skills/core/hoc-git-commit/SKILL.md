@@ -408,8 +408,8 @@ scanning subjects for where a convention changed has to work out which one each 
 
 ## Granularity in one line
 
-One commit is **one decision a reviewer can accept or reject on its own**. If the subject
-needs the word "and" to be accurate, the commit is two commits.
+One commit is **one decision a reviewer can accept or reject on its own**. If the subject needs
+the word "and" to join two of them, the commit is two commits.
 
 The full heuristic — what to split, what to keep together, and how to stage a mixed working
 tree — is in [granularity.md](./references/granularity.md).

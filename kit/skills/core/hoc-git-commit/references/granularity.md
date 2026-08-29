@@ -28,6 +28,18 @@ Good: Add LockEmployeeSignInInputValidator
       Tidy up the JSDoc of EmployeeSignInMutationResolver#resolve()
 ```
 
+**Unless the two sides it joins belong to one decision.** The word is a symptom often enough to
+be worth noticing, and it settles nothing on its own.
+
+```
+Good: Add coverage, tgz and eslintcache to Regenerable output
+Good: Rename environment to Regenerable output and absorb Build output
+```
+
+The first is one decision — everything confirmed regenerable goes in — written as a list. The
+second is one structural change, where the rename and the absorption cannot be taken apart:
+half of it leaves a section named for what it no longer holds.
+
 The same applies to a subject that reaches for a vague umbrella noun to cover several
 changes — `Update auth handling`, `Various fixes`, `Cleanup`. The umbrella is the "and" in
 disguise.
