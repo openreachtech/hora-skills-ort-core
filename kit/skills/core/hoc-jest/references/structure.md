@@ -117,7 +117,7 @@ describe('BaseAuthorizationBuilder', () => {
 })
 ```
 
-- If the abstract member is an **instance method** (`#method()`, not static),
+- If the abstract member is an **instance method** (`#instanceMethod()`, not static),
   **instantiate** it before calling. Since the constructor arguments are irrelevant to
   the verification, fill them with neutral values (the same idea as
   [Isolate the property under test](#isolate-the-property-under-test)). If the message
@@ -1631,7 +1631,7 @@ splitting by describe is easy, and once split, each `cases`'s `input` / `expecte
   member notation (`when #isNullable:true`). A pure method-argument flag that is not
   turned into a property (e.g. `mode`) uses the bare name (`when mode:true`). The
   `args` key and `this.<flag>` remain in their bare form — `#` appears only in the
-  describe label's notation (the same as `#method()`).
+  describe label's notation (the same as `#instanceMethod()`).
 - Even when a boolean flag **changes the very determination of valid/invalid** (e.g.
   under `#isEnabled:true`, a value that was previously invalid becomes valid, or only
   the null guard remains), place inside each mode's `describe()` only the results that
