@@ -41,4 +41,3 @@ Each skill lives at `kit/skills/core/<name>/`, one level under the domain direct
 | `hoc-statements` | Statements and control flow — no literal `undefined` in production code, higher-order functions over sequential processing, and ternary/`if` policies. |
 | `hoc-test-execution` | Run a project's tests and drive them to green without weakening them — nothing skipped, deleted, loosened or waited out to make the suite pass. |
 | `hoc-workflows` | Development workflow rules — how to proceed with an implementation, and the steps always performed before committing and before completion. |
-
