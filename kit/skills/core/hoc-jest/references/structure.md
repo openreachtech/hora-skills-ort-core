@@ -467,6 +467,52 @@ describe('constants-error', () => {
 })
 ```
 
+#### Below level 1 comes the kind of export, then its name
+
+A class's members carry their kind in the name — `#` for an instance member, `.` for a
+static one. **An export has no such sigil, so the kind takes a level of its own.**
+
+| Level 2 | Level 3 |
+| :-- | :-- |
+| `default export` | — (a default export has no name to index) |
+| `named export` | `as <the exported name>`, as the source writes it |
+
+```js
+describe('package entry', () => {
+  describe('default export', () => {
+    describe('when imported', () => {
+      test('should be the core ruleset', () => {
+        // ...
+      })
+    })
+  })
+})
+
+describe('package entry', () => {
+  describe('named export', () => {
+    describe('as deprecated', () => {
+      describe('when imported', () => {
+        test('should be the deprecated ruleset', () => {
+          // ...
+        })
+      })
+    })
+  })
+})
+```
+
+- **The name stays greppable.** Somebody who changes a named export searches for its
+  name and lands on a describe, exactly as they would for a class member. Collapsing
+  the two levels into `named export` alone would lose that the moment a module has two.
+- **`as` is what marks the level as a name.** A class member wears `#` or `.`; a bare
+  `deprecated` sitting under `named export` could be read as a behavior or a member
+  instead. `as deprecated` reads as one phrase with the level above it — *a named
+  export, as `deprecated`* — and the name is still what a search finds.
+- **A default export stops at level 2**, because there is no name to put below it. The
+  levels are not padded to match.
+- The module describe is **repeated per export**, the way the class describe is repeated
+  per member, and for the same reason.
+
 ### A data file is indexed by its path
 
 When the subject is a data file — a message catalogue, a fixture set, a generated
