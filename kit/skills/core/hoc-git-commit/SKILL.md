@@ -208,6 +208,15 @@ substitutes for it. Where nothing listed names it, open the subject with the ver
   else. Reordering control flow is not this: two `if` statements swapped is a behavior change
   wearing the clothes of an ordering, and it takes the verb its behavior deserves. Relocating
   something to another file is `Move`; `Rearrange` never crosses a file.
+- **`Move` stays `Move` when the relocation itself forces an edit.** A file that changes
+  directory takes its relative paths with it, and whatever pointed at the old place has
+  to point at the new one. Those edits are not a second decision riding along — they are
+  what the move consists of, and a subject naming anything else would hide the one thing
+  that happened. The row's `content untouched` means the substance is untouched: what the
+  file says, not the depth of a path it says it at.
+  - The test is whether the edit would stand on its own. A path following its file would
+    not: revert the move and the edit has nothing to do. An edit that still makes sense
+    with the file where it was is a separate decision, and takes its own commit.
 - **`Update` and `Retake` split on what was there before.** `Update` carries a sound
   implementation forward and leaves it giving something it did not give before — the gain is the
   point. `Retake` replaces what was poor, hurried or a stopgap with what should have been there,
@@ -408,14 +417,16 @@ scanning subjects for where a convention changed has to work out which one each 
 
 ## Granularity in one line
 
-One commit is **one decision a reviewer can accept or reject on its own**. If the subject
-needs the word "and" to be accurate, the commit is two commits.
+One commit is **one decision a reviewer can accept or reject on its own**, and the test is
+whether one plain subject line states everything it does. Everything — a subject that fits by
+leaving something out has failed the test rather than passed it, and "and" joining two
+decisions is only the most visible way it fails.
 
-The full heuristic — what to split, what to keep together, and how to stage a mixed working
-tree — is in [granularity.md](./references/granularity.md).
+The full heuristic — what to split, what to keep together, the order the commits land in, and
+how to stage a mixed working tree — is in [granularity.md](./references/granularity.md).
 
 ## Detail files
 
-- [granularity.md](./references/granularity.md) — what belongs in one commit, splitting a mixed working tree
+- [granularity.md](./references/granularity.md) — what belongs in one commit, the order the commits land in, splitting a mixed working tree
 - [format-imperative.md](./references/format-imperative.md) — capitalized imperative subject, no type prefix
 - [format-conventional.md](./references/format-conventional.md) — Conventional Commits (`type: summary`)

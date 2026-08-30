@@ -18,7 +18,33 @@ Two consequences follow.
 - A later reader bisecting for a regression lands on a commit that changes **one** thing, so
   the answer to "what broke it" is the commit itself, not a subset of it.
 
-## The "and" test
+## The one-line test
+
+A commit is scoped right when **one plain subject line states everything it does**. That one
+question runs in both directions.
+
+- **It lets a mixed-looking commit through.** Items resting on different justifications may
+  travel together, so long as one line takes them all without strain. What a commit holds is
+  one decision, and a decision often lands as a list.
+- **It turns away a commit that will not fit.** A subject that cannot be written in one line is
+  reporting that the changes beneath it never cohered into a decision — the line is long
+  because the commit is several.
+
+**Everything, or the line has not been written yet.** The question is not whether the subject
+fits one line; it is whether it fits once it has said all of what the commit did. A subject
+that fits by leaving something out has failed the test rather than passed it, and what it
+leaves out is reliably the part worth reviewing.
+
+```
+Bad: Move dist into Regenerable output and add coverage, tgz, eslintcache
+```
+
+That subject fits, and the commit under it also changed `dist/` to `/dist/` — an existing rule
+re-anchored to the repository root, and the only risky change on its branch. Nothing in the
+line points at it. Said as well, the subject runs past one line, which is the answer: the
+behavior change is its own commit.
+
+### The "and" test
 
 If an accurate subject line needs the word "and", the commit is two commits.
 
@@ -28,9 +54,23 @@ Good: Add LockEmployeeSignInInputValidator
       Tidy up the JSDoc of EmployeeSignInMutationResolver#resolve()
 ```
 
+**Unless the two sides it joins belong to one decision.** The word is a symptom often enough to
+be worth noticing, and it settles nothing on its own.
+
+```
+Good: Add coverage, tgz and eslintcache to Regenerable output
+Good: Rename environment to Regenerable output and absorb Build output
+```
+
+The first is one decision — everything confirmed regenerable goes in — written as a list. The
+second is one structural change, where the rename and the absorption cannot be taken apart:
+half of it leaves a section named for what it no longer holds.
+
 The same applies to a subject that reaches for a vague umbrella noun to cover several
 changes — `Update auth handling`, `Various fixes`, `Cleanup`. The umbrella is the "and" in
-disguise.
+disguise, and it is also how a subject fits one line without saying everything.
+
+So `and` is a prompt to look, never the verdict. The verdict comes from the test it sits under.
 
 ## Scale
 
@@ -111,6 +151,45 @@ reviewed. This is test-driven development written into the history rather than i
     Correcting a default that one example states wrongly, and supplying an option that another
     example omits, are two decisions in both languages — that is two commits, each touching two
     files, not one commit touching four.
+
+## Order
+
+Splitting settles what each commit holds, not which one comes first. **The sequence is behavior
+change, then structural change, then addition.**
+
+- **A change to how an existing rule behaves leads the branch**, however small it is. One line
+  earns a commit of its own here. At the head it stands directly against the state it changed,
+  so a reviewer compares the two with nothing structural in between, and it reverts on its own
+  if the behavior turns out wrong.
+- **Structural change comes next** — a section renamed, two of them folded into one, a module
+  moved. It carries the tree from one shape to another and claims no new ground.
+- **Addition comes last**, into the shape that is settled by then.
+
+**What separates the three is nature, not size.** A single line that changes what an existing
+entry matches is a behavior change; a hundred lines of new entries are an addition. Ordering by
+how much a commit touches buries the one risky line in the middle of the branch, which is the
+one place it must not be.
+
+**An addition does not go inside a structural change.** A new section is structure rather than
+addition, so whatever belongs in it waits for a later commit. Filled as it is created, the
+structural change comes apart around its contents, and a reader watches the same shape being
+assembled twice.
+
+```
+Anchor dist to the repository root                                behavior
+Move .env into a new Secrets section                              structure
+Rename environment to Regenerable output and absorb Build output  structure
+Add coverage, tgz and eslintcache to Regenerable output           addition
+Add key and certificate patterns to Secrets                       addition
+```
+
+The first commit is one line of a `.gitignore`, and it leads because it is the only one that
+changes what an existing entry matches. The two `Add` commits fill sections the two structural
+commits put there, and they wait until both are in place.
+
+**Coherence bounds the sequence.** Where this order would leave a commit referring to what is
+not there yet, the seam is what is wrong, not the order — find the seam first, and sequence
+what comes out of it.
 
 ## Staging a mixed working tree
 
