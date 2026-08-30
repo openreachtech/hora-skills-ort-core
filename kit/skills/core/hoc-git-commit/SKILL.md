@@ -208,6 +208,15 @@ substitutes for it. Where nothing listed names it, open the subject with the ver
   else. Reordering control flow is not this: two `if` statements swapped is a behavior change
   wearing the clothes of an ordering, and it takes the verb its behavior deserves. Relocating
   something to another file is `Move`; `Rearrange` never crosses a file.
+- **`Move` stays `Move` when the relocation itself forces an edit.** A file that changes
+  directory takes its relative paths with it, and whatever pointed at the old place has
+  to point at the new one. Those edits are not a second decision riding along — they are
+  what the move consists of, and a subject naming anything else would hide the one thing
+  that happened. The row's `content untouched` means the substance is untouched: what the
+  file says, not the depth of a path it says it at.
+  - The test is whether the edit would stand on its own. A path following its file would
+    not: revert the move and the edit has nothing to do. An edit that still makes sense
+    with the file where it was is a separate decision, and takes its own commit.
 - **`Update` and `Retake` split on what was there before.** `Update` carries a sound
   implementation forward and leaves it giving something it did not give before — the gain is the
   point. `Retake` replaces what was poor, hurried or a stopgap with what should have been there,
