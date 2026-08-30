@@ -415,12 +415,45 @@ The rule above fixes level 1 to a class name and level 2 to a member name. Some
 tests have neither: a module that exports constants, or a data file such as a
 message catalogue. The index rule still holds — only what is indexed changes.
 
-### A module is indexed by its exported names
+### Level 1 names what the module default-exports
 
-Level 1 = the module name, level 2 = the exported name. The module name is the
-file's basename without its extension, standing for the file the way a class name
-stands for its own. Nothing else changes, because an exported name is as
-greppable as a member name.
+The class rule reads level 1 off the class because **the class is what the file is
+about**. A module is the same question with a different answer, and the answer comes
+from what it default-exports:
+
+| `export default` is | Level 1 |
+| :-- | :-- |
+| A class | The class's name |
+| A function | The function's name |
+| A `const` this file declares | That binding's name |
+| An import binding whose name matches the file it came from | That binding's name |
+| A value with no name of its own | **A name chosen for what the file is about** |
+
+A module with no default export at all falls in the last row too.
+
+- **The first four rows are not the file's basename.** They coincide in practice,
+  because a file is named after what it holds, but the anchor is the definition
+  rather than the filename. Rename the file and the describe does not move.
+- **Borrow the identifier wherever there is one to borrow.** A class, a function
+  and a `const` are all names the source already chose, and a name the source chose
+  is one a reader can search for. The rows differ in what is exported, not in how
+  the level is decided.
+- **An import binding is borrowed only while it still names its source.**
+  `import core from './rules/core.js'` passes something along under the name it
+  already had — the binding and the file agree, so the name was not invented here.
+  `import config from './rules/core.js'` renames on the way in, and that name is
+  this file's private label for somebody else's export: it names nothing a reader
+  can trace, so level 1 falls to the last row.
+- **The last row is a judgement, and that is deliberate.** `export default { ... }`
+  written inline has no identifier at all — `index` or `constants-error` names the
+  file, not the subject. Choose the name a reader would use for what the file is
+  about.
+
+**The judgement is only affordable because the test file mirrors the source path**
+([directory.md](./directory.md#directory-structure)). Somebody who edits the source
+reaches its test through the path, so level 1 is what they read once they arrive,
+not what they search for. A test file named by convention rather than by mirroring
+takes that away, and then neither end can be derived.
 
 ```js
 describe('constants-error', () => {
