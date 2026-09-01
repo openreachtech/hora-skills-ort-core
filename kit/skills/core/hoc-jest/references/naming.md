@@ -36,6 +36,28 @@ describe('should call JSON.stringify() with value and replacer', () => {})
 describe('should call JSON.stringify with value and replacer', () => {})
 ```
 
+## Notation When the Subject Is Not a Class
+
+The table above covers class members. Other subjects appear, and each has its own
+notation ([structure.md](./structure.md#when-the-subject-is-not-a-class)).
+
+| subject | level 1 | level 2 | level 3 |
+| :-- | :-- | :-- | :-- |
+| module whose default export is a class, a function, a declared `const`, or an import binding still under its source's name | that definition's name | the export's kind | the exported name |
+| module whose default export has no name of its own | a name for what the file is about | the export's kind | the exported name |
+| data file, a part asserted | the file's path | the part's key path | ─ |
+| data file, the whole asserted | the file's path | the reading | ─ |
+| reconciliation of two collections | the relation | a collection | ─ |
+
+The export's kind is `default export` or `named export`, written out. **A `default
+export` stops there** — it has no name for level 3. A named export puts its name at
+level 3 as `as <name>`, the name as the source writes it (`as deprecated`).
+
+The data-file and reconciliation rows carry no `#` or `.` by design: the absence is
+what tells a reading of a file, or a collection being reconciled, from a definition on
+a class. This notation governs the `describe()` name only — the governing "Notation of
+Class Members" table covers class members alone and is unchanged by it.
+
 ## Test Case Variables
 
 - Name the array of test cases `cases`.

@@ -1,11 +1,12 @@
 ---
 name: hoc-jest
-description: "Write Jest unit tests for JavaScript classes. Use this skill whenever the user asks to create or update Jest tests for a class."
+description: "Write Jest unit tests for JavaScript classes, and for the modules, data files and reconciliations a project tests alongside them. Use this skill whenever the user asks to create or update Jest tests — for a class, for a module of exported constants, for a data file such as a message catalogue, or for a test that two collections still agree with each other."
 ---
 
-# Jest Class Testing
+# Jest Testing
 
-A skill for writing Jest unit tests for JavaScript classes.
+A skill for writing Jest unit tests for JavaScript classes, and for the modules
+and data files a project tests alongside them.
 The conventions are split across the detail files below. Refer to them as needed.
 
 > **Notation convention**: Throughout this skill, when we simply write
@@ -100,6 +101,14 @@ test()`.
   member `describe()`, so "which class, which member am I looking at" always
   stays on screen (a syntactically achieved sticky header). We accept that the
   class name is duplicated in Jest's output, in favor of human explorability.
+- **When the subject is not a class** — a module of exported constants, or a
+  data file such as a message catalogue — the index rule still holds, but what
+  sits at each level changes. **A module reads level 1 off whatever it
+  default-exports**, and indexes below that by the kind of export and its name; a
+  data file is indexed by its path. **A reconciliation between two collections is
+  the one case where the rule cannot hold**, because neither side is the subject;
+  it is indexed by the relation instead. See
+  [structure.md](./references/structure.md#when-the-subject-is-not-a-class).
 - For details on nesting structure and notation, see
   [structure.md](./references/structure.md#describe-structure) /
   [naming.md](./references/naming.md#notation-of-class-members).
@@ -114,11 +123,8 @@ codebase.
   (`// same reference` / `// neutral value; not under test` /
   `// all omitted → default; keep last`, etc. — `//` or `/* */` written in
   `.js` files). These are generated artifacts, hence English.
-- The prose in this skill's own documentation (the body text of each Markdown
-  file) remains in Japanese.
-- Comments inside **this skill's own examples** (` ```js ``` ` blocks) are
-  *explanations* of the skill, so they are written in the same **Japanese**
-  as the body text.
+- Comments inside **this skill's own examples** (` ```js ``` ` blocks) follow the
+  same rule, since they illustrate the very code the rule governs.
 
 ## Detail files
 

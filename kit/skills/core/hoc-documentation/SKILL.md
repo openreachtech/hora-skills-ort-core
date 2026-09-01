@@ -27,6 +27,7 @@ This gathers the conventions for writing documentation (READMEs, design document
 | `.get:staticGetter` | static getter |
 | `.set:staticSetter` | static setter |
 
+- **Where the kind of member does not matter, write `#instanceMember` / `.staticMember`.** A rule that holds for every member alike turns on the prefix alone, and naming a kind it does not depend on would narrow it.
 - When attaching the class name, write it as in `SampleClass#extractValue()`.
 
 | notation | member |

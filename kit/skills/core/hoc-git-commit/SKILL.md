@@ -1,12 +1,12 @@
 ---
 name: hoc-git-commit
 description: >
-  Conventions for git commits and the branches they land on. Covers what belongs in a single
-  commit and the order commits land in, the message format (imperative or Conventional
-  Commits), the verb vocabulary shared by both, and the trunk role with the subjects that open
-  and close a branch. The commands that gate a commit belong to the workflows convention. Use
-  before writing a commit message, before splitting a working tree into commits, and before
-  cutting or merging a branch.
+  Conventions for git commits. Covers what belongs in a single commit and the order commits
+  land in, the message format (imperative or Conventional Commits), and the verb vocabulary
+  shared by both. The branches commits land on, and the two commits a branch makes about
+  itself, belong to the git branch convention; the commands that gate a commit belong to the
+  workflows convention. Use before writing a commit message, and before splitting a working
+  tree into commits.
 ---
 
 # Git Commit
@@ -101,81 +101,13 @@ concluding that a change is not in the history.
   comment", no tool attribution. Where the content itself came from is a different matter — that
   belongs in the subject wherever it is part of what the work is.
 
-### The branch-opening marker commit
+### The commits a branch makes about itself
 
-A branch that will act as a trunk opens with an **empty commit** whose subject begins with
-`Start` — or with `Release`, on a `release/x.x.x` trunk. This is a deliberate convention, not a
-checkpoint or a placeholder.
-
-```bash
-# opening a long-lived dev branch
-git switch -c dev
-git commit --allow-empty -m 'Start dev'
-
-# opening a general branch that will carry sub-branches
-git switch -c feature/equip-tools-for-each-application
-git commit --allow-empty -m 'Start adding the skills installer'
-
-# opening a nested trunk: cut from the branch above, and carrying sub-branches of its own
-git switch -c update/the-domains-a-repository-selects
-git commit --allow-empty -m 'Start updating the domains a repository selects'
-```
-
-- It must be **empty** (`--allow-empty`). It exists to put a commit on a branch that has no
-  work on it yet, so there is nothing for it to carry. A `Start …` subject on a commit that
-  actually contains changes is not this convention — it is a mislabelled change.
-- It is the **first commit on the branch**, made immediately after branching.
-- **One per trunk, and none on a sub-branch.** The test is the branch's role: will other
-  branches be cut from this one and merged back into it? Where the answer is yes, the branch is
-  a trunk — that is what [branches.md](./references/branches.md) defines the word to mean, and
-  that definition is the whole of the condition.
-- **A nested trunk takes a marker of its own.** A general branch cut from `main` that then has
-  work split off it is a sub-branch and a trunk at once, and it is the trunk half the marker
-  answers to. Such a branch merges back locally, with no pull request anywhere in it, and it
-  still opens with `Start …`.
-- **Whether a pull request is ever opened decides nothing.** Where the merge does go through a
-  host, the marker buys a branch that can be reviewed before any code exists — but that is
-  something the commit makes possible, never the test for making one.
-- **`Start` is not a verb for resuming work mid-branch.** A branch already carrying commits has
-  nothing left to open.
-- The subject names **what is being started**, which depends on the kind of trunk.
-  - A **trunk that is one by name** is named directly: a `dev` branch opens with `Start dev`.
-    Here `dev` is the branch, not a placeholder word.
-  - A **general branch acting as a trunk** states the work it will carry — `Start adding the
-    skills installer`, `Start renaming kit/skills/_core/ to core/`. A later reader scanning the
-    log gets the branch's purpose for free.
-  - A **`release/x.x.x` trunk** is opened by its version alone: `Release 0.2.0`. The word
-    `Start` does not appear, because the version is the whole of what is being started.
-  - **Where the work carries content in from elsewhere, the marker names the origin** — `Start
-    migrating the mail templates from lunas-ec-cart-backend`. Stated once here, it covers every
-    commit on the branch, and the merge commit keeps it in the history after the branch is gone.
-- **The marker takes no type prefix, in either message format.** Repositories on Conventional
-  Commits write `Start dev`, not `chore: start dev`. The marker sits outside the format.
-
-### The merge commit
-
-A branch merges back into its trunk with `--no-ff`, and the merge commit that results carries a
-subject of its own.
-
-```
-Merge the classes of the skills installer
-Merge the core/ rename in the repository documents
-```
-
-- **It names the work, never the branch.** `Merge rename/FormElementClerk` says only what
-  `git log --graph` already shows, and the branch is deleted moments later. What it carried is
-  the part that has to survive it.
-- **It stands in for the message a host would have written.** A merge that goes through a pull
-  request is described for free — `Merge pull request #53 from …`. A merge made locally has no
-  such author, and this subject fills the gap.
-- **It takes no type prefix, in either message format**, for the same reason the branch-opening
-  marker takes none: it carries no change of its own. Repositories on Conventional Commits
-  write `Merge …`, not `chore: merge …`.
-- **A merge made through a pull request is left alone.** The host writes it, and no one here
-  chooses its wording.
-
-Which branch is a trunk, how the merge is made, and what becomes of the branch afterwards are in
-[branches.md](./references/branches.md).
+Two commits carry no change of their own: the empty marker that opens a trunk, and the
+`Merge …` commit that closes a sub-branch. Both are specified in full by the git branch
+convention — when to make one, and what its subject says — because what they say is
+inseparable from what they are for. Here they surface only in the verb table below, where
+`Start`, `Release` and `Merge` are reserved for them.
 
 ### Verbs
 
@@ -185,7 +117,7 @@ Conventional Commits.
 
 **A verb of two words joins into one where it sits in a single-token slot, and takes no hyphen
 in its place.** `Kick out`, `Tidy up`, `Turn on` and `Turn off` stay two words in a subject and
-become one before the slash of a branch name — `tidyup/the-environment-files` — and the same
+become one before the slash of a branch name — `tidyup/environment-files` — and the same
 holds wherever a project puts this vocabulary in the `type:` slot of Conventional Commits rather
 than the types listed in [format-conventional.md](./references/format-conventional.md). The
 slash and the colon already end the token, so a hyphen inside it marks nothing.
@@ -223,9 +155,9 @@ substitutes for it. Where nothing listed names it, open the subject with the ver
 | `Adjust` | a dial moved — a threshold, a limit, the options of a rule that stays on |
 | `Export` | public surface changed |
 | `Install` / `Uninstall` | a dependency the project takes on, or gives up |
-| `Start` | **empty** branch-opening marker only — see above |
-| `Release` | **empty** marker opening a `release/x.x.x` trunk only — see above |
-| `Merge` | **merge commits only** — see above |
+| `Start` | **empty** branch-opening marker only — see the git branch convention |
+| `Release` | **empty** marker opening a `release/x.x.x` trunk only — see the git branch convention |
+| `Merge` | **merge commits only** — see the git branch convention |
 
 - **`Declare` is for the class itself; `Define` is for what is written inside or beside it** —
   a member, a function, a constant. Both are the specific forms of `Add`, and where they apply,
@@ -276,6 +208,15 @@ substitutes for it. Where nothing listed names it, open the subject with the ver
   else. Reordering control flow is not this: two `if` statements swapped is a behavior change
   wearing the clothes of an ordering, and it takes the verb its behavior deserves. Relocating
   something to another file is `Move`; `Rearrange` never crosses a file.
+- **`Move` stays `Move` when the relocation itself forces an edit.** A file that changes
+  directory takes its relative paths with it, and whatever pointed at the old place has
+  to point at the new one. Those edits are not a second decision riding along — they are
+  what the move consists of, and a subject naming anything else would hide the one thing
+  that happened. The row's `content untouched` means the substance is untouched: what the
+  file says, not the depth of a path it says it at.
+  - The test is whether the edit would stand on its own. A path following its file would
+    not: revert the move and the edit has nothing to do. An edit that still makes sense
+    with the file where it was is a separate decision, and takes its own commit.
 - **`Update` and `Retake` split on what was there before.** `Update` carries a sound
   implementation forward and leaves it giving something it did not give before — the gain is the
   point. `Retake` replaces what was poor, hurried or a stopgap with what should have been there,
@@ -393,7 +334,8 @@ substitutes for it. Where nothing listed names it, open the subject with the ver
   package.json`. `Adjust` carries no direction: a dial is as properly turned down as up, which
   is why `Update`'s gain does not apply to it.
 - **`Start`, `Release` and `Merge` are reserved** for the commits that carry no change of their
-  own — the two branch-opening markers and the merge commit, all described above. A change that
+  own — the two branch-opening markers and the merge commit, all described by the git branch
+  convention. A change that
   folds two things into one takes `Unify`, never `Merge`, so that a merge commit stays
   recognizable by its subject alone.
 
@@ -423,6 +365,20 @@ Tidy up the JSDoc of BaseRestfulApiLauncher.get:ResponseBodyParser
 
 This is the same notation used throughout documentation and error messages; see the
 documentation convention.
+
+### Referring to a skill
+
+A skill named in a subject or body carries the **leading slash it is invoked with**.
+
+```
+Author /hoc-git-branch skill
+Fulfill the article rule for a branch name in /hoc-git-branch
+Add the notation for a skill name in /hoc-git-commit
+```
+
+The slash is what marks the word as a skill. Without it the same string reads as a directory,
+a package, or a branch prefix — all of which a repository of skills is full of — and a reader
+scanning subjects for where a convention changed has to work out which one each mention was.
 
 ### Body
 
@@ -461,15 +417,16 @@ documentation convention.
 
 ## Granularity in one line
 
-One commit is **one decision a reviewer can accept or reject on its own**. If the subject
-needs the word "and" to be accurate, the commit is two commits.
+One commit is **one decision a reviewer can accept or reject on its own**, and the test is
+whether one plain subject line states everything it does. Everything — a subject that fits by
+leaving something out has failed the test rather than passed it, and "and" joining two
+decisions is only the most visible way it fails.
 
-The full heuristic — what to split, what to keep together, and how to stage a mixed working
-tree — is in [granularity.md](./references/granularity.md).
+The full heuristic — what to split, what to keep together, the order the commits land in, and
+how to stage a mixed working tree — is in [granularity.md](./references/granularity.md).
 
 ## Detail files
 
-- [branches.md](./references/branches.md) — the trunk role, naming a branch, merging it back
-- [granularity.md](./references/granularity.md) — what belongs in one commit, splitting a mixed working tree
+- [granularity.md](./references/granularity.md) — what belongs in one commit, the order the commits land in, splitting a mixed working tree
 - [format-imperative.md](./references/format-imperative.md) — capitalized imperative subject, no type prefix
 - [format-conventional.md](./references/format-conventional.md) — Conventional Commits (`type: summary`)

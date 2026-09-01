@@ -81,6 +81,16 @@ Example:
 Incorrect example: `tests/__tests__/lib/tools/PathnameBuilder.js`
 (must not include `lib/`)
 
+A test whose subject is a **data file** mirrors that file's path the same way,
+with the varying segment — written `*` — collapsed into a single test file. The
+describe name at level 1 then matches the source path it mirrors
+([structure.md](./structure.md#a-data-file-is-indexed-by-its-path)).
+
+| Source | Test |
+| --- | --- |
+| `lib/i18n/locales/*/message.json` | `tests/__tests__/i18n/locales/message.js` |
+| `lib/fixtures/*/user.json` | `tests/__tests__/fixtures/user.js` |
+
 ## Splitting Large Test Files
 
 If a single test file grows too large, it may be **split by method**. In that
@@ -107,12 +117,22 @@ tests/__tests__/tools/PathnameBuilder/
 
 Do not define helper functions inside a test file
 ([anti-pattern.md](./anti-pattern.md)). If one is truly necessary, **define** it
-under `tests/tools/`, and **mirror the same directory structure** under
-`tests/__tests__/test-tools/` to **write tests** for the helper function.
+under `tests/tools/`, and **write its test at that same path mirrored under
+`tests/__tests__/`** — the path carried across whole, `tests/` included.
 
-- The mirroring base point, not including `lib/`, etc., follows the same idea
-  as the Directory Structure section above:
-  `tests/tools/foo/makeSample.js` ↔ `tests/__tests__/test-tools/foo/makeSample.js`.
+| Helper | Its test |
+| --- | --- |
+| `tests/tools/makeSample.js` | `tests/__tests__/tests/tools/makeSample.js` |
+| `tests/tools/foo/makeSample.js` | `tests/__tests__/tests/tools/foo/makeSample.js` |
+
+- **`lib/` is stripped; nothing else is.** The mirroring base is the source root, and
+  `lib/` drops out because it *is* that root's name (Directory Structure, above). A
+  helper does not live under `lib/`, so nothing drops out of its path — which is why
+  the test path repeats `tests/`.
+- **This is what keeps the two trees from colliding.** `lib/tools/` and `tests/tools/`
+  are different directories sharing a tail. Strip `tests/` and both of their tests land
+  on `tests/__tests__/tools/`, where the second one written has to be renamed to fit.
+  Carrying the path whole gives each its own place, with no extra rule to remember.
 - Only helper functions that have tests written for them may be used inside
   test files.
 

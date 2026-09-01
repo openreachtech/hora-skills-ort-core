@@ -117,7 +117,7 @@ describe('BaseAuthorizationBuilder', () => {
 })
 ```
 
-- If the abstract member is an **instance method** (`#method()`, not static),
+- If the abstract member is an **instance method** (`#instanceMethod()`, not static),
   **instantiate** it before calling. Since the constructor arguments are irrelevant to
   the verification, fill them with neutral values (the same idea as
   [Isolate the property under test](#isolate-the-property-under-test)). If the message
@@ -409,6 +409,310 @@ describe('when schema is array', () => {
 })
 ```
 
+## When the subject is not a class
+
+The rule above fixes level 1 to a class name and level 2 to a member name. Some
+tests have neither: a module that exports constants, or a data file such as a
+message catalogue. The index rule still holds — only what is indexed changes.
+
+### Level 1 names what the module default-exports
+
+The class rule reads level 1 off the class because **the class is what the file is
+about**. A module is the same question with a different answer, and the answer comes
+from what it default-exports:
+
+| `export default` is | Level 1 |
+| :-- | :-- |
+| A class | The class's name |
+| A function | The function's name |
+| A `const` this file declares | That binding's name |
+| An import binding whose name matches the file it came from | That binding's name |
+| A value with no name of its own | **A name chosen for what the file is about** |
+
+A module with no default export at all falls in the last row too.
+
+- **The first four rows are not the file's basename.** They coincide in practice,
+  because a file is named after what it holds, but the anchor is the definition
+  rather than the filename. Rename the file and the describe does not move.
+- **Borrow the identifier wherever there is one to borrow.** A class, a function
+  and a `const` are all names the source already chose, and a name the source chose
+  is one a reader can search for. The rows differ in what is exported, not in how
+  the level is decided.
+- **An import binding is borrowed only while it still names its source.**
+  `import core from './rules/core.js'` passes something along under the name it
+  already had — the binding and the file agree, so the name was not invented here.
+  `import config from './rules/core.js'` renames on the way in, and that name is
+  this file's private label for somebody else's export: it names nothing a reader
+  can trace, so level 1 falls to the last row.
+- **The last row is a judgement, and that is deliberate.** `export default { ... }`
+  written inline has no identifier at all — `index` or `constants-error` names the
+  file, not the subject. Choose the name a reader would use for what the file is
+  about.
+
+**The judgement is only affordable because the test file mirrors the source path**
+([directory.md](./directory.md#directory-structure)). Somebody who edits the source
+reaches its test through the path, so level 1 is what they read once they arrive,
+not what they search for. A test file named by convention rather than by mirroring
+takes that away, and then neither end can be derived.
+
+```js
+describe('constants-error', () => {
+  describe('ERROR_CODE_HASH', () => {
+    describe('should map every code to a message', () => {
+      test.each(cases)('code: $input.code', ({ input, expected }) => {
+        // ...
+      })
+    })
+  })
+})
+```
+
+#### Below level 1 comes the kind of export, then its name
+
+A class's members carry their kind in the name — `#` for an instance member, `.` for a
+static one. **An export has no such sigil, so the kind takes a level of its own.**
+
+| Level 2 | Level 3 |
+| :-- | :-- |
+| `default export` | — (a default export has no name to index) |
+| `named export` | `as <the exported name>`, as the source writes it |
+
+```js
+describe('package entry', () => {
+  describe('default export', () => {
+    describe('when imported', () => {
+      test('should be the core ruleset', () => {
+        // ...
+      })
+    })
+  })
+})
+
+describe('package entry', () => {
+  describe('named export', () => {
+    describe('as deprecated', () => {
+      describe('when imported', () => {
+        test('should be the deprecated ruleset', () => {
+          // ...
+        })
+      })
+    })
+  })
+})
+```
+
+- **The name stays greppable.** Somebody who changes a named export searches for its
+  name and lands on a describe, exactly as they would for a class member. Collapsing
+  the two levels into `named export` alone would lose that the moment a module has two.
+- **`as` is what marks the level as a name.** A class member wears `#` or `.`; a bare
+  `deprecated` sitting under `named export` could be read as a behavior or a member
+  instead. `as deprecated` reads as one phrase with the level above it — *a named
+  export, as `deprecated`* — and the name is still what a search finds.
+- **A default export stops at level 2**, because there is no name to put below it. The
+  levels are not padded to match.
+- The module describe is **repeated per export**, the way the class describe is repeated
+  per member, and for the same reason.
+
+### A data file is indexed by its path
+
+When the subject is a data file — a message catalogue, a fixture set, a generated
+manifest — level 1 is **the data file's path**: written from the mirroring base,
+carrying the extension as the source spells it, with a varying segment written as
+`*`.
+
+The varying segment is whatever a family of files differs by, and nothing about
+the rule is tied to what that is: `i18n/locales/*/message.json`,
+`fixtures/*/user.json`, `manifests/*.json`.
+
+Level 2 is one of two things.
+
+**The key path of the part under assertion**, when the assertion is about one part
+of the file:
+
+```js
+describe('i18n/locales/*/message.json', () => {
+  describe('message.form', () => {
+    describe('should hold the same keys in every file', () => {
+      test.each(cases)('locale: $input.locale', ({ input, expected }) => {
+        // ...
+      })
+    })
+  })
+})
+```
+
+**A bare noun phrase naming the reading**, when the assertion is about the file as
+a whole and no part can be named. The precondition layer takes `when …` and the
+assertion moves into `test()`, as it does for a fixed value:
+
+```js
+describe('i18n/locales/*/message.json', () => {
+  describe('key set', () => {
+    describe('when every file is read', () => {
+      test('should be identical across them', () => {
+        // ...
+      })
+    })
+  })
+})
+```
+
+- **The key path comes first.** Reach for a noun phrase only when the assertion
+  covers the whole file.
+- **Why the path sits at level 1**: for a class the target of a fix is a member,
+  but for a data file it is the file, and what a person greps is its path. Level 1
+  therefore carries the index, and level 2 says which reading of the file is
+  asserted.
+- **Why a bare noun phrase**: every class and module member carries a sigil —
+  `#`, `.`, or an upper-case export name — so a lower-case noun phrase at level 2
+  marks a reading of a data file rather than a definition, without a new symbol.
+- **Do not borrow `.` for a reading.** `.keys` claims a static property that does
+  not exist, and whoever greps for it finds nothing. `.` is for definitions only.
+- One reading per path describe(), repeated per reading — the same consequence
+  the class rule has.
+
+### A reconciliation is indexed by the relation
+
+Some tests have no single subject at all. What is under test is **whether two collections
+still agree** — the identifiers a dependency publishes against the configuration that
+declares each one, a schema against the fixtures built for it, an enum against the table it
+is stored in. Neither side is the subject; the agreement between them is.
+
+Level 1 names the relation. Level 2 names each side of it, one describe per collection,
+plus one for the catalogue they are reconciled against.
+
+```js
+describe('rule coverage', () => {
+  describe('core rules', () => {
+    // the declarations carrying the error severity
+  })
+
+  describe('deprecated rules', () => {
+    // the declarations carrying the off severity
+  })
+
+  describe('plugin rules', () => {
+    // the catalogue both are reconciled against
+  })
+})
+```
+
+- **Level 1 is a noun phrase naming the reconciliation**, and carries no `#` or `.` — the
+  same reason a data file's reading does ([naming.md](./naming.md#notation-when-the-subject-is-not-a-class)).
+- **Level 2 names a collection**, in the plural of what it holds. There is nothing to grep
+  for at either level, and that is the point: no definition owns this test.
+- This is the one shape where the index rule **cannot** be satisfied. Satisfying it
+  would mean electing one of the two sides as the subject, and the election is wrong
+  either way — the test fails when the two disagree, not when either one is wrong.
+
+#### Close the chain end to end
+
+A reconciliation is worth writing only if **removing one entry anywhere makes it fail.**
+Lay out the seams and put a check on each:
+
+| Seam | What it catches |
+| :-- | :-- |
+| A case's own fields against each other | A typo in the data every other test trusts |
+| Each case against the declaration | A declaration missing, or carrying the wrong severity |
+| The **unique** case count against the declaration count | A case dropped from the array, or written twice |
+| The declaration total against the catalogue | An entry the catalogue holds and nothing declares |
+
+Miss one seam and a gap opens that every remaining test passes over. Without the third,
+deleting a case shrinks the coverage silently — the cases that remain all still pass, and
+the total still reconciles.
+
+**Verify both directions before believing the chain is closed.** Delete an entry on the
+catalogue side and confirm the failure; then delete one on the declaration side and confirm
+it again. A chain that only catches one direction is half a chain, and which half is
+missing is not visible from reading it.
+
+**Count the entries left after duplicates are dropped, never `cases.length`.** Write the
+same identifier into two rows and the length still matches, while the entry it displaced
+goes unverified — and a duplicate is not something a reader finds. In a table of seventy
+rows, whether two of them are the same cannot be seen by looking.
+
+Dropping duplicates is a transformation, so it does not belong inside the test
+([anti-pattern.md](./anti-pattern.md)). Put it in a helper under `tests/tools/`, give the
+helper its own test
+([directory.md](./directory.md#test-tools-where-to-place-helper-functions)), and call it
+from the assertion.
+
+```js
+const received = extractUniqueIds({ values: cases })
+
+expect(received)
+  .toHaveLength(Object.keys(core.rules).length)
+```
+
+**The data's own consistency is a behavior of its own**, and goes in its own behavior
+describe rather than folded into the one that checks the declaration.
+
+```js
+describe('should prefix each id with the plugin namespace', () => {
+  test.each(cases)('input: $input', ({ input, expected }) => {
+    const received = `plugin/${input}`
+
+    expect(received)
+      .toBe(expected)
+  })
+})
+
+describe('should declare each rule of the plugin as an error', () => {
+  // the same cases, checked against the declaration
+})
+```
+
+- **What is under test here is the case data itself**, which is why it reads oddly at
+  first: nothing of the subject is called, and the assertion compares two literals through
+  one interpolation. That is the point. Every other seam trusts these literals, and whether
+  a literal is right cannot be seen by reading it — a namespace misspelt in one row of
+  seventy looks exactly like the sixty-nine that are correct.
+- **Folding it into the declaration check hides which of the two failed.** Split, a failure
+  names its own cause: either the data is wrong, or the declaration is. Together, every
+  failure looks like a missing declaration, and the first move is to go looking in the
+  wrong file.
+
+#### Reconcile totals by summing the parts, never by merging them
+
+Where the declarations are split across several collections, compare the catalogue's count
+against **the sum of the parts**. Do not spread them into one object and count its keys.
+
+```js
+// Good: summed, so an entry declared in both collections is counted twice and fails
+const expected = Object.keys(core.rules).length
+  + Object.keys(deprecated.rules).length
+
+const received = Object.keys(plugin.rules)
+
+expect(received)
+  .toHaveLength(expected)
+```
+
+```js
+// Avoid: a merge collapses a key present in both, and the total matches
+//        even though that entry is declared twice
+const merged = Object.keys({
+  ...core.rules,
+  ...deprecated.rules,
+})
+```
+
+A merge is the natural way to write "everything declared," which is exactly why it is the
+trap. It answers *how many distinct things are declared*, and the question being asked is
+*how many declarations there are*. The two differ by precisely the bug worth catching.
+
+#### For an empty collection, leave the describe out
+
+When a collection is **empty** — a deprecated set with nothing in it yet — do not
+write its describe around an empty `cases`. **`test.each([])` throws**, so the file
+fails to run at all rather than reporting a passing empty group. Leave the describe
+out, and let the total reconciliation cover that side: zero sums correctly.
+
+- The describe comes back the moment the collection has an entry.
+- This is not licence to drop a describe whose cases are merely few. A single element keeps
+  it — the "two or more" guidance in [test-cases.md](./test-cases.md) yields here, because
+  what fixes the count is the collection, not the author.
+
 ## Define shared fixtures directly under the member describe
 
 If the same fixture variable (e.g. `alphaReplacer`) is used by **multiple behavior
@@ -418,6 +722,13 @@ behavior.
 
 - A variable used by only one behavior belongs inside that behavior's describe (do not
   force-hoist it). Only lift it up to the member level when sharing actually occurs.
+- **When one behavior audits another's data, sharing is not a convenience — it is what
+  makes the audit true.** A `cases` array that a sibling describe counts, or checks for
+  completeness, has to be **the same array**, declared once where both can reach it. Give
+  each describe its own copy and the audit checks a copy of itself, while the array
+  actually driving the tests goes unchecked; the two then drift with nothing to reveal it.
+  A `const` declared inside one describe is not visible from a sibling, so the choice here
+  is never "share or repeat" — it is **share or verify nothing**.
 
 ```js
 describe('BaseRequestBodyStringifier', () => {
@@ -1399,7 +1710,7 @@ splitting by describe is easy, and once split, each `cases`'s `input` / `expecte
   member notation (`when #isNullable:true`). A pure method-argument flag that is not
   turned into a property (e.g. `mode`) uses the bare name (`when mode:true`). The
   `args` key and `this.<flag>` remain in their bare form — `#` appears only in the
-  describe label's notation (the same as `#method()`).
+  describe label's notation (the same as `#instanceMethod()`).
 - Even when a boolean flag **changes the very determination of valid/invalid** (e.g.
   under `#isEnabled:true`, a value that was previously invalid becomes valid, or only
   the null guard remains), place inside each mode's `describe()` only the results that
