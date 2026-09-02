@@ -1,6 +1,6 @@
 # @openreachtech/hora-skills-ort-core
 
-Hora Kit で開発するための ORT JavaScript コーディングスキルを配布するパッケージです。
+ORT JavaScript コーディングスキルを配布するパッケージです。単体でどのリポジトリにも導入でき、Hora Kit ではそのスキルライブラリの 1 つとして装備されます。
 
 ## コンセプト
 

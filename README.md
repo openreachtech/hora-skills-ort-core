@@ -1,6 +1,6 @@
 # @openreachtech/hora-skills-ort-core
 
-A distribution package of the ORT JavaScript coding skills for developing with Hora Kit.
+A distribution package of the ORT JavaScript coding skills — installed into any repository on its own, and equipped by Hora Kit as one of its skill libraries.
 
 ## Concept
 
