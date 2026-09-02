@@ -13,6 +13,7 @@ Hora Kit で開発するための ORT JavaScript コーディングスキルを�
 | `@openreachtech/hora-skills-ort-core`(このパッケージ) | `hoc-` | `core` | 39 |
 | `@openreachtech/hora-skills-ort-renchan` | `hor-` | `backend` | 31 |
 | `@openreachtech/hora-skills-ort-furo` | `hof-` | `frontend` | 46 |
+| `@openreachtech/hora-skills-ort-support` | `hos-` | `support` | 3 |
 
 [**スキルカタログ**](https://github.com/openreachtech/hora-skills-ort-core/blob/main/docs/skills.ja.md) ([English](https://github.com/openreachtech/hora-skills-ort-core/blob/main/docs/skills.md)) — このパッケージに収録された全スキルの一覧と概要(1〜2 行)を、呼び出しコマンド名で並べています。
 
