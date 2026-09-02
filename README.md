@@ -1,5 +1,7 @@
 # @openreachtech/hora-skills-ort-core
 
+*[日本語](https://github.com/openreachtech/hora-skills-ort-core/blob/main/README.ja.md)*
+
 A distribution package of the ORT JavaScript coding skills — installed into any repository on its own, and equipped by Hora Kit as one of its skill libraries.
 
 ## Concept
