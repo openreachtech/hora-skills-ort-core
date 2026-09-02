@@ -97,3 +97,13 @@
 | :-- | :-- |
 | `hoc-code-review` | 変更をコードレベルで読み取り専用にレビューし、仕様適合性・正当性・規約準拠についての所見レポートを出します。修正は一切しません。 |
 | `hoc-workflows` | 開発ワークフローの手続き規約。実装の進め方と、コミット前・完了前に必ず行う手順を定義します。 |
+---
+
+## 導入
+
+```sh
+npm install -D @openreachtech/hora-skills-ort-core
+npx --no hora-skills-ort-core install
+```
+
+`postinstall` フックの宣言、複数ドメインを同じ `.claude/skills/` に入れる方法、配置を最新に保つ方法は [README](https://github.com/openreachtech/hora-skills-ort-core/blob/main/README.ja.md) にあります。

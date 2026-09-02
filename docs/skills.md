@@ -97,3 +97,13 @@ Each skill lives at `kit/skills/core/<name>/`, one level under the domain direct
 | :-- | :-- |
 | `hoc-code-review` | Read-only, code-level review of a change, producing a findings report on specification compliance, correctness and convention conformance. Never fixes anything. |
 | `hoc-workflows` | Development workflow rules — how to proceed with an implementation, and the steps always performed before committing and before completion. |
+---
+
+## Installing them
+
+```sh
+npm install -D @openreachtech/hora-skills-ort-core
+npx --no hora-skills-ort-core install
+```
+
+The [README](https://github.com/openreachtech/hora-skills-ort-core/blob/main/README.md) covers the `postinstall` hook, installing more than one domain into the same `.claude/skills/`, and keeping an installation current.
