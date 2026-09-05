@@ -5,7 +5,8 @@ description: >
   deleted, loosened, or padded with waits to make the suite pass. Use this skill whenever tests are run,
   whenever a test still fails after an implementation was believed finished, when the user asks to
   run or fix failing tests, and before claiming an implementation is complete. Writing new tests
-  belongs to the project's test-writing convention.
+  belongs to the project's test-writing convention; reusing a recorded pass over unchanged inputs,
+  to the test-cache convention.
 ---
 
 # Test Execution
@@ -131,6 +132,11 @@ These are never acceptable, including "temporarily". See
   path is no longer exercised.
 - Adding a branch to the implementation that exists only to satisfy the test.
 - Marking a test as expected-to-fail.
+
+**Reusing a recorded pass is not one of these.** A cache that re-reports a pass for inputs identical
+to the ones that produced it skips a second execution, not a test — nothing is skipped, loosened or
+deleted, and the numbers reported are still the ones the runner measured. When that reuse is allowed,
+and what a reused pass must be reported with, belong to `hoc-test-cache`.
 
 **Breaking the letter of these rules breaks their spirit too.** A suite whose failures were silenced
 is worse than no suite, because it is believed.
