@@ -46,9 +46,10 @@ Resolve which one applies, in this order.
    git log --no-merges -n 30 --pretty=format:'%s'
    ```
 
-   If **most** of them begin with `feat:` / `fix:` / `refactor:` / `test:` / `docs:` /
-   `chore:` (optionally with a scope, as in `feat(resolver):`), the project uses
-   conventional. Otherwise it uses imperative.
+   If **most** of them begin with a lowercase word and a colon — `feat:` / `fix:` /
+   `refactor:` / `docs:` and the rest, optionally with a scope, as in `feat(resolver):` — the
+   project uses conventional. Otherwise it uses imperative. The types themselves are listed in
+   the conventional format file; read the ones named here as examples, not as the whole set.
 
 3. **Default to imperative** when the history is too short to judge, as in a new repository.
 
