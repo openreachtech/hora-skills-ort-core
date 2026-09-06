@@ -8,14 +8,14 @@ A distribution package of the ORT JavaScript coding skills — installed into an
 
 This package ships **skills only** — there is no library to `import`, and the one executable it carries exists to install those skills. A skill is a directory holding a `SKILL.md`, plus optional `references/` and `scripts/`, that Claude Code loads and invokes as `/<name>`. Installing this package into a repository puts the conventions and procedures Open Reach Tech develops with in front of the agent working on that repository.
 
-40 skills are distributed, all of the `core` domain: conventions and procedures that apply to any project, regardless of stack. The three-character prefix on every name is the domain, so a reader looking at one flat list of skills can tell at a glance which came from this package. Each domain is a package of its own, and a repository installs the ones it works in:
+The skills distributed are all of the `core` domain: conventions and procedures that apply to any project, regardless of stack. The three-character prefix on every name is the domain, so a reader looking at one flat list of skills can tell at a glance which came from this package. Each domain is a package of its own, and a repository installs the ones it works in:
 
-| Package | Prefix | Domain | Skills |
-| :-- | :-- | :-- | --: |
-| `@openreachtech/hora-skills-ort-core` (this one) | `hoc-` | `core` | 40 |
-| `@openreachtech/hora-skills-ort-renchan` | `hor-` | `backend` | 31 |
-| `@openreachtech/hora-skills-ort-furo` | `hof-` | `frontend` | 46 |
-| `@openreachtech/hora-skills-ort-support` | `hos-` | `support` | 3 |
+| Package | Prefix | Domain |
+| :-- | :-- | :-- |
+| [`@openreachtech/hora-skills-ort-core`](https://github.com/openreachtech/hora-skills-ort-core) (this one) | `hoc-` | `core` |
+| [`@openreachtech/hora-skills-ort-renchan`](https://github.com/openreachtech/hora-skills-ort-renchan) | `hor-` | `backend` |
+| [`@openreachtech/hora-skills-ort-furo`](https://github.com/openreachtech/hora-skills-ort-furo) | `hof-` | `frontend` |
+| [`@openreachtech/hora-skills-ort-support`](https://github.com/openreachtech/hora-skills-ort-support) | `hos-` | `support` |
 
 [**Skill catalog**](https://github.com/openreachtech/hora-skills-ort-core/blob/main/docs/skills.md) ([日本語](https://github.com/openreachtech/hora-skills-ort-core/blob/main/docs/skills.ja.md)) — every skill in this package with a one- or two-line summary, listed by the command name it is invoked by.
 
