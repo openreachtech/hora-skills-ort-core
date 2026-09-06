@@ -48,6 +48,21 @@ The shape of the name settles nothing. `release/x.x.x` is a trunk and
   - The exceptions are the two commits a trunk makes about itself rather than about the work:
     the marker that opens it, and the `Merge …` commit that brings a sub-branch in. Both are
     described below, and neither carries a change of its own.
+- **A trunk's published history is never rewritten.** `git push --force` and
+  `--force-with-lease` are not operations these four branches take, and neither are the local
+  rewrites that would make one necessary — `rebase`, `commit --amend`, `reset` onto an already
+  pushed commit. There is no permission that unlocks this; it is what the four names mean.
+  - **The reason is who else is holding the branch.** A trunk is what every other branch is cut
+    from, so its commits are already in clones, in merge commits' parents, and in whatever CI
+    recorded against them. Rewriting it does not correct a mistake — it makes everyone else's
+    copy disagree with the remote, silently, until they try to push.
+  - **A mistake already merged into a trunk is corrected by a new commit**, on a branch that
+    merges in like any other. A subject worded badly, a value that turned out wrong, a file that
+    should not have gone in: the trunk gains a commit that says so, and the record of the
+    mistake stays. A history a reader can trust is worth more than one that is tidy.
+  - **A sub-branch is the opposite**, until it is pushed and opened for review: rewriting it is
+    how the structure described below gets cut at all. Nobody else is holding it, so nothing
+    disagrees.
 
 ## When the structure is decided
 
