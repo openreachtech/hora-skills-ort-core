@@ -43,7 +43,8 @@ feat(resolver): add unlockClientMemberSignIn mutation
 | `refactor` | restructuring with no change in behavior |
 | `test` | tests added or changed, with no production-code change |
 | `docs` | documentation only |
-| `chore` | build config, dependencies, tooling |
+| `chore` | build config, tooling |
+| `deps` | a dependency the project takes on, gives up, or moves to another version |
 | `style` | formatting only, no code meaning changed |
 | `perf` | a change made for performance |
 
@@ -58,6 +59,16 @@ feat(resolver): add unlockClientMemberSignIn mutation
   — and the two should have been separate commits in the first place. See the granularity
   detail file.
 - When two types would both fit, the commit is doing two things. Split it.
+- **`deps` covers the lock file too.** Installing, uninstalling and moving a version all take
+  it, and so does the `package-lock.json` regenerated with them. A lock file records how the
+  dependency tree resolved; it is not tooling config, and one operation split across two types
+  breaks the thread for whoever reads the history back.
+- To pick out only the packages added — for release notes, say — filter on **the verb**, not
+  the type: `deps: install`, `deps: uninstall`. How the history gets displayed is not a reason
+  to cut the type layer finer.
+- **The internal-parts rule above does not reach dependencies.** It is about the repository's
+  own work: a class only `Alpha` uses is part of what `Alpha` delivers, and an installed
+  package never is. A package installed to build `Alpha` is `deps`, not `feat`.
 
 ## Summary
 
