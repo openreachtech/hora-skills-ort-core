@@ -12,6 +12,34 @@ What belongs in a single commit, and how a subject is worded, are settled by the
 convention. The two commits described here are the exception it points at: their subjects are
 specified in full below, because what they say is inseparable from what they are for.
 
+## Every rebase takes `-r`
+
+**`git rebase` without `-r` (`--rebase-merges`) is forbidden. There is no ordinary case that
+omits it.** Not preferred, not recommended where a branch has merges in it: the flag goes on
+every invocation, and a command written without it is wrong whether or not this particular
+branch happens to survive the omission.
+
+```bash
+git rebase -r <trunk> <branch>
+git rebase -r --onto <trunk's new tip> <the commit this branch was cut from> <branch>
+```
+
+Without `-r`, `git rebase` drops every merge commit it replays. A branch that carried its own
+sub-branches arrives flattened, and the `--no-ff` merges inside it are gone — the exact thing
+`--no-ff` was used to keep. The loss is silent: the rebase reports success, the working tree
+matches, and what is missing is structure no diff reports.
+
+**Whether the branch holds a merge commit right now is not the test.** A branch with none loses
+nothing today, but deciding case by case means re-examining the question at every rebase and
+getting it wrong on the one branch that did carry a merge. The flag costs nothing when there is
+nothing to preserve.
+
+- The single thing that lifts it is a deliberate decision to flatten a branch's internal merges,
+  taken as such and said out loud. Nobody arrives there by default.
+
+This rule stands ahead of everything below because the commands that need it appear throughout,
+and because a rebase that drops a merge cannot be spotted afterwards from the result.
+
 ## The trunk branch
 
 A **trunk branch** is one that other branches are cut from and merged back into.
@@ -243,12 +271,3 @@ Merge the core/ rename in the repository documents
 - **When two branches were cut from the same commit on a trunk, whichever merges second rebases
   onto the trunk's new tip first.** The second branch then merges into the trunk as it now
   stands, rather than reopening a line that was already closed.
-- **Every rebase in this scheme uses `-r` (`--rebase-merges`).**
-
-  ```bash
-  git rebase -r --onto <trunk's new tip> <the commit this branch was cut from> <branch>
-  ```
-
-  Without `-r`, `git rebase` drops every merge commit it replays. A branch that carried its own
-  sub-branches then arrives flattened, and the `--no-ff` merges inside it are gone — the exact
-  thing `--no-ff` was used to keep.
