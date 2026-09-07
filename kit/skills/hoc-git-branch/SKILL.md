@@ -108,6 +108,14 @@ So the order is: commit in a meaningful sequence until the work is ready for rev
 together whatever turns out to be one decision after all, and only then cut the markers and
 split the line into sub-branches.
 
+- **Every sub-branch is cut from the trunk, never from the sub-branch before it.** Splitting a
+  finished line means returning to the trunk for each cut, not walking forward along the line as
+  the branches come off it. A branch cut while standing on the previous sub-branch carries that
+  branch's commits as well as its own, and the two arrive at the trunk stacked instead of side by
+  side — the second merge then reopens a line the first one closed.
+  - **What `git branch` shows afterwards looks the same either way.** Only the commit each branch
+    was created from tells the two apart, and by the time the merges expose it the structure is
+    already built.
 - **This holds only while the commits are unshared.** Folding and splitting both rewrite
   history. Once the work has been pushed, the line stands as it is, and a structure it did not
   get is a structure it does not get.
