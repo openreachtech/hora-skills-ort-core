@@ -264,6 +264,18 @@ Merge the core/ rename in the repository documents
 - **Always `--no-ff`, never fast-forward.** A fast-forward leaves no commit a human can point
   at: the branch's commits are strung onto the trunk's line, and the fact that they arrived
   together, as one piece of work, stops being visible at all.
+- **Before each merge, confirm the branch is fast-forwardable.** `--no-ff` is only doing its
+  work when a fast-forward is what would otherwise have happened. On a branch that has fallen
+  behind the tip, git makes a three-way merge regardless, and the flag changes nothing.
+
+  ```bash
+  git merge-base --is-ancestor <trunk> <branch>   # must succeed
+  ```
+
+  Failure means the branch has not been rebased onto the current tip. Rebase it, then merge.
+  - **A merge commit's two parents are not evidence that `--no-ff` did anything.** A three-way
+    merge has two parents as well, and nothing in the finished history separates the two. That
+    is why this is checked before the merge, and cannot be checked after it.
 - **Delete the branch once it is merged.** Its name was written for whoever watched the work in
   flight, and that reader is gone. This includes a trunk that merges into another trunk —
   `dev` and `env` are deleted once they land on `main`.
