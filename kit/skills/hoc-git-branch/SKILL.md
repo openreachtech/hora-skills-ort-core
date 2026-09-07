@@ -1,6 +1,6 @@
 ---
 name: hoc-git-branch
-description: "Conventions for the branches a repository carries: which branch is a trunk and what that role obliges, how a general branch is named, the empty marker that opens a trunk, and the `--no-ff` merge that closes a sub-branch along with the subject that merge commit carries. What goes inside a commit, and how a subject is worded generally, belong to the git commit convention. Use before cutting a branch, before merging one back, and before deciding whether work needs a branch structure at all."
+description: "Conventions for the branches a repository carries: which branch is a trunk and what that role obliges, how a general branch is named, the empty marker that opens a trunk, and the `--no-ff` merge that closes a sub-branch along with the subject that merge commit carries. What goes inside a commit, and how a subject is worded generally, belong to the git commit convention. Use before cutting a branch, before merging one back, and before deciding whether work needs a branch structure at all. Every `git rebase` in this scheme takes `-r`."
 ---
 
 # Git Branch
