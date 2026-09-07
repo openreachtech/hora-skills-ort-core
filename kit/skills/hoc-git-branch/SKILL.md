@@ -276,6 +276,27 @@ Merge the core/ rename in the repository documents
     git branch -d dev
     git switch -C dev origin/main
     ```
-- **When two branches were cut from the same commit on a trunk, whichever merges second rebases
-  onto the trunk's new tip first.** The second branch then merges into the trunk as it now
-  stands, rather than reopening a line that was already closed.
+- **Merging several sub-branches back is a cycle, not a batch: merge one, rebase the next onto
+  the trunk's new tip, merge it, rebase the one after that.** Every merge moves the tip, so each
+  branch is rebased against a commit that did not exist while the branch before it was still
+  open. Each then merges into the trunk as it now stands, rather than reopening a line that was
+  already closed.
+
+  ```bash
+  git switch <trunk>
+  git merge --no-ff <first> -m 'Merge …'
+
+  git rebase -r <trunk> <second>        # onto the tip the merge above just made
+  git switch <trunk>
+  git merge --no-ff <second> -m 'Merge …'
+
+  git rebase -r <trunk> <third>         # onto the tip that merge made
+  git switch <trunk>
+  git merge --no-ff <third> -m 'Merge …'
+  ```
+
+  - **The rebases cannot be done in advance.** Aiming them all at one point — the commit the
+    branches were cut from, or anywhere else — settles nothing past the first merge: the second
+    branch is behind the tip again by the time its turn comes. The commit each rebase needs does
+    not exist until the merge before it is made.
+  - **Two branches are the smallest case of this, not a rule of their own.**
