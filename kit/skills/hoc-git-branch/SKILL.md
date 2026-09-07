@@ -1,6 +1,6 @@
 ---
 name: hoc-git-branch
-description: "Conventions for the branches a repository carries: which branch is a trunk and what that role obliges, how a general branch is named, the empty marker that opens a trunk, and the `--no-ff` merge that closes a sub-branch along with the subject that merge commit carries. What goes inside a commit, and how a subject is worded generally, belong to the git commit convention. Use before cutting a branch, before merging one back, and before deciding whether work needs a branch structure at all."
+description: "Conventions for the branches a repository carries: which branch is a trunk and what that role obliges, how a general branch is named, the empty marker that opens a trunk, and the `--no-ff` merge that closes a sub-branch along with the subject that merge commit carries. What goes inside a commit, and how a subject is worded generally, belong to the git commit convention. Use before cutting a branch, before merging one back, and before deciding whether work needs a branch structure at all. Every `git rebase` in this scheme takes `-r`."
 ---
 
 # Git Branch
@@ -11,6 +11,34 @@ branch is called, the commit that opens a trunk and the commit that closes a sub
 What belongs in a single commit, and how a subject is worded, are settled by the git commit
 convention. The two commits described here are the exception it points at: their subjects are
 specified in full below, because what they say is inseparable from what they are for.
+
+## Every rebase takes `-r`
+
+**`git rebase` without `-r` (`--rebase-merges`) is forbidden. There is no ordinary case that
+omits it.** Not preferred, not recommended where a branch has merges in it: the flag goes on
+every invocation, and a command written without it is wrong whether or not this particular
+branch happens to survive the omission.
+
+```bash
+git rebase -r <trunk> <branch>
+git rebase -r --onto <trunk's new tip> <the commit this branch was cut from> <branch>
+```
+
+Without `-r`, `git rebase` drops every merge commit it replays. A branch that carried its own
+sub-branches arrives flattened, and the `--no-ff` merges inside it are gone — the exact thing
+`--no-ff` was used to keep. The loss is silent: the rebase reports success, the working tree
+matches, and what is missing is structure no diff reports.
+
+**Whether the branch holds a merge commit right now is not the test.** A branch with none loses
+nothing today, but deciding case by case means re-examining the question at every rebase and
+getting it wrong on the one branch that did carry a merge. The flag costs nothing when there is
+nothing to preserve.
+
+- The single thing that lifts it is a deliberate decision to flatten a branch's internal merges,
+  taken as such and said out loud. Nobody arrives there by default.
+
+This rule stands ahead of everything below because the commands that need it appear throughout,
+and because a rebase that drops a merge cannot be spotted afterwards from the result.
 
 ## The trunk branch
 
@@ -48,6 +76,21 @@ The shape of the name settles nothing. `release/x.x.x` is a trunk and
   - The exceptions are the two commits a trunk makes about itself rather than about the work:
     the marker that opens it, and the `Merge …` commit that brings a sub-branch in. Both are
     described below, and neither carries a change of its own.
+- **A trunk's published history is never rewritten.** `git push --force` and
+  `--force-with-lease` are not operations these four branches take, and neither are the local
+  rewrites that would make one necessary — `rebase`, `commit --amend`, `reset` onto an already
+  pushed commit. There is no permission that unlocks this; it is what the four names mean.
+  - **The reason is who else is holding the branch.** A trunk is what every other branch is cut
+    from, so its commits are already in clones, in merge commits' parents, and in whatever CI
+    recorded against them. Rewriting it does not correct a mistake — it makes everyone else's
+    copy disagree with the remote, silently, until they try to push.
+  - **A mistake already merged into a trunk is corrected by a new commit**, on a branch that
+    merges in like any other. A subject worded badly, a value that turned out wrong, a file that
+    should not have gone in: the trunk gains a commit that says so, and the record of the
+    mistake stays. A history a reader can trust is worth more than one that is tidy.
+  - **A sub-branch is the opposite**, until it is pushed and opened for review: rewriting it is
+    how the structure described below gets cut at all. Nobody else is holding it, so nothing
+    disagrees.
 
 ## When the structure is decided
 
@@ -65,6 +108,14 @@ So the order is: commit in a meaningful sequence until the work is ready for rev
 together whatever turns out to be one decision after all, and only then cut the markers and
 split the line into sub-branches.
 
+- **Every sub-branch is cut from the trunk, never from the sub-branch before it.** Splitting a
+  finished line means returning to the trunk for each cut, not walking forward along the line as
+  the branches come off it. A branch cut while standing on the previous sub-branch carries that
+  branch's commits as well as its own, and the two arrive at the trunk stacked instead of side by
+  side — the second merge then reopens a line the first one closed.
+  - **What `git branch` shows afterwards looks the same either way.** Only the commit each branch
+    was created from tells the two apart, and by the time the merges expose it the structure is
+    already built.
 - **This holds only while the commits are unshared.** Folding and splitting both rewrite
   history. Once the work has been pushed, the line stands as it is, and a structure it did not
   get is a structure it does not get.
@@ -213,6 +264,18 @@ Merge the core/ rename in the repository documents
 - **Always `--no-ff`, never fast-forward.** A fast-forward leaves no commit a human can point
   at: the branch's commits are strung onto the trunk's line, and the fact that they arrived
   together, as one piece of work, stops being visible at all.
+- **Before each merge, confirm the branch is fast-forwardable.** `--no-ff` is only doing its
+  work when a fast-forward is what would otherwise have happened. On a branch that has fallen
+  behind the tip, git makes a three-way merge regardless, and the flag changes nothing.
+
+  ```bash
+  git merge-base --is-ancestor <trunk> <branch>   # must succeed
+  ```
+
+  Failure means the branch has not been rebased onto the current tip. Rebase it, then merge.
+  - **A merge commit's two parents are not evidence that `--no-ff` did anything.** A three-way
+    merge has two parents as well, and nothing in the finished history separates the two. That
+    is why this is checked before the merge, and cannot be checked after it.
 - **Delete the branch once it is merged.** Its name was written for whoever watched the work in
   flight, and that reader is gone. This includes a trunk that merges into another trunk —
   `dev` and `env` are deleted once they land on `main`.
@@ -225,15 +288,27 @@ Merge the core/ rename in the repository documents
     git branch -d dev
     git switch -C dev origin/main
     ```
-- **When two branches were cut from the same commit on a trunk, whichever merges second rebases
-  onto the trunk's new tip first.** The second branch then merges into the trunk as it now
-  stands, rather than reopening a line that was already closed.
-- **Every rebase in this scheme uses `-r` (`--rebase-merges`).**
+- **Merging several sub-branches back is a cycle, not a batch: merge one, rebase the next onto
+  the trunk's new tip, merge it, rebase the one after that.** Every merge moves the tip, so each
+  branch is rebased against a commit that did not exist while the branch before it was still
+  open. Each then merges into the trunk as it now stands, rather than reopening a line that was
+  already closed.
 
   ```bash
-  git rebase -r --onto <trunk's new tip> <the commit this branch was cut from> <branch>
+  git switch <trunk>
+  git merge --no-ff <first> -m 'Merge …'
+
+  git rebase -r <trunk> <second>        # onto the tip the merge above just made
+  git switch <trunk>
+  git merge --no-ff <second> -m 'Merge …'
+
+  git rebase -r <trunk> <third>         # onto the tip that merge made
+  git switch <trunk>
+  git merge --no-ff <third> -m 'Merge …'
   ```
 
-  Without `-r`, `git rebase` drops every merge commit it replays. A branch that carried its own
-  sub-branches then arrives flattened, and the `--no-ff` merges inside it are gone — the exact
-  thing `--no-ff` was used to keep.
+  - **The rebases cannot be done in advance.** Aiming them all at one point — the commit the
+    branches were cut from, or anywhere else — settles nothing past the first merge: the second
+    branch is behind the tip again by the time its turn comes. The commit each rebase needs does
+    not exist until the merge before it is made.
+  - **Two branches are the smallest case of this, not a rule of their own.**

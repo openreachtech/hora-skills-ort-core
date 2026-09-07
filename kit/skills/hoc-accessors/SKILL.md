@@ -1,6 +1,6 @@
 ---
 name: hoc-accessors
-description: "Conventions for class accessor (getter/setter) definitions: setters are prohibited for immutability; `#get:Ctor` is reserved for `this.constructor`; dependency references are extracted into getters — a static `[TargetClassName]Ctor` for classes to instantiate, or a plain instance getter for non-instantiated dependencies like native modules; getter bodies forbid branching and method calls, staying pure property references."
+description: "Conventions for class accessor (getter/setter) definitions: setters are prohibited for immutability; `#get:Ctor` is reserved for `this.constructor`; dependency references are extracted into getters — a static `[TargetClassName]Ctor` for classes to instantiate, and a static getter reached through `#get:Ctor` for non-instantiated dependencies like native modules; getter bodies forbid branching and method calls, staying pure property references."
 ---
 
 # Classes: Members / Accessors
@@ -120,24 +120,30 @@ static get ConstraintCtor () {
 }
 ```
 
-## Native modules and other dependencies that involve no instantiation are returned as-is via an instance getter
+## Native modules and other dependencies that involve no instantiation are returned as-is via a static getter
 
-- When the dependency is a native module such as `fs` — where the module itself is the value and there is no instantiation via `new` / `.create(...)` — neither the `Ctor` suffix nor a dedicated factory method is needed. Define a single **instance getter** that returns the dependency module as-is.
+- When the dependency is a native module such as `fs` — where the module itself is the value and there is no instantiation via `new` / `.create(...)` — neither the `Ctor` suffix nor a dedicated factory method is needed. Define a single **static getter** that returns the dependency module as-is.
+- **It is static because the body never touches `this`.** `return fs` is the whole of it, so nothing in it belongs to an instance. What decides the kind of a getter is its body, not the kind of value it holds — a getter that reaches for no instance state is a static getter, whatever it returns.
+- **An instance reaches it through `#get:Ctor`**, as `this.Ctor.fs`. That is what the reserved getter is for, and going through the constructor is what keeps a subclass's override the one that answers.
 - Calling a function of the module from within the getter is prohibited, per the "do not call a method from a getter" convention. The getter must return nothing but the module reference itself.
 
 ```javascript
-// OK: an instance getter that returns a native module as-is
+// OK: a static getter that returns a native module as-is, reached through #get:Ctor
 import fs from 'fs'
 
 export default class DeepLoader {
-  get fs () {
+  static get fs () {
     return fs
+  }
+
+  get Ctor () {
+    return /** @type {typeof DeepLoader} */ (this.constructor)
   }
 
   collectFileNames ({
     poolPath = this.poolPath,
   } = {}) {
-    return this.fs.readdirSync(poolPath)
+    return this.Ctor.fs.readdirSync(poolPath)
       .filter(it => !it.startsWith('.'))
   }
 }
