@@ -49,6 +49,24 @@ guarantee is not the implementation's internal circumstances, but the member's
   branch, or variable element, the justification must be "this input/state
   cannot exist under the contract," never "because I know the implementation."
 
+### Run the test against the unchanged code first
+
+**A test written for a change is run against the code as it stands, before the
+change, and it has to fail there.** A test that passes against the unchanged
+code is describing what the code already does — the one thing a test must not
+be, and the shape a test takes when it is written by reading the very
+implementation it is meant to check.
+
+Measured on one such run: the new cases failed 19 and passed 8 against the
+unchanged code, and all 27 passed once the code had changed.
+
+- **The cases that pass against the unchanged code are the ones covering
+  behaviour the change does not touch**, and that is correct rather than a
+  defect. In the run above the 8 were the surface that already existed, whose
+  signature and behaviour the change left alone.
+- So the run reports a split as well as a verdict: which of the new cases cover
+  new ground, and which are holding ground that was already held.
+
 ## Core principle: don't put logic in test files
 
 A test must consist **only of assertions** (`expect()`) that **check simple
