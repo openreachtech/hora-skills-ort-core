@@ -251,6 +251,14 @@ git diff              # confirm what is being left for the next commit
     - **The premise is what buys the freedom, so the premise has to hold.** A commit still
       there when the work is shared was never one of these, whatever was intended when it was
       made. Delete it before the branch goes out, or write it as any other commit.
+- **A change the same work is about to take away.** A commit that writes something a later
+  commit in the same line removes has recorded a state nobody will ever want, and whoever
+  bisects through it is reading a decision that was never taken. **The check is mechanical: for
+  each commit, ask whether its diff is still there at the tip.** In one measured case a commit
+  had rewritten a block of configuration that a commit two further on deleted outright — not one
+  line of what it wrote survived, and the whole of it was churn.
+  - The fix is to cut the line again, not to add a commit that corrects it. That is available
+    only while the commits are unshared, which the git branch convention bounds.
 - **End-of-day dumps.** A single commit holding everything touched since morning is the
   default outcome of never deciding granularity. Decide it while working.
 - **Typo-fix follow-ups on unpushed work.** A `Fix typo` commit immediately after the commit
