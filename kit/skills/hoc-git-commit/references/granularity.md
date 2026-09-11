@@ -193,6 +193,23 @@ The first commit is one line of a `.gitignore`, and it leads because it is the o
 changes what an existing entry matches. The two `Add` commits fill sections the two structural
 commits put there, and they wait until both are in place.
 
+**A test and the implementation it covers are not ordered by this sequence.** The implementation
+is the behavior change, so the sequence would lead with it, and the rule that a class's tests are
+committed before its implementation says otherwise. That rule governs the pair; the sequence
+orders whatever else the line holds.
+
+So work that also brings the existing tests up to convention lands in three commits, with the
+behavior change last of the three:
+
+```
+Tidy up the existing test for <the class>    structure
+Update the test for <the class>              addition
+Update <the class>                           behavior
+```
+
+The middle commit is red where it sits, and that is what it is for — the claim stands there on
+its own, and the commit after it is the one that makes the claim true.
+
 **Coherence bounds the sequence.** Where this order would leave a commit referring to what is
 not there yet, the seam is what is wrong, not the order — find the seam first, and sequence
 what comes out of it.
