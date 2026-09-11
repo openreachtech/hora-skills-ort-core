@@ -80,6 +80,7 @@ Each skill lives at `kit/skills/<name>/`, directly under the skills directory, a
 | `hoc-npm-install-scripts` | The gate deciding which packages may run an install script — denial as the default, the settings placed before the install they govern, and the dry run that reports a script without executing one. |
 | `hoc-npm-vulnerability` | Keeping a vulnerable version out — what the audit does and does not see, the release-age quarantine and the install it does not apply to, and resolving a report by raising a transitive dependency. |
 | `hoc-npm-publish` | Where a release's version bump sits among the commits, what to do when it turns out not to be last, how a dependency raise is split into commits, and the audit that reads the artefact a consumer receives before anything goes out. |
+| `hoc-deps-package-latest` | Bringing declared dependency versions up to what the registry publishes — reading the declared ranges rather than the lockfile, writing each move into the manifest instead of updating it into place, and the single install and one lockfile commit that close the pass. |
 | `hoc-dependency-defect` | Work around a bug in code this project uses but does not own — a subclass that overrides only the broken member, called by its own name, with a comment saying when it can be deleted. |
 
 ### Documents
