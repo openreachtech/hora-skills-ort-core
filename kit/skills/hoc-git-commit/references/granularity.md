@@ -128,6 +128,12 @@ reviewed. This is test-driven development written into the history rather than i
     then the thing itself. Each step deletes something nothing else points at any more, so no
     intermediate state refers to what is gone. Going the other way breaks at the first commit,
     which is what makes a removal look unsplittable when it is not.
+    - **A member's own tests are the exception, and they come out last.** The rule turns on
+      references that must not dangle, and a test's reference to what is gone does not break the
+      tree — it reports. Removing the implementation first is what makes it report: the suite
+      goes red, and the commit taking the tests out is the one that clears it again. Taken the
+      other way every step is green, so nothing distinguishes removing the right tests from
+      removing the wrong ones. What that proves, and where it fails hardest, is `hoc-jest`'s.
   - Retiring a check that a CI workflow runs, an npm script registers, and a script file
     implements is three commits, and taken in this order not one of them leaves a dangling
     reference behind:
