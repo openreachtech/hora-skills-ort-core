@@ -64,6 +64,9 @@ if (
 - When writing a method chain, allow at most one receiver per line, and at most one method per line.
 - `this` does not count as a receiver.
 - Unless instructed to chop down, place the first method of a method chain on the same line as the receiver.
+- **Counting receivers and methods does not settle a chain on its own.** The count of complex
+  expressions on the line governs it too, and a chain can pass this rule while failing that one.
+  Read both before deciding where a chain breaks.
 
 ```javascript
 // NG
@@ -82,6 +85,51 @@ const ids = this.extractSamples()
   .filter(it => it)
   .map(it => it.id)
 ```
+
+### Where the chain itself carries the complex expressions, chop it
+
+**A receiver derived by a call, or reached through a computed key, is a complex expression of
+its own** — and the method called on it is a second. One receiver and one method sit within
+the count this section states, so this rule permits the line; the rule against two complex
+expressions on one line is what forbids it.
+
+**The fix there is to chop the chain, not to name a variable.** Chopping already secures the
+readability the naming would have bought, and introducing a variable for what a line break
+handles is what the rule against meaningless assignments turns away.
+
+```javascript
+// NG: two calls on one line — the key's, and the method's
+return entity[resolveKey(this.ModelCtor.name)].toSorted(this.getSorter())
+
+// NG: a variable that chopping made unnecessary
+const key = resolveKey(this.ModelCtor.name)
+
+return entity[key]
+  .toSorted(this.getSorter())
+
+// OK: the chain carries them, so the chain is where it breaks
+return entity[resolveKey(this.ModelCtor.name)]
+  .toSorted(this.getSorter())
+```
+
+### One-line and chopped chains stand together
+
+**A file holding both is not inconsistent for holding both.** Every line is decided by what it
+carries, so two chains of the same length break differently the moment one of them derives its
+receiver and the other does not.
+
+```javascript
+// One line: the receiver is a plain identifier, and the method is the only call
+const sorted = array.toSorted(sorter)
+
+// Two lines: the receiver is a call, so the method is the second one on the line
+const [latest] = this.extractStatuses()
+  .toSorted(comparer)
+```
+
+Reading the shorter one as a breach of the longer one's shape is the mistake this note exists
+to prevent. Where the two differ, look for what the receiver costs before calling it a
+divergence.
 
 ## Write one property per line in a property chain
 
