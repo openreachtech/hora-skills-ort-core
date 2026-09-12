@@ -324,9 +324,10 @@ substitutes for it. Where nothing listed names it, open the subject with the ver
   there, and which of `install`, `update` or `audit fix` resolved them is not. Naming the
   version or the packages instead would restate what the commit before it already said, and
   lose the operation.
-  - **This is the second of the two commits a dependency change makes**, the project's own
-    version bump included. The first moves `package.json` and names the decision — `Install
-    date-fns 4.1.0`, `Update the package version to 0.8.0 in package.json`. The second moves
+  - **This is the second of the two commits that moving a version makes**, and the shape is the
+    same whether the version moved is a dependency's or the project's own. The first moves
+    `package.json` and names the decision — `Install date-fns 4.1.0` for a dependency, `Update
+    the package version to 0.8.0 in package.json` for the project's own bump. The second moves
     the lock file and names the command that regenerated it. Neither stands in for the other,
     and folding them together would hide which of the two a later revert has to undo.
 - **A subject describes a transition, never a state.** `Don't disable the action button when
