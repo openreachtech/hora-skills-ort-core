@@ -38,6 +38,10 @@ resting state. Approval is the exception that has to earn itself.
 
 - Reaching the decision means **denying the script and running the project's own checks** —
   its lint, its tests, whatever it runs to know it works. If those pass, the denial stands.
+  - **A native package answers before the suite does.** Where its binary comes from a prebuilt
+    platform package, the script has nothing left to do: check that the platform package's
+    `.node` file is present, that no build directory was produced, and that the module loads
+    when required.
 - **A package's reputation is not evidence.** Widely used, well maintained, and depended on
   by something the project needs are all true of packages whose install scripts do nothing
   this project uses. The question is not whether the package is trustworthy; it is whether
