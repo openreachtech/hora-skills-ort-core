@@ -163,6 +163,19 @@ What the finished line is looked at for:
 - **One sub-branch with something to group is enough.** The others may carry a single commit
   each; what makes the trunk worth having is that at least one merge names a piece of work
   assembled from parts.
+- **A sub-branch of its own is decided twice over: by what the piece carries, and by whether it
+  stands beside the others as work in its own right.** The bullets above settle the first. The
+  second asks whether the pieces are siblings — each a thing that was done, reviewable on its own
+  merit — or steps toward one thing they share. **Steps of one piece go in one sub-branch,
+  however much each carries.**
+  - Two classes reshaped, each for reasons of its own, are siblings: either could be taken and
+    the other left. A fix to the code and the removal of the relaxation that fix made unnecessary
+    are not — the second exists only because the first happened.
+  - **Looking like siblings is not being siblings.** Two methods rewritten, in two files, in two
+    classes, read as a pair of independent jobs. If neither of them alone clears the thing the
+    work set out to clear, they are halves of one job and belong on one branch.
+  - Deciding on size alone splits a pair that should have been one branch, because size is the
+    test that a pair of one-commit steps passes and a pair of large steps fails.
 
 ### The same work across sibling repositories takes the same order
 
