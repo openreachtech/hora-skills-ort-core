@@ -1,6 +1,6 @@
 ---
 name: hoc-workflows
-description: "Development workflow procedural rules. Defines how to proceed with implementation and the steps that must always be performed before committing / before completion."
+description: "Development workflow procedural rules. Defines how to proceed with implementation, the steps that must always be performed before committing and before completion, how to establish that a tool reporting nothing was actually measuring, and what a report of remaining work lists. Use when starting an implementation, before a commit, and before calling work complete."
 ---
 
 # Workflows
@@ -45,3 +45,76 @@ Procedural rules related to the development workflow.
   implementation complete while either one is failing.
 - The branch structure the commits land on is decided here, once the work is complete, rather
   than before it starts; see the git branch convention.
+
+## What is outstanding, and what only looks it
+
+**A report of what is left lists work nobody has started.** Plenty of things read as loose ends
+without being work: a tree holding modified files, a host carrying the issues and pull requests
+this work produced. Neither waits on anybody.
+
+- **Uncommitted changes are not outstanding work.** Whether to commit, and how to split what is
+  in the tree, is a decision of its own. What was written gets reported once, when the work that
+  wrote it is done — carrying it forward on every later report turns a finished piece into a
+  standing debt, and buries the one line that was actually still open.
+- **What was done on the host is not outstanding work either.** An issue filed, a pull request
+  opened, a field edited: asked for, performed, finished. A report that keeps naming them is
+  holding somebody else's queue on their behalf.
+- **What does belong is inert until somebody acts** — a command not yet run, a decision waiting
+  on an answer, a piece deliberately left for later. The test is not whether it is unfinished. It
+  is whether anything happens if nobody picks it up.
+
+**This is the same shape as the rule keeping an automated check off a checklist.** A suite that
+runs itself, a commit somebody else will make, a review somebody else will give — none of them
+wait on whoever is reporting, and naming them tells the reader nothing they did not already have.
+
+## A command that ran is not a command that worked
+
+**A zero comes out of two states: nothing was wrong, and nothing was measured.** The output reads
+the same either way — no findings, no failures, a clean exit — and every gate above is read off
+exactly that.
+
+**So before believing a zero, make the tool report a failure it cannot miss.** Plant a defect of
+the kind it exists to catch, confirm it appears, and take it back out. A count that cannot be made
+to move is not a count.
+
+Measured on a type-checker invoked through a variable holding its flags: the run reported no errors
+before a refactor and none after it, and the conclusion drawn was that the refactor had cost
+nothing. The tool had not run at all. What exposed it was an earlier recorded run over the same
+files at 435 errors — **a zero that contradicts a number somebody wrote down is the only kind that
+announces itself.** Re-measured with the flags written out, the same comparison came back 435
+against 431.
+
+- **A variable holding a command and its flags is one command name, not a command with
+  arguments.** A shell that does not word-split an unquoted parameter looks for a program whose
+  name contains the spaces and the dashes; measured side by side, the identical script ran the
+  command under one shell and reported `command not found` under another. **A variable may hold a
+  path or a filename. It may not hold the command.**
+  - Wrapped in `> file 2>&1 || true`, that failure lands in the output file and the exit status is
+    discarded, so the `grep -c` that reads the file afterwards returns a clean zero. **The error
+    message is inside the file being counted and does not match what is being counted for.**
+- **Reaching the end of a script is not evidence that its steps succeeded.** An abort-on-error
+  setting is not a substitute for looking: a command joined by `||`, one inside a condition, one
+  on the left of `&&` are all outside its reach, and a `|| true` written to keep a step quiet
+  removes it on purpose. **Check the end state the steps were supposed to produce**, not the fact
+  that the script finished.
+- **This is the general form of rules stated elsewhere in narrower terms** — that a test is run
+  against the unchanged code first, and that progress is recorded from evidence rather than from
+  effort. Both are this check applied to one instrument.
+
+### A count belongs to the state it was taken from
+
+**The instrument can be sound and the number still wrong, because the tree moved under it.**
+Counting, then editing, then reporting the earlier count describes a state that no longer exists
+— and nothing in the output betrays it, since the count was correct at the moment it was taken.
+
+Measured: a search reporting that a term was gone was quoted in a report written after two
+further edits had put the term back, twice. The search had run, had run correctly, and had run
+before the change it was being cited about.
+
+- **Take the count after the last edit, not after the edit that prompted it.** The prompting edit
+  is the one that comes to mind, and it is rarely the last one — least of all when the later edits
+  were the ones adding back what was being counted.
+- **A number carried across a turn is a claim about the past.** Either re-take it, or say when it
+  was taken. A bare figure is read as current, because every other figure in a report is.
+- **This failure survives the check above.** Planting a defect proves the instrument moves; it
+  says nothing about which state the instrument was pointed at.
