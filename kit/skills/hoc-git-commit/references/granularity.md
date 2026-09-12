@@ -90,7 +90,7 @@ generated artifact, an initial scaffold. What makes them legitimate is that they
 | Refactor and behavior change | A refactor is reviewed by confirming behavior did **not** change. Mixed together, the reviewer cannot tell which lines were meant to alter behavior. |
 | Mechanical rename and logic edit | A rename is verified by scanning that it is uniform. One hand-edited line hidden among 200 renamed ones is invisible. |
 | Formatting or lint fixes and substance | Whitespace churn buries the two lines that matter. |
-| Dependency bumps and code that uses them | The bump is a separate risk with a separate rollback. |
+| Dependency raises and code that uses them | The raise is a separate risk with a separate rollback. |
 | Generated artifacts (`package-lock.json`, generated types) and hand-written source | Generated diffs are large and unreviewable; keeping them separate keeps the source commit readable. |
 | Unrelated files that happen to be dirty | They are unrelated. This is the most common cause of an accidental umbrella commit. |
 
