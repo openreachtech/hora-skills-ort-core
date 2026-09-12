@@ -40,6 +40,28 @@ nothing to preserve.
 This rule stands ahead of everything below because the commands that need it appear throughout,
 and because a rebase that drops a merge cannot be spotted afterwards from the result.
 
+### Editing a commit inside the branch takes `-i` as well
+
+**`-r` keeps the merges; `-i` is what opens the todo list.** Given `-r` alone, a rebase runs the
+sequencer but never presents a todo, so a sequence editor named in the environment is never
+called — and the run reports every step successful while handing each commit back with the hash
+it went in with.
+
+```bash
+git rebase -i -r --onto <base> <the commit the branch was cut from> <branch>
+```
+
+Measured on a branch carrying one merge: with `-r` alone the rebase printed eight steps and
+`Successfully rebased`, and no hash changed. With `-i -r` the reword applied and the merge commit
+survived, the graph keeping its shape.
+
+- **Being unable to answer a prompt is not a reason to avoid `-i`.** Point the sequence editor
+  and the message editor at scripts — one rewrites the todo, the other rewrites the message —
+  and nothing prompts. An interactive rebase can be driven rather than attended.
+- **Rebuilding the sub-branch by hand is the fallback for a conflict, not for a reword.**
+  Cherry-picking its commits onto a fresh branch and amending the one that needed the new
+  subject reaches the same tree at the cost of the branch and every merge above it.
+
 ## The trunk branch
 
 A **trunk branch** is one that other branches are cut from and merged back into.
