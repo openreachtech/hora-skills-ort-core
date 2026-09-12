@@ -138,6 +138,12 @@ split the line into sub-branches.
   - **What `git branch` shows afterwards looks the same either way.** Only the commit each branch
     was created from tells the two apart, and by the time the merges expose it the structure is
     already built.
+  - **The exception is a branch that cannot stand up without another one's work**, where that
+    other reaches the trunk by its own pull request rather than by the local merge described
+    below. Sitting on it is how the prerequisite is had, and the reason the rule gives — a second
+    merge reopening a line the first one closed — does not reach the case, because the two never
+    merge into the trunk together. When the prerequisite lands, rebase the stack onto the trunk's
+    new tip and carry on.
 - **This holds only while the commits are unshared.** Folding and splitting both rewrite
   history. Once the work has been pushed, the line stands as it is, and a structure it did not
   get is a structure it does not get.
