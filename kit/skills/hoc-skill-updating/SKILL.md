@@ -48,6 +48,61 @@ After the prefix, name the subject, not the source tree:
   convention for moving dependency versions took `raise` rather than `bump` on this ground —
   `bump` heads the publishing convention's rule about a release's own version.
 
+### The name is read as "how to do X"
+
+**A reader expands the name into an instruction.** `hoc-git-commit` reads as how to commit,
+`hoc-npm-publish` as how to publish, and every skill in the libraries is read the same way. So
+**the subject after the prefix has to be a practice**, and the check on a candidate is
+mechanical: expand it and read the result.
+
+**The expansion reads the words in the order they are written.** Two shapes manage it: a verb
+with its object behind it, and an established compound noun — `hoc-code-review` expands to how
+to do a code review without anything being moved. What fails is a name that is neither, whose
+words have to be swapped before the instruction appears. `hoc-npm-deps-raise` was defended as
+*how to raise deps*, which is the name read backwards; `hoc-npm-raise-deps` is the same three
+words in the order that reads. **The swap is easy to perform without noticing**, because whoever
+supplies it already knows what the skill does, and a reader meeting the name in a flat list does
+not.
+
+**Naming a skill after the outcome it exists to prevent inverts it.** A skill written to keep a
+refactor from moving a published interface was proposed as `hoc-breaking-change` — which expands
+to *how to make a breaking change*, instructions for producing the very thing. The argument for
+it was that a person's actual question is "is this a breaking change?", and that a name matching
+the question routes best. It does not survive the expansion: the question a reader arrives with
+and the instruction they leave with are not the same sentence.
+
+- **This does not reach a skill named for a body of rules.** `hof-css-prohibits` expands to how
+  to handle the CSS prohibitions, and observing them is the practice. What fails the test is a
+  name whose subject is a result nobody wants, not one whose subject is a set of rules about
+  results.
+
+**A name must not promise an extent the convention does not reach.** A skill for bringing a
+project's declared dependency versions up was proposed as `hoc-npm-deps-latest`, while the
+convention it carried takes each entry only as far as its own declaration already permits and
+leaves anything past that for a decision of its own. A pass that finishes under it is therefore
+not at the latest of everything: the name promised the one thing the body spends a section
+refusing.
+
+- The fault is not the word but its grammar. **The word states a result where the body states a
+  bound**, so check a candidate against the rule that limits the practice, never against the
+  rule that describes it — the describing rule is what suggested the name in the first place.
+- Where the name has to carry a direction, take a verb that gives one without naming a
+  destination. `raise` says which way and stops there.
+
+**Where the library already has a word for the thing, the name takes that word.** The skill above
+became `hoc-retake-declaration`, from the verb the commit convention defines: a `Retake` replaces
+something poor or hurried with what should have been written and *claims no gain beyond that*,
+where an `Update` carries an implementation forward and the gain is the point.
+
+That name does work a descriptive one cannot. **It decides membership.** Asked whether a defect
+found mid-work may be fixed, the name answers on its own — fixing it is a gain, a gain is an
+`Update`, and this is a `Retake`. A name assembled out of fresh words has to be read alongside
+the body before it settles anything, and a rule the body forgot to state is then simply absent.
+
+- The cost is that the reader must know the word. That is paid once, by the convention that
+  defines it, and it is the same cost the vocabulary was already worth paying — **a term the
+  library defines and never names a skill after is a term nobody meets.**
+
 ## Writing and updating the description
 
 - `description:` should indicate the skill's scope (what subject it covers, and what it defines), not name an individual rule.
