@@ -101,6 +101,7 @@ Each skill lives at `kit/skills/<name>/`, directly under the skills directory, a
 | :-- | :-- |
 | `hoc-code-review` | Read-only, code-level review of a change, producing a findings report on specification compliance, correctness and convention conformance. Never fixes anything. |
 | `hoc-workflows` | Development workflow rules — how to proceed with an implementation, and the steps always performed before committing and before completion. |
+| `hoc-retake-declaration` | Redoing existing code without moving what its callers see — a retake claims no gain, so the logic stays where callers already reach it, an added argument carries a default, and a defect found on the way is reported rather than fixed. |
 ---
 
 ## Installing them
