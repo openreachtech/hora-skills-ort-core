@@ -70,6 +70,15 @@ specifically failed. Whoever reads the commit should not have to derive it again
 - Where projects are generated from a boilerplate, the denials common to all of them belong
   in the boilerplate's own `package.json`, already recorded, so a new project starts gated.
 
+### An approval records a version; a denial records a name
+
+`approve` writes `<pkg>@<version>`, pinned to what is installed. `deny` writes the bare name.
+
+- **So an approval goes in after the raise that introduced the version**, or it pins the version
+  being replaced. A denial names no version, so it is decided on its own and in any order.
+- Approve unpinned only where the script is needed whatever the version.
+- **Remove a denial before approving.** `approve` refuses while the entry stands.
+
 ## `--dry-run` answers "does this upgrade add a script?"
 
 Before committing to an upgrade, the question is whether it introduces an install script
