@@ -177,6 +177,29 @@ What the finished line is looked at for:
   - Deciding on size alone splits a pair that should have been one branch, because size is the
     test that a pair of one-commit steps passes and a pair of large steps fails.
 
+### The order the sub-branches merge in
+
+**Merge the cheap ones first and the substantial ones last.** Where one sub-branch changes a line
+of configuration and another changes the code behind it, the line of configuration goes in first
+and the code last.
+
+**The reason is how a diff is read.** A reader starts at the newest commit and works down, so
+whatever sits on top is what they see first and read hardest. Put a one-line change there and the
+substantial one is buried beneath it; put the substantial one there and the small changes sit
+where they cost nothing, at the bottom, passed over on the way.
+
+- **This is not an argument about risk.** Ordering by cost so that the cheap gains survive if the
+  expensive work is rejected reaches the same order by another route, and it is not the reason.
+- **A change that only becomes possible once the others land goes last, whatever it costs.** Where
+  several sub-branches each clear the way for one change to a file they share, that change is not
+  spread across them: it gathers into a sub-branch of its own, placed after them. A relaxation
+  removed only once every file it named has been fixed is the ordinary shape of this.
+- **Do not reorder the merges to dodge a rename.** A rebase carries a commit onto a file its base
+  renamed underneath it. Measured on a branch whose base had renamed a file the branch edits: the
+  edit landed on the new name, every merge the branch held survived, and the tree came out
+  differing only by what the new base added. A conflict predicted there is not a reason to put a
+  branch anywhere but where its size says.
+
 ### The same work across sibling repositories takes the same order
 
 Where one piece of work lands in two repositories at once, the sub-branches under each trunk
