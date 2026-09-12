@@ -119,6 +119,14 @@ printed.
 - Installing once, after the settings are complete, is the same shape as concentrating the
   install into a single run at the end of a release.
 
+## Write `allowScripts` with the install-scripts command, never with `npm pkg`
+
+`approve` and `deny` edit `package.json` in place and leave the rest of it alone. **`npm pkg
+set` and `npm pkg delete` do not: they silently drop the dependency fields that are empty**, so
+one line added to `allowScripts` arrives as a diff that also deletes lines nobody asked it to.
+
+- `overrides` has no subcommand of its own, so it is edited by hand for the same reason.
+
 ## The npm configuration file is written `key = value`
 
 Spaces on both sides of the `=`.
