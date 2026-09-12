@@ -162,6 +162,42 @@ whatever that repository carries.
 libraries, so there is no name a single skill could take. Split it where the libraries divide,
 and let each half name the other by name where a reader has to go there.
 
+## Where a skill stops
+
+A `description:` that names its boundary has said where the skill stops. **It has not said when
+the reader gets there**, and that missing sentence is what lets the neighbour's material back in.
+
+**Naming a boundary does not discharge it.** A convention that routed advisories next door in its
+opening paragraph still carried the neighbouring mechanism through its body — the reach of an
+override, the test for whether a consumer survives one — in wording that was nearly the
+neighbour's own. The boundary was written and the body walked past it, because nothing in the
+body said at which point the reader leaves.
+
+**A rule whose reason lives in another convention is that convention's rule.** The test is not
+whether the rule is true, nor whether readers of this skill will meet the situation. It is
+whether *this* convention supplies the reason the rule exists. The skill above had a row sending
+a dependency the project never asked for to an override, and said nowhere why such a dependency
+would move at all; the only reason the library gives for moving one is an advisory, which belongs
+next door. **A rule supported from outside is a rule that belongs outside.**
+
+- This is what a duplicate looks like before it becomes one. Two skills stating a rule in nearly
+  the same words is the late symptom. The early symptom is a rule sitting in a skill that cannot
+  say why it is there.
+
+**Specify the handoff by what this convention could not reach.** A boundary written as a subject
+— *advisories belong next door* — leaves the reader to judge when a subject has arrived. A
+boundary written as a residue does not: run the convention to its end, and whatever is left is
+the neighbour's by construction. The dependency convention hands on what the audit still reports
+**after** its pass, which is exactly what raising a declared version could not reach, and that is
+also the case the neighbouring convention opens with. The two halves meet without either
+restating the other.
+
+- The residue is usually the neighbour's own opening case. Where it is not, the boundary is in
+  the wrong place.
+- **A convention that mostly clears what the neighbour handles still needs the sentence.** Stating
+  what the practice *adds* gets the direction backwards, and sends the reader next door for the
+  cases the practice was about to settle itself.
+
 ## Keep skills self-contained
 
 - Write a skill so that it is meaningfully complete on its own. **Information that is not self-contained within the skill must not be put into `SKILL.md`.**
