@@ -42,6 +42,11 @@ After the prefix, name the subject, not the source tree:
 - **One word after the prefix is enough when it names the concept unambiguously** (`hoc-async`,
   `hoc-jest`). Qualify it when sibling skills have an equal claim to the same word: CSS prohibitions
   are `hof-css-prohibits` and `hof-css-props-prohibits`, not two skills both called prohibits.
+- **A word another convention already leads with is not freed by qualifying it.** Qualification
+  settles siblings that hold a word equally; where one convention has built its own rule on the
+  word, a second skill carrying it leaves the word pointing at two places and naming neither. A
+  convention for moving dependency versions took `raise` rather than `bump` on this ground —
+  `bump` heads the publishing convention's rule about a release's own version.
 
 ## Writing and updating the description
 
