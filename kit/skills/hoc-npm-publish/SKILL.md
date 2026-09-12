@@ -20,14 +20,14 @@ So a release is guarded twice.
 
 ## The version bump is the last commit of the release
 
-The package's **own** version is raised only after every change going into that release is
+The package's **own** version is bumped only after every change going into that release is
 done, in the final commit. Two things depend on it.
 
 - **A premature publish fails instead of succeeding.** While the version still matches what
   is already published, the registry rejects the publish as a collision — so a half-finished
-  tree cannot get out by accident. Raise the version early and that protection is gone: any
+  tree cannot get out by accident. Bump the version early and that protection is gone: any
   publish from any intermediate state goes through.
-- **It concentrates the install into one run.** Raising the version means the lockfile
+- **It concentrates the install into one run.** Bumping the version means the lockfile
   has to be updated too, which is the occasion to run the install — once, at the end. The
   dependency tree settles in that one run rather than being shaken through the work.
 
@@ -43,7 +43,7 @@ Update the package version to x.x.x in package-lock.json
   separates a generated artefact from hand-written source. What is specific here is **the
   order and the single install between them.**
 - The bump commit is also the declaration that the release is ready. Reading it in a log
-  means the release is imminent, so do not raise a version to keep a branch tidy.
+  means the release is imminent, so do not bump a version to keep a branch tidy.
 
 ## When the bump turns out not to be last
 
@@ -67,8 +67,8 @@ trunk?**
 When bringing dependencies up to date, edit **one package per commit** in the manifest, and
 commit the lockfile once at the end after a single install.
 
-- The git commit convention already separates a dependency bump from code that uses it. This
-  goes further: **the bumps are separated from each other**, because each one is its own
+- The git commit convention already separates a dependency raise from code that uses it. This
+  goes further: **the raises are separated from each other**, because each one is its own
   risk with its own rollback, and a tree that breaks after ten of them in one commit gives
   no information about which.
 - The lockfile is one commit however many packages moved, since it is generated and
