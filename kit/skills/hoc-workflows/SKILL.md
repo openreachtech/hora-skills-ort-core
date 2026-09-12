@@ -100,3 +100,21 @@ against 431.
 - **This is the general form of rules stated elsewhere in narrower terms** — that a test is run
   against the unchanged code first, and that progress is recorded from evidence rather than from
   effort. Both are this check applied to one instrument.
+
+### A count belongs to the state it was taken from
+
+**The instrument can be sound and the number still wrong, because the tree moved under it.**
+Counting, then editing, then reporting the earlier count describes a state that no longer exists
+— and nothing in the output betrays it, since the count was correct at the moment it was taken.
+
+Measured: a search reporting that a term was gone was quoted in a report written after two
+further edits had put the term back, twice. The search had run, had run correctly, and had run
+before the change it was being cited about.
+
+- **Take the count after the last edit, not after the edit that prompted it.** The prompting edit
+  is the one that comes to mind, and it is rarely the last one — least of all when the later edits
+  were the ones adding back what was being counted.
+- **A number carried across a turn is a claim about the past.** Either re-take it, or say when it
+  was taken. A bare figure is read as current, because every other figure in a report is.
+- **This failure survives the check above.** Planting a defect proves the instrument moves; it
+  says nothing about which state the instrument was pointed at.
