@@ -1,6 +1,6 @@
 ---
 name: hoc-skill-updating
-description: "Conventions for creating new skills (SKILL.md) or updating existing ones. Defines how to name a skill (the domain prefix, and the folder name that must equal `name:`), where the folder goes among the three domain directories, and the conventions to follow when writing the body and the description."
+description: "Conventions for creating new skills (SKILL.md) or updating existing ones. Defines how to name a skill (the prefix its library owns, the folder name that must equal `name:`, and the practice the rest of the name has to state), which library repository a skill belongs to, where one skill stops and a neighbouring convention takes over, the flat layout every library keeps under `kit/skills/`, and the conventions to follow when writing the body and the description."
 ---
 
 # Skill Updating
