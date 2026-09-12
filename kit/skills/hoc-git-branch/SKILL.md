@@ -375,4 +375,29 @@ Merge the core/ rename in the repository documents
     branches were cut from, or anywhere else — settles nothing past the first merge: the second
     branch is behind the tip again by the time its turn comes. The commit each rebase needs does
     not exist until the merge before it is made.
+  - **After each rebase and before its merge, confirm the branch still carries something.** A
+    rebase drops a commit whose change the trunk already holds, and where that was the branch's
+    only commit the branch arrives at the trunk's own tip. The `--no-ff` merge that follows then
+    prints `Already up to date.`, exits zero, creates nothing, and **a rung of the structure is
+    gone** — leaving a graph that reads as one which was never meant to have it.
+
+    ```bash
+    git rebase -r <trunk> <branch>
+    git rev-list --count <trunk>..<branch>   # must be greater than zero
+    ```
+
+    **Measured before it and after it is not the same measurement.** Before the rebase the count
+    was one and would have passed; the rebase took it to zero. The only warning git gave was a
+    hint about skipped cherry-picks, which `-q` and a trailing `tail` both remove.
+
+    - **This is not the ancestry check above, and neither catches what the other does.** A
+      branch left behind the tip fails `--is-ancestor` and still makes a merge commit, because
+      it holds commits of its own. A branch sitting exactly on the tip **passes**
+      `--is-ancestor` — it is not behind anything — and makes none.
+    - **A count of zero is not answered by skipping the merge.** The change is in the trunk
+      already, so the structure was drawn with one rung too many, or the change belongs to a
+      different sub-branch than the one that carried it. Both are decisions, not repairs.
+    - The same emptiness arrives by accident wherever a step meant to fill the branch reported
+      success without committing — a `cherry-pick` refused for a bad flag, a patch that did not
+      apply, a copied file identical to the one already there. The check does not care which.
   - **Two branches are the smallest case of this, not a rule of their own.**
