@@ -38,6 +38,10 @@ resting state. Approval is the exception that has to earn itself.
 
 - Reaching the decision means **denying the script and running the project's own checks** —
   its lint, its tests, whatever it runs to know it works. If those pass, the denial stands.
+  - **A native package answers before the suite does.** Where its binary comes from a prebuilt
+    platform package, the script has nothing left to do: check that the platform package's
+    `.node` file is present, that no build directory was produced, and that the module loads
+    when required.
 - **A package's reputation is not evidence.** Widely used, well maintained, and depended on
   by something the project needs are all true of packages whose install scripts do nothing
   this project uses. The question is not whether the package is trustworthy; it is whether
@@ -65,6 +69,15 @@ specifically failed. Whoever reads the commit should not have to derive it again
   not the one being enforced goes stale with nothing to reveal it.
 - Where projects are generated from a boilerplate, the denials common to all of them belong
   in the boilerplate's own `package.json`, already recorded, so a new project starts gated.
+
+### An approval records a version; a denial records a name
+
+`approve` writes `<pkg>@<version>`, pinned to what is installed. `deny` writes the bare name.
+
+- **So an approval goes in after the raise that introduced the version**, or it pins the version
+  being replaced. A denial names no version, so it is decided on its own and in any order.
+- Approve unpinned only where the script is needed whatever the version.
+- **Remove a denial before approving.** `approve` refuses while the entry stands.
 
 ## `--dry-run` answers "does this upgrade add a script?"
 
@@ -105,6 +118,14 @@ printed.
   setting, then the denials — with no lockfile commit between them.
 - Installing once, after the settings are complete, is the same shape as concentrating the
   install into a single run at the end of a release.
+
+## Write `allowScripts` with the install-scripts command, never with `npm pkg`
+
+`approve` and `deny` edit `package.json` in place and leave the rest of it alone. **`npm pkg
+set` and `npm pkg delete` do not: they silently drop the dependency fields that are empty**, so
+one line added to `allowScripts` arrives as a diff that also deletes lines nobody asked it to.
+
+- `overrides` has no subcommand of its own, so it is edited by hand for the same reason.
 
 ## The npm configuration file is written `key = value`
 

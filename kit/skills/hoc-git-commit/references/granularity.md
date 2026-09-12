@@ -90,7 +90,7 @@ generated artifact, an initial scaffold. What makes them legitimate is that they
 | Refactor and behavior change | A refactor is reviewed by confirming behavior did **not** change. Mixed together, the reviewer cannot tell which lines were meant to alter behavior. |
 | Mechanical rename and logic edit | A rename is verified by scanning that it is uniform. One hand-edited line hidden among 200 renamed ones is invisible. |
 | Formatting or lint fixes and substance | Whitespace churn buries the two lines that matter. |
-| Dependency bumps and code that uses them | The bump is a separate risk with a separate rollback. |
+| Dependency raises and code that uses them | The raise is a separate risk with a separate rollback. |
 | Generated artifacts (`package-lock.json`, generated types) and hand-written source | Generated diffs are large and unreviewable; keeping them separate keeps the source commit readable. |
 | Unrelated files that happen to be dirty | They are unrelated. This is the most common cause of an accidental umbrella commit. |
 
@@ -128,6 +128,12 @@ reviewed. This is test-driven development written into the history rather than i
     then the thing itself. Each step deletes something nothing else points at any more, so no
     intermediate state refers to what is gone. Going the other way breaks at the first commit,
     which is what makes a removal look unsplittable when it is not.
+    - **A member's own tests are the exception, and they come out last.** The rule turns on
+      references that must not dangle, and a test's reference to what is gone does not break the
+      tree — it reports. Removing the implementation first is what makes it report: the suite
+      goes red, and the commit taking the tests out is the one that clears it again. Taken the
+      other way every step is green, so nothing distinguishes removing the right tests from
+      removing the wrong ones. What that proves, and where it fails hardest, is `hoc-jest`'s.
   - Retiring a check that a CI workflow runs, an npm script registers, and a script file
     implements is three commits, and taken in this order not one of them leaves a dangling
     reference behind:
@@ -187,6 +193,23 @@ The first commit is one line of a `.gitignore`, and it leads because it is the o
 changes what an existing entry matches. The two `Add` commits fill sections the two structural
 commits put there, and they wait until both are in place.
 
+**A test and the implementation it covers are not ordered by this sequence.** The implementation
+is the behavior change, so the sequence would lead with it, and the rule that a class's tests are
+committed before its implementation says otherwise. That rule governs the pair; the sequence
+orders whatever else the line holds.
+
+So work that also brings the existing tests up to convention lands in three commits, with the
+behavior change last of the three:
+
+```
+Tidy up the existing test for <the class>    structure
+Update the test for <the class>              addition
+Update <the class>                           behavior
+```
+
+The middle commit is red where it sits, and that is what it is for — the claim stands there on
+its own, and the commit after it is the one that makes the claim true.
+
 **Coherence bounds the sequence.** Where this order would leave a commit referring to what is
 not there yet, the seam is what is wrong, not the order — find the seam first, and sequence
 what comes out of it.
@@ -228,6 +251,14 @@ git diff              # confirm what is being left for the next commit
     - **The premise is what buys the freedom, so the premise has to hold.** A commit still
       there when the work is shared was never one of these, whatever was intended when it was
       made. Delete it before the branch goes out, or write it as any other commit.
+- **A change the same work is about to take away.** A commit that writes something a later
+  commit in the same line removes has recorded a state nobody will ever want, and whoever
+  bisects through it is reading a decision that was never taken. **The check is mechanical: for
+  each commit, ask whether its diff is still there at the tip.** In one measured case a commit
+  had rewritten a block of configuration that a commit two further on deleted outright — not one
+  line of what it wrote survived, and the whole of it was churn.
+  - The fix is to cut the line again, not to add a commit that corrects it. That is available
+    only while the commits are unshared, which the git branch convention bounds.
 - **End-of-day dumps.** A single commit holding everything touched since morning is the
   default outcome of never deciding granularity. Decide it while working.
 - **Typo-fix follow-ups on unpushed work.** A `Fix typo` commit immediately after the commit

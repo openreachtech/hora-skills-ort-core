@@ -2,11 +2,10 @@
 name: hoc-test-execution
 description: >
   Run a project's test cases and drive them to green without weakening them — no test skipped,
-  deleted, loosened, or padded with waits to make the suite pass. Use this skill whenever tests are run,
-  whenever a test still fails after an implementation was believed finished, when the user asks to
-  run or fix failing tests, and before claiming an implementation is complete. Writing new tests
-  belongs to the project's test-writing convention; reusing a recorded pass over unchanged inputs,
-  to the test-cache convention.
+  deleted or loosened to make the suite pass. Use this skill whenever tests are run, whenever a
+  test still fails after an implementation was believed finished, and before claiming an
+  implementation is complete. Writing new tests belongs to the project's test-writing convention;
+  reusing a recorded pass over unchanged inputs, to the test-cache convention.
 ---
 
 # Test Execution

@@ -1,6 +1,6 @@
 ---
 name: hoc-git-branch
-description: "Conventions for the branches a repository carries: which branch is a trunk and what that role obliges, how a general branch is named, the empty marker that opens a trunk, and the `--no-ff` merge that closes a sub-branch along with the subject that merge commit carries. What goes inside a commit, and how a subject is worded generally, belong to the git commit convention. Use before cutting a branch, before merging one back, and before deciding whether work needs a branch structure at all. Every `git rebase` in this scheme takes `-r`."
+description: "Conventions for the branches a repository carries: which branch is a trunk and what that role obliges, how a general branch is named, and how work is split off a trunk and merged back with `--no-ff`. Use before cutting a branch, before merging one back, and before deciding whether work needs a branch structure at all. What goes inside a commit, and how a subject is worded, belong to the git commit convention. Every `git rebase` here takes `-r`."
 ---
 
 # Git Branch
@@ -39,6 +39,28 @@ nothing to preserve.
 
 This rule stands ahead of everything below because the commands that need it appear throughout,
 and because a rebase that drops a merge cannot be spotted afterwards from the result.
+
+### Editing a commit inside the branch takes `-i` as well
+
+**`-r` keeps the merges; `-i` is what opens the todo list.** Given `-r` alone, a rebase runs the
+sequencer but never presents a todo, so a sequence editor named in the environment is never
+called — and the run reports every step successful while handing each commit back with the hash
+it went in with.
+
+```bash
+git rebase -i -r --onto <base> <the commit the branch was cut from> <branch>
+```
+
+Measured on a branch carrying one merge: with `-r` alone the rebase printed eight steps and
+`Successfully rebased`, and no hash changed. With `-i -r` the reword applied and the merge commit
+survived, the graph keeping its shape.
+
+- **Being unable to answer a prompt is not a reason to avoid `-i`.** Point the sequence editor
+  and the message editor at scripts — one rewrites the todo, the other rewrites the message —
+  and nothing prompts. An interactive rebase can be driven rather than attended.
+- **Rebuilding the sub-branch by hand is the fallback for a conflict, not for a reword.**
+  Cherry-picking its commits onto a fresh branch and amending the one that needed the new
+  subject reaches the same tree at the cost of the branch and every merge above it.
 
 ## The trunk branch
 
@@ -116,6 +138,12 @@ split the line into sub-branches.
   - **What `git branch` shows afterwards looks the same either way.** Only the commit each branch
     was created from tells the two apart, and by the time the merges expose it the structure is
     already built.
+  - **The exception is a branch that cannot stand up without another one's work**, where that
+    other reaches the trunk by its own pull request rather than by the local merge described
+    below. Sitting on it is how the prerequisite is had, and the reason the rule gives — a second
+    merge reopening a line the first one closed — does not reach the case, because the two never
+    merge into the trunk together. When the prerequisite lands, rebase the stack onto the trunk's
+    new tip and carry on.
 - **This holds only while the commits are unshared.** Folding and splitting both rewrite
   history. Once the work has been pushed, the line stands as it is, and a structure it did not
   get is a structure it does not get.
@@ -135,6 +163,42 @@ What the finished line is looked at for:
 - **One sub-branch with something to group is enough.** The others may carry a single commit
   each; what makes the trunk worth having is that at least one merge names a piece of work
   assembled from parts.
+- **A sub-branch of its own is decided twice over: by what the piece carries, and by whether it
+  stands beside the others as work in its own right.** The bullets above settle the first. The
+  second asks whether the pieces are siblings — each a thing that was done, reviewable on its own
+  merit — or steps toward one thing they share. **Steps of one piece go in one sub-branch,
+  however much each carries.**
+  - Two classes reshaped, each for reasons of its own, are siblings: either could be taken and
+    the other left. A fix to the code and the removal of the relaxation that fix made unnecessary
+    are not — the second exists only because the first happened.
+  - **Looking like siblings is not being siblings.** Two methods rewritten, in two files, in two
+    classes, read as a pair of independent jobs. If neither of them alone clears the thing the
+    work set out to clear, they are halves of one job and belong on one branch.
+  - Deciding on size alone splits a pair that should have been one branch, because size is the
+    test that a pair of one-commit steps passes and a pair of large steps fails.
+
+### The order the sub-branches merge in
+
+**Merge the cheap ones first and the substantial ones last.** Where one sub-branch changes a line
+of configuration and another changes the code behind it, the line of configuration goes in first
+and the code last.
+
+**The reason is how a diff is read.** A reader starts at the newest commit and works down, so
+whatever sits on top is what they see first and read hardest. Put a one-line change there and the
+substantial one is buried beneath it; put the substantial one there and the small changes sit
+where they cost nothing, at the bottom, passed over on the way.
+
+- **This is not an argument about risk.** Ordering by cost so that the cheap gains survive if the
+  expensive work is rejected reaches the same order by another route, and it is not the reason.
+- **A change that only becomes possible once the others land goes last, whatever it costs.** Where
+  several sub-branches each clear the way for one change to a file they share, that change is not
+  spread across them: it gathers into a sub-branch of its own, placed after them. A relaxation
+  removed only once every file it named has been fixed is the ordinary shape of this.
+- **Do not reorder the merges to dodge a rename.** A rebase carries a commit onto a file its base
+  renamed underneath it. Measured on a branch whose base had renamed a file the branch edits: the
+  edit landed on the new name, every merge the branch held survived, and the tree came out
+  differing only by what the new base added. A conflict predicted there is not a reason to put a
+  branch anywhere but where its size says.
 
 ### The same work across sibling repositories takes the same order
 
@@ -311,4 +375,29 @@ Merge the core/ rename in the repository documents
     branches were cut from, or anywhere else — settles nothing past the first merge: the second
     branch is behind the tip again by the time its turn comes. The commit each rebase needs does
     not exist until the merge before it is made.
+  - **After each rebase and before its merge, confirm the branch still carries something.** A
+    rebase drops a commit whose change the trunk already holds, and where that was the branch's
+    only commit the branch arrives at the trunk's own tip. The `--no-ff` merge that follows then
+    prints `Already up to date.`, exits zero, creates nothing, and **a rung of the structure is
+    gone** — leaving a graph that reads as one which was never meant to have it.
+
+    ```bash
+    git rebase -r <trunk> <branch>
+    git rev-list --count <trunk>..<branch>   # must be greater than zero
+    ```
+
+    **Measured before it and after it is not the same measurement.** Before the rebase the count
+    was one and would have passed; the rebase took it to zero. The only warning git gave was a
+    hint about skipped cherry-picks, which `-q` and a trailing `tail` both remove.
+
+    - **This is not the ancestry check above, and neither catches what the other does.** A
+      branch left behind the tip fails `--is-ancestor` and still makes a merge commit, because
+      it holds commits of its own. A branch sitting exactly on the tip **passes**
+      `--is-ancestor` — it is not behind anything — and makes none.
+    - **A count of zero is not answered by skipping the merge.** The change is in the trunk
+      already, so the structure was drawn with one rung too many, or the change belongs to a
+      different sub-branch than the one that carried it. Both are decisions, not repairs.
+    - The same emptiness arrives by accident wherever a step meant to fill the branch reported
+      success without committing — a `cherry-pick` refused for a bad flag, a patch that did not
+      apply, a copied file identical to the one already there. The check does not care which.
   - **Two branches are the smallest case of this, not a rule of their own.**
