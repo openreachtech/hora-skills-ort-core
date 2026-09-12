@@ -1,6 +1,6 @@
 ---
 name: hoc-workflows
-description: "Development workflow procedural rules. Defines how to proceed with implementation, the steps that must always be performed before committing and before completion, and how to establish that a tool reporting nothing was actually measuring. Use when starting an implementation, before a commit, and before calling work complete."
+description: "Development workflow procedural rules. Defines how to proceed with implementation, the steps that must always be performed before committing and before completion, how to establish that a tool reporting nothing was actually measuring, and what a report of remaining work lists. Use when starting an implementation, before a commit, and before calling work complete."
 ---
 
 # Workflows
@@ -45,6 +45,27 @@ Procedural rules related to the development workflow.
   implementation complete while either one is failing.
 - The branch structure the commits land on is decided here, once the work is complete, rather
   than before it starts; see the git branch convention.
+
+## What is outstanding, and what only looks it
+
+**A report of what is left lists work nobody has started.** Plenty of things read as loose ends
+without being work: a tree holding modified files, a host carrying the issues and pull requests
+this work produced. Neither waits on anybody.
+
+- **Uncommitted changes are not outstanding work.** Whether to commit, and how to split what is
+  in the tree, is a decision of its own. What was written gets reported once, when the work that
+  wrote it is done — carrying it forward on every later report turns a finished piece into a
+  standing debt, and buries the one line that was actually still open.
+- **What was done on the host is not outstanding work either.** An issue filed, a pull request
+  opened, a field edited: asked for, performed, finished. A report that keeps naming them is
+  holding somebody else's queue on their behalf.
+- **What does belong is inert until somebody acts** — a command not yet run, a decision waiting
+  on an answer, a piece deliberately left for later. The test is not whether it is unfinished. It
+  is whether anything happens if nobody picks it up.
+
+**This is the same shape as the rule keeping an automated check off a checklist.** A suite that
+runs itself, a commit somebody else will make, a review somebody else will give — none of them
+wait on whoever is reporting, and naming them tells the reader nothing they did not already have.
 
 ## A command that ran is not a command that worked
 
