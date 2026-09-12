@@ -82,6 +82,7 @@ Each skill lives at `kit/skills/<name>/`, directly under the skills directory, a
 | `hoc-npm-publish` | Where a release's version bump sits among the commits, what to do when it turns out not to be last, how a dependency raise is split into commits, and the audit that reads the artefact a consumer receives before anything goes out. |
 | `hoc-npm-raise-deps` | Raising declared dependency versions to the newest release each range already permits, leaving a major it excludes for a decision of its own — reading the declared ranges rather than the lockfile, writing each move into the manifest instead of updating it into place, and the single install and one lockfile commit that close the pass. |
 | `hoc-dependency-defect` | Work around a bug in code this project uses but does not own — a subclass that overrides only the broken member, called by its own name, with a comment saying when it can be deleted. |
+| `hoc-eslint-config` | The shared ESLint config and the local `eslint.config.js` — which version a bump takes, what may be fixed and committed without a decision and what stops for one, and narrowing a rule's options to a set of files. |
 
 ### Documents
 
