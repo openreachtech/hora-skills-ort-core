@@ -236,6 +236,15 @@ where they cost nothing, at the bottom, passed over on the way.
   several sub-branches each clear the way for one change to a file they share, that change is not
   spread across them: it gathers into a sub-branch of its own, placed after them. A relaxation
   removed only once every file it named has been fixed is the ordinary shape of this.
+- **The order reverses where the sub-branches reach the trunk through pull requests.** Then the
+  substantial one goes first and the cheap ones follow it. The reason above does not reach that
+  case: a pull request is read on its own rather than as one diff worked down from the top, so
+  there is no top for a small change to occupy. What the order decides instead is which piece of
+  work the reviewer meets first, and that is the one the rest depends on.
+  - **The two rules are told apart by the route, never by the work.** The same pair of branches
+    takes one order merged locally and the other order opened as pull requests, so the question
+    to ask is how they reach the trunk — not how large they are, which is what both rules
+    measure once the route is known.
 - **Do not reorder the merges to dodge a rename.** A rebase carries a commit onto a file its base
   renamed underneath it. Measured on a branch whose base had renamed a file the branch edits: the
   edit landed on the new name, every merge the branch held survived, and the tree came out
