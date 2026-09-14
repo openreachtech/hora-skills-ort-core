@@ -66,17 +66,19 @@ survived, the graph keeping its shape.
 
 A **trunk branch** is one that other branches are cut from and merged back into.
 
-Four are trunks by name, in every repository.
+**Five are trunks by name, in every repository: `main`, and the four branches that may merge
+into it.**
 
-| branch | what it carries |
-| :-- | :-- |
-| `main` | the mainline every other branch descends from |
-| `release/x.x.x` | one version's work, until it merges into `main` |
-| `dev` | long-lived integration |
-| `env` | the initial environment setup |
+| branch | what it carries | may merge into `main` |
+| :-- | :-- | :-- |
+| `main` | the mainline every other branch descends from | — |
+| `release/x.x.x` | one version's work, until it merges into `main` | yes |
+| `hotfix/xxxx` | one fix that cannot wait for a release | yes |
+| `dev` | long-lived integration | yes |
+| `env` | the initial environment setup | yes |
 
 **Every other branch is a general branch, and takes the role rather than holding it.** A
-general branch behaves as a trunk for as long as work is split off it. The four above behave as
+general branch behaves as a trunk for as long as work is split off it. The five above behave as
 trunks whether anything is outstanding against them or not.
 
 The shape of the name settles nothing. `release/x.x.x` is a trunk and
@@ -98,10 +100,18 @@ The shape of the name settles nothing. `release/x.x.x` is a trunk and
   - The exceptions are the two commits a trunk makes about itself rather than about the work:
     the marker that opens it, and the `Merge …` commit that brings a sub-branch in. Both are
     described below, and neither carries a change of its own.
+- **`hotfix/xxxx` is the one trunk worked on directly.** The fix is committed onto it, with no
+  sub-branch and no marker, and the branch merges into `main` as it stands.
+  - **The reason is what the branch is for.** It exists to carry one fix past the release that
+    would otherwise have carried it, and every step between the fix and `main` is time the
+    failure it fixes is still running. A sub-branch and its merge buy structure that nothing is
+    going to read on a branch holding one fix.
+  - **It is a trunk in every other respect.** Its history is not rewritten once pushed, it
+    reaches `main` through a pull request like the rest, and it is deleted on merge.
 - **A trunk's published history is never rewritten.** `git push --force` and
-  `--force-with-lease` are not operations these four branches take, and neither are the local
+  `--force-with-lease` are not operations these branches take, and neither are the local
   rewrites that would make one necessary — `rebase`, `commit --amend`, `reset` onto an already
-  pushed commit. There is no permission that unlocks this; it is what the four names mean.
+  pushed commit. There is no permission that unlocks this; it is what the names mean.
   - **The reason is who else is holding the branch.** A trunk is what every other branch is cut
     from, so its commits are already in clones, in merge commits' parents, and in whatever CI
     recorded against them. Rewriting it does not correct a mistake — it makes everyone else's
@@ -278,6 +288,9 @@ git commit --allow-empty -m 'Start updating the domains a repository selects'
   branches be cut from this one and merged back into it? Where the answer is yes, the branch is
   a trunk — that is what this document defines the word to mean, and that definition is the
   whole of the condition.
+  - **`hotfix/xxxx` is the exception, and it is the same test that exempts it.** Nothing is cut
+    from it, so there is nothing for a marker to open. A branch whose first commit is the fix
+    needs no commit placed ahead of the work, because the work is already there.
 - **A nested trunk takes a marker of its own.** A general branch cut from `main` that then has
   work split off it is a sub-branch and a trunk at once, and it is the trunk half the marker
   answers to. Such a branch merges back locally, with no pull request anywhere in it, and it
@@ -342,7 +355,7 @@ Merge the core/ rename in the repository documents
     is why this is checked before the merge, and cannot be checked after it.
 - **Delete the branch once it is merged.** Its name was written for whoever watched the work in
   flight, and that reader is gone. This includes a trunk that merges into another trunk —
-  `dev` and `env` are deleted once they land on `main`.
+  `release/x.x.x`, `hotfix/xxxx`, `dev` and `env` are all deleted once they land on `main`.
   - **A trunk kept alive after it merged sits at the past of the trunk it merged into**, and
     everything cut from it afterwards inherits that. Merging `origin/main` back in would
     settle it, but re-cutting the branch settles the same thing without leaving a merge commit
