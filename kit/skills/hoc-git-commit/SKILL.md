@@ -324,12 +324,23 @@ substitutes for it. Where nothing listed names it, open the subject with the ver
   there, and which of `install`, `update` or `audit fix` resolved them is not. Naming the
   version or the packages instead would restate what the commit before it already said, and
   lose the operation.
-  - **This is the second of the two commits that moving a version makes**, and the shape is the
-    same whether the version moved is a dependency's or the project's own. The first moves
-    `package.json` and names the decision — `Install date-fns 4.1.0` for a dependency, `Update
-    the package version to 0.8.0 in package.json` for the project's own bump. The second moves
-    the lock file and names the command that regenerated it. Neither stands in for the other,
-    and folding them together would hide which of the two a later revert has to undo.
+  - **This is the second of the two commits that a change to `package.json` makes**, and the
+    shape is the same whether the version moved is a dependency's or the project's own. The
+    first moves `package.json` and names the decision — `Install date-fns 4.1.0` for a
+    dependency, `Update the package version to 0.8.0 in package.json` for the project's own
+    bump. The second moves the lock file and names the command that regenerated it. Neither
+    stands in for the other, and folding them together would hide which of the two a later
+    revert has to undo.
+  - **The pair is owed by every field the lock file mirrors, not by versions alone.** A lock
+    file carries the package's own `name:` as well, in its root object and again in the entry
+    for the project itself, so renaming a package leaves it stale in two places and the same
+    two commits are owed: `Fulfill name: in package.json`, then `Update package-lock.json
+    after npm install`.
+    - **An install from the lock file does not regenerate it.** Measured after a `name:`
+      change: `npm ci` succeeded and left both copies of the old name where they were, and
+      `npm install` then rewrote exactly those two lines and moved no dependency. A working
+      tree that comes back clean from `npm ci` is therefore no evidence that the lock file is
+      in step.
 - **A subject describes a transition, never a state.** `Don't disable the action button when
   the competition is completed` describes a state the code should hold; `Allow the action button
   when the competition is completed` says the same change as a transition, and it completes
