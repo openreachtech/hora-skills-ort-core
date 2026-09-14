@@ -135,6 +135,27 @@ The shape of the name settles nothing. `release/x.x.x` is a trunk and
     how the structure described below gets cut at all. Nobody else is holding it, so nothing
     disagrees.
 
+### What may be cut from `main`
+
+**Under Git flow, the only branches cut from `main` are the trunks that may merge into it.**
+Everything else is cut from one of those. A general branch taken straight off `main` has nowhere
+to land: the four are what `main` accepts, a guard on `main` refuses the rest, and the branch
+arrives at a base it is not allowed to merge into.
+
+**Under GitHub Flow every branch is cut from `main` and returns to it**, because there is no
+other trunk to cut from. So one and the same branch is correct in one repository and stranded in
+the other, and which it is cannot be read off the branch itself.
+
+**Ask which flow the repository is on before cutting a branch from `main`.** Nothing announces
+it: a repository that has not yet opened `dev`, `env` or a release looks exactly like one that
+never will, and a wrong guess is not found until the pull request is refused. The tells are the
+four names and a guard on `main` — where none of them is there, the repository is on GitHub
+Flow, and cutting from `main` is what it wants.
+
+- **This is the only branching question that is asked rather than decided.** Everywhere else
+  this convention settles the answer itself, because the answer does not change between
+  repositories. Here it does, and the cost of assuming is a branch that has to be rebuilt.
+
 ## When the structure is decided
 
 **Commit the work in one line first, and shape the branches once it is finished.** How many
