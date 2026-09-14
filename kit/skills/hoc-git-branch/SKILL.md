@@ -92,13 +92,13 @@ trunks whether anything is outstanding against them or not.
 The shape of the name settles nothing. `release/x.x.x` is a trunk and
 `retake/save-of-UserRepository` is not, and the two are the same shape.
 
-- **Trunks nest.** A general branch cut from `main` that then has work split off it is both: a
-  sub-branch of `main`, and the trunk of what it carries. The role is held against a particular
+- **Trunks nest.** A general branch cut from a trunk that then has work split off it is both: a
+  sub-branch of that trunk, and the trunk of what it carries. The role is held against a particular
   branch, never held outright.
   - **Each half brings its own obligations, and neither cancels the other.** Being a trunk, the
     branch opens with the `Start …` marker described below; being a sub-branch, it merges back
-    into `main` once it is done. That the merge is made locally, with no pull request to open
-    early, takes nothing away from the marker.
+    into the trunk it was cut from once it is done. That the merge is made locally, with no pull
+    request to open early, takes nothing away from the marker.
 - **A sub-branch merges back into its trunk, and a trunk never merges into what it carries.**
   The direction is the same at every level of the nesting.
 - **A trunk is where work arrives, not where work is done.** Nothing is committed to a trunk
@@ -302,7 +302,7 @@ git commit --allow-empty -m 'Start updating the domains a repository selects'
   - **`hotfix/xxxx` is the exception, and it is the same test that exempts it.** Nothing is cut
     from it, so there is nothing for a marker to open. A branch whose first commit is the fix
     needs no commit placed ahead of the work, because the work is already there.
-- **A nested trunk takes a marker of its own.** A general branch cut from `main` that then has
+- **A nested trunk takes a marker of its own.** A general branch cut from a trunk that then has
   work split off it is a sub-branch and a trunk at once, and it is the trunk half the marker
   answers to. Such a branch merges back locally, with no pull request anywhere in it, and it
   still opens with `Start …`.
