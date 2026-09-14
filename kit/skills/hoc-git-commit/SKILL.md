@@ -398,6 +398,30 @@ Tidy up the JSDoc of BaseRestfulApiLauncher.get:ResponseBodyParser
 This is the same notation used throughout documentation and error messages; see the
 documentation convention.
 
+### Referring to a config field
+
+A configuration file's own field, named in a subject or body, carries **its trailing colon**.
+
+```
+Fulfill name: in package.json
+Fulfill repository:, bugs: and homepage: in package.json
+Kick out main: from package.json
+```
+
+The colon is what marks the word as a field rather than a description of one. `Fulfill the
+package name in package.json` reads as prose and leaves a reader to work out which key moved;
+`Fulfill name: in package.json` names the key they will search the file for.
+
+- **The file is named beside it.** One key name recurs across a repository's configuration, and
+  the field alone does not say which file it sits in.
+- **What the notation marks is a field of the file's own structure, never an entry inside one.**
+  A lint rule under `rules:`, a script under `scripts:`, a package under `dependencies:` — each
+  is a value the file holds rather than a key the format defines, and each is named as itself:
+  `Turn off jsdoc/require-jsdoc for tests in eslint.config.js`, `Kick out check:levers from
+  package.json`.
+  - A key already carrying a colon of its own keeps only that one. `check:levers` is written as
+    it is spelled, because the notation adds a colon to a bare key and there is one there.
+
 ### Referring to a skill
 
 A skill named in a subject or body carries the **leading slash it is invoked with**.
