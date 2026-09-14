@@ -312,11 +312,21 @@ git commit --allow-empty -m 'Start updating the domains a repository selects'
 - **`Start` is not a verb for resuming work mid-branch.** A branch already carrying commits has
   nothing left to open.
 - The subject names **what is being started**, which depends on the kind of trunk.
-  - A **trunk that is one by name** is named directly: a `dev` branch opens with `Start dev`.
-    Here `dev` is the branch, not a placeholder word.
-  - A **general branch acting as a trunk** states the work it will carry — `Start adding the
-    skills installer`, `Start renaming kit/skills/_core/ to core/`. A later reader scanning the
-    log gets the branch's purpose for free.
+  - A **`dev` trunk** is named directly: `Start dev`. Here `dev` is the branch, not a
+    placeholder word.
+  - A **general branch acting as a trunk** states the work it will carry, and the shape is
+    `Start <verb>ing xxxx` — the verb in its `-ing` form, then what it acts on.
+
+    ```
+    Start adding the skills installer
+    Start renaming kit/skills/_core/ to core/
+    Start updating the domains a repository selects
+    ```
+
+    A later reader scanning the log gets the branch's purpose for free.
+  - An **`env` trunk** takes that same shape rather than its own name — `Start provisioning
+    env`, `Start setting up env`. It is a trunk by name like `dev`, and unlike `dev` the name
+    says nothing about which environment work is being opened.
   - A **`release/x.x.x` trunk** is opened by its version alone: `Release 0.2.0`. The word
     `Start` does not appear, because the version is the whole of what is being started.
   - **Where the work carries content in from elsewhere, the marker names the origin** — `Start
