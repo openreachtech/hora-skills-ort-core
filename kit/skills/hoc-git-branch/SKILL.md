@@ -74,12 +74,15 @@ into it.**
 | `main` | the mainline every other branch descends from | — |
 | `release/x.x.x` | one version's work, until it merges into `main` | yes |
 | `hotfix/xxxx` | one fix that cannot wait for a release | yes |
-| `dev` | long-lived integration | yes |
+| `dev` | long-lived integration. **Legacy** | yes |
 | `env` | the initial environment setup | yes |
 
 **Every other branch is a general branch, and takes the role rather than holding it.** A
 general branch behaves as a trunk for as long as work is split off it. The five above behave as
 trunks whether anything is outstanding against them or not.
+
+- **`dev` is legacy.** It stays in the set for backward compatibility, and nothing new is opened
+  on it. A repository still carrying one holds it to every rule here.
 
 The shape of the name settles nothing. `release/x.x.x` is a trunk and
 `retake/save-of-UserRepository` is not, and the two are the same shape.
