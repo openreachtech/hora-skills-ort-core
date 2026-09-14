@@ -325,8 +325,12 @@ git commit --allow-empty -m 'Start updating the domains a repository selects'
 
     A later reader scanning the log gets the branch's purpose for free.
   - An **`env` trunk** takes that same shape rather than its own name — `Start provisioning
-    env`, `Start setting up env`. It is a trunk by name like `dev`, and unlike `dev` the name
-    says nothing about which environment work is being opened.
+    environment`, `Start setting up the environment`. It is a trunk by name like `dev`, and
+    unlike `dev` the name says nothing about which environment work is being opened.
+    - **What follows the verb is the thing being provisioned, never the branch.** `Start env`
+      names the branch and stops there, and `Start provisioning env` puts the branch back into
+      the slot the work belongs in. Either way a reader scanning the log learns only which
+      branch they are on, which the ref beside the subject has already told them.
   - A **`release/x.x.x` trunk** is opened by its version alone: `Release 0.2.0`. The word
     `Start` does not appear, because the version is the whole of what is being started.
   - **Where the work carries content in from elsewhere, the marker names the origin** — `Start
