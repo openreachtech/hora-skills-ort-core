@@ -120,6 +120,9 @@ The shape of the name settles nothing. `release/x.x.x` is a trunk and
   `--force-with-lease` are not operations these branches take, and neither are the local
   rewrites that would make one necessary — `rebase`, `commit --amend`, `reset` onto an already
   pushed commit. There is no permission that unlocks this; it is what the names mean.
+  - **On a `main` that something releases from, it goes further.** The branch is the record of
+    what was published, handed to whoever cloned it, or put in front of users, and rewriting it
+    rewrites when each of those happened.
   - **The reason is who else is holding the branch.** A trunk is what every other branch is cut
     from, so its commits are already in clones, in merge commits' parents, and in whatever CI
     recorded against them. Rewriting it does not correct a mistake — it makes everyone else's
