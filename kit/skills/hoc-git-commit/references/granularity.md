@@ -225,6 +225,23 @@ The first commit is one line of a `.gitignore`, and it leads because it is the o
 changes what an existing entry matches. The two `Add` commits fill sections the two structural
 commits put there, and they wait until both are in place.
 
+**A set of fields filled in one configuration file is ordered inside itself.** The sequence
+above ranks them all equally, because every one of them is an addition. Order them by what they
+depend on instead: the identifier the rest follow from first, the fields derived from it next,
+and the field nothing else decides last.
+
+```
+Fulfill name: in package.json                             the identifier
+Fulfill repository:, bugs: and homepage: in package.json  derived from it
+Fulfill description: in package.json                      decided on its own
+```
+
+**The derived fields travel together and the independent one does not.** Three URLs naming one
+repository are a single decision written as a list, which the one-line test lets through. A
+description is a judgement that could be accepted while those URLs are rejected, so it takes a
+commit of its own — and a subject reaching for an umbrella over all five, such as *fulfill the
+placeholders*, is the "and" in disguise that the test turns away.
+
 **A test and the implementation it covers are not ordered by this sequence.** The implementation
 is the behavior change, so the sequence would lead with it, and the rule that a class's tests are
 committed before its implementation says otherwise. That rule governs the pair; the sequence
