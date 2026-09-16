@@ -62,6 +62,31 @@ survived, the graph keeping its shape.
   Cherry-picking its commits onto a fresh branch and amending the one that needed the new
   subject reaches the same tree at the cost of the branch and every merge above it.
 
+### A rewritten trunk takes `--onto` as well
+
+**`git rebase -r <trunk> <branch>` is right while the trunk only moves forward, and wrong once
+the trunk has been rebuilt.** The two-argument form replays everything in `<trunk>..<branch>`,
+and that range holds the branch's own commits only for as long as the commit the branch was cut
+from is still on the trunk. Rebuild the trunk — rewind it and merge the sub-branches again — and
+that commit is gone, so the range reaches back to whatever the two still share and sweeps up the
+old trunk's merges on the way.
+
+```bash
+git rebase -r --onto <the trunk's new tip> <the commit this branch was cut from> <branch>
+```
+
+**`-r` is what makes the damage silent.** The flag exists to preserve merge commits, and it
+preserves these too: the old trunk's `Merge …` commits are replayed inside the sub-branch, so the
+graph comes out with two paths carrying the same subjects, and the branch appears to hold work
+that was folded away. The rebase reports success and the tree is correct, which is why nothing
+downstream catches it.
+
+- **The graph is where it shows.** `git log --graph` after each rebase, and one merge subject
+  appearing twice is the whole of the symptom.
+- **Measured twice on one branch structure.** Both times the trunk had been rewound and rebuilt,
+  both times the two-argument form recreated its merges inside the sub-branch, and both times
+  `--onto` naming the commit the branch was cut from replayed only what the branch held.
+
 ## The trunk branch
 
 A **trunk branch** is one that other branches are cut from and merged back into.
@@ -300,6 +325,19 @@ is deliberately descriptive. Nothing reads it after the branch is gone.
 - **Leave out the article.** `kickout/the-copied-rules` and `kickout/copied-rules` point at the
   same work, and the shorter one is what a reader scanning `git branch` gets through faster.
   What comes after the slash is a label, not a sentence.
+- **The label names the whole at one altitude, and never lists what the branch carries.** A
+  branch holding two changes is still one branch, and `and` in the label hands the reader the
+  division before the thing. Where several changes land on one thing, the label is that thing and
+  the changes are what the commits are for.
+
+  ```
+  Bad   add/retry-and-timeout-options-to-AlphaClient
+  Good  update/AlphaClient
+  ```
+
+  The altitude to find is the one the changes sit beneath, and it is usually already named —
+  the class, the module, the document they all touch. A label that reaches for `and` is one
+  written before that name was looked for.
 
 ## The branch-opening marker commit
 
@@ -341,6 +379,9 @@ git commit --allow-empty -m 'Start updating the domains a repository selects'
   something the commit makes possible, never the test for making one.
 - **`Start` is not a verb for resuming work mid-branch.** A branch already carrying commits has
   nothing left to open.
+- **The subject is written at the altitude the branch name is written at.** Both name one piece
+  of work, so a marker listing what the branch will carry fails the same way a label does, and
+  the two then disagree besides.
 - The subject names **what is being started**, which depends on the kind of trunk.
   - A **`dev` trunk** is named directly: `Start dev`. Here `dev` is the branch, not a
     placeholder word.
@@ -411,6 +452,30 @@ Merge the core/ rename in the repository documents
 - **Delete the branch once it is merged.** Its name was written for whoever watched the work in
   flight, and that reader is gone. This includes a trunk that merges into another trunk —
   `release/x.x.x`, `hotfix/xxxx`, `dev` and `env` are all deleted once they land on `main`.
+  - **`git branch -d` judges against the branch's upstream, not against where you are standing.**
+    A sub-branch that was given one is refused although the trunk in front of you holds every
+    commit it carries:
+
+    ```
+    warning: not deleting branch 'add/xxxx' that is not yet merged to
+             'refs/remotes/origin/release/x.x.x', even though it is merged to HEAD
+    error: the branch 'add/xxxx' is not fully merged
+    ```
+
+    Unset the upstream and delete again:
+
+    ```bash
+    git branch --unset-upstream <branch>
+    git branch -d <branch>
+    ```
+
+    **`-D` is not the answer to this.** It deletes whatever it is given, so it removes the check
+    rather than the cause — and on the one branch where the check was right, nothing is left to
+    say so.
+  - **The upstream arrives from the start point.** `git switch -c <name> origin/<trunk>` sets
+    one and `git switch -c <name> <trunk>` does not, so a branch cut from a remote-tracking ref
+    carries a tie to that ref for the rest of its life. The refusal above is usually the first
+    time anybody meets it.
   - **A trunk kept alive after it merged sits at the past of the trunk it merged into**, and
     everything cut from it afterwards inherits that. Merging `origin/main` back in would
     settle it, but re-cutting the branch settles the same thing without leaving a merge commit
@@ -420,6 +485,19 @@ Merge the core/ rename in the repository documents
     git branch -d dev
     git switch -C dev origin/main
     ```
+  - **Fetch before cutting from a remote-tracking ref.** `origin/main` is a local copy of what
+    the remote held when it was last fetched, and nothing refreshes it on its own. Cut from a
+    stale one and the trunk stands at a commit the remote has left behind — silently, because
+    every branch cut from it afterwards inherits that base and the first report of it is the size
+    of a pull request's diff.
+
+    ```bash
+    git fetch origin
+    git switch -C dev origin/main
+    ```
+
+    **Cutting from a local branch does not need the fetch, and does not get the guarantee
+    either**: a local trunk is as old as the last time somebody moved it.
 - **Merging several sub-branches back is a cycle, not a batch: merge one, rebase the next onto
   the trunk's new tip, merge it, rebase the one after that.** Every merge moves the tip, so each
   branch is rebased against a commit that did not exist while the branch before it was still
