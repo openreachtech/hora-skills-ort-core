@@ -17,12 +17,12 @@ Each skill lives at `kit/skills/<name>/`, directly under the skills directory, a
 | Skill | Summary |
 | :-- | :-- |
 | `hoc-classes-principles` | Class design principles — no classes without properties, and the system underpinning it (deep immutability, constructor-only, references-as-contract). |
-| `hoc-classes-constructor` | Class constructor conventions. Constructor parameters must not have default values. |
-| `hoc-classes-notations` | The order members are written in a class body: the eight-block placement order, plus ordering within getters and within methods. |
+| `hoc-classes-constructor` | Class constructor conventions — the constructor holds what its parameters receive and decides no value, so its parameters carry no defaults and the factory methods resolve them. |
+| `hoc-classes-notations` | The order members are written in a class body: the eight-block placement order, the ordering within getters and within methods, and the fallback to source order where none of it decides. |
 | `hoc-classes-prohibits` | Prohibitions in class definitions: static-only classes and classes without state are not allowed, and why. |
 | `hoc-classes-inflators` | The inflator (binding) method pattern — bind the class passed as an argument and return a derived subclass memoized via `BoundCtorRegistry` — plus its naming and arguments. |
 | `hoc-properties` | Property conventions — set on `this` in the constructor, immutable (no reassignment, no `Map`), and no JavaScript native private. |
-| `hoc-accessors` | Getter/setter conventions — setters prohibited for immutability, `#get:Ctor` reserved for `this.constructor`, and dependency references extracted into getters. |
+| `hoc-accessors` | Getter/setter conventions — setters prohibited for immutability, `#get:Ctor` reserved for `this.constructor`, dependency references extracted into getters, and getter bodies kept to a property reference, with no branching and no method call. |
 
 ## Members and scope
 
@@ -47,7 +47,7 @@ Each skill lives at `kit/skills/<name>/`, directly under the skills directory, a
 | :-- | :-- |
 | `hoc-statements` | Statements and control flow — no literal `undefined` in production code, higher-order functions over sequential processing, and ternary/`if` policies. |
 | `hoc-async` | Asynchronous code conventions. When writing Promises, use `async`/`await` whenever possible. |
-| `hoc-errors` | Error handling — return `null` on failure from value-generating methods, and the throw-message format for abstract members. |
+| `hoc-errors` | Error handling — return `null` on failure from value-generating methods, and the two throws an abstract member declares itself unimplemented with: a plain `Error` carrying the fixed wording, or the error class the module declares for its own failures. |
 | `hoc-coding-styles` | Coding style — where to chop down expressions, method/property chains, call arguments, template literals and regular-expression flags. |
 
 ## Naming, comments and JSDoc
@@ -70,7 +70,7 @@ Each skill lives at `kit/skills/<name>/`, directly under the skills directory, a
 
 | Skill | Summary |
 | :-- | :-- |
-| `hoc-git-branch` | Conventions for the branches a repository carries — which one is a trunk and what that role obliges, how a general branch is named, the empty marker commit that opens a trunk, and the `--no-ff` merge that closes a sub-branch, along with the subject that merge commit carries. |
+| `hoc-git-branch` | Conventions for the branches a repository carries — which five are trunks and what that obliges, which may be cut from `main` per flow, how a general branch is named, the empty marker commit that opens a trunk, and the `--no-ff` merge that closes a sub-branch, along with the subject that merge commit carries and the `-r` every rebase takes. |
 | `hoc-git-commit` | Commit conventions — what belongs in a single commit and the order commits land in, the message format (imperative or Conventional Commits, chosen per project), and the verb vocabulary shared by both. |
 | `hoc-git-push` | What a push takes before it is made — the permission each one needs and how narrowly it counts, the force-push handed to a person rather than run here, naming the remote and the branch instead of relying on configuration, and why tags and remote-branch deletions are not pushed by hand. |
 
@@ -80,10 +80,10 @@ Each skill lives at `kit/skills/<name>/`, directly under the skills directory, a
 | :-- | :-- |
 | `hoc-npm-install-scripts` | The gate deciding which packages may run an install script — denial as the default, the settings placed before the install they govern, and the dry run that reports a script without executing one. |
 | `hoc-npm-vulnerability` | Keeping a vulnerable version out — what the audit does and does not see, the release-age quarantine and the install it does not apply to, and resolving a report by raising a transitive dependency. |
-| `hoc-npm-publish` | Where a release's version bump sits among the commits, what to do when it turns out not to be last, how a dependency raise is split into commits, and the audit that reads the artefact a consumer receives before anything goes out. |
+| `hoc-npm-publish` | Where a release's version bump sits among the commits, what to do when it turns out not to be last, and the audit that reads the artefact a consumer receives before anything goes out. Moving the dependency versions a release takes in belongs to `hoc-npm-raise-deps`. |
 | `hoc-npm-raise-deps` | Raising declared dependency versions to the newest release each range already permits, leaving a major it excludes for a decision of its own — reading the declared ranges rather than the lockfile, writing each move into the manifest instead of updating it into place, and the single install and one lockfile commit that close the pass. |
 | `hoc-dependency-defect` | Work around a bug in code this project uses but does not own — a subclass that overrides only the broken member, called by its own name, with a comment saying when it can be deleted. |
-| `hoc-eslint-config` | The shared ESLint config and the local `eslint.config.js` — which version a bump takes, what may be fixed and committed without a decision and what stops for one, and narrowing a rule's options to a set of files. |
+| `hoc-eslint-config` | The shared ESLint config and the local `eslint.config.js` — which version a bump takes, what may be fixed and committed without a decision and what stops for one, narrowing a rule's options to a set of files, and when a rule may be relaxed rather than the code changed. |
 
 ## Documents
 
@@ -92,18 +92,18 @@ Each skill lives at `kit/skills/<name>/`, directly under the skills directory, a
 | `hoc-readme` | Write and update a project's README. |
 | `hoc-license` | Write and update a project's LICENSE file. |
 | `hoc-boilerplate` | The `about-boilerplate.md` every clone carries — the `## Version` that moves in a boilerplate and is frozen in everything cloned from one, the single-commit bump that closes a boilerplate's release, and the guard holding three statements of that version to one value. |
-| `hoc-documentation` | Documentation writing conventions — the language a document written for a reader is in, and the `#instanceMember` / `.staticMember` notation used when referring to class members. |
+| `hoc-documentation` | Documentation writing conventions — what a document may state as fact and what it must reach for instead, the language a document written for a reader is in, and the `#instanceMember` / `.staticMember` notation used when referring to class members. |
 | `hoc-requirement-definition` | Turn a rough request into a requirement definition document through conversation — requirements, observable acceptance criteria, out-of-scope list, open questions. |
 | `hoc-deployment-document` | Write a server deployment runbook through conversation — the hosting and process-management profile, the first-time build, the repeatable release, migrations, rollback, and the output that confirms each step worked. |
 | `hoc-implementation-progress` | Track an in-flight implementation in a progress document anchored to requirement ids, advancing a status only against recorded evidence. |
-| `hoc-skill-updating` | Conventions for creating and updating skills — how to name one, placement rules, directory structure, and how to write a `SKILL.md`. |
+| `hoc-skill-updating` | Conventions for creating and updating skills — how to name one, which library it belongs to, where one skill stops and a neighbouring convention takes over, the flat directory layout, and how to write a `SKILL.md`. |
 
 ## Review and workflow
 
 | Skill | Summary |
 | :-- | :-- |
 | `hoc-code-review` | Read-only, code-level review of a change, producing a findings report on specification compliance, correctness and convention conformance. Never fixes anything. |
-| `hoc-workflows` | Development workflow rules — how to proceed with an implementation, and the steps always performed before committing and before completion. |
+| `hoc-workflows` | Development workflow rules — how to proceed with an implementation, the steps always performed before committing and before completion, how to establish that a tool reporting nothing was actually measuring, and what a report of remaining work lists. |
 | `hoc-retake-declaration` | Redoing existing code without moving what its callers see — a retake claims no gain, so the logic stays where callers already reach it, an added argument carries a default, and a defect found on the way is reported rather than fixed. |
 
 ---
