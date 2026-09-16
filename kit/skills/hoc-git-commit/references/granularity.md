@@ -274,8 +274,11 @@ git diff --cached     # confirm what is actually staged before committing
 git diff              # confirm what is being left for the next commit
 ```
 
-- Never `git add -A` or `git add .` without first checking what that sweeps in. Untracked
-  scratch files, editor artifacts, and `.env` variants are picked up this way.
+- **Staging names its paths.** `git add -A`, `git add .`, `git add -u`, `git commit -a` and
+  every other spelling that stages without naming what it stages are not used — not once the
+  tree has been checked either, because the command carries no record of what it took. Untracked
+  scratch files, editor artifacts and `.env` variants are what it sweeps up, and a diff nobody
+  named is a commit nobody designed.
 - When hunks for two decisions are interleaved in the same file, stage the first, commit, and
   then stage the second. `git add -p` splits hunks with `s` and edits them with `e`.
 
