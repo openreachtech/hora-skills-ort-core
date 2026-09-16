@@ -316,7 +316,7 @@ const total = numbers
 
 - Accessing an individual array element via the `[]` operator (`array[0]` / `array[i]`) is prohibited.
 - Pulling out a specific element to handle it specially violates "Treat all elements of an array equally in higher-order functions" (above), and is a circumvention of the discipline that a collection is "always used all at once" (the class design principles convention / the property-definition convention).
-- Handle every element together with `map` / `filter` / `reduce` / `for...of`, etc., without pulling out individual elements.
+- Handle every element together with a higher-order function — `map` / `filter` / `reduce` / `Array.from`, etc. — without pulling out individual elements.
 
 ```javascript
 // NG: accessing an individual element by subscript
