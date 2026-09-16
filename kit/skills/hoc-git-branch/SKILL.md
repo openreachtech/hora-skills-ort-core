@@ -325,6 +325,19 @@ is deliberately descriptive. Nothing reads it after the branch is gone.
 - **Leave out the article.** `kickout/the-copied-rules` and `kickout/copied-rules` point at the
   same work, and the shorter one is what a reader scanning `git branch` gets through faster.
   What comes after the slash is a label, not a sentence.
+- **The label names the whole at one altitude, and never lists what the branch carries.** A
+  branch holding two changes is still one branch, and `and` in the label hands the reader the
+  division before the thing. Where several changes land on one thing, the label is that thing and
+  the changes are what the commits are for.
+
+  ```
+  Bad   add/retry-and-timeout-options-to-AlphaClient
+  Good  update/AlphaClient
+  ```
+
+  The altitude to find is the one the changes sit beneath, and it is usually already named —
+  the class, the module, the document they all touch. A label that reaches for `and` is one
+  written before that name was looked for.
 
 ## The branch-opening marker commit
 
@@ -366,6 +379,9 @@ git commit --allow-empty -m 'Start updating the domains a repository selects'
   something the commit makes possible, never the test for making one.
 - **`Start` is not a verb for resuming work mid-branch.** A branch already carrying commits has
   nothing left to open.
+- **The subject is written at the altitude the branch name is written at.** Both name one piece
+  of work, so a marker listing what the branch will carry fails the same way a label does, and
+  the two then disagree besides.
 - The subject names **what is being started**, which depends on the kind of trunk.
   - A **`dev` trunk** is named directly: `Start dev`. Here `dev` is the branch, not a
     placeholder word.
