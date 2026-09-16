@@ -120,9 +120,10 @@ change the rule is asking for?*
 | Is shaped as it should be, and the rule mis-reads it | Narrow the rule to that file |
 | Has a shape the rule is right to refuse | Change the code |
 
-A class that is static because it holds a stateless transformation is the first case: a rule
-against static classes describes a smell that is not present, and giving the class instance
-state to satisfy it would leave it worse.
+A test file repeating the class-name `describe()` above every member it covers is the first
+case: a rule against identical titles reads the repetition as a copy-paste mistake, where it
+is the index a reader looks a member up by, and collapsing the titles to satisfy the rule
+would take that index with them.
 
 A constructor that calls one of its own methods is the second. The rule is pointing at
 composition done inline, and naming that step — extracting it into a member of its own,
