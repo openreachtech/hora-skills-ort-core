@@ -104,6 +104,29 @@ commit is the one that makes the statement true. Committed the other way round, 
 confirm what already worked, and there is no commit at which the claim stands on its own to be
 reviewed. This is test-driven development written into the history rather than into the editor.
 
+### One module per commit, and its tests are a commit of their own
+
+**A new module never shares a commit with another module, and never shares one with its own
+tests. There is no exception to either.** One new class takes its tests, then its implementation,
+then its entry in the export barrel — three commits of its own, so two classes are six. This is
+the coding charter's *Keep Everything One by One* applied to history: a commit the reader has to
+pull two facts out of is the oversight trap the charter names, and the subject line is where the
+second fact goes missing.
+
+- **The count is per file, not per folder.** Five route classes arriving in a package are five
+  `Declare` commits and five `Add tests for` commits, not one of each covering the set. The
+  collective subject that lets such a commit fit one line — `Declare the express routes`,
+  `Add tests for the express routes` — is the umbrella noun this file already turns away, and
+  the plural is precisely what hides the count from the reader.
+- **Size is not what the split is for.** Not a class of eight lines, not a subclass that
+  overrides nothing, not a pair of files small enough that separating them feels like ceremony.
+  What the split prevents is the reader's second extraction, and a small class costs that
+  extraction exactly as a large one does.
+- **Carrying a module in from elsewhere bundles nothing.** Migration is bracketed by the branch,
+  whose opening marker names the origin once; the commits beneath it are the ordinary `Declare`
+  and `Add tests for`, one apiece. That the files were copied in a single operation describes how
+  the work was done, which is the thing a subject never records. See the git branch convention.
+
 ## What to keep together
 
 - A change and the **type annotations or JSDoc that describe it**. A signature and its
