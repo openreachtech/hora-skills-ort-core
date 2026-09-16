@@ -113,6 +113,15 @@ the coding charter's *Keep Everything One by One* applied to history: a commit t
 pull two facts out of is the oversight trap the charter names, and the subject line is where the
 second fact goes missing.
 
+- **The separation is the only thing that lets anybody else check the test.** Checked out at the
+  test commit the suite runs red, and the commit after it is what turns green — so a reader
+  watches the test fail for the reason it exists, and then watches the implementation answer it,
+  at the cost of one `git checkout`. Folded into one commit, no such state exists anywhere in the
+  repository: there is nowhere to stand and see the test fail, so nothing distinguishes a test
+  that exercises the code from one that asserts nothing at all. Reconstructing the missing state
+  means resetting the commit and stripping the implementation back out of the diff by hand, every
+  time somebody wants to know. **A test nobody can watch fail is a test nobody has grounds to
+  trust**, and that — not tidiness — is what the split buys.
 - **The count is per file, not per folder.** Five route classes arriving in a package are five
   `Declare` commits and five `Add tests for` commits, not one of each covering the set. The
   collective subject that lets such a commit fit one line — `Declare the express routes`,
