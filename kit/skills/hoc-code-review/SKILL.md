@@ -118,10 +118,10 @@ End the review with, in this order:
    always includes its baseline row, so this pass can never be reported as `N/A` in full.
 4. **Findings** — most severe first, in the format above.
 5. **Counts by severity**, and the lint result on one line.
+6. **A one-line statement that nothing was modified.**
 
 Write the report in the language the reader is using, as the documentation convention requires of
 any document generated for a reader.
-6. **A one-line statement that nothing was modified.**
 
 If any `BLOCKER` or any `PARTIAL` / `MISSING` verdict exists, say plainly that the change does
 not yet satisfy its specification. Do not soften it, and do not bury it under the passing rows.

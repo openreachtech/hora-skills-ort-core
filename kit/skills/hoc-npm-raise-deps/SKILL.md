@@ -1,6 +1,6 @@
 ---
 name: hoc-npm-raise-deps
-description: "How a project's declared dependency versions are raised to the newest release each declared range already permits — which side of the project the comparison reads, why a version move is written into the manifest rather than updated into place, and where the pass's single install and one lockfile commit sit. A major a range excludes is a decision of its own and not this pass. Use when raising dependency versions or comparing them against the registry. Resolving an advisory belongs to the vulnerability convention, and an install script to the install-scripts convention."
+description: "How a project's declared dependency versions are raised to the newest release each declared range already permits. A major a range excludes is a decision of its own and not this pass. Use when raising dependency versions or comparing them against the registry. Resolving an advisory belongs to the vulnerability convention, and an install script to the install-scripts convention."
 ---
 
 # npm Raise Deps

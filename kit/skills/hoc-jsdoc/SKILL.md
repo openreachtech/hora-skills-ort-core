@@ -211,7 +211,7 @@ generate ({
 ## Do not write undefined type names (define custom types before referencing them)
 
 - For type names written in JSDoc, anything other than built-in types (`string` / `number` /
-  `boolean` / `Array` / `Object` / `*` / `null`, etc.) and TS utility types (`Record` / `Partial` /
+  `boolean` / `Array` / `*` / `null`, etc.) and TS utility types (`Record` / `Partial` /
   `Pick` / `Omit` / `ReturnType`, etc.) must be **defined before** it is referenced, via one of
   `@typedef` / `@class` / `@interface` / import.
 - Do not write undefined type names. Reason: they are a common source of typos and missing imports.

@@ -27,7 +27,7 @@ subject belongs to the class-member notation, where it always follows `#` or `.`
 The two never collide — one opens the subject, the other sits inside a member name.
 
 ```
-feat: add LockEmployeeSignInInputValidator for employee sign-in validation
+feat: declare LockEmployeeSignInInputValidator
 fix: return 401 instead of 500 when the visa is expired
 refactor: update return types in LockClientMemberSignInMutationResolver
 test: add generateCommentFilesAssignments tests to client TaskCommentsQueryResolver
@@ -84,11 +84,11 @@ The characteristic failure of this format is a **redundant trailing clause** tha
 identifier already named:
 
 ```
-Bad:  feat: add LockEmployeeSignInInputValidator for employee sign-in validation
-Good: feat: add LockEmployeeSignInInputValidator
+Bad:  feat: declare LockEmployeeSignInInputValidator for employee sign-in validation
+Good: feat: declare LockEmployeeSignInInputValidator
 
 Bad:  feat: implement LockClientMemberSignInMutationResolver for locking client member sign-in accounts
-Good: feat: add LockClientMemberSignInMutationResolver
+Good: feat: declare LockClientMemberSignInMutationResolver
 ```
 
 The identifier already carries the purpose. Add a clause only when it says something the name
@@ -98,7 +98,10 @@ does not.
 Good: fix: reject empty clientMemberId before the resolver reaches the model
 ```
 
-Related: `add` and `implement` are not two different things. Use `add`.
+Related: `implement` names no operation the shared table does not already carry. A class written
+for the first time is `declare`, one of its members `define`, and anything else that did not
+exist before is `add`. Feature-scale work is what the `feat` type is for, so the word has nothing
+left to say in the summary.
 
 ## Breaking changes
 
