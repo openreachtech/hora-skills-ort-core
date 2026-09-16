@@ -96,7 +96,7 @@ Each skill lives at `kit/skills/<name>/`, directly under the skills directory, a
 | `hoc-requirement-definition` | Turn a rough request into a requirement definition document through conversation — requirements, observable acceptance criteria, out-of-scope list, open questions. |
 | `hoc-deployment-document` | Write a server deployment runbook through conversation — the hosting and process-management profile, the first-time build, the repeatable release, migrations, rollback, and the output that confirms each step worked. |
 | `hoc-implementation-progress` | Track an in-flight implementation in a progress document anchored to requirement ids, advancing a status only against recorded evidence. |
-| `hoc-skill-updating` | Conventions for creating and updating skills — how to name one, placement rules, directory structure, and how to write a `SKILL.md`. |
+| `hoc-skill-updating` | Conventions for creating and updating skills — how to name one, which library it belongs to, where one skill stops and a neighbouring convention takes over, the flat directory layout, and how to write a `SKILL.md`. |
 
 ## Review and workflow
 
