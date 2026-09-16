@@ -6,13 +6,13 @@ A catalog of every skill in this package, with a one- or two-line summary each.
 
 Each skill lives at `kit/skills/<name>/`, directly under the skills directory, and that folder name is both the skill's `name:` and the folder name it is installed under. **Skill** below is therefore all you need: it is what you invoke as `/name`, what appears under `.claude/skills/` once installed, and where the source sits. The prefix — the first three or four characters — is the domain — see [the build convention](https://github.com/openreachtech/hora-skills-ort-core/blob/main/.claude/skills/build/SKILL.md) for the layout and the naming rules. Full guidance for a skill is in its own `SKILL.md`, and in the `references/` beside it where a skill needs one — a skill that fits in one file carries no `references/`, and each `SKILL.md` that has references says which of them settles what. Grouped by area below; an area is a heading of this catalog, never part of a skill's name.
 
-### The charter
+## The charter
 
 | Skill | Summary |
 | :-- | :-- |
 | `hoc-charters-coding` | The ORT coding charter: write readable, unified code; avoid modification; let the code explain everything. |
 
-### Classes
+## Classes
 
 | Skill | Summary |
 | :-- | :-- |
@@ -24,7 +24,7 @@ Each skill lives at `kit/skills/<name>/`, directly under the skills directory, a
 | `hoc-properties` | Property conventions — set on `this` in the constructor, immutable (no reassignment, no `Map`), and no JavaScript native private. |
 | `hoc-accessors` | Getter/setter conventions — setters prohibited for immutability, `#get:Ctor` reserved for `this.constructor`, and dependency references extracted into getters. |
 
-### Members and scope
+## Members and scope
 
 | Skill | Summary |
 | :-- | :-- |
@@ -34,14 +34,14 @@ Each skill lives at `kit/skills/<name>/`, directly under the skills directory, a
 | `hoc-contracts` | Type contracts for function and method arguments and return values, and how contract types are defined. |
 | `hoc-scope` | Scope references among class members — `this` between static members, and `#get:Ctor` when referring from an instance to a static member. |
 
-### Modules
+## Modules
 
 | Skill | Summary |
 | :-- | :-- |
 | `hoc-modules-exports` | Don't define files that merely named-export a function; define a class per responsibility. |
 | `hoc-modules-imports` | Group imports at the top of the file, ordered from farthest to nearest to application development. |
 
-### Statements and style
+## Statements and style
 
 | Skill | Summary |
 | :-- | :-- |
@@ -50,7 +50,7 @@ Each skill lives at `kit/skills/<name>/`, directly under the skills directory, a
 | `hoc-errors` | Error handling — return `null` on failure from value-generating methods, and the throw-message format for abstract members. |
 | `hoc-coding-styles` | Coding style — where to chop down expressions, method/property chains, call arguments, template literals and regular-expression flags. |
 
-### Naming, comments and JSDoc
+## Naming, comments and JSDoc
 
 | Skill | Summary |
 | :-- | :-- |
@@ -58,7 +58,7 @@ Each skill lives at `kit/skills/<name>/`, directly under the skills directory, a
 | `hoc-comments` | Comments within actual code are written in English unless there is a reason otherwise. |
 | `hoc-jsdoc` | JSDoc writing conventions shared by backend and frontend — type annotations, `@returns`, `@typedef` and type-only imports, with the Vue/Nuxt-specific conventions in its references. |
 
-### Testing
+## Testing
 
 | Skill | Summary |
 | :-- | :-- |
@@ -66,7 +66,7 @@ Each skill lives at `kit/skills/<name>/`, directly under the skills directory, a
 | `hoc-test-execution` | Run a project's tests and drive them to green without weakening them — nothing skipped, deleted, loosened or waited out to make the suite pass. |
 | `hoc-test-cache` | Reuse a recorded test pass when a verification unit's inputs are unchanged, through the `mentsu-testcase-cache` CLI — declaring the units in `.hora-cache.json`, and judging when a recorded pass may stand in for an execution. |
 
-### Git
+## Git
 
 | Skill | Summary |
 | :-- | :-- |
@@ -74,7 +74,7 @@ Each skill lives at `kit/skills/<name>/`, directly under the skills directory, a
 | `hoc-git-commit` | Commit conventions — what belongs in a single commit and the order commits land in, the message format (imperative or Conventional Commits, chosen per project), and the verb vocabulary shared by both. |
 | `hoc-git-push` | What a push takes before it is made — the permission each one needs and how narrowly it counts, the force-push handed to a person rather than run here, naming the remote and the branch instead of relying on configuration, and why tags and remote-branch deletions are not pushed by hand. |
 
-### Dependencies and publishing
+## Dependencies and publishing
 
 | Skill | Summary |
 | :-- | :-- |
@@ -85,7 +85,7 @@ Each skill lives at `kit/skills/<name>/`, directly under the skills directory, a
 | `hoc-dependency-defect` | Work around a bug in code this project uses but does not own — a subclass that overrides only the broken member, called by its own name, with a comment saying when it can be deleted. |
 | `hoc-eslint-config` | The shared ESLint config and the local `eslint.config.js` — which version a bump takes, what may be fixed and committed without a decision and what stops for one, and narrowing a rule's options to a set of files. |
 
-### Documents
+## Documents
 
 | Skill | Summary |
 | :-- | :-- |
@@ -98,13 +98,14 @@ Each skill lives at `kit/skills/<name>/`, directly under the skills directory, a
 | `hoc-implementation-progress` | Track an in-flight implementation in a progress document anchored to requirement ids, advancing a status only against recorded evidence. |
 | `hoc-skill-updating` | Conventions for creating and updating skills — how to name one, placement rules, directory structure, and how to write a `SKILL.md`. |
 
-### Review and workflow
+## Review and workflow
 
 | Skill | Summary |
 | :-- | :-- |
 | `hoc-code-review` | Read-only, code-level review of a change, producing a findings report on specification compliance, correctness and convention conformance. Never fixes anything. |
 | `hoc-workflows` | Development workflow rules — how to proceed with an implementation, and the steps always performed before committing and before completion. |
 | `hoc-retake-declaration` | Redoing existing code without moving what its callers see — a retake claims no gain, so the logic stays where callers already reach it, an added argument carries a default, and a defect found on the way is reported rather than fixed. |
+
 ---
 
 ## Installing them
