@@ -1,6 +1,6 @@
 ---
 name: hoc-npm-publish
-description: "How a package release is ordered and checked before it goes out — where the version bump sits among the commits, what to do when it turns out not to be last, how to raise dependencies, and the audit to run before publishing. Use this skill when preparing a release, bumping a package's own version, or deciding whether a package is ready to publish."
+description: "How a package release is ordered and checked before it goes out — where the version bump sits among the commits, what to do when it turns out not to be last, and the audit that reads the artefact a consumer will receive. Use this skill when preparing a release, bumping a package's own version, or deciding whether a package is ready to publish. Moving the dependency versions a release takes in belongs to the dependency-raising convention."
 ---
 
 # npm Publish
@@ -66,14 +66,15 @@ trunk?**
   the rule protects is that nothing unfinished gets published** — not the shape of the log.
   A fix merged on top before the publish satisfies that completely.
 
-## Raising dependencies: one package per commit
+## What the release takes in is settled before this convention starts
 
-When bringing dependencies up to date, edit **one package per commit** in the manifest, and
-commit the lockfile once at the end after a single install.
+**This one orders the commits a release makes about itself** — its own version, and the
+lockfile that follows it. Everything the release carries arrived before that, and how it
+arrived is not decided here.
 
-- The git commit convention already separates a dependency raise from code that uses it. This
-  goes further: **the raises are separated from each other**, because each one is its own
-  risk with its own rollback, and a tree that breaks after ten of them in one commit gives
-  no information about which.
-- The lockfile is one commit however many packages moved, since it is generated and
-  reviewing it line by line buys nothing.
+- **Moving the dependency versions a release takes in belongs to `hoc-npm-raise-deps`**, which
+  settles what a raise compares against, how each move is written down, and where its single
+  install sits.
+- What is left once that pass has run — an advisory still in the report, an install script
+  nobody has decided about — belongs to `hoc-npm-vulnerability` and `hoc-npm-install-scripts`
+  respectively.

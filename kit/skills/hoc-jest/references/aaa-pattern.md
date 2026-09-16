@@ -161,8 +161,19 @@ separate even in the code.
   argument structure and reads better than destructuring into properties
   like `expected.a` / `expected.b`.
 - When verifying multiple calls, make `expected` **an array of per-call
-  argument arrays**, and spread each call as `...expected[0]` /
-  `...expected[1]`, etc.
+  argument arrays**, take each call out by **destructuring** the array, and
+  spread the one the matcher is for. Destructuring is how leading elements are
+  taken, in a test as anywhere else; `expected[0]` is the subscript access the
+  statement convention turns away.
+
+  ```js
+  const [firstCall, secondCall] = expected
+
+  expect(handlerSpy)
+    .toHaveBeenNthCalledWith(1, ...firstCall)
+  expect(handlerSpy)
+    .toHaveBeenNthCalledWith(2, ...secondCall)
+  ```
 
 ```js
 const cases = [

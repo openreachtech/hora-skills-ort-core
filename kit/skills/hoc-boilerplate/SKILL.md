@@ -1,6 +1,6 @@
 ---
 name: hoc-boilerplate
-description: "Conventions for `about-boilerplate.md` and the repositories it appears in: the `## Version` field that moves in a boilerplate and is frozen everywhere else, the one-commit bump that closes a boilerplate's release, the guard that holds three statements of the version to one value, and why `release/x.x.x` is the only branch a boilerplate merges into `main`. Read before touching `about-boilerplate.md` at all, and before opening or releasing a boilerplate. Which branch merges where in general belongs to the git branch convention; publishing a package belongs to the npm publish convention."
+description: "Conventions for `about-boilerplate.md` and the repositories it appears in: the `## Version` field that moves in a boilerplate and is frozen everywhere else, and how a boilerplate's own release is closed and guarded. Read before touching `about-boilerplate.md` at all, and before opening or releasing a boilerplate. Which branch merges where in general belongs to the git branch convention; publishing a package belongs to the npm publish convention."
 ---
 
 # Boilerplate

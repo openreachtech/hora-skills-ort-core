@@ -96,13 +96,13 @@ export default class BaseRewardCalculator {
 - When applying an emergency patch in a subclass, overriding `AggregatorCtor` alone suffices.
 
 ```javascript
-// OK: swapping in the patched class only requires overriding AggregatorCtor
-import PatchedAggregator from './PatchedAggregator.js'
+// OK: swapping the corrected class in only requires overriding AggregatorCtor
+import RoundHalfUpAggregator from './RoundHalfUpAggregator.js'
 
 export default class UserRewardCalculator extends BaseRewardCalculator {
   /** @override */
   static get AggregatorCtor () {
-    return PatchedAggregator
+    return RoundHalfUpAggregator
   }
 }
 ```
@@ -129,7 +129,7 @@ static get ConstraintCtor () {
 
 ```javascript
 // OK: a static getter that returns a native module as-is, reached through #get:Ctor
-import fs from 'fs'
+import fs from 'node:fs'
 
 export default class DeepLoader {
   static get fs () {
