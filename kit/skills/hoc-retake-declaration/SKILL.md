@@ -60,6 +60,12 @@ Dropping the default to preserve some finer property of the behaviour trades the
 a detail. Where the two cannot both be had, the contract wins and the finer property waits for the
 version that may change it.
 
+**Where the member gaining the parameter is the constructor, the default goes on the factory
+method.** A constructor decides no value — it holds what its parameters receive — so the parameter
+it gains stays bare, and `.create()` supplies what the existing calls relied on. The contract is
+kept where callers actually stand: they reach the class through the factory method, never through
+`new`. The class conventions settle that division; this is only where a retake meets it.
+
 ## How often a default is evaluated is part of what callers see
 
 **A default is evaluated where it is written, as often as that member is called** — so moving one
