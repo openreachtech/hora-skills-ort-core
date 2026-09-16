@@ -72,6 +72,7 @@ Each skill lives at `kit/skills/<name>/`, directly under the skills directory, a
 | :-- | :-- |
 | `hoc-git-branch` | Conventions for the branches a repository carries — which one is a trunk and what that role obliges, how a general branch is named, the empty marker commit that opens a trunk, and the `--no-ff` merge that closes a sub-branch, along with the subject that merge commit carries. |
 | `hoc-git-commit` | Commit conventions — what belongs in a single commit and the order commits land in, the message format (imperative or Conventional Commits, chosen per project), and the verb vocabulary shared by both. |
+| `hoc-git-push` | What a push takes before it is made — the permission each one needs and how narrowly it counts, the force-push handed to a person rather than run here, naming the remote and the branch instead of relying on configuration, and why tags and remote-branch deletions are not pushed by hand. |
 
 ### Dependencies and publishing
 
@@ -90,6 +91,7 @@ Each skill lives at `kit/skills/<name>/`, directly under the skills directory, a
 | :-- | :-- |
 | `hoc-readme` | Write and update a project's README. |
 | `hoc-license` | Write and update a project's LICENSE file. |
+| `hoc-boilerplate` | The `about-boilerplate.md` every clone carries — the `## Version` that moves in a boilerplate and is frozen in everything cloned from one, the single-commit bump that closes a boilerplate's release, and the guard holding three statements of that version to one value. |
 | `hoc-documentation` | Documentation writing conventions — the language a document written for a reader is in, and the `#instanceMember` / `.staticMember` notation used when referring to class members. |
 | `hoc-requirement-definition` | Turn a rough request into a requirement definition document through conversation — requirements, observable acceptance criteria, out-of-scope list, open questions. |
 | `hoc-deployment-document` | Write a server deployment runbook through conversation — the hosting and process-management profile, the first-time build, the repeatable release, migrations, rollback, and the output that confirms each step worked. |
