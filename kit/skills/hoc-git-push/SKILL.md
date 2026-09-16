@@ -1,6 +1,6 @@
 ---
 name: hoc-git-push
-description: "Conventions for `git push` itself: the permission each one takes and how narrowly that permission counts, the force-push no branch takes from here and is handed to a person instead, naming the remote and the branch rather than relying on configuration, and why tags and remote-branch deletions are not pushed by hand. What a branch is and where it merges belongs to the git branch convention; what a pull request says belongs to the pull request convention. Use before every push, and before any command that changes what the remote holds."
+description: "Conventions for `git push` itself: the permission each one takes and how narrowly that permission counts, and the force-push that is handed to a person rather than run here. What a branch is and where it merges belongs to the git branch convention; what a pull request says belongs to the pull request convention. Use before every push, and before any command that changes what the remote holds."
 ---
 
 # Git Push
