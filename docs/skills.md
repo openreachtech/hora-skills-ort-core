@@ -92,7 +92,7 @@ Each skill lives at `kit/skills/<name>/`, directly under the skills directory, a
 | `hoc-readme` | Write and update a project's README. |
 | `hoc-license` | Write and update a project's LICENSE file. |
 | `hoc-boilerplate` | The `about-boilerplate.md` every clone carries — the `## Version` that moves in a boilerplate and is frozen in everything cloned from one, the single-commit bump that closes a boilerplate's release, and the guard holding three statements of that version to one value. |
-| `hoc-documentation` | Documentation writing conventions — the language a document written for a reader is in, and the `#instanceMember` / `.staticMember` notation used when referring to class members. |
+| `hoc-documentation` | Documentation writing conventions — what a document may state as fact and what it must reach for instead, the language a document written for a reader is in, and the `#instanceMember` / `.staticMember` notation used when referring to class members. |
 | `hoc-requirement-definition` | Turn a rough request into a requirement definition document through conversation — requirements, observable acceptance criteria, out-of-scope list, open questions. |
 | `hoc-deployment-document` | Write a server deployment runbook through conversation — the hosting and process-management profile, the first-time build, the repeatable release, migrations, rollback, and the output that confirms each step worked. |
 | `hoc-implementation-progress` | Track an in-flight implementation in a progress document anchored to requirement ids, advancing a status only against recorded evidence. |
