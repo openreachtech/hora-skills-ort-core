@@ -62,6 +62,31 @@ survived, the graph keeping its shape.
   Cherry-picking its commits onto a fresh branch and amending the one that needed the new
   subject reaches the same tree at the cost of the branch and every merge above it.
 
+### A rewritten trunk takes `--onto` as well
+
+**`git rebase -r <trunk> <branch>` is right while the trunk only moves forward, and wrong once
+the trunk has been rebuilt.** The two-argument form replays everything in `<trunk>..<branch>`,
+and that range holds the branch's own commits only for as long as the commit the branch was cut
+from is still on the trunk. Rebuild the trunk — rewind it and merge the sub-branches again — and
+that commit is gone, so the range reaches back to whatever the two still share and sweeps up the
+old trunk's merges on the way.
+
+```bash
+git rebase -r --onto <the trunk's new tip> <the commit this branch was cut from> <branch>
+```
+
+**`-r` is what makes the damage silent.** The flag exists to preserve merge commits, and it
+preserves these too: the old trunk's `Merge …` commits are replayed inside the sub-branch, so the
+graph comes out with two paths carrying the same subjects, and the branch appears to hold work
+that was folded away. The rebase reports success and the tree is correct, which is why nothing
+downstream catches it.
+
+- **The graph is where it shows.** `git log --graph` after each rebase, and one merge subject
+  appearing twice is the whole of the symptom.
+- **Measured twice on one branch structure.** Both times the trunk had been rewound and rebuilt,
+  both times the two-argument form recreated its merges inside the sub-branch, and both times
+  `--onto` naming the commit the branch was cut from replayed only what the branch held.
+
 ## The trunk branch
 
 A **trunk branch** is one that other branches are cut from and merged back into.
