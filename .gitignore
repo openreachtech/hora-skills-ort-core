@@ -1,5 +1,4 @@
 #### environment
-.env
 node_modules/
 
 #### Build output
@@ -23,3 +22,9 @@ ehthumbs_vista.db
 yarn.lock
 pnpm-lock.yaml
 bun.lockb
+
+#### Secrets
+
+# unused here (this stack reads `.env.<NODE_ENV>`), but it is the default name
+# other dotenv tooling writes to, and where a credential lands
+.env
