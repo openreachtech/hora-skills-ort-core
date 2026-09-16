@@ -70,7 +70,7 @@ Each skill lives at `kit/skills/<name>/`, directly under the skills directory, a
 
 | Skill | Summary |
 | :-- | :-- |
-| `hoc-git-branch` | Conventions for the branches a repository carries — which one is a trunk and what that role obliges, how a general branch is named, the empty marker commit that opens a trunk, and the `--no-ff` merge that closes a sub-branch, along with the subject that merge commit carries. |
+| `hoc-git-branch` | Conventions for the branches a repository carries — which five are trunks and what that obliges, which may be cut from `main` per flow, how a general branch is named, the empty marker commit that opens a trunk, and the `--no-ff` merge that closes a sub-branch, along with the subject that merge commit carries and the `-r` every rebase takes. |
 | `hoc-git-commit` | Commit conventions — what belongs in a single commit and the order commits land in, the message format (imperative or Conventional Commits, chosen per project), and the verb vocabulary shared by both. |
 | `hoc-git-push` | What a push takes before it is made — the permission each one needs and how narrowly it counts, the force-push handed to a person rather than run here, naming the remote and the branch instead of relying on configuration, and why tags and remote-branch deletions are not pushed by hand. |
 
