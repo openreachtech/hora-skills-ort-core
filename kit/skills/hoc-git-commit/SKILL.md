@@ -130,6 +130,26 @@ way or the other. Where a listed verb names what happened, it is the one to use,
 substitutes for it. Where nothing listed names it, open the subject with the verb that does:
 `Name`, `Point`, `Follow`, `Keep` and their like fix no such distinction and need no row.
 
+**The verb is decided by what this commit did, never by what the commit beside it says.** Two
+commits carrying one change into two files read as a pair, and making their subjects agree looks
+like tidiness. But a verb does not describe the change — it describes **what the change met**, and
+where one file already held the rule and the other did not, `Update` and `Add` are both the true
+answer.
+
+```
+Update what decides whether a section takes H2s in /hoc-alpha   a rule was there, and was replaced
+Add    what decides whether a section takes H2s to /hoc-beta    nothing was there
+```
+
+A matched pair says the two files were in the same state when they were not, and that is the one
+thing a later reader cannot recover from the diff: the diff shows what the file holds now, and the
+verb is the only record of what it held before.
+
+**The pressure here is symmetry, where in `## The history is a record, never a licence` below it
+is precedent.** Both end with a subject chosen from something other than what happened, and this
+one is the harder to catch — the pair looks more correct after the verbs are matched than it did
+before.
+
 | verb | use for |
 | :-- | :-- |
 | `Add` | a new file, member, case, or capability that did not exist |
