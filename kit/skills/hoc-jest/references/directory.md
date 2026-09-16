@@ -41,7 +41,8 @@ benefits listed below.
    **unconditionally**.
 
 3. **npm publish can be handled with a simple allowlist.**
-   If `lib/` is pure, the publish spec is a one-liner: `"files": ["lib"]`. With
+   If `lib/` is pure, the publish spec has nothing to exclude: it names the
+   directories that ship, and everything inside one of them belongs there. With
    co-location, you either publish the tests along with everything else,
    **polluting the package** (bloated installs, broken references to
    devDependencies, information leaks via fixtures), or you're stuck
