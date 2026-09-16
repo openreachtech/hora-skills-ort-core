@@ -91,27 +91,20 @@ describe name at level 1 then matches the source path it mirrors
 | `lib/i18n/locales/*/message.json` | `tests/__tests__/i18n/locales/message.js` |
 | `lib/fixtures/*/user.json` | `tests/__tests__/fixtures/user.js` |
 
-## Splitting Large Test Files
+## One Source File, One Test File
 
-If a single test file grows too large, it may be **split by method**. In that
-case, use **the class name as a directory** and place per-method files
-underneath it.
-
-- Before splitting: `tests/__tests__/tools/PathnameBuilder.js`
-- After splitting: turn the class name `PathnameBuilder` into a directory.
+A source file's tests live in **the single test file its path mirrors**, and
+every member of the class is written in that one file.
 
 ```
-tests/__tests__/tools/PathnameBuilder/
-  constructor.js
-  create.js
-  buildPathname.js
+lib/tools/PathnameBuilder.js  ->  tests/__tests__/tools/PathnameBuilder.js
 ```
 
-- Directory mirroring (not including `lib/`, etc.) stays the same after
-  splitting: `lib/tools/PathnameBuilder.js` ↔
-  `tests/__tests__/tools/PathnameBuilder/`.
-- Splitting is a remedy for bloat and is not mandatory. A single file is fine
-  while it stays small.
+Mirroring stays useful because it reads in both directions: the source path
+derives the test path, and the test path derives the source path. Within the
+file, members are found through the describe levels indexed by definition name
+(the core principle in [SKILL.md](../SKILL.md)), so a long file is still
+navigable without being divided up.
 
 ## Test Tools (Where to Place Helper Functions)
 
