@@ -129,7 +129,7 @@ static get ConstraintCtor () {
 
 ```javascript
 // OK: a static getter that returns a native module as-is, reached through #get:Ctor
-import fs from 'fs'
+import fs from 'node:fs'
 
 export default class DeepLoader {
   static get fs () {
