@@ -469,6 +469,19 @@ Merge the core/ rename in the repository documents
     git branch -d dev
     git switch -C dev origin/main
     ```
+  - **Fetch before cutting from a remote-tracking ref.** `origin/main` is a local copy of what
+    the remote held when it was last fetched, and nothing refreshes it on its own. Cut from a
+    stale one and the trunk stands at a commit the remote has left behind — silently, because
+    every branch cut from it afterwards inherits that base and the first report of it is the size
+    of a pull request's diff.
+
+    ```bash
+    git fetch origin
+    git switch -C dev origin/main
+    ```
+
+    **Cutting from a local branch does not need the fetch, and does not get the guarantee
+    either**: a local trunk is as old as the last time somebody moved it.
 - **Merging several sub-branches back is a cycle, not a batch: merge one, rebase the next onto
   the trunk's new tip, merge it, rebase the one after that.** Every merge moves the tip, so each
   branch is rebased against a commit that did not exist while the branch before it was still
