@@ -436,6 +436,30 @@ Merge the core/ rename in the repository documents
 - **Delete the branch once it is merged.** Its name was written for whoever watched the work in
   flight, and that reader is gone. This includes a trunk that merges into another trunk —
   `release/x.x.x`, `hotfix/xxxx`, `dev` and `env` are all deleted once they land on `main`.
+  - **`git branch -d` judges against the branch's upstream, not against where you are standing.**
+    A sub-branch that was given one is refused although the trunk in front of you holds every
+    commit it carries:
+
+    ```
+    warning: not deleting branch 'add/xxxx' that is not yet merged to
+             'refs/remotes/origin/release/x.x.x', even though it is merged to HEAD
+    error: the branch 'add/xxxx' is not fully merged
+    ```
+
+    Unset the upstream and delete again:
+
+    ```bash
+    git branch --unset-upstream <branch>
+    git branch -d <branch>
+    ```
+
+    **`-D` is not the answer to this.** It deletes whatever it is given, so it removes the check
+    rather than the cause — and on the one branch where the check was right, nothing is left to
+    say so.
+  - **The upstream arrives from the start point.** `git switch -c <name> origin/<trunk>` sets
+    one and `git switch -c <name> <trunk>` does not, so a branch cut from a remote-tracking ref
+    carries a tie to that ref for the rest of its life. The refusal above is usually the first
+    time anybody meets it.
   - **A trunk kept alive after it merged sits at the past of the trunk it merged into**, and
     everything cut from it afterwards inherits that. Merging `origin/main` back in would
     settle it, but re-cutting the branch settles the same thing without leaving a merge commit
