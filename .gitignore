@@ -3,7 +3,7 @@
 node_modules/
 
 #### Build output
-dist/
+/dist/
 
 #### for Windows
 Thumbs.db
