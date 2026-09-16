@@ -7,6 +7,15 @@ node_modules/
 # written by a build
 /dist/
 
+# written by Jest
+/coverage/
+
+# left in the root by `npm pack`
+*.tgz
+
+# written by `eslint --cache`
+.eslintcache
+
 #### for Windows
 Thumbs.db
 Thumbs.db:encryptable
