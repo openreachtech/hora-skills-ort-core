@@ -27,7 +27,7 @@ subject belongs to the class-member notation, where it always follows `#` or `.`
 The two never collide — one opens the subject, the other sits inside a member name.
 
 ```
-feat: add LockEmployeeSignInInputValidator for employee sign-in validation
+feat: declare LockEmployeeSignInInputValidator
 fix: return 401 instead of 500 when the visa is expired
 refactor: update return types in LockClientMemberSignInMutationResolver
 test: add generateCommentFilesAssignments tests to client TaskCommentsQueryResolver
