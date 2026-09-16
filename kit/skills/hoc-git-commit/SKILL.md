@@ -436,6 +436,27 @@ scanning subjects for where a convention changed has to work out which one each 
   settles what goes into a commit, how it is worded, and the order the commits land in — never
   whether a command's result permits the commit.
 
+## The history is a record, never a licence
+
+**A commit already in the history is evidence of what happened. It is never permission to write
+another one like it.** Conventions arrive after code does, so every repository carries subjects
+written before this one was settled, by another team, or by hand in a hurry. Those commits stay,
+because a history a reader can trust is worth more than one that is tidy — and not one of them
+amends what is written here.
+
+- **A violation found in a sibling repository is the weakest ground there is.** The search that
+  turned it up was a search for permission, and what it found was somebody else's mistake. A
+  subject joining two class declarations with `and` is wrong in the repository it was copied from
+  as surely as in the one it was copied to, and citing it names a second offence rather than
+  excusing the first.
+- **The reach for a precedent is itself the signal.** It happens where the rule would otherwise
+  cost something — more commits to write, a branch already shaped to rebuild. That pressure is
+  the moment the rule is doing its work, so a precedent produced under it is being used to buy
+  the rule off.
+- **What the history does govern is reading.** Search it without filtering on the resolved
+  convention, as the format section above states: the commits that do not follow it are still the
+  record of what happened. Reading them is required; imitating them is not permitted.
+
 ## Granularity in one line
 
 One commit is **one decision a reviewer can accept or reject on its own**, and the test is
