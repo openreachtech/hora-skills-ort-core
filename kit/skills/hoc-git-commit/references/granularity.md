@@ -189,6 +189,20 @@ second fact goes missing.
     Correcting a default that one example states wrongly, and supplying an option that another
     example omits, are two decisions in both languages — that is two commits, each touching two
     files, not one commit touching four.
+  - **What the rule bundles is a document, never an edit.** The same correction applied to two
+    documents is two commits, one per document. The pair it folds together is a document and its
+    translation, and nothing wider — a rule stated once in two origin documents is two decisions
+    that happen to read alike, not one decision written twice.
+    - **The subject is the mechanical tell.** The form above names *the* document, extension
+      dropped. A subject that cannot name one, and reaches for `and` to carry two, is describing
+      a commit this rule never licensed — and the `and` test above will not catch it, because a
+      list of documents reads exactly like the list one decision is allowed to land as.
+    - **An edit no document owns is the exception, and it gathers.** The same typo corrected in
+      four documents, a term respelt everywhere it appears, a moved link followed in each place
+      that pointed at it — the change belongs to none of them in particular, so a per-document
+      split costs four commits saying one thing and buys a reviewer nothing. The test is whether
+      a reviewer could accept it in one document and reject it in another: where they could not,
+      it is one decision, and the subject then names the edit rather than a document.
 
 ## Order
 
