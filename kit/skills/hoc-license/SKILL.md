@@ -1,6 +1,6 @@
 ---
 name: hoc-license
-description: "Write and update LICENSE files for projects. Use this skill whenever the user asks to create, update or delete a LICENSE file."
+description: "The `./LICENSE` file a project carries, settled by the `license` field of `package.json` — which text each value takes, the placeholders it fills, and the deletion `UNLICENSED` calls for. Use whenever a LICENSE file is created, updated or deleted, or when `license` is changed or found missing. What the README's license section says belongs to the README convention."
 ---
 
 # License
