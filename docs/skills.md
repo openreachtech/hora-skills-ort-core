@@ -90,7 +90,7 @@ Each skill lives at `kit/skills/<name>/`, directly under the skills directory, a
 | Skill | Summary |
 | :-- | :-- |
 | `hoc-readme` | Write and update a project's README. |
-| `hoc-license` | Write and update a project's LICENSE file. |
+| `hoc-license` | The `./LICENSE` a project carries, settled by the `license` field of `package.json` — which text each value takes, the placeholders it fills, the deletion `UNLICENSED` calls for, and what an absent field means. |
 | `hoc-boilerplate` | The `about-boilerplate.md` every clone carries — the `## Version` that moves in a boilerplate and is frozen in everything cloned from one, the single-commit bump that closes a boilerplate's release, and the guard holding three statements of that version to one value. |
 | `hoc-documentation` | Documentation writing conventions — what a document may state as fact and what it must reach for instead, the language a document written for a reader is in, and the `#instanceMember` / `.staticMember` notation used when referring to class members. |
 | `hoc-requirement-definition` | Turn a rough request into a requirement definition document through conversation — requirements, observable acceptance criteria, out-of-scope list, open questions. |
