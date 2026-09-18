@@ -25,14 +25,14 @@ Denotes private/restricted distribution.
 
 ## `Apache-2.0`
 
-Copy the full text of [templates/Apache-2.0](./templates/Apache-2.0) into `./LICENSE`, replacing the placeholders in the trailing APPENDIX.
+Copy the full text of [Apache-2.0](./references/templates/Apache-2.0) into `./LICENSE`, replacing the placeholders in the trailing APPENDIX.
 
 - **`[yyyy]`** should match the year in the README's Copyright section (`© <year> ...`).
 - **`[name of copyright owner]`** should be replaced with `author` from `package.json` (e.g., `Open Reach Tech Inc.`).
 
 ## `MIT`
 
-Copy the full text of [templates/MIT](./templates/MIT) into `./LICENSE`, replacing the placeholders.
+Copy the full text of [MIT](./references/templates/MIT) into `./LICENSE`, replacing the placeholders.
 
 - **`[full name]`** should be replaced with `author` from `package.json` (e.g., `Open Reach Tech Inc.`).
 - **`[year]`** should match the README's Copyright section (`© <year> ...`).
