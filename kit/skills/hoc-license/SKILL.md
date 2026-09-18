@@ -17,6 +17,19 @@ When creating, updating or deleting the LICENSE file, follow the rules below.
    What that section says, for every value of `license`, is governed by the "License" convention in
    the **README convention**.
 
+## No `license` field
+
+**An absent field is not a value.** Every section below acts on what `license` says, so where the
+field is missing, nothing decides what `./LICENSE` should be. Ask the user which license the
+project takes, write the answer into `license`, and then follow the section for that value.
+
+- **Do not infer one.** A `./LICENSE` already in the tree, the `author` field, and the absence of
+  the file each suggest an answer, and none of them is the project's decision — the field is where
+  a project states its license, and a guess written into `./LICENSE` leaves the two disagreeing.
+- **This is not the `Others` case below.** There the field carries a value this convention does not
+  cover, and what is settled is the file. Here there is no value at all, and what is settled first
+  is the field.
+
 ## `UNLICENSED`
 
 Denotes private/restricted distribution.
