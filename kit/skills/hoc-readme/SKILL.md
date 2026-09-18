@@ -3,7 +3,7 @@ name: hoc-readme
 description: "Write and update README files for projects. Use this skill whenever the user asks to create or update a README file."
 ---
 
-# README Skill
+# README
 
 When creating or updating a README, follow the rules in the following files.
 

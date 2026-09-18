@@ -3,7 +3,7 @@ name: hoc-license
 description: "Write and update LICENSE files for projects. Use this skill whenever the user asks to create, update or delete a LICENSE file."
 ---
 
-# License Skill
+# License
 
 When creating or updating the LICENSE file and the README's license notation, follow the rules below.
 
