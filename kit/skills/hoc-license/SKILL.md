@@ -25,10 +25,10 @@ Denotes private/restricted distribution.
 
 ## `Apache-2.0`
 
-Copy the full text of [templates/Apache-2.0](./templates/Apache-2.0) as-is into `./LICENSE` (do not modify the body).
+Copy the full text of [templates/Apache-2.0](./templates/Apache-2.0) into `./LICENSE`, replacing the placeholders in the trailing APPENDIX.
 
-- The **`[yyyy]`** in the trailing APPENDIX should match the year in the README's Copyright section (`© <year> ...`).
-- The **`[name of copyright owner]`** in the trailing APPENDIX should be replaced with `author` from `package.json` (e.g., `Open Reach Tech Inc.`).
+- **`[yyyy]`** should match the year in the README's Copyright section (`© <year> ...`).
+- **`[name of copyright owner]`** should be replaced with `author` from `package.json` (e.g., `Open Reach Tech Inc.`).
 
 The license section of `README.md` / `README.xx.md` should contain wording that links to `./LICENSE`
 (the template is governed by the "License" convention in the README convention).
