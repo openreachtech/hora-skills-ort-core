@@ -130,6 +130,26 @@ way or the other. Where a listed verb names what happened, it is the one to use,
 substitutes for it. Where nothing listed names it, open the subject with the verb that does:
 `Name`, `Point`, `Follow`, `Keep` and their like fix no such distinction and need no row.
 
+**The verb is decided by what this commit did, never by what the commit beside it says.** Two
+commits carrying one change into two files read as a pair, and making their subjects agree looks
+like tidiness. But a verb does not describe the change — it describes **what the change met**, and
+where one file already held the rule and the other did not, `Update` and `Add` are both the true
+answer.
+
+```
+Update what decides whether a section takes H2s in /hoc-alpha   a rule was there, and was replaced
+Add    what decides whether a section takes H2s to /hoc-beta    nothing was there
+```
+
+A matched pair says the two files were in the same state when they were not, and that is the one
+thing a later reader cannot recover from the diff: the diff shows what the file holds now, and the
+verb is the only record of what it held before.
+
+**The pressure here is symmetry, where in `## The history is a record, never a licence` below it
+is precedent.** Both end with a subject chosen from something other than what happened, and this
+one is the harder to catch — the pair looks more correct after the verbs are matched than it did
+before.
+
 | verb | use for |
 | :-- | :-- |
 | `Add` | a new file, member, case, or capability that did not exist |
@@ -324,11 +344,23 @@ substitutes for it. Where nothing listed names it, open the subject with the ver
   there, and which of `install`, `update` or `audit fix` resolved them is not. Naming the
   version or the packages instead would restate what the commit before it already said, and
   lose the operation.
-  - **This is the second of the two commits a dependency change makes**, the project's own
-    version bump included. The first moves `package.json` and names the decision — `Install
-    date-fns 4.1.0`, `Update the package version to 0.8.0 in package.json`. The second moves
-    the lock file and names the command that regenerated it. Neither stands in for the other,
-    and folding them together would hide which of the two a later revert has to undo.
+  - **This is the second of the two commits that a change to `package.json` makes**, and the
+    shape is the same whether the version moved is a dependency's or the project's own. The
+    first moves `package.json` and names the decision — `Install date-fns 4.1.0` for a
+    dependency, `Update the package version to 0.8.0 in package.json` for the project's own
+    bump. The second moves the lock file and names the command that regenerated it. Neither
+    stands in for the other, and folding them together would hide which of the two a later
+    revert has to undo.
+  - **The pair is owed by every field the lock file mirrors, not by versions alone.** A lock
+    file carries the package's own `name:` as well, in its root object and again in the entry
+    for the project itself, so renaming a package leaves it stale in two places and the same
+    two commits are owed: `Fulfill name: in package.json`, then `Update package-lock.json
+    after npm install`.
+    - **An install from the lock file does not regenerate it.** Measured after a `name:`
+      change: `npm ci` succeeded and left both copies of the old name where they were, and
+      `npm install` then rewrote exactly those two lines and moved no dependency. A working
+      tree that comes back clean from `npm ci` is therefore no evidence that the lock file is
+      in step.
 - **A subject describes a transition, never a state.** `Don't disable the action button when
   the competition is completed` describes a state the code should hold; `Allow the action button
   when the competition is completed` says the same change as a transition, and it completes
@@ -386,6 +418,30 @@ Tidy up the JSDoc of BaseRestfulApiLauncher.get:ResponseBodyParser
 This is the same notation used throughout documentation and error messages; see the
 documentation convention.
 
+### Referring to a config field
+
+A configuration file's own field, named in a subject or body, carries **its trailing colon**.
+
+```
+Fulfill name: in package.json
+Fulfill repository:, bugs: and homepage: in package.json
+Kick out main: from package.json
+```
+
+The colon is what marks the word as a field rather than a description of one. `Fulfill the
+package name in package.json` reads as prose and leaves a reader to work out which key moved;
+`Fulfill name: in package.json` names the key they will search the file for.
+
+- **The file is named beside it.** One key name recurs across a repository's configuration, and
+  the field alone does not say which file it sits in.
+- **What the notation marks is a field of the file's own structure, never an entry inside one.**
+  A lint rule under `rules:`, a script under `scripts:`, a package under `dependencies:` — each
+  is a value the file holds rather than a key the format defines, and each is named as itself:
+  `Turn off jsdoc/require-jsdoc for tests in eslint.config.js`, `Kick out check:levers from
+  package.json`.
+  - A key already carrying a colon of its own keeps only that one. `check:levers` is written as
+    it is spelled, because the notation adds a colon to a bare key and there is one there.
+
 ### Referring to a skill
 
 A skill named in a subject or body carries the **leading slash it is invoked with**.
@@ -434,6 +490,27 @@ scanning subjects for where a convention changed has to work out which one each 
   and which before the work is called complete, belongs to the workflows convention. This one
   settles what goes into a commit, how it is worded, and the order the commits land in — never
   whether a command's result permits the commit.
+
+## The history is a record, never a licence
+
+**A commit already in the history is evidence of what happened. It is never permission to write
+another one like it.** Conventions arrive after code does, so every repository carries subjects
+written before this one was settled, by another team, or by hand in a hurry. Those commits stay,
+because a history a reader can trust is worth more than one that is tidy — and not one of them
+amends what is written here.
+
+- **A violation found in a sibling repository is the weakest ground there is.** The search that
+  turned it up was a search for permission, and what it found was somebody else's mistake. A
+  subject joining two class declarations with `and` is wrong in the repository it was copied from
+  as surely as in the one it was copied to, and citing it names a second offence rather than
+  excusing the first.
+- **The reach for a precedent is itself the signal.** It happens where the rule would otherwise
+  cost something — more commits to write, a branch already shaped to rebuild. That pressure is
+  the moment the rule is doing its work, so a precedent produced under it is being used to buy
+  the rule off.
+- **What the history does govern is reading.** Search it without filtering on the resolved
+  convention, as the format section above states: the commits that do not follow it are still the
+  record of what happened. Reading them is required; imitating them is not permitted.
 
 ## Granularity in one line
 

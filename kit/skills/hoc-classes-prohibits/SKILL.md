@@ -35,7 +35,7 @@ Reasons:
 
 ### (3) Static methods should be placed where the responsibility belongs
 
-- If only one class uses a given piece of logic, implement it as that class's own method (private or a regular instance method). There is no reason to extract it into a static-only class or a function.
+- If only one class uses a given piece of logic, implement it as that class's own instance method — one the class only calls internally, or one it publishes. There is no reason to extract it into a static-only class or a function.
 - If multiple classes use it and they belong to the same inheritance hierarchy, place the shared implementation in the
   base class. Expressing it through inheritance makes the location of responsibility clearer.
 - If it does not naturally belong to an inheritance hierarchy and is shared across multiple unrelated classes, extract it into a dedicated single-responsibility class (`Validator` / `Formatter` / `Normalizer` / `Resolver`, etc.), and have each class delegate to it. This makes dependencies explicit, allows state to be held if needed, and makes extension/mocking/testing easier.

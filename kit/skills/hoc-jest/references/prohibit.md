@@ -84,6 +84,22 @@ expect(core.rules)
 - **Never let it stand as the whole assertion.** Pinning the type is half the check; the
   concrete value is pinned by the assertion next to it. Alone, it is a loose matcher again.
 
+#### Where the value is made at the moment of the call
+
+**That last rule has one case it does not reach: a value produced when the call happens.** A
+clock read, a random draw — there is no concrete value to pin beside the type, because none
+exists until the call is made, and none is the same twice.
+
+There `expect.any(<concrete type>)` stands as the whole assertion, and it is not a loosening.
+`expect.any(Date)` on a default a factory fills from the clock still excludes every wrong value
+the assertion could otherwise have let through — a string, a number, an argument that never
+arrived.
+
+- The alternative offered above — binding the first return value to `expected` and comparing by
+  identity — reaches a memoized value, which is handed back to the caller. It does not reach a
+  value that goes **into** a call and is never returned, which is where a filled-in default is
+  observed.
+
 ## Do Not Write `jest.fn()` Directly Inline Inside `test()`
 
 Creating and using a `jest.fn()` inside `test()` (injecting it into args,

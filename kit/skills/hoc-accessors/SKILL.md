@@ -96,13 +96,13 @@ export default class BaseRewardCalculator {
 - When applying an emergency patch in a subclass, overriding `AggregatorCtor` alone suffices.
 
 ```javascript
-// OK: swapping in the patched class only requires overriding AggregatorCtor
-import PatchedAggregator from './PatchedAggregator.js'
+// OK: swapping the corrected class in only requires overriding AggregatorCtor
+import RoundHalfUpAggregator from './RoundHalfUpAggregator.js'
 
 export default class UserRewardCalculator extends BaseRewardCalculator {
   /** @override */
   static get AggregatorCtor () {
-    return PatchedAggregator
+    return RoundHalfUpAggregator
   }
 }
 ```
@@ -129,7 +129,7 @@ static get ConstraintCtor () {
 
 ```javascript
 // OK: a static getter that returns a native module as-is, reached through #get:Ctor
-import fs from 'fs'
+import fs from 'node:fs'
 
 export default class DeepLoader {
   static get fs () {
@@ -228,4 +228,8 @@ buildAuthorLabel () {
 ```
 
 - When the value reached by drilling down is a function, **returning it without calling it** is out of scope. What is prohibited is calling within the getter; returning a function as a value is not restricted.
-- Exception: an abstract getter that requires an override and declares itself unimplemented via `throw new Error()` is out of scope. Its format follows the error-handling convention.
+- Exception: an abstract getter that requires an override and declares itself unimplemented by
+  throwing is out of scope, whichever of the two throws the error-handling convention gives it.
+  **That covers the one that reaches the module's own error class through a factory method** —
+  a call inside a getter, and the exception would be worth nothing without it, since the getter
+  never returns. What the throw looks like follows the error-handling convention.
