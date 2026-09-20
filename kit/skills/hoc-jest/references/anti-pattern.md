@@ -199,3 +199,45 @@ Instead of `Array#forEach()`, use the Jest extension defined by
 `toThrow()`, etc.). `expect.each()` is an extension, provided by
 `@openreachtech/jest-expect-each`, that lets you apply that standard matcher
 repeatedly across multiple values.
+
+### It Replaces `Array#map()` Reducing a Collection for One Assertion
+
+**The commonest escape from the prohibition is not `forEach()` but `map()`**, used to
+reduce what a call returned into something a single matcher will accept. It reads
+as assertion rather than logic, and it is the same unverified transformation.
+
+```js
+// ❌️ Mapping the collection down so that one toStrictEqual() can take it
+const errors = validate(schema, parse(input.query), rules)
+
+const actual = errors.map(it => it.message)
+
+expect(actual)
+  .toStrictEqual(expected)
+
+// ✅️ Assert over the collection as it came back
+const errors = validate(schema, parse(input.query), rules)
+
+expect.each(errors)
+  .toHaveProperty.each([
+    [
+      'message',
+      '103.X000.002',
+    ],
+    [
+      'message',
+      '103.X000.003 {"depth":11}',
+    ],
+  ])
+```
+
+- **An element of the array passed to `.each()` that is itself an array is spread
+  as the matcher's arguments**, which is what lets a two-argument matcher such as
+  `toHaveProperty()` be paired per element. A non-array element is passed as the
+  single argument.
+- **The lengths must match.** `expect.each()` throws where the two arrays differ,
+  so the count is asserted as well — something the mapped version gave away, since
+  `toStrictEqual()` on a mapped array reports a length mismatch as a value
+  mismatch.
+- **Where every element takes the same expectation**, drop the `.each()` and pass
+  it once: `expect.each(errors).toHaveProperty('message', expected)`.

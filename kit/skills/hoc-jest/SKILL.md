@@ -1,13 +1,19 @@
 ---
 name: hoc-jest
-description: "Write Jest unit tests for JavaScript classes, and for the modules, data files and reconciliations a project tests alongside them. Use this skill whenever the user asks to create or update Jest tests — for a class, for a module of exported constants, for a data file such as a message catalogue, or for a test that two collections still agree with each other."
+description: "Write Jest unit tests for JavaScript classes, and for the modules, data files and reconciliations a project tests alongside them. Use whenever a test is created or updated — for a class, a module of exported constants, a data file such as a message catalogue, or a reconciliation between two collections that have to agree. Driving a failing suite to green belongs to the test-execution convention, and reusing a recorded pass over unchanged inputs to the test-cache convention."
 ---
 
 # Jest Testing
 
 A skill for writing Jest unit tests for JavaScript classes, and for the modules
 and data files a project tests alongside them.
-The conventions are split across the detail files below. Refer to them as needed.
+The conventions are split across the detail files below.
+
+**Three of them are read in full before the first line of a new test file:**
+[naming.md](./references/naming.md), [anti-pattern.md](./references/anti-pattern.md) and
+[structure.md](./references/structure.md). They hold the prohibitions no lint rule catches, so a
+file written without them passes lint and passes its own tests while breaking this convention
+throughout, and nothing anywhere reports it. The rest are read as the work reaches them.
 
 > **Notation convention**: Throughout this skill, when we simply write
 > `describe()` / `test()` / `expect()`, each is a **generic term that implies**
@@ -82,7 +88,58 @@ collapses.
 - Inside `describe()`, do not use `if` / ternary / `??` / short-circuit
   evaluation / higher-order functions / `forEach`. Express repetition with
   `expect.each()` from `@openreachtech/jest-expect-each`.
+  - **The test is syntactic, not semantic.** A call taking a function is a
+    higher-order function, and how short its body is, how obvious it looks or
+    how free of branching it happens to be does not enter into it:
+    `errors.map(it => it.message)` is as prohibited as any other. Asking whether
+    a particular case "really counts as logic" is the judgement this rule exists
+    to remove, and the answer arrived at is always yes.
+  - **It covers the result as much as the preparation.** The paragraph above
+    speaks of logic written to *prepare* a test, and reducing what a call
+    returned so that one assertion can compare it reads as outside that — which
+    is the route this rule is most often escaped through. A collection is
+    compared with `expect.each()`, never by mapping it down to something
+    `toStrictEqual()` accepts.
 - See [anti-pattern.md](./references/anti-pattern.md) for details and examples.
+
+## Core principle: nothing but imports at file scope
+
+**The only thing a test file may hold outside every `describe()` is its
+imports.** A value, a class, a function, a schema — each is defined inside every
+`describe()` that uses it, written out as many times as there are `describe()`
+blocks that need it.
+
+DRY does not apply to test code, and file scope is where it is refused most
+plainly. A definition shared there cannot be changed for one member without
+being read against the assumptions of every other `describe()` depending on it,
+so it ends up copied and modified in place anyway — which is what defining it
+per `describe()` does from the start. Shared state at file scope is also
+untraceable to the blocks that rely on it, which is how one test contaminates
+the next.
+
+- **Two `describe()` blocks needing the same value is the case this rule is
+  for**, not the exception to it. The cost of repeating the definition is
+  keystrokes; the cost of sharing it is that neither block can be read on its
+  own.
+- See [anti-pattern.md](./references/anti-pattern.md) and
+  [structure.md](./references/structure.md) for the reasoning and examples.
+
+## Core principle: the case object has four property names, and no others
+
+The element objects of `cases` carry `override`, `input`, `tally` and
+`expected`. **`params` and `args` are not among them and are never invented** —
+the argument passed to the subject under test is `input`.
+
+- The set is closed, so a name that is not one of the four is wrong however well
+  it reads. The one addition allowed is a prefixed `~Cases` property, on the
+  outer `cases` of a double loop.
+- Which of the four applies, and the mechanical test separating `tally` from
+  `input` / `expected`, are in
+  [naming.md](./references/naming.md#property-names-of-case-objects).
+- **A repository full of `params` is not a licence to write another.** Test
+  files predating this convention record when they were written, and the
+  workflow convention settles what to follow where the code around you and a
+  convention disagree.
 
 ## Core principle: index the first and second levels by definition name (class/member)
 
@@ -169,12 +226,12 @@ showing that the tests removed were the tests covering what was removed.
 ## Detail files
 
 - [directory.md](./references/directory.md) — directory layout, import paths
-- [structure.md](./references/structure.md) — structure of describe / test
+- [structure.md](./references/structure.md) — structure of describe / test, and what may not be shared between them
 - [test-cases.md](./references/test-cases.md) — data conventions for `cases`
 - [aaa-pattern.md](./references/aaa-pattern.md) — Arrange / Act / Assert
 - [mocks.md](./references/mocks.md) — mocks/stubs (inside Arrange, overridden with `jest.spyOn()`)
-- [naming.md](./references/naming.md) — naming of variables and case properties
+- [naming.md](./references/naming.md) — variable names, and the closed set of `cases` element properties (`override` / `input` / `tally` / `expected`)
 - [types.md](./references/types.md) — type annotations and type resolution
-- [anti-pattern.md](./references/anti-pattern.md) — don't put logic in tests (forbidden syntax, extracting helpers)
+- [anti-pattern.md](./references/anti-pattern.md) — no logic in tests (forbidden syntax, extracted helpers), and no DRY — nothing but imports at file scope
 - [prohibit.md](./references/prohibit.md) — prohibited items (forbidden matchers, etc.)
 - [eslint-jest-rules.md](./references/eslint-jest-rules.md) — ESLint (jest plugin) mapping (follow it and `npm run lint` passes; intentionally relaxed rules)

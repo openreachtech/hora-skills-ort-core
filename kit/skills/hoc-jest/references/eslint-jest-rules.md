@@ -143,6 +143,26 @@ describe('#notify()', () => {
   snapshots in principle (same spirit as "do not use loose matchers" in
   [prohibit.md](./prohibit.md)).
 
+## Rules deliberately not written (the convention carries them instead)
+
+Two of this skill's prohibitions are decidable from syntax alone, and a
+`no-restricted-syntax` selector would catch either — the `params` / `args` key on
+an element of `cases`, and a declaration at file scope in a test file. **Neither
+is a lint rule, and that is a decision rather than an oversight.**
+
+A lint rule applies to every file in the repository, not to the file being
+written. Turning either on makes every test file written before the convention a
+failing file, and the only route back to a green tree is to rewrite them all.
+**That rewrite buys nothing**: those tests pass and cover what they cover, so the
+whole cost would be paid to move a property name. The prohibitions are carried by
+this convention instead, and read by whoever writes a new test.
+
+- **Do not propose the rule again while the cost is unchanged.** What would change
+  it is the corpus rather than the rule — once few enough files sit outside the
+  convention for the fix to be incidental, the selectors are waiting above.
+- **These are not the relaxed rules below.** Those are off *because this skill's
+  patterns need them off*; these two are off despite this skill wanting them on.
+
 ## Intentionally relaxed rules (this skill's patterns rely on these)
 
 These are errors under `flat/recommended` but are turned **off** in this project.
