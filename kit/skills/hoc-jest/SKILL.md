@@ -124,6 +124,23 @@ the next.
 - See [anti-pattern.md](./references/anti-pattern.md) and
   [structure.md](./references/structure.md) for the reasoning and examples.
 
+## Core principle: the case object has four property names, and no others
+
+The element objects of `cases` carry `override`, `input`, `tally` and
+`expected`. **`params` and `args` are not among them and are never invented** —
+the argument passed to the subject under test is `input`.
+
+- The set is closed, so a name that is not one of the four is wrong however well
+  it reads. The one addition allowed is a prefixed `~Cases` property, on the
+  outer `cases` of a double loop.
+- Which of the four applies, and the mechanical test separating `tally` from
+  `input` / `expected`, are in
+  [naming.md](./references/naming.md#property-names-of-case-objects).
+- **A repository full of `params` is not a licence to write another.** Test
+  files predating this convention record when they were written, and the
+  workflow convention settles what to follow where the code around you and a
+  convention disagree.
+
 ## Core principle: index the first and second levels by definition name (class/member)
 
 The nesting of `describe()` is fixed as **level 1 = class name**,
