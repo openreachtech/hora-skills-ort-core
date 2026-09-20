@@ -279,8 +279,18 @@ before.
   - `Remove` reads the same whether a whole file went or one line inside it did — `Purge` and
     `Kick out` split exactly that, and `Delete` is `Remove`'s twin in this.
   - `Create` leaves open whether a class, one of its members, or something else arrived, which
-    `Declare`, `Define` and `Add` settle between them. `Make` is `Create`'s twin, and
-    `Make changes to syntax` is what it comes to.
+    `Declare`, `Define` and `Add` settle between them.
+- **`Make` is `Create`'s twin, and is barred on wider ground than the trio.** Standing for
+  `Create` it inherits that fault — `Make changes to syntax` settles nothing between `Declare`,
+  `Define` and `Add`. What `Create` cannot do and `Make` can is take an outcome as its object:
+  `Make the written conventions reach the writer` names the state the tree is meant to be in
+  once the change is applied, and every verb in the table could have brought that state about.
+  A word that fits in front of any object marks nothing by standing there, so the subject tells
+  a reader only that something was done. It is the fault `Keep` is kept out for and the fault
+  `Put` is kept out for, arriving in one word.
+  - **The bar reaches the `-ing` form a branch-opening marker takes.** `Start making xxxx`
+    says no more than `Make xxxx` does. The marker carries the verb the branch's own commits
+    would use, and this is not one of them.
 - **The table carries no `Refine` either.** It claims the thing got better without saying what
   changed, so the reader is left with the writer's satisfaction and nothing else. Whatever the
   improvement was, a listed verb names it: the wording redone is `Retake`, the formatting
