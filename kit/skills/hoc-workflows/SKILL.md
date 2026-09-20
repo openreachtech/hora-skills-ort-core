@@ -30,11 +30,20 @@ stop.
 - **The count does not change the answer.** A rule broken by one file and a rule
   broken by sixty are the same rule. A majority in the repository is evidence of
   when the code was written, never of what is correct.
-- **The surrounding code stands in only where nothing is written.** On a point no
-  convention covers, follow the pattern of the files around you; on a point a
-  convention covers, the convention has already answered and the surroundings are
-  not consulted. The code review convention applies the same division from the
-  reading side.
+- **Where a convention covers the point, the surroundings are not consulted.** The
+  convention has already answered, and what the files around you happen to do adds
+  nothing to that answer.
+- **Where nothing is written, the surroundings inform and never authorize.** They
+  show what has been done, which is not the same as what may be done. Code that is
+  worse than what you already know how to write does not become acceptable by being
+  nearby, and matching it writes the flaw a second time — leaving the next reader
+  two examples of it instead of one, and a majority where there had been an
+  exception. What stands in where nothing is written is the coding charter and the
+  QA stance the tests are held to, never the nearest file.
+  - **The code review convention's rule about the surrounding code is not this
+    one.** It sets what a reviewer may raise as a finding, so that a preference
+    does not become one. A threshold for objecting to code is not a licence for
+    writing it.
 - **Only a named instruction reverses this.** Being asked to match a particular
   file, or to leave a module's style alone, is that instruction. Being asked to add
   something to a file is not.
