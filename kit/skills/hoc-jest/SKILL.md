@@ -88,6 +88,18 @@ collapses.
 - Inside `describe()`, do not use `if` / ternary / `??` / short-circuit
   evaluation / higher-order functions / `forEach`. Express repetition with
   `expect.each()` from `@openreachtech/jest-expect-each`.
+  - **The test is syntactic, not semantic.** A call taking a function is a
+    higher-order function, and how short its body is, how obvious it looks or
+    how free of branching it happens to be does not enter into it:
+    `errors.map(it => it.message)` is as prohibited as any other. Asking whether
+    a particular case "really counts as logic" is the judgement this rule exists
+    to remove, and the answer arrived at is always yes.
+  - **It covers the result as much as the preparation.** The paragraph above
+    speaks of logic written to *prepare* a test, and reducing what a call
+    returned so that one assertion can compare it reads as outside that — which
+    is the route this rule is most often escaped through. A collection is
+    compared with `expect.each()`, never by mapping it down to something
+    `toStrictEqual()` accepts.
 - See [anti-pattern.md](./references/anti-pattern.md) for details and examples.
 
 ## Core principle: index the first and second levels by definition name (class/member)
