@@ -226,12 +226,12 @@ showing that the tests removed were the tests covering what was removed.
 ## Detail files
 
 - [directory.md](./references/directory.md) — directory layout, import paths
-- [structure.md](./references/structure.md) — structure of describe / test
+- [structure.md](./references/structure.md) — structure of describe / test, and what may not be shared between them
 - [test-cases.md](./references/test-cases.md) — data conventions for `cases`
 - [aaa-pattern.md](./references/aaa-pattern.md) — Arrange / Act / Assert
 - [mocks.md](./references/mocks.md) — mocks/stubs (inside Arrange, overridden with `jest.spyOn()`)
-- [naming.md](./references/naming.md) — naming of variables and case properties
+- [naming.md](./references/naming.md) — variable names, and the closed set of `cases` element properties (`override` / `input` / `tally` / `expected`)
 - [types.md](./references/types.md) — type annotations and type resolution
-- [anti-pattern.md](./references/anti-pattern.md) — don't put logic in tests (forbidden syntax, extracting helpers)
+- [anti-pattern.md](./references/anti-pattern.md) — no logic in tests (forbidden syntax, extracted helpers), and no DRY — nothing but imports at file scope
 - [prohibit.md](./references/prohibit.md) — prohibited items (forbidden matchers, etc.)
 - [eslint-jest-rules.md](./references/eslint-jest-rules.md) — ESLint (jest plugin) mapping (follow it and `npm run lint` passes; intentionally relaxed rules)
