@@ -1,6 +1,6 @@
 ---
 name: hoc-workflows
-description: "Development workflow procedural rules. Defines how to proceed with implementation and the steps that must always be performed before committing / before completion."
+description: "Development workflow procedural rules. Defines how to proceed with implementation, which of the two to follow where a convention and the surrounding code disagree, and the steps that must always be performed before committing / before completion."
 ---
 
 # Workflows
@@ -18,6 +18,38 @@ Procedural rules related to the development workflow.
 4. Implement the class members
 5. Commit the tests one class at a time
 6. Commit per class
+
+## The existing code is not a template
+
+**A convention outranks the code already in the repository.** Where a skill states
+how something is written and the files around it are written another way, the new
+code follows the skill. Those files record what the convention was before it was
+written down, and matching them propagates the very thing the convention exists to
+stop.
+
+- **The count does not change the answer.** A rule broken by one file and a rule
+  broken by sixty are the same rule. A majority in the repository is evidence of
+  when the code was written, never of what is correct.
+- **Where a convention covers the point, the surroundings are not consulted.** The
+  convention has already answered, and what the files around you happen to do adds
+  nothing to that answer.
+- **Where nothing is written, the surroundings inform and never authorize.** They
+  show what has been done, which is not the same as what may be done. Code that is
+  worse than what you already know how to write does not become acceptable by being
+  nearby, and matching it writes the flaw a second time — leaving the next reader
+  two examples of it instead of one, and a majority where there had been an
+  exception. What stands in where nothing is written is the coding charter and the
+  QA stance the tests are held to, never the nearest file.
+  - **The code review convention's rule about the surrounding code is not this
+    one.** It sets what a reviewer may raise as a finding, so that a preference
+    does not become one. A threshold for objecting to code is not a licence for
+    writing it.
+- **Only a named instruction reverses this.** Being asked to match a particular
+  file, or to leave a module's style alone, is that instruction. Being asked to add
+  something to a file is not.
+- **Leave the older files alone.** This governs what is being written; it is not
+  licence to rewrite what is already there. Bringing existing files up to a
+  convention is work of its own, and it is asked for separately.
 
 ## Before committing
 
