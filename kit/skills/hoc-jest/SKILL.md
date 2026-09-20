@@ -102,6 +102,28 @@ collapses.
     `toStrictEqual()` accepts.
 - See [anti-pattern.md](./references/anti-pattern.md) for details and examples.
 
+## Core principle: nothing but imports at file scope
+
+**The only thing a test file may hold outside every `describe()` is its
+imports.** A value, a class, a function, a schema — each is defined inside every
+`describe()` that uses it, written out as many times as there are `describe()`
+blocks that need it.
+
+DRY does not apply to test code, and file scope is where it is refused most
+plainly. A definition shared there cannot be changed for one member without
+being read against the assumptions of every other `describe()` depending on it,
+so it ends up copied and modified in place anyway — which is what defining it
+per `describe()` does from the start. Shared state at file scope is also
+untraceable to the blocks that rely on it, which is how one test contaminates
+the next.
+
+- **Two `describe()` blocks needing the same value is the case this rule is
+  for**, not the exception to it. The cost of repeating the definition is
+  keystrokes; the cost of sharing it is that neither block can be read on its
+  own.
+- See [anti-pattern.md](./references/anti-pattern.md) and
+  [structure.md](./references/structure.md) for the reasoning and examples.
+
 ## Core principle: index the first and second levels by definition name (class/member)
 
 The nesting of `describe()` is fixed as **level 1 = class name**,
