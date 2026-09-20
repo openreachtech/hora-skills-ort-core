@@ -19,6 +19,29 @@ Procedural rules related to the development workflow.
 5. Commit the tests one class at a time
 6. Commit per class
 
+## The existing code is not a template
+
+**A convention outranks the code already in the repository.** Where a skill states
+how something is written and the files around it are written another way, the new
+code follows the skill. Those files record what the convention was before it was
+written down, and matching them propagates the very thing the convention exists to
+stop.
+
+- **The count does not change the answer.** A rule broken by one file and a rule
+  broken by sixty are the same rule. A majority in the repository is evidence of
+  when the code was written, never of what is correct.
+- **The surrounding code stands in only where nothing is written.** On a point no
+  convention covers, follow the pattern of the files around you; on a point a
+  convention covers, the convention has already answered and the surroundings are
+  not consulted. The code review convention applies the same division from the
+  reading side.
+- **Only a named instruction reverses this.** Being asked to match a particular
+  file, or to leave a module's style alone, is that instruction. Being asked to add
+  something to a file is not.
+- **Leave the older files alone.** This governs what is being written; it is not
+  licence to rewrite what is already there. Bringing existing files up to a
+  convention is work of its own, and it is asked for separately.
+
 ## Before committing
 
 - Before committing, pass `npx eslint <path> <path> …`, naming the files the commit touches.
