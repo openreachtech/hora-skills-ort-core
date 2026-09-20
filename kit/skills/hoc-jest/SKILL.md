@@ -7,7 +7,13 @@ description: "Write Jest unit tests for JavaScript classes, and for the modules,
 
 A skill for writing Jest unit tests for JavaScript classes, and for the modules
 and data files a project tests alongside them.
-The conventions are split across the detail files below. Refer to them as needed.
+The conventions are split across the detail files below.
+
+**Three of them are read in full before the first line of a new test file:**
+[naming.md](./references/naming.md), [anti-pattern.md](./references/anti-pattern.md) and
+[structure.md](./references/structure.md). They hold the prohibitions no lint rule catches, so a
+file written without them passes lint and passes its own tests while breaking this convention
+throughout, and nothing anywhere reports it. The rest are read as the work reaches them.
 
 > **Notation convention**: Throughout this skill, when we simply write
 > `describe()` / `test()` / `expect()`, each is a **generic term that implies**
