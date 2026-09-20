@@ -1,6 +1,6 @@
 ---
 name: hoc-workflows
-description: "Development workflow procedural rules. Defines how to proceed with implementation and the steps that must always be performed before committing / before completion."
+description: "Development workflow procedural rules. Defines how to proceed with implementation, which of the two to follow where a convention and the surrounding code disagree, and the steps that must always be performed before committing / before completion."
 ---
 
 # Workflows
