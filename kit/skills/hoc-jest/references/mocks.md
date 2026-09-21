@@ -111,6 +111,56 @@ test.each(cases)('source: $input.source', ({ override, input, expected }) => {
 })
 ```
 
+## Never Read `mock.calls` in Assert; State It in the Matcher
+
+**A spy is asserted through the matchers Jest gives it, never by reading the
+call log it keeps.** `mock.calls`, `mock.lastCall` and `mock.results` do not
+appear in an Assert phase.
+
+| What is being checked | The matcher |
+| :-- | :-- |
+| Whether it was called | `toHaveBeenCalled()` / `.not.toHaveBeenCalled()` |
+| How many times | `toHaveBeenCalledTimes(n)` |
+| The arguments | `toHaveBeenCalledWith(expected)` |
+| The arguments of the nth call | `toHaveBeenNthCalledWith(n, ...expected)` |
+| The arguments of the last call | `toHaveBeenLastCalledWith(...expected)` |
+
+Reading the log instead costs three things, every time.
+
+- **It needs a subscript.** `spy.mock.calls[0][0]` is the subscript access the
+  statement convention turns away, and it carries two meanings —
+  `[which call][which argument]` — in position alone.
+- **The expected value swells into the whole call log.** `[[expect.objectContaining({
+  message })]]` expresses "called once, and its first argument was" through
+  nothing but the depth of the brackets. Written as the matcher takes it, the
+  same expectation is `expect.objectContaining({ message })` and two levels of
+  brackets disappear.
+- **The failure output degrades.** `toHaveBeenCalledWith` reports a diff against
+  the arguments the spy received; `expect(spy.mock.calls).toStrictEqual(...)`
+  reports a diff between nested arrays, and the reader has to work out which
+  bracket was the call and which was the argument.
+
+```js
+// NG: the call log read in Assert
+expect(reportErrorSpy.mock.calls[0][0])
+  .toHaveProperty('message', expected)
+
+// NG: the whole log compared
+expect(reportErrorSpy.mock.calls)
+  .toStrictEqual(expected) // expected: [[expect.objectContaining({ message })]]
+
+// OK: stated in the matcher
+expect(reportErrorSpy)
+  .toHaveBeenCalledTimes(1)
+expect(reportErrorSpy)
+  .toHaveBeenCalledWith(expected) // expected: expect.objectContaining({ message })
+```
+
+- **Retrieving a value the spy was handed is not this.** Where a test has to
+  take a callback that was passed to a dependency and call it, the log is the
+  only handle Jest offers, and that retrieval belongs to Arrange or Act. A
+  `mock.calls` appearing in Assert means a matcher was not known.
+
 ## Verifying Calls to a Function Passed as an Argument (callback / handler / deriver) with `jest.spyOn(args, key)`
 
 When verifying that a **function passed as an argument** to the subject under
