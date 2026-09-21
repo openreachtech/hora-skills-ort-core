@@ -50,10 +50,11 @@ stop.
   two examples of it instead of one, and a majority where there had been an
   exception. What stands in where nothing is written is the coding charter and the
   QA stance the tests are held to, never the nearest file.
-  - **The code review convention's rule about the surrounding code is not this
-    one.** It sets what a reviewer may raise as a finding, so that a preference
-    does not become one. A threshold for objecting to code is not a licence for
-    writing it.
+  - **The code review convention says the same from the reviewer's side.** Where
+    nothing is written it sends a reviewer to the baseline and the charter too, and
+    it raises a departure from the surrounding code only where the departure is the
+    worse of the two. Code written to this rule is therefore not a finding under
+    that one.
 - **Only a named instruction reverses this.** Being asked to match a particular
   file, or to leave a module's style alone, is that instruction. Being asked to add
   something to a file is not.
