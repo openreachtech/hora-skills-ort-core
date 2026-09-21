@@ -1,6 +1,6 @@
 ---
 name: hoc-scope
-description: "Conventions for scope references among class members. Covers using `this` for references between static members, going through `#get:Ctor` when referring from an instance to static members, and the prohibition on a bare `this` on the right-hand side — neither bound to a local nor destructured for its properties. What a class may hold belongs to the class design principles convention."
+description: "Conventions for scope references among class members. Covers using `this` for references between static members, going through `#get:Ctor` when referring from an instance to static members, and the prohibition on destructuring a property out of `this` — while binding `this` itself to carry the scope stays permitted. What a class may hold belongs to the class design principles convention."
 ---
 
 # Classes: Shared / Scope
@@ -84,11 +84,11 @@ someInstanceMethod () {
 }
 ```
 
-## Do not write a bare `this` on the right-hand side
+## Do not destructure `this`
 
-**`this` never stands alone on the right of an assignment.** Destructuring a property out of
-it (`const { alpha } = this`), or binding the object itself (`const self = this`), is
-prohibited. A property is read where it is used, as `this.alpha`.
+**`this` never stands alone on the right of a destructuring assignment.** Taking a property
+out of it (`const { alpha } = this`) is prohibited; a property is read where it is used, as
+`this.alpha`.
 
 ```javascript
 // NG: the property taken into a local first
@@ -112,6 +112,42 @@ return depths.filter(it =>
 - **Where the local looks unavoidable, what is missing is a member.** The value is being
   held because some logic needs it in hand; give the class the member that performs that
   logic, and the property is read inside it as `this.alpha` again.
+
+### Binding `this` itself is permitted
+
+**What the rule turns away is a property taken out; binding the object to a name is a
+different act and is allowed.** It creates no second name for a value — the one name still
+refers to the one object — and it is what carries the scope into a body that would otherwise
+lose it.
+
+```javascript
+// OK: the receiver carried into a class expression, whose methods re-bind `this`
+static onto (TargetCtor) {
+  const registry = BoundCtorRegistry.create({
+    BaseCtor: TargetCtor,
+  })
+
+  const OwnCtor = this
+
+  return registry.ensureBoundCtor({
+    bindings: [
+      OwnCtor,
+    ],
+    deriver: ({ Ctor }) => class extends Ctor {
+      /** @override */
+      static get boundSource () {
+        return OwnCtor
+      }
+    },
+  })
+}
+```
+
+- A method inside a class expression has a `this` of its own, bound to whatever the member is
+  called on, and an arrow function's lexical `this` does not reach into it. The binding above
+  is the only way the enclosing receiver arrives there.
+- **The name says what was bound**, as any other name does — `OwnCtor` for the class the
+  member was called on. `self` says only that something was aliased.
 
 ### Reading the property is also the faster one
 
