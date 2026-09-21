@@ -111,6 +111,134 @@ test.each(cases)('source: $input.source', ({ override, input, expected }) => {
 })
 ```
 
+## Never Read `mock.calls` in Assert; State It in the Matcher
+
+**A spy is asserted through the matchers Jest gives it, never by reading the
+call log it keeps.** `mock.calls`, `mock.lastCall` and `mock.results` do not
+appear in an Assert phase.
+
+| What is being checked | The matcher |
+| :-- | :-- |
+| Whether it was called | `toHaveBeenCalled()` / `.not.toHaveBeenCalled()` |
+| How many times | `toHaveBeenCalledTimes(n)` |
+| The arguments | `toHaveBeenCalledWith(expected)` |
+| The arguments of the nth call | `toHaveBeenNthCalledWith(n, ...expected)` |
+| The arguments of the last call | `toHaveBeenLastCalledWith(...expected)` |
+
+Reading the log instead costs three things, every time.
+
+- **It needs a subscript.** `spy.mock.calls[0][0]` is the subscript access the
+  statement convention turns away, and it carries two meanings —
+  `[which call][which argument]` — in position alone.
+- **The expected value swells into the whole call log.** `[[expect.objectContaining({
+  message })]]` expresses "called once, and its first argument was" through
+  nothing but the depth of the brackets. Written as the matcher takes it, the
+  same expectation is `expect.objectContaining({ message })` and two levels of
+  brackets disappear.
+- **The failure output degrades.** `toHaveBeenCalledWith` reports a diff against
+  the arguments the spy received; `expect(spy.mock.calls).toStrictEqual(...)`
+  reports a diff between nested arrays, and the reader has to work out which
+  bracket was the call and which was the argument.
+
+```js
+// NG: the call log read in Assert
+expect(reportErrorSpy.mock.calls[0][0])
+  .toHaveProperty('message', expected)
+
+// NG: the whole log compared
+expect(reportErrorSpy.mock.calls)
+  .toStrictEqual(expected) // expected: [[expect.objectContaining({ message })]]
+
+// OK: stated in the matcher
+expect(reportErrorSpy)
+  .toHaveBeenCalledWith(expected) // expected: expect.objectContaining({ message })
+expect(reportErrorSpy)
+  .toHaveBeenCalledTimes(1)
+```
+
+- **Retrieving a value the spy was handed is not this.** Where a test has to
+  take a callback that was passed to a dependency and call it, the log is the
+  only handle Jest offers, and that retrieval belongs to Arrange or Act. A
+  `mock.calls` appearing in Assert means a matcher was not known.
+
+## Spy the instance the subject will use, never a class prototype
+
+**A spy goes on the object the subject under test will actually reach** — the instance it
+is handed, or the args object it is passed. Planting one on a class's `prototype` so that
+every instance picks it up is not the same verification.
+
+```js
+// Avoid: every instance in the process now answers the spy
+jest.spyOn(EnvironmentFacade.prototype, 'isProduction')
+  .mockReturnValue(true)
+
+const engine = new SomeServerEngine({ config, share, errorHash })
+```
+
+- **A prototype spy passes even when the subject reads something else.** It answers for
+  every instance there is, so a member holding the wrong collaborator — one built
+  elsewhere, one left over from a previous step — still returns the value the test planted,
+  and the test reports success for a path it never exercised. Spying the instance the
+  subject was given makes that the thing under observation.
+- It also outlives the case in a way the instance does not: until `afterEach` restores it,
+  the substitution is in force for anything else the test touches.
+- The same reasoning turns away spying a **collaborator's** class where the subject's own
+  class would do: the seam to take is the nearest one the subject reads.
+
+### Where the collaborator cannot be spied, build it per case and pass it in
+
+**Some collaborators refuse the spy.** An object behind a `Proxy` whose `set` trap throws,
+a frozen object, a value produced fresh on every read — `jest.spyOn()` defines a property
+on the target, so on any of these it fails at the moment it is called.
+
+```
+can not modify environment variable [isProduction]
+```
+
+That error is the proxy's, not Jest's: the spy was being planted on an environment object
+whose trap rejects every assignment.
+
+- **Build the collaborator the case needs and hand it to the subject.** Where the class
+  that produces it can be constructed directly, construct it with the state the case wants
+  (`new EnvironmentFacade({ environmentHash: { NODE_ENV: 'production' } })`) and pass it
+  through whatever the subject takes it by. The case then carries the collaborator
+  ([test-cases.md](./test-cases.md#a-case-carries-the-collaborator-already-built)).
+- **This runs the collaborator's real code**, which the prototype spy replaced. A predicate
+  such as `isProduction()` is exercised rather than stubbed, so the test covers the
+  predicate as well as the branch that reads it.
+- Reach for this only where the seam genuinely refuses a spy. Where a spy can be planted on
+  the instance, plant it — the substitution stays smaller.
+
+### A shared fixture may hold the member that is spied
+
+A fixture defined once under the member describe
+([structure.md](./structure.md#define-shared-fixtures-directly-under-the-member-describe))
+**may carry the function each test spies on**, declared as a real function. Each test
+plants its spy on that same object, and `afterEach(() => jest.restoreAllMocks())` puts the
+function back before the next one runs.
+
+```js
+/** @type {SomeType.ValidationContext} */
+const mockContext = /** @type {*} */ ({
+  getFragment: () => null,
+  reportError: () => {},
+})
+
+describe('should report each selection over the cap', () => {
+  test.each(cases)('...', ({ input, expected }) => {
+    const reportErrorSpy = jest.spyOn(mockContext, 'reportError')
+    // ...
+  })
+})
+```
+
+- **Cloning the fixture per test to keep the spy out of it buys nothing**, and the copy —
+  `{ ...mockContext, reportError: () => {} }` — reads as a second fixture whose difference
+  from the first is the thing the reader has to work out.
+- What makes this safe is the restore hook, not the shape of the fixture. Where a project
+  has no such hook, the substitution does outlive the test, and that is a defect in the
+  setup rather than a reason to clone.
+
 ## Verifying Calls to a Function Passed as an Argument (callback / handler / deriver) with `jest.spyOn(args, key)`
 
 When verifying that a **function passed as an argument** to the subject under

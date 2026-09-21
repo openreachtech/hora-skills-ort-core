@@ -100,6 +100,38 @@ arrived.
   value that goes **into** a call and is never returned, which is where a filled-in default is
   observed.
 
+## Take the Matcher a Value Has, Rather Than Routing It Through `expected`
+
+Where Jest names a matcher for the value being asserted — `toBeNull()`, `toBeUndefined()`,
+`toBeNaN()`, `toHaveLength()` — that matcher is the assertion. Binding the value to
+`expected` and comparing it with `toBe()` says the same thing in more lines, and says it
+where lint cannot see it.
+
+```js
+// ❌️ The expectation routed through a variable
+const expected = null
+
+const received = SomeClass.extractValue(args)
+
+expect(received)
+  .toBe(expected)
+
+// ✅️ The matcher that names the value
+const received = SomeClass.extractValue(args)
+
+expect(received)
+  .toBeNull()
+```
+
+- **The variable is what hides it.** `jest/prefer-to-be` rewrites `toBe(null)` into
+  `toBeNull()`, but it reads the argument at the call site; once the literal is bound to
+  `expected`, the rule has nothing to match and the looser form survives review.
+- The failure message differs too: `toBeNull()` reports what it received against "null",
+  while `toBe(expected)` reports it against a variable the reader then has to look up.
+- This is the matcher-choice list in
+  [eslint-jest-rules.md](./eslint-jest-rules.md#how-to-choose-matchers-follow-these-otherwise-they-error)
+  applied to the case lint cannot reach.
+
 ## Do Not Write `jest.fn()` Directly Inline Inside `test()`
 
 Creating and using a `jest.fn()` inside `test()` (injecting it into args,
