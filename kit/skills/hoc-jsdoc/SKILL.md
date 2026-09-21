@@ -1,6 +1,6 @@
 ---
 name: hoc-jsdoc
-description: "JSDoc writing conventions shared by backend and frontend. Use when writing or reviewing JSDoc type annotations, in plain JavaScript or in Vue."
+description: "JSDoc writing conventions shared by backend and frontend: the types a tag carries and the casts refused on the right-hand side, how far an `@override` block may be reduced, and the layout of the block itself — the one `*`-only line it may hold, and where a sentence breaks. Use when writing or reviewing JSDoc, in plain JavaScript or in Vue. Which lint rule enforces what is in the reference beside it."
 ---
 
 # Shared: JSDoc
@@ -376,12 +376,27 @@ static isAcceptable ({
   among a few others ([eslint-jsdoc-rules.md](./references/eslint-jsdoc-rules.md)). What
   decides whether to use it is this rule, not that exemption.
 
-## A JSDoc block holds no blank line
+## A `*`-only line is the block's one separator, and it goes in one place
 
-**There is no blank line inside a JSDoc block**, and a line carrying nothing but `*` is
-not a separator. This holds inside a type literal as much as between sentences.
+**A JSDoc block cannot hold a blank line.** Every line inside it carries the leading `*`
+(`jsdoc/require-asterisk-prefix`), so a line left truly blank is not a wider gap — it is a
+lint error, reported alongside `jsdoc/check-alignment`. What reads as a blank line is a line
+carrying nothing but `*`, and that is the only separator the block has.
+
+**It is spent in one place: between the block description and the first tag**, where
+`jsdoc/tag-lines` requires exactly one. Nowhere else — not between tags, not before the
+closing, and **not inside a type literal**.
 
 ```javascript
+// OK: the one place it goes, between the description and the first tag
+/**
+ * Generate a random text of the given length.
+ *
+ * @param {{
+ *   length: number
+ * }} params - Parameters.
+ */
+
 // NG: a `*`-only line used to group the parameters
 /**
  * @param {{
@@ -403,8 +418,13 @@ not a separator. This holds inside a type literal as much as between sentences.
 - A grouping worth showing is shown **in the code**, where a blank line is a blank line:
   the argument list of the constructor or the factory carries it, and the JSDoc above
   stays a flat list of the same properties.
-- `jsdoc/require-asterisk-prefix` does not catch this — a `*`-only line has its asterisk,
-  so lint passes and the block reads as though the grouping were sanctioned.
+- **Lint places the separator and then stops at the brace.** `jsdoc/tag-lines` counts the
+  lines around the tags, so it is what reports a missing separator before the first tag and
+  a stray one between two tags. Inside a type literal it sees one `@param` and nothing else,
+  so a `*`-only line between two properties is not a line it counts; and
+  `jsdoc/require-asterisk-prefix` passes it too, because the line has its asterisk. The
+  block comes out green, reading as though the grouping were sanctioned, which is why this
+  convention carries the rest.
 
 ## Wrap a JSDoc sentence at a clause boundary
 

@@ -59,12 +59,14 @@ conventions in other files reinforce one another.
 - **Every line must start with `*`.** — `jsdoc/require-asterisk-prefix` (`'always'`)
 - **Keep the `*` column aligned and the spacing after tags (one space after the tag /
   type / name / hyphen).** — `jsdoc/check-alignment` / `jsdoc/check-line-alignment`
-- **Exactly one blank line between the description and the first tag; no blank lines
-  between tags; no blank line before the closing.** — `jsdoc/tag-lines`
-  (`'never'`, `startLines: 1`, `endLines: 0`, `applyToEndTag: true`)
+- **Exactly one `*`-only line between the description and the first tag; none between
+  tags; none before the closing.** — `jsdoc/tag-lines`
+  (`'never'`, `startLines: 1`, `endLines: 0`, `applyToEndTag: true`). A block holds no
+  blank line to begin with, so the separator this rule counts is a line carrying nothing
+  but `*`, and the skill body settles where one may appear
 - **Order tags by the default `tagSequence`** (roughly
   `@param` → `@returns` → `@throws` → … → `@public`/`@access` → `@example`), with no
-  blank lines between tags (`linesBetween: 0`). — `jsdoc/sort-tags`
+  `*`-only lines between tags (`linesBetween: 0`). — `jsdoc/sort-tags`
 - **Do not place stray `*` (`**`) in the middle or at the end of a line** (leading
   whitespace is allowed). — `jsdoc/no-multi-asterisks` (`allowWhitespace: true`)
 - **`@description` / `@param` / `@returns` and others are excluded from the indentation
