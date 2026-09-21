@@ -92,6 +92,94 @@ formatName () {
 }
 ```
 
+## A method that extracts resolves the value; it does not interpret it
+
+**Where a method's job is to take a value out of something — a config, a payload, a
+response — it returns what is there, and `null` where nothing is.** What absence means is
+the caller's to decide, and deciding it inside the extractor hides the decision in the one
+member whose name promises not to make any.
+
+```javascript
+// NG: the extractor decides that no cap means an unreachable one
+static extractMaxDocumentDepth ({
+  config,
+}) {
+  return config.maxDocumentDepth
+    ?? Infinity
+}
+
+// OK: it resolves, and leaves the meaning to whoever asked
+static extractMaxDocumentDepth ({
+  config: {
+    maxDocumentDepth = null,
+  },
+}) {
+  return maxDocumentDepth
+}
+```
+
+- **A default at the destructuring point is not interpretation.** `= null` states that an
+  absent key and an explicit `null` arrive the same way; `?? Infinity` states what absence
+  is worth, which is a different claim.
+- **The caller skips the work rather than being handed a value that stands in for nothing.**
+  Where the value is absent, the member that would have used it returns early, and the
+  behaviour that depends on it does not run.
+
+```javascript
+// The consumer decides what an absent cap means
+exceedsMaxDocumentDepth ({
+  depth,
+}) {
+  if (!this.maxDocumentDepth) {
+    return false
+  }
+
+  return depth > this.maxDocumentDepth
+}
+```
+
+- Two members then each hold one thing: the extractor holds where the value comes from, and
+  the consumer holds what its absence does. A substitute value inside the extractor merges
+  the two, and the merged version reads as though no decision had been made.
+
+## A parameter default belongs to the entry point of a recursion
+
+**Where a recursion carries an accumulator — a visited list, a depth, a path — only the
+member the recursion is entered through gives it a default.** The members reached from
+inside take it as a required parameter.
+
+```javascript
+// The entry point: callers state nothing about the accumulator
+deepMeasureSelectionDepth ({
+  context,
+  selection,
+  visitedFragmentNames = [],
+}) {
+  // ...
+}
+
+// Reached only from inside the recursion: the accumulator is required
+measureSelectionSetDepth ({
+  context,
+  selectionSet,
+  visitedFragmentNames,
+}) {
+  // ...
+}
+```
+
+- **A default on an inner member says it can be entered directly**, which is the one thing
+  it cannot do: called from outside with the accumulator empty, it starts a walk with no
+  record of where it has been. Requiring the parameter is what states that it is a step,
+  not a door.
+- **The initial value stops leaking into the caller.** Before the default existed, the entry
+  point's own caller wrote `visitedFragmentNames: []` — the recursion's internal state
+  stated by code that has nothing to do with the recursion.
+- **Which member is the entry point is readable from its name as well.** The naming
+  convention gives the entry the `deep~` super-prefix, so the name and this default point at
+  the same member — and a default later added to a step contradicts the naming, which is what
+  makes it visible.
+
 ## Factory methods must be defined without exception
 
 - Class definitions must define a factory method without exception.
