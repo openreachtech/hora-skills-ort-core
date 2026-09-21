@@ -1,6 +1,6 @@
 ---
 name: hoc-scope
-description: "Conventions for scope references among class members. Covers using `this` for references between static members, and going through `#get:Ctor` when referring from an instance to static members."
+description: "Conventions for scope references among class members. Covers using `this` for references between static members, going through `#get:Ctor` when referring from an instance to static members, and the prohibition on a bare `this` on the right-hand side — neither bound to a local nor destructured for its properties. What a class may hold belongs to the class design principles convention."
 ---
 
 # Classes: Shared / Scope
