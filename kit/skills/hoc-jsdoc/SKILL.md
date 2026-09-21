@@ -283,6 +283,66 @@ generate ({
  */
 ```
 
+## A `*` cast on the right-hand side is prohibited
+
+- **A variable whose declaration carries no type annotation must not be cast with `*` on its
+  right-hand side.** Both `/** @type {*} */ (...)` and `/** @type {Array<*>} */ ([...])` are
+  prohibited there, as is `any` written in place of `*`.
+- Nothing about the variable then states a type: the declaration says nothing, and the cast says
+  `any`. Every use of that variable downstream is unchecked, so the cast is not a type — it is a
+  switch that turns the checker off for everything the value reaches.
+- **The type error the cast silences is evidence.** A message such as "`{ Gamma?: undefined }` is
+  not assignable to `Record<string, T>`" is pointing at the union TypeScript inferred from the
+  literal, and the fix is to declare what the literal is. Casting deletes the message rather than
+  the defect.
+- **The only `*` cast allowed is the temporary one**: the declaration carries a real type, and the
+  cast on the right-hand side bridges a literal that is deliberately partial — a mock standing in
+  for a wide interface. The variable still carries the real type, so its uses stay checked.
+- **In a test this is absolute.** The implementation exists by the time its test is written, so
+  every type the test needs is already declared somewhere in the code under test. A `*` there is
+  never "the type cannot be narrowed"; it is "the type was not looked up".
+
+```javascript
+// NG: nothing declares the type, and the cast removes the check
+const cases = /** @type {Array<*>} */ ([
+  {
+    input: {
+      errorHash: {
+        Alpha: AlphaError,
+      },
+    },
+  },
+])
+
+// OK: the declaration carries the type
+/**
+ * @type {Array<{
+ *   input: {
+ *     errorHash: Record<string, typeof RenchanGraphqlError>
+ *   }
+ * }>}
+ */
+const cases = [
+  {
+    input: {
+      errorHash: {
+        Alpha: AlphaError,
+      },
+    },
+  },
+]
+
+// OK: a temporary cast, bridging a deliberately partial literal to the declared type
+/** @type {GraphqlType.ValidationContext} */
+const mockContext = /** @type {*} */ ({
+  getType: () => null,
+  reportError: jest.fn(),
+})
+```
+
+- The rule names `const` because that is the only declaration written: `let` is prohibited
+  (see `/hoc-statements`), and `var` errors under lint.
+
 ## Do not place a delimiter after each chopped-down property
 
 - When chopping down the `@param` for named arguments, do not place a semicolon or comma after each property.
