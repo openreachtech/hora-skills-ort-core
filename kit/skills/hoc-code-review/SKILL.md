@@ -28,7 +28,9 @@ behind it. Without that document the first pass cannot be run; see
 3. **Leave to the linter what the linter enforces.** Run the project's lint command; report its
    result as one line. Do not turn lint-enforced formatting into findings — that noise buries
    the findings that matter. Where the project has no lint command, say so on that line; the
-   formatting rules then fall to the convention pass, judged against the surrounding code.
+   formatting rules then fall to the convention pass, judged there the way every other point
+   is — against what the conventions state, and against the surrounding code only where they
+   state nothing.
 4. **Detect, don't assume.** Read the surrounding code before judging a line. A call that looks
    wrong is often correct against a convention you have not read yet.
 5. **Report the defect, not the taste.** A finding states what breaks, or which stated
