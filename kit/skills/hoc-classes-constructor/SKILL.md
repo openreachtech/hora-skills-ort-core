@@ -30,3 +30,35 @@ constructor ({
   this.delimiter = delimiter
 }
 ```
+
+## Separate what goes up to the base from what this class keeps
+
+**Where a constructor hands part of its parameters to the base class and keeps the rest,
+a blank line divides the two in the parameter list.** The reader then sees, without
+following `super()`, which of the properties this class is responsible for.
+
+```javascript
+constructor ({
+  ErrorCtor,
+
+  maxDocumentDepth,
+}) {
+  super({
+    ErrorCtor,
+  })
+
+  this.maxDocumentDepth = maxDocumentDepth
+}
+```
+
+- **The factory methods repeat the same division**, in their own parameter list and in the
+  `new this({ ... })` they assemble. A class states the split in one shape wherever the
+  list appears, so a reader meeting `.create()` first learns the same thing.
+- **A call that hands over the whole list carries no division**: `super({ ErrorCtor })`
+  lists only the base's share, and nothing is separated inside it.
+- **The JSDoc above it does not repeat the division.** A JSDoc block holds no blank line,
+  and a `*`-only line inside a type literal is not one — see the JSDoc convention. The type
+  literal stays a flat list of the same properties.
+- **Tests do not repeat it either.** A test assembling the constructor's argument is
+  building a value, not declaring what the class is made of, so the argument object it
+  writes carries no blank line.
