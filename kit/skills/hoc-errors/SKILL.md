@@ -85,6 +85,9 @@ beside it would be the one failure of that module a caller cannot place.
 - **The message is the error class's, not this convention's.** Where the class builds one from
   an error code and a value, the code and the value are what a reader sees; the
   `must be inherited` wording belongs to the plain route and is not restated here.
+  - **What that code is belongs to the error code convention** — its parts, and the category a
+    failure of this kind takes. This convention settles that the throw happens and what it
+    carries the member under, never how the string identifying it is built.
 - **The member goes in under the key `memberName`.** Fixing the key buys what fixing the wording
   buys on the other route — whoever searches for where a member is declared abstract has one
   string to search for, rather than a shape that differs per module.
