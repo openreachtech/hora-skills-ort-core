@@ -22,6 +22,8 @@ server that did — an operation for GraphQL, a request method for a REST API. S
 
 - [graphql-error-codes.md](./references/graphql-error-codes.md) — what a GraphQL server fills
   `XBBB.CCC` with, and the bands its client raises
+- [restapi-error-codes.md](./references/restapi-error-codes.md) — the same for a REST API, plus the
+  status errors it alone carries
 
 ## The code is a string
 
@@ -126,6 +128,10 @@ Counting per category, rather than once across the raiser, is what keeps a categ
 contiguous. Adding a validation error to a raiser that already has database errors appends to the
 validation run; counted across the raiser it would land after them, and a reader could no longer
 tell from the number whether a category was complete.
+
+- **A detail file may spend `CCC` on something the stack already numbers**, in a band of its own.
+  Where it does, it says so and gives the reason — a number the stack has already published is a
+  name a reader knows, and a running number beside it would be a second name for one thing.
 
 ## A code that has shipped is never renumbered
 
