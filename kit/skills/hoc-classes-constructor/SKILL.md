@@ -56,9 +56,10 @@ constructor ({
   list appears, so a reader meeting `.create()` first learns the same thing.
 - **A call that hands over the whole list carries no division**: `super({ ErrorCtor })`
   lists only the base's share, and nothing is separated inside it.
-- **The JSDoc above it does not repeat the division.** A JSDoc block holds no blank line,
-  and a `*`-only line inside a type literal is not one — see the JSDoc convention. The type
-  literal stays a flat list of the same properties.
+- **The JSDoc above it does not repeat the division.** A JSDoc block has no blank line to
+  divide with, and the `*`-only line that stands in for one is spent between the description
+  and the first tag — see the JSDoc convention. The type literal stays a flat list of the
+  same properties.
 - **Tests do not repeat it either.** A test assembling the constructor's argument is
   building a value, not declaring what the class is made of, so the argument object it
   writes carries no blank line.
