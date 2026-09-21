@@ -187,7 +187,8 @@ return manifest.isProduction()
 - **A method call on a value is not this.** `it.name.toUpperCase()` calls a built-in on the value
   a property gave back; nothing behind the property is being reached for. What this rule turns
   away is a hop to a **collaborator** whose behaviour is a decision of its own.
-- **The chop-down rule counts the same hops**, from the property-chain convention. A line that
+- **The chop-down rule counts the same hops**, under "one property per line in a property chain"
+  in the coding-styles convention. A line that
   has to be chopped to satisfy it is usually a line that should not exist.
 
 ### Where the manifest is a plain object
