@@ -822,41 +822,47 @@ describe('SomeClass', () => {
 })
 ```
 
-## Instantiate the subject with `new`, not with its factory
+## Build the subject with its factory; take `new` to replace a defaulted module
 
-**Where a test needs an instance of the class under test, build it with `new`.** A factory
-(`.create()` / `.createAsync()`) is reached for only when the factory itself is the member
-under test.
+**A test builds the instance the way the class says instances are built — with `.create()`
+/ `.createAsync()`.** The defaults the factory fills in are part of what the class offers,
+so a case that wants them takes them, and the test says only what distinguishes it.
 
 ```js
-// Good: the instance the member under test needs, built directly
-const validator = new DocumentTooDeepGraphqlRequestValidator({
-  ErrorCtor: DocumentTooDeepError,
-
-  maxDocumentDepth: input.maxDocumentDepth,
-})
-
-// Avoid: the factory, which decides for the test what the instance is made of
+// Good: the factory, so the defaults the class declares are the ones under test
 const validator = DocumentTooDeepGraphqlRequestValidator.create({
-  ErrorCtor: DocumentTooDeepError,
-
   maxDocumentDepth: input.maxDocumentDepth,
 })
 ```
 
-- **A factory fills in what the test did not state.** Defaults, a collaborator built from
-  configuration, an await on something the test never asked for — each is a decision the
-  factory makes, and a test whose subject is some other member has to live with all of
-  them. `new` takes exactly the properties the case lines up and nothing else.
-- **An async factory reaches further still.** `createAsync()` runs whatever boot path the
-  class declares — building a share, reading the environment, loading configuration from
-  disk — none of which the member under test is about. Under `new`, a collaborator the test
-  wants to vary is simply passed in.
-- **The exception is the factory's own tests.** In `describe('.create()')` the factory is
-  the subject, so it is called; that is the one place it appears.
-- The constructor's own tests already use `new` by nature
-  ([Constructor Tests](#constructor-tests)); this rule is about every **other** member's
-  tests, which is where a factory call tends to creep in as a convenience.
+**Where the default is a dependency module and the case has to substitute it, the factory
+is the wrong door.** It names that module itself, so nothing the test passes can displace
+it. The constructor is the only seam that takes the replacement, and the subject is built
+with `new`.
+
+```js
+// Good: the defaulted module replaced, so the constructor takes it directly
+const validator = new DocumentTooDeepGraphqlRequestValidator({
+  ErrorCtor: DocumentTooDeepErrorMock,
+  maxDocumentDepth: input.maxDocumentDepth,
+})
+```
+
+- **What sends a test to `new` is the substitution, never the existence of a default.** A
+  factory filling in a threshold, a flag or a formatted value is left to fill it in — the
+  case has no quarrel with the value. `new` is reached for when the case has to observe or
+  control what the default is: the module the subject calls through.
+- **`new` then states the whole list.** Once the constructor is the door, every property
+  comes from the case, and the substitute arrives beside the real values instead of being
+  planted behind the subject. That is the same seam
+  [mocks.md](./mocks.md#spy-the-instance-the-subject-will-use-never-a-class-prototype)
+  reaches for where a collaborator refuses a spy.
+- **An async factory is not avoided for being async.** `createAsync()` running a boot path
+  is what a case wanting the booted instance awaits. It is left on the one ground above —
+  a module it defaults to, which the case must replace.
+- The constructor's own tests use `new` by nature
+  ([Constructor Tests](#constructor-tests)), and in `describe('.create()')` the factory is
+  the subject. Neither is decided by this rule.
 
 ## Constructor Tests
 
