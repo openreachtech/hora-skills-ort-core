@@ -1,17 +1,27 @@
 ---
 name: hoc-error-codes
-description: "The string an error carries so a caller can tell it apart from every other: the parts of `Aaa.XBBB.CCC`, the categories a failure is sorted into, the per-resolver identifier below them, and the codes a client raises on its own behalf. Use when adding an error to a resolver, or when choosing a category for a new failure. Declaring and throwing the code belong to each stack's own convention; whether a failure throws at all belongs to the errors convention."
+description: "The string an error carries so a caller can tell it apart from every other: the parts of `Aaa.XBBB.CCC`, the categories a failure is sorted into, and the bands a client fills from the top. Which letters `X` takes, and what `BBB` counts, are settled per server kind in the detail files. Use when adding an error, or when choosing a category for a new failure. Declaring and throwing the code belong to each stack's own convention; whether a failure throws at all belongs to the errors convention."
 ---
 
 # Error Codes
 
-An error code identifies a failure across every boundary it crosses — the resolver that raised it,
+An error code identifies a failure across every boundary it crosses — whatever raised it,
 the response that carried it, the client that matched it against a message, and the report someone
 reads afterwards. This convention settles what that string is.
 
 Whether a failure is reported by returning `null` or by throwing is settled before this convention
 is reached; the errors convention settles it. What follows applies to a failure that arrives
 carrying a code.
+
+**`Aaa` reads the same wherever the code was raised; `XBBB.CCC` does not.** What kind of failure it
+is holds across every server a project runs, while who raised it is spelled in the terms of the
+server that did — an operation for GraphQL, a request method for a REST API. So this file settles
+`Aaa` and the shape of the rest, and a detail file settles the rest itself.
+
+## Detail files
+
+- [graphql-error-codes.md](./references/graphql-error-codes.md) — what a GraphQL server fills
+  `XBBB.CCC` with, and the bands its client raises
 
 ## The code is a string
 
@@ -70,47 +80,51 @@ readings part company exactly where it matters: the client decides what to show 
 and a category assigned by the handling it expected makes that circular.
 
 - **A category that does not fit is not a licence to invent one.** The list above is the whole of
-  it, and `00` exists for what none of the others describes.
+  what a server raises, and `00` exists for what none of the others describes. The bands below are
+  the client's, and a server never reaches for one.
 
-## `X` — which operation raised it
+## The client fills the categories from the top
 
-| letter | operation |
-| :-- | :-- |
-| `Q` | query resolver |
-| `M` | mutation resolver |
-| `S` | subscription resolver |
-| `X` | none of them — the code is raised across resolvers, or below them |
+**A request can fail without the server ever running it.** What is sent can be rejected before the
+request leaves, the network can drop it, and the response can arrive unparseable — failures the
+client raises on its own behalf, which still need codes, and which must not be mistakable for
+anything the server sent.
 
-**`X` is what a built-in takes.** A code the engine raises for every operation alike has no one
-resolver to name, so it takes `X` and the resolver number `000` with it — `102.X000.001` is
-unauthenticated wherever it happens.
+They take the same format, and the category is what tells them apart. **The client fills `aa` from
+the top: the tens digit starts at `9` and drops to `8`, then `7`, as each band is used up**, while
+the units inside a band count up from `0`. Counting down is what keeps the client's categories from
+ever meeting the server's, which count up from `00`.
 
-## `BBB` — which resolver raised it
+- **`A` is still `1`**, because these are the client framework's own errors. A client raising a code
+  of its own — one the framework does not define — takes `2` and the same bands.
+- Which bands exist is per server kind, and the detail files carry them. `190` is unknown in both,
+  and the rest diverge with what each client can see.
 
-**A resolver holds one identifier, and every code it declares carries that identifier.** The number
-is assigned per operation letter, so `Q001` and `M001` are two different resolvers and neither
-collides with the other.
+## `XBBB` — who raised it
 
-- **`000` means no single resolver.** It goes with `X`, and only with it.
-- **The identifier is the resolver's for as long as the resolver exists.** It is not reassigned
-  when a neighbouring resolver is deleted, and the gap that leaves is left as a gap.
-- 999 resolvers per operation is the ceiling. Mutations are where a project accumulates them, and
-  that is the count the width was chosen for.
+**The four characters together name the raiser, and how they divide is per server kind.** A stack
+may spend the letter on a kind of raiser and the digits on which one of that kind it was, or spend
+the whole group on a single identifier and leave the digits at `000`. Which letters exist, and what
+the digits are assigned to where they are assigned at all, is settled in the detail file.
+
+- **`X000` is reserved, and means the same everywhere: no single raiser.** A code the engine
+  raises alike for every operation, every method and every endpoint has nothing to name, so it
+  takes the letter `X` and the number `000` together — `102.X000.001` is unauthenticated wherever
+  it happens. `X` appears with no other number.
+- **`000` behind any other letter is not that.** There the letter is doing the naming and the
+  digits are simply unspent, which a reader tells apart by the letter rather than by the zeros.
+- **An identifier belongs to what it names for as long as that thing exists.** It is not
+  reassigned when a neighbour is deleted, and the gap that leaves is left as a gap.
+- 999 per letter is the ceiling wherever the digits are counted at all.
 
 ## `CCC` — the running number
 
-**The number counts within one resolver and one category, from `001`.** So a resolver's validation
+**The number counts within one raiser and one category, from `001`.** So one raiser's validation
 errors run `001`, `002`, `003` under `203`, and its first database error is `001` again under `204`.
 
-```
-203.M024.001   InvalidEmail       validation, first
-203.M024.002   InvalidPassword    validation, second
-204.M024.001   UserNotFound       database, first — the count starts over
-```
-
-Counting per category, rather than once across the resolver, is what keeps a category's codes
-contiguous. Adding a validation error to a resolver that already has database errors appends to the
-validation run; counted across the resolver it would land after them, and a reader could no longer
+Counting per category, rather than once across the raiser, is what keeps a category's codes
+contiguous. Adding a validation error to a raiser that already has database errors appends to the
+validation run; counted across the raiser it would land after them, and a reader could no longer
 tell from the number whether a category was complete.
 
 ## A code that has shipped is never renumbered
@@ -126,29 +140,6 @@ when the string moves.
   what moves is the error — a new code in the right category, the old one retired and its number
   left spent.
 
-## Codes the client raises
-
-**A request can fail without a resolver ever running.** The variables can be rejected before the
-request leaves, the network can drop it, and the response can arrive unparseable — failures the
-client raises on its own behalf, which still need codes, and which must not be mistakable for
-anything a resolver sent.
-
-They take the same format, and they are told apart by the category. **Client categories fill `aa`
-from the top down**, starting at `9` in the tens digit and descending as they are used up, so they
-can never meet the server's categories counting up from `00`.
-
-| code | raised when |
-| :-- | :-- |
-| `190.X000.001` | unknown — nothing more specific applies |
-| `191.X000.001` | the variables did not pass their check before the request left |
-| `191.X000.002` | the headers did not pass theirs |
-| `192.X000.001` | the request never completed — a network failure |
-| `192.X000.002` | the response arrived and did not parse |
-
-- `X000` throughout: no resolver raised these, so there is none to name.
-- **`A` is still `1`**, because these are the client framework's own errors. A client raising a
-  code of its own — one the framework does not define — takes `2` and the same categories.
-
 ## Where this convention stops
 
 Run this convention to its end and what you have is a string. **Everything that happens to that
@@ -156,7 +147,3 @@ string afterwards belongs somewhere else**: which hash declares it, how it is th
 validator reaches it, and how a client turns it into something a person reads. Those are the
 backend and frontend conventions for the stack in hand, and each of them assumes the string this
 one produces.
-
-- **The operation letters are GraphQL's.** Anything else raising a code in this format — a job, a
-  consumer, the engine below them — has no operation to name, and takes `X` with `000` behind it.
-- An HTTP error carries a status code and a message instead, and is not written in this format.
