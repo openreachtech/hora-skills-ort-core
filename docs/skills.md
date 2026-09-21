@@ -58,7 +58,7 @@ Each skill lives at `kit/skills/<name>/`, directly under the skills directory, a
 | :-- | :-- |
 | `hoc-naming` | Naming for classes, methods, properties and accessors — datetime suffixes (`At`/`On`, plus `From`/`To` for ranges), abbreviation criteria, American spelling, forbidden words, ASCII only. |
 | `hoc-comments` | Comments within actual code are written in English unless there is a reason otherwise. |
-| `hoc-jsdoc` | JSDoc writing conventions shared by backend and frontend — type annotations, `@returns`, `@typedef` and type-only imports, with the Vue/Nuxt-specific conventions in its references. |
+| `hoc-jsdoc` | JSDoc writing conventions shared by backend and frontend — type annotations, the casts refused, `@typedef` and type-only imports, and the layout of the block itself, with the Vue/Nuxt-specific conventions in its references. |
 
 ## Testing
 
