@@ -151,9 +151,9 @@ expect(reportErrorSpy.mock.calls)
 
 // OK: stated in the matcher
 expect(reportErrorSpy)
-  .toHaveBeenCalledTimes(1)
-expect(reportErrorSpy)
   .toHaveBeenCalledWith(expected) // expected: expect.objectContaining({ message })
+expect(reportErrorSpy)
+  .toHaveBeenCalledTimes(1)
 ```
 
 - **Retrieving a value the spy was handed is not this.** Where a test has to

@@ -71,6 +71,11 @@ Items that overlap with conventions in other files reinforce one another.
   `toHaveBeenNthCalledWith(1, ...)` … `toHaveBeenNthCalledWith(n, ...)` n times,
   pinning the arguments of every call. Verifying only the count lets arguments pass
   through (QA stance; a convention of this skill, not lint-enforced).
+- **Where both are written, the argument matcher goes first and
+  `toHaveBeenCalledTimes(n)` goes last.** What the test is looking at is what the spy
+  was called with; the count is the supplement. Writing the supplement first puts the
+  lesser claim where the reader looks for the greater one, and a reader who stops at
+  the first line has read the wrong one.
 - **Split count patterns into a `describe()` per count** (`when called once` /
   `when called twice` / `when called three times`, and if needed `when not called`
   (= 0 times)). Within each `describe()` you can write `expect()` out flat, without
@@ -91,9 +96,9 @@ describe('#notify()', () => {
       // arrange / act ...
 
       expect(handlerSpy)
-        .toHaveBeenCalledTimes(1)
-      expect(handlerSpy)
         .toHaveBeenNthCalledWith(1, expected.first)
+      expect(handlerSpy)
+        .toHaveBeenCalledTimes(1)
     })
   })
 
@@ -109,11 +114,11 @@ describe('#notify()', () => {
       // arrange / act ...
 
       expect(handlerSpy)
-        .toHaveBeenCalledTimes(2)
-      expect(handlerSpy)
         .toHaveBeenNthCalledWith(1, expected.first)
       expect(handlerSpy)
         .toHaveBeenNthCalledWith(2, expected.second)
+      expect(handlerSpy)
+        .toHaveBeenCalledTimes(2)
     })
   })
 
