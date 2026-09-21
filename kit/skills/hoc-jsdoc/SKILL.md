@@ -1,6 +1,6 @@
 ---
 name: hoc-jsdoc
-description: "JSDoc writing conventions shared by backend and frontend. Use when writing or reviewing JSDoc type annotations, in plain JavaScript or in Vue."
+description: "JSDoc writing conventions shared by backend and frontend: the types a tag carries and the casts refused on the right-hand side, how far an `@override` block may be reduced, and the layout of the block itself — the one `*`-only line it may hold, and where a sentence breaks. Use when writing or reviewing JSDoc, in plain JavaScript or in Vue. Which lint rule enforces what is in the reference beside it."
 ---
 
 # Shared: JSDoc
