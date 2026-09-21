@@ -343,6 +343,95 @@ const mockContext = /** @type {*} */ ({
 - The rule names `const` because that is the only declaration written: `let` is prohibited
   (see `/hoc-statements`), and `var` errors under lint.
 
+## An override is reduced to `/** @override */` only where nothing else is stated
+
+A member that overrides another, and whose JSDoc adds nothing the base does not already
+say, is written as the one-line block. **It may be reduced that far only when the block
+carries no `@param` and no `@returns`** — those two are read by the type checker, and
+**TypeScript does not inherit them from the base member.**
+
+```javascript
+// OK: a getter with no parameters, whose return type the literal already gives
+/** @override */
+static get errorName () {
+  return 'DocumentTooDeep'
+}
+
+// NG: @param dropped, so the destructured argument becomes an implicit any
+/** @override */
+static isAcceptable ({
+  engine,
+}) {
+  // ...
+}
+```
+
+- **Measured**: dropping `@param` from an override reported `TS7031` on the destructured
+  binding, and dropping `@returns` from a member returning a visitor reported `TS7006` on
+  that visitor's own parameters — the return type was what gave them their shape. **Lint
+  stayed at zero through both**, so nothing but the type checker reports this.
+- A description the override adds of its own keeps the block, even where `@param` and
+  `@returns` would be redundant: the sentence is the thing being added.
+- The one-line form is permitted by `jsdoc/multiline-blocks`, which exempts `override`
+  among a few others ([eslint-jsdoc-rules.md](./references/eslint-jsdoc-rules.md)). What
+  decides whether to use it is this rule, not that exemption.
+
+## A JSDoc block holds no blank line
+
+**There is no blank line inside a JSDoc block**, and a line carrying nothing but `*` is
+not a separator. This holds inside a type literal as much as between sentences.
+
+```javascript
+// NG: a `*`-only line used to group the parameters
+/**
+ * @param {{
+ *   ErrorCtor: typeof RenchanGraphqlError
+ *
+ *   maxDocumentDepth: number
+ * }} params - Parameters of this constructor.
+ */
+
+// OK: the properties stand as one list
+/**
+ * @param {{
+ *   ErrorCtor: typeof RenchanGraphqlError
+ *   maxDocumentDepth: number
+ * }} params - Parameters of this constructor.
+ */
+```
+
+- A grouping worth showing is shown **in the code**, where a blank line is a blank line:
+  the argument list of the constructor or the factory carries it, and the JSDoc above
+  stays a flat list of the same properties.
+- `jsdoc/require-asterisk-prefix` does not catch this — a `*`-only line has its asterisk,
+  so lint passes and the block reads as though the grouping were sanctioned.
+
+## Wrap a JSDoc sentence at a clause boundary
+
+**Where a sentence in a JSDoc block runs past the line, break it where the clause breaks**
+— after a comma, at a conjunction, between two sentences — rather than filling to a column
+and breaking wherever the word count lands.
+
+```javascript
+// NG: filled to the margin, so the line ends mid-clause
+/**
+ * A fragment already on the path contributes nothing, which is what stops a
+ * cyclic document from being walked forever.
+ */
+
+// OK: the break falls where the clause does
+/**
+ * A fragment already on the path contributes nothing,
+ * which is what stops a cyclic document from being walked forever.
+ */
+```
+
+- **The unit a reader takes in is the line.** Broken at a clause, each line is one
+  statement and the comment can be read down the left edge; broken at a column, a line
+  ends on `stops a` and carries no meaning of its own.
+- This governs prose. A type literal is already one property per line, and `@param` /
+  `@returns` descriptions follow the same break where they run long.
+
 ## Do not place a delimiter after each chopped-down property
 
 - When chopping down the `@param` for named arguments, do not place a semicolon or comma after each property.
