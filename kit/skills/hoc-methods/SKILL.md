@@ -175,8 +175,10 @@ measureSelectionSetDepth ({
 - **The initial value stops leaking into the caller.** Before the default existed, the entry
   point's own caller wrote `visitedFragmentNames: []` — the recursion's internal state
   stated by code that has nothing to do with the recursion.
-- Which member is the entry point should be readable from its name as well as from this
-  default; naming it belongs to the naming convention.
+- **Which member is the entry point is readable from its name as well.** The naming
+  convention gives the entry the `deep~` super-prefix, so the name and this default point at
+  the same member — and a default later added to a step contradicts the naming, which is what
+  makes it visible.
 
 ## Factory methods must be defined without exception
 
