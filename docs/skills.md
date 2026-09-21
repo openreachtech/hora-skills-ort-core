@@ -33,7 +33,7 @@ Each skill lives at `kit/skills/<name>/`, directly under the skills directory, a
 | `hoc-functions` | Function conventions. Parameters follow method parameters: named arguments as a principle. |
 | `hoc-constants` | Constant conventions — naming (uppercase `SNAKE_CASE`, singular for enum-like objects), chopping down, and the file organization and placement of object-type constants. |
 | `hoc-contracts` | Type contracts for function and method arguments and return values, and how contract types are defined. |
-| `hoc-scope` | Scope references among class members — `this` between static members, and `#get:Ctor` when referring from an instance to a static member. |
+| `hoc-scope` | Scope references among class members — `this` between static members, `#get:Ctor` when referring from an instance to a static member, and no bare `this` on the right-hand side. |
 
 ## Modules
 
