@@ -42,7 +42,7 @@ guarantee is not the implementation's internal circumstances, but the member's
   `BoundCtorRegistry`" would still pass even for the hard-coded implementation
   `return BoundCtorRegistry`. Only by running the variable element (the
   instance's type) through `test.each()` can you verify the contract
-  ([structure.md](./references/structure.md#instance-getters-require-testeach-the-variable-element-is-the-instance)).
+  ([structure.md](./references/structure.md#instance-members-require-testeach-the-variable-element-is-the-instance)).
 - Example: don't skip testing a static property because "the memoization
   pool is an implementation detail." Members that appear public should be
   verified as part of the contract.
@@ -229,7 +229,7 @@ showing that the tests removed were the tests covering what was removed.
 - [structure.md](./references/structure.md) — structure of describe / test, and what may not be shared between them
 - [test-cases.md](./references/test-cases.md) — data conventions for `cases`
 - [aaa-pattern.md](./references/aaa-pattern.md) — Arrange / Act / Assert
-- [mocks.md](./references/mocks.md) — mocks/stubs (inside Arrange, overridden with `jest.spyOn()`)
+- [mocks.md](./references/mocks.md) — mocks/stubs (inside Arrange, overridden with `jest.spyOn()`), and which object the spy goes on
 - [naming.md](./references/naming.md) — variable names, and the closed set of `cases` element properties (`override` / `input` / `tally` / `expected`)
 - [types.md](./references/types.md) — type annotations and type resolution
 - [anti-pattern.md](./references/anti-pattern.md) — no logic in tests (forbidden syntax, extracted helpers), and no DRY — nothing but imports at file scope

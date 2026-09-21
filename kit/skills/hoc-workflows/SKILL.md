@@ -30,6 +30,16 @@ stop.
 - **The count does not change the answer.** A rule broken by one file and a rule
   broken by sixty are the same rule. A majority in the repository is evidence of
   when the code was written, never of what is correct.
+  - **Counting the two spellings is itself the error.** A convention written after
+    the code exists starts at zero occurrences of the spelling it prescribes, so the
+    tally is guaranteed to argue against every rule on the day it is adopted.
+    Reaching for `grep -c` to settle which spelling is right asks a question whose
+    answer was fixed before the rule was written, and reading a count of 441 to 0 as
+    "the repository says otherwise" inverts what the numbers mean.
+  - **The first instance is not an anomaly needing a defence.** "The skill states
+    it" is the whole justification, and 441 to 1 is what a convention looks like on
+    its first day rather than evidence against it. The spelling that is about to be
+    written is the one the count is missing.
 - **Where a convention covers the point, the surroundings are not consulted.** The
   convention has already answered, and what the files around you happen to do adds
   nothing to that answer.

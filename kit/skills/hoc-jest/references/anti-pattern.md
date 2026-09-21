@@ -208,15 +208,15 @@ as assertion rather than logic, and it is the same unverified transformation.
 
 ```js
 // ❌️ Mapping the collection down so that one toStrictEqual() can take it
-const errors = validate(schema, parse(input.query), rules)
+const errors = validate(schema, input.document, rules)
 
-const actual = errors.map(it => it.message)
+const received = errors.map(it => it.message)
 
-expect(actual)
+expect(received)
   .toStrictEqual(expected)
 
 // ✅️ Assert over the collection as it came back
-const errors = validate(schema, parse(input.query), rules)
+const errors = validate(schema, input.document, rules)
 
 expect.each(errors)
   .toHaveProperty.each([

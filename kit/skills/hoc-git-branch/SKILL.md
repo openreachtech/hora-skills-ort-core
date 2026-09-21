@@ -243,6 +243,20 @@ What the finished line is looked at for:
     work set out to clear, they are halves of one job and belong on one branch.
   - Deciding on size alone splits a pair that should have been one branch, because size is the
     test that a pair of one-commit steps passes and a pair of large steps fails.
+  - **New definitions and the adoption of them are the asymmetric pair, and they split.** Where
+    a change introduces classes or members that did not exist and then adapts the existing code
+    to use them, the seam between the two is where the sub-branches part: one defines, one
+    adapts. The pair looks like steps of one piece — nothing uses the definitions until the
+    adoption lands — but only one half of the test holds. **The definitions stand on their own**:
+    they compile, they carry their own tests, and they could be taken while the adoption is left.
+    The adoption could not. That asymmetry is what the earlier examples lack, where neither half
+    means anything without the other.
+    - **The adapting half is not split further by class or by file.** Three classes changed so
+      that one new family can be used are three parts of one adoption, and they belong on one
+      sub-branch; splitting them by class produces siblings that are not siblings, which is the
+      failure the bullet above describes.
+    - Which half merges first follows the ordering rules below — the adoption cannot land before
+      what it adopts.
 
 ### The order the sub-branches merge in
 
@@ -382,6 +396,13 @@ git commit --allow-empty -m 'Start updating the domains a repository selects'
 - **The subject is written at the altitude the branch name is written at.** Both name one piece
   of work, so a marker listing what the branch will carry fails the same way a label does, and
   the two then disagree besides.
+- **The marker tests what the branch holds.** Where the subject cannot name everything the branch
+  carries without stretching, the branch is what is wrong — not the subject. A marker reading
+  `Start implementing the validator family` over a branch that also rewrites the engine using it
+  is not a marker that needs rewording; it is a branch carrying two pieces of work, and the
+  second belongs beside it rather than under it. Writing the marker is therefore the moment the
+  contents get checked, which is one more reason it is cut while the structure is being shaped
+  rather than at the start.
 - The subject names **what is being started**, which depends on the kind of trunk.
   - A **`dev` trunk** is named directly: `Start dev`. Here `dev` is the branch, not a
     placeholder word.
