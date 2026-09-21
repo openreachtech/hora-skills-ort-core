@@ -46,7 +46,7 @@ Each skill lives at `kit/skills/<name>/`, directly under the skills directory, a
 
 | Skill | Summary |
 | :-- | :-- |
-| `hoc-statements` | Statements and control flow — no `let`, no literal `undefined` in production code, higher-order functions over sequential processing, and ternary/`if` policies. |
+| `hoc-statements` | Statements and control flow — no `let` anywhere, no literal `undefined` in production code, higher-order functions over sequential processing, and ternary/`if` policies. |
 | `hoc-async` | Asynchronous code conventions. When writing Promises, use `async`/`await` whenever possible. |
 | `hoc-errors` | Error handling — return `null` on failure from value-generating methods, and the two throws an abstract member declares itself unimplemented with: a plain `Error` carrying the fixed wording, or the error class the module declares for its own failures. |
 | `hoc-error-codes` | The string an error carries — the three parts of `Aaa.XBBB.CCC`, the categories a failure is sorted into, and the bands a client fills from the top, with `XBBB.CCC` settled per server kind for GraphQL and for a REST API. |
