@@ -12,6 +12,11 @@ each member, and put only **one** member into each class-name describe().
 
 - Do not bundle multiple members into a single class-name describe().
 - The nesting order is `describe(class) > describe(member) > describe(behavior) > test()`.
+- **The member describes appear in the order the class writes its members.** The test file
+  is read beside the implementation, and a reader who has just found a member in the class
+  reaches its tests by counting the same distance down the test file. Where the class is
+  reordered, the test file is reordered with it in the same change — two orders that drift
+  apart cost the reader the one thing this index was for.
 - Name the behavior-layer describe() after the expected behavior using
   **`should [verb]`** (e.g. `describe('should keep property')` /
   `describe('should call constructor')`). Do not use `to [verb]`. However, when the
@@ -233,13 +238,19 @@ describe('BoundCtorRegistry', () => {
 })
 ```
 
-### Instance getters require `test.each()` (the variable element is the instance)
+### Instance members require `test.each()` (the variable element is the instance)
 
 An instance getter (e.g. `get Ctor () { return this.constructor }`), or a getter whose
 value **varies depending on the instance's state or type**, is not a "fixed value". Do
 not reduce it to a single `test()` under `when called as is` — instead, put the
 **variable element (i.e. which instance it is) into `cases` and drive it with
 `test.each()`**.
+
+**This reaches every instance member of a class that holds properties, not getters
+alone.** An instance method taking no arguments still reads the instance, so the instance
+is its variable element, and a single `test()` fixes it — the same shortcut the argument
+rule below turns away. Build two or more instances differing in the property the member
+reads, and drive them with `test.each()`.
 
 - Do not shrink it to a single `test()` just because "the base class currently being
   verified always yields the same value". That is a **shortcut justified by the
@@ -356,7 +367,7 @@ value passed in), you must **not** fix a single input in a single `test()`. Turn
 argument into the variable element as `cases`, and drive **two or more inputs** with
 `test.each()`. With only one input, an implementation that ignores the argument and
 hardcodes the value would still pass (the QA stance in [SKILL.md](../SKILL.md)).
-Whereas [Instance getters require `test.each()`](#instance-getters-require-testeach-the-variable-element-is-the-instance)
+Whereas [Instance members require `test.each()`](#instance-members-require-testeach-the-variable-element-is-the-instance)
 has "the variable element is the instance," here "the variable element is the
 argument."
 
@@ -810,6 +821,42 @@ describe('SomeClass', () => {
   })
 })
 ```
+
+## Instantiate the subject with `new`, not with its factory
+
+**Where a test needs an instance of the class under test, build it with `new`.** A factory
+(`.create()` / `.createAsync()`) is reached for only when the factory itself is the member
+under test.
+
+```js
+// Good: the instance the member under test needs, built directly
+const validator = new DocumentTooDeepGraphqlRequestValidator({
+  ErrorCtor: DocumentTooDeepError,
+
+  maxDocumentDepth: input.maxDocumentDepth,
+})
+
+// Avoid: the factory, which decides for the test what the instance is made of
+const validator = DocumentTooDeepGraphqlRequestValidator.create({
+  ErrorCtor: DocumentTooDeepError,
+
+  maxDocumentDepth: input.maxDocumentDepth,
+})
+```
+
+- **A factory fills in what the test did not state.** Defaults, a collaborator built from
+  configuration, an await on something the test never asked for — each is a decision the
+  factory makes, and a test whose subject is some other member has to live with all of
+  them. `new` takes exactly the properties the case lines up and nothing else.
+- **An async factory reaches further still.** `createAsync()` runs whatever boot path the
+  class declares — building a share, reading the environment, loading configuration from
+  disk — none of which the member under test is about. Under `new`, a collaborator the test
+  wants to vary is simply passed in.
+- **The exception is the factory's own tests.** In `describe('.create()')` the factory is
+  the subject, so it is called; that is the one place it appears.
+- The constructor's own tests already use `new` by nature
+  ([Constructor Tests](#constructor-tests)); this rule is about every **other** member's
+  tests, which is where a factory call tends to creep in as a convenience.
 
 ## Constructor Tests
 
@@ -1416,8 +1463,15 @@ fits this.
   does not affect the behavior** — not because "reading the implementation shows it
   has no effect, so I'll use a single loop" (the QA principle in
   [SKILL.md](../SKILL.md)).
+- **The outer axis is whatever state the member reads, which is not always a property of
+  the subject.** A static member handed a collaborator (`isAcceptable({ engine })` /
+  `createAsync({ engine })`) reads that collaborator's state, and the double loop puts it
+  on the outside — the collaborator's error hash, the environment it reports — with the
+  member's own argument inside. What decides the outer axis is **what varies independently
+  of the argument**, never where the value happens to be stored.
 - Each element of the outer `cases` **bundles together** `input` (the constructor
-  property) with its own dedicated inner cases (`~Cases`).
+  property, or the collaborator whose state the member reads) with its own dedicated inner
+  cases (`~Cases`).
 - For the naming convention of the inner cases variable (the prefixed `~Cases`), see
   [naming.md](./naming.md).
 - Use `override` / `input` / `tally` on the **outer** element side. `expected` may be
