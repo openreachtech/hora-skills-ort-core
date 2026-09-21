@@ -1,6 +1,6 @@
 ---
 name: hoc-statements
-description: "Conventions for statements and control flow. Covers prohibiting the literal `undefined` in production code, avoiding sequential processing in favor of higher-order functions, and policies on ternary expressions and if statements."
+description: "Conventions for statements and control flow. Covers prohibiting `let` and the literal `undefined` in production code, avoiding sequential processing in favor of higher-order functions, and policies on ternary expressions and if statements."
 ---
 
 # Shared: Statements
@@ -60,6 +60,39 @@ function extractAlpha (object) {
 console.log(
   extractAlpha({})
 ) // null
+```
+
+## `let` is prohibited; declare every variable with `const`
+
+- **`let` is not written.** Every variable is declared with `const`; `var` is already an error
+  under lint (`no-var`).
+- A `let` exists in order to be reassigned, and a reassigned binding is sequential processing
+  held in one name: what the name means depends on how far down the function the reader has got.
+  Every rule below this one — higher-order functions in place of loops, a conditional expression
+  in place of a branch that assigns — exists so that a value is computed once and named once.
+- **Lint enforces it.** `@openreachtech/eslint-config` carries `Never use let` among its
+  `no-restricted-syntax` options, so a `let` errors whatever it is for. `prefer-const` would have
+  caught only the ones never reassigned — that is, exactly the harmless ones — which is why the
+  prohibition is written as syntax rather than left to it.
+- Where a `let` looks unavoidable, what sits underneath it is one of these:
+
+| The `let` | What replaces it |
+| :-- | :-- |
+| Accumulating through a loop | `map` / `filter` / `reduce` / `Array.from` |
+| Assigned in each branch of an `if` | A conditional expression, or `??` |
+| Assigned later, once a guard has passed | An early `return`, or a function that returns the value |
+
+```javascript
+// NG: one name, two meanings
+let endpoint = config.graphqlEndpoint
+if (config.prefix) {
+  endpoint = `${config.prefix}${endpoint}`
+}
+
+// OK: computed once, named once
+const endpoint = config.prefix
+  ? `${config.prefix}${config.graphqlEndpoint}`
+  : config.graphqlEndpoint
 ```
 
 ## Sequential processing is prohibited; write with higher-order functions
