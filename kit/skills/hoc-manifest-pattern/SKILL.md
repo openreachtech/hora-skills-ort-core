@@ -27,7 +27,7 @@ structure already shares with everything inside it.
 static isAcceptable ({
   manifest,
 }) {
-  return manifest.env.isProduction()
+  return manifest.isProduction()
 }
 
 static async createAsync ({
@@ -162,8 +162,45 @@ ordinary dependency.
 | A collector's method grows a branch per member | The members were never asked whether they apply |
 | A collector names each member's constructor parameters | The members were handed values instead of the manifest |
 | The shared object grows one policy member per member of a family | A question the member should answer was answered for it, because the manifest held the data |
-| A member is called a message chain for reading the manifest's own fields | Reading the shared object was mistaken for reaching through an unrelated one |
+| A caller reaches through a field of the manifest to a method behind it | The manifest was treated as a bag of collaborators instead of an interface |
 
-**The last one is the trap.** A general rule against reaching through objects is right, and the
-manifest is the exception it does not cover. Where a structure declares a shared object, reading
-it is not a chain — it is the interface.
+## Reading the manifest is one hop, and one hop only
+
+**Taking the manifest freely is not licence to reach through it.** `manifest.env` is the
+interface the structure declares; `manifest.env.isProduction()` is the caller reaching past that
+interface to a collaborator behind it, and the general rule against reaching through objects
+applies to it in full. The manifest is not an exception to that rule — it is the object the rule
+is measured from.
+
+```javascript
+// NG: the caller now depends on env, and on what env offers
+return manifest.env.isProduction()
+
+// OK: the manifest answers for itself
+return manifest.isProduction()
+```
+
+- **The fix is a method on the manifest, not a shorter chain at the call site.** `Manifest`
+  grows `#isProduction()`, which delegates to whatever it holds. Adding a member is a cheap
+  direction and it compounds: once the method exists, the next caller reaches it without ever
+  meeting the field behind it.
+- **A method call on a value is not this.** `it.name.toUpperCase()` calls a built-in on the value
+  a property gave back; nothing behind the property is being reached for. What this rule turns
+  away is a hop to a **collaborator** whose behaviour is a decision of its own.
+- **The chop-down rule counts the same hops**, under "one property per line in a property chain"
+  in the coding-styles convention. A line that
+  has to be chopped to satisfy it is usually a line that should not exist.
+
+### Where the manifest is a plain object
+
+**A manifest that cannot grow a method is a design mistake**, and the correction is to make it an
+instance of a class that can. Where that is cheap, do it.
+
+- **Where it is not, measure before reaching for it.** A manifest built as a plain object at boot
+  may be read from everywhere, and giving it a class touches every one of those sites.
+- **Survey the reach first, and where the correction turns out to be a large-scale change, stop
+  and report it** as a refactoring target rather than starting one. The review convention has no
+  `WARNING`; the level this takes there is `MEDIUM` — a departure that will mislead the next
+  reader, with no defect behind it.
+- The report names the manifest, the sites that reach through it, and the members it would have
+  to grow. Deciding to spend that is not this convention's call.

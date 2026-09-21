@@ -1,6 +1,6 @@
 ---
 name: hoc-statements
-description: "Conventions for statements and control flow. Covers prohibiting `let` and the literal `undefined` in production code, avoiding sequential processing in favor of higher-order functions, and policies on ternary expressions and if statements."
+description: "Conventions for statements and control flow. Covers prohibiting `let` — in test files too — and the literal `undefined`, which test files are exempt from, avoiding sequential processing in favor of higher-order functions, and policies on ternary expressions and if statements."
 ---
 
 # Shared: Statements

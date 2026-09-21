@@ -62,7 +62,38 @@ if (
 
 - Write one method per line.
 - When writing a method chain, allow at most one receiver per line, and at most one method per line.
-- `this` does not count as a receiver.
+- **`this` and `it` do not count as receivers.** They are the context variables: `this` names the
+  object the code is already inside, and `it` is the fixed name the naming convention gives the
+  current item of a higher-order callback. Neither carries information of its own, so counting
+  either would chop a line that states one receiver and one member — `this.converter.toFixed({ value })`
+  and `it.name.toUpperCase()` each say one thing, and each stays on one line.
+  - **Every other identifier is a receiver**, including the inner item a nested callback names by
+    meaning. `manifest.env.isProduction()` is two receivers on one line, and chopping it is not
+    the fix — see the next bullet.
+  - **Where a line would otherwise carry two receivers, destructure at the parameter.** Naming
+    the inner object in the parameter list leaves one identifier at the call site, so nothing has
+    to be chopped and nothing is reached through.
+
+    ```javascript
+    // Two receivers
+    .filter(it => it.account.isActive())
+
+    // One: the parameter names what the body acts on
+    .filter(({ account }) => account.isActive())
+    ```
+
+  - **Two receivers on a line is usually the Law of Demeter showing through.** Reaching a property
+    of a property is yours to do only inside the top-receiver, which is why `this.` reaches one
+    further and a named object does not. Where the line is `manifest.env.isProduction()`, what the
+    count is reporting is that the method belongs on `manifest`.
+    - **Destructuring answers the count, not the design.** It is the right move where the object
+      is data the body consumes — an item being iterated, a payload being read. It is a dodge
+      where the object is an interface that should have answered for itself: taking
+      `{ manifest: { env } }` states the same knowledge of the manifest's insides that
+      `manifest.env` did, one line higher up.
+    - **Passing the count is not a clearance.** `it` is excluded from it, so a reach through a
+      callback item's field never shows up there at all. What the count catches is a subset; the
+      design conventions judge the rest.
 - Unless instructed to chop down, place the first method of a method chain on the same line as the receiver.
 - **Counting receivers and methods does not settle a chain on its own.** The count of complex
   expressions on the line governs it too, and a chain can pass this rule while failing that one.
@@ -134,7 +165,8 @@ divergence.
 ## Write one property per line in a property chain
 
 - Write one property per line.
-- A receiver is not considered a property. `this.xxxx` is considered a receiver.
+- A receiver is not considered a property, and the context variables above are not receivers — so
+  `this.xxxx` and `it.xxxx` each stand as one receiver.
 - This criterion also conforms to the "Law of Demeter".
 
 ```javascript

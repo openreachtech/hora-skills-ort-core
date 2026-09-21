@@ -195,14 +195,16 @@ static onto (TargetCtor) {
     BaseCtor: TargetCtor, // ← inflate based on the argument side
   })
 
+  const OwnCtor = this // ← the receiver itself becomes the binding
+
   return registry.ensureBoundCtor({
     bindings: [
-      this, // ← the receiver itself becomes the binding
+      OwnCtor,
     ],
     deriver: ({ Ctor }) => class extends Ctor {
       /** @override */
       static get boundSource () {
-        return this
+        return OwnCtor
       }
     },
   })

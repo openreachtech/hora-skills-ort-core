@@ -14,10 +14,17 @@ preference, and preferences are excluded by the review rules.
   (naming, class design and members, module structure, contracts and JSDoc, comments, constants,
   errors, coding style, documentation), plus anything the project states in its own instruction
   file.
-- Where the project has no written convention on a point, two things stand in for one: **what
-  the surrounding code already does**, and the **baseline below**. A change that departs from
-  the pattern of the files around it is a finding; a change that follows an unwritten pattern
-  you personally dislike is not.
+- Where the conventions — including the reference files beside them — state nothing on a point,
+  what stands in is the **baseline below**, read with the project's coding charter. **What the
+  surrounding code does is evidence of when it was written, and settles nothing on its own.**
+  - **A departure from the pattern of the files around it is a finding only where the departure
+    is the worse of the two.** Where the new code is the better one, the workflow convention
+    required it rather than merely allowing it, so raising it turns a convention into a
+    violation of itself. The surrounding code informs a reviewer; it never authorizes a writer.
+  - **Which of the two is worse is settled by the baseline and the charter**, never by which is
+    more common in the repository. Where neither says the new shape is the worse one, there is
+    no finding — and a change that follows an unwritten pattern you personally dislike is not
+    one either.
 - Formatting that the linter enforces is out of scope. Run the lint command, report its result
   in one line, and do not restate its output as findings.
 

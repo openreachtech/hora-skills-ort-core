@@ -33,7 +33,7 @@ Each skill lives at `kit/skills/<name>/`, directly under the skills directory, a
 | `hoc-functions` | Function conventions. Parameters follow method parameters: named arguments as a principle. |
 | `hoc-constants` | Constant conventions — naming (uppercase `SNAKE_CASE`, singular for enum-like objects), chopping down, and the file organization and placement of object-type constants. |
 | `hoc-contracts` | Type contracts for function and method arguments and return values, and how contract types are defined. |
-| `hoc-scope` | Scope references among class members — `this` between static members, and `#get:Ctor` when referring from an instance to a static member. |
+| `hoc-scope` | Scope references among class members — `this` between static members, `#get:Ctor` when referring from an instance to a static member, and no destructuring of `this`. |
 
 ## Modules
 
@@ -46,10 +46,10 @@ Each skill lives at `kit/skills/<name>/`, directly under the skills directory, a
 
 | Skill | Summary |
 | :-- | :-- |
-| `hoc-statements` | Statements and control flow — no literal `undefined` in production code, higher-order functions over sequential processing, and ternary/`if` policies. |
+| `hoc-statements` | Statements and control flow — no `let` anywhere, no literal `undefined` in production code, higher-order functions over sequential processing, and ternary/`if` policies. |
 | `hoc-async` | Asynchronous code conventions. When writing Promises, use `async`/`await` whenever possible. |
 | `hoc-errors` | Error handling — return `null` on failure from value-generating methods, and the two throws an abstract member declares itself unimplemented with: a plain `Error` carrying the fixed wording, or the error class the module declares for its own failures. |
-| `hoc-error-codes` | The string an error carries — the three parts of `Aaa.XBBB.CCC`, the categories a failure is sorted into, the per-resolver identifier and running number below them, and the codes a client raises on its own behalf. |
+| `hoc-error-codes` | The string an error carries — the three parts of `Aaa.XBBB.CCC`, the categories a failure is sorted into, and the bands a client fills from the top, with `XBBB.CCC` settled per server kind for GraphQL and for a REST API. |
 | `hoc-coding-styles` | Coding style — where to chop down expressions, method/property chains, call arguments, template literals and regular-expression flags. |
 
 ## Naming, comments and JSDoc
@@ -58,7 +58,7 @@ Each skill lives at `kit/skills/<name>/`, directly under the skills directory, a
 | :-- | :-- |
 | `hoc-naming` | Naming for classes, methods, properties and accessors — datetime suffixes (`At`/`On`, plus `From`/`To` for ranges), abbreviation criteria, American spelling, forbidden words, ASCII only. |
 | `hoc-comments` | Comments within actual code are written in English unless there is a reason otherwise. |
-| `hoc-jsdoc` | JSDoc writing conventions shared by backend and frontend — type annotations, `@returns`, `@typedef` and type-only imports, with the Vue/Nuxt-specific conventions in its references. |
+| `hoc-jsdoc` | JSDoc writing conventions shared by backend and frontend — type annotations, the casts refused, `@typedef` and type-only imports, and the layout of the block itself, with the Vue/Nuxt-specific conventions in its references. |
 
 ## Testing
 
