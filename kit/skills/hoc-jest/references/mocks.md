@@ -3,6 +3,15 @@
 Conventions for mocks and stubs in jest. Referenced from `SKILL.md`.
 See [naming.md](./naming.md) for the meaning of the `override` case property.
 
+**A test is driven with the real thing.** The collaborator a subject reaches is built from the
+class that defines it, and what a case needs from that collaborator — a return value watched, a
+return value swapped — is taken with `jest.spyOn()` on the instance itself. **Spying is part of
+driving the real thing, not a departure from it**: the object is real, its code runs, and the spy
+observes one member of it. What this rules out is the fabricated stand-in — an object literal cast
+into the collaborator's type, or a `jest.fn()` standing where a member should be. The one
+exception is a module the project does not own, and it is taken outside the test entirely (see
+below).
+
 ## Override with jest.spyOn() Instead of Defining a Derived Class
 
 When you need a stub implementation of an abstract method, or need to swap out
