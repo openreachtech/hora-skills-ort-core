@@ -87,6 +87,28 @@ downstream catches it.
   both times the two-argument form recreated its merges inside the sub-branch, and both times
   `--onto` naming the commit the branch was cut from replayed only what the branch held.
 
+### A commit the base already holds is dropped, not resolved
+
+**A rebase onto a base that has moved past the branch replays commits whose change is already
+there**, and the ones that conflict are the safe half. A conflict stops and asks; a commit that
+applies cleanly does not, and where the base holds the same change at a different place in the
+file, what lands is the change twice.
+
+Measured twice, on two branches against one base: a conflict was resolved by taking the base's
+side, a later commit in the same rebase then applied without conflict at its own anchor, and both
+times the result was a configuration file carrying the same key on two lines. Both times the tree
+was correct at every other point, the rebase reported success, and nothing downstream refused it.
+
+- **Establish which commits the base already holds before starting**, and skip those rather than
+  resolving them. A patch already upstream has nothing to contribute, so the resolution never
+  needed judgment in the first place.
+- **The repair is to drop the commit, never to tidy the result.** Editing the duplicate away
+  leaves a commit in the branch claiming a change the base had already made, and the next rebase
+  of that branch makes the same duplicate again. Drop it with `-i -r`, which keeps the merges the
+  `-i` would otherwise cost.
+- **Read the result against the base before merging.** Where a branch was expected to add
+  something and the diff shows a line the base already had, the duplicate is what it is showing.
+
 ## The trunk branch
 
 A **trunk branch** is one that other branches are cut from and merged back into.
