@@ -178,6 +178,18 @@ The shape of the name settles nothing. `release/x.x.x` is a trunk and
     merges in like any other. A subject worded badly, a value that turned out wrong, a file that
     should not have gone in: the trunk gains a commit that says so, and the record of the
     mistake stays. A history a reader can trust is worth more than one that is tidy.
+  - **A trunk may be re-cut while nothing on the remote descends from it, and both halves of
+    that are a person's.** Where no branch has been pushed from it and no pull request is open
+    against it, the commits the rule protects are held by nobody, and the reason above does not
+    reach the case.
+    - **What may be run here is `git fetch`, and nothing past it.** The condition is read at an
+      instant and the push is not, so a check that passed is not a check that still holds — and
+      a verdict handed over as settled is one the operation gets run on. Refresh the
+      remote-tracking refs, show what they now hold, and leave both the judgement and the push
+      where they belong.
+    - **Local branches cut from it are recovered afterwards**, by `--onto` naming the commit
+      each was cut from. That half is ordinary work and asks no permission of its own.
+    - **A single pushed branch, or one open pull request, ends it** and the rule is back whole.
   - **A sub-branch is the opposite**, until it is pushed and opened for review: rewriting it is
     how the structure described below gets cut at all. Nobody else is holding it, so nothing
     disagrees.
