@@ -114,9 +114,9 @@ the mapped host had never carried.
 
 ## One install, one lockfile commit, at the end
 
-**The lockfile is not committed until the pass is finished.** However many declared versions
-move, and however many commits they take, there is **one** install and **one** lockfile
-commit, and it is last.
+**The lockfile is not committed until the pass is finished.** However many decisions the pass
+writes into the manifest, and however many commits they take, there is **one** install and
+**one** lockfile commit, and it is last.
 
 The alternative — a lockfile commit beside each declared version — fails twice:
 
@@ -126,16 +126,22 @@ The alternative — a lockfile commit beside each declared version — fails twi
   one resolution, not a sum of parts: raising three versions produces a single tree in which
   the three are already entangled with whatever else moved underneath them.
 
-So the shape of the pass is N commits that move declared versions, then one that records the
+So the shape of the pass is N commits that move the manifest, then one that records the
 resolution:
 
 ```
 Update alpha-package version to 1.3.0 in <manifest>
 Update beta-package version to 2.7.1 in <manifest>
 Update gamma-package version to 4.0.2 in <manifest>
+Uninstall delta-package
 <the single lockfile commit>
 ```
 
+- **A decision that is not a version move takes the same position.** A package the raise has
+  orphaned comes out in a commit of its own, and that commit goes **before** the lockfile
+  commit rather than after it: one install resolved the removal and the raises together, so one
+  lockfile commit records them together. Putting it after would need a second install, which is
+  what this section refuses.
 - **The intermediate commits carry no matching lockfile, and that is the shape rather than
   an oversight.** A reader checking one of them out finds a manifest ahead of its lockfile,
   which is the same state the project sits in whenever a range is widened.
@@ -156,6 +162,25 @@ a native package as a regular — not optional — dependency of something two l
   decision outstanding, and a project whose gate is strict stops instead.
 - **How to settle it is not this convention's** — `hoc-npm-install-scripts` covers reviewing
   the script, denying or approving it, and what the record looks like.
+
+## A raise can also orphan one
+
+**A consolidation upstream leaves packages behind.** Where a dependency used to reach several
+narrow packages and its new release reaches one that subsumes them, the narrow ones stay in the
+manifest with nothing left to pull them in. They look required for as long as nobody checks,
+because they were being installed the whole time — by the parent, not by the declaration.
+
+Measured on one raise: two packages the manifest declared were reached, before it, through a
+parent the new release replaced with a single consolidated one. Afterwards nothing but the root
+requested either, and nothing in the project imported them.
+
+- **They are found in the lockfile, never by reading code.** A package requested by the root
+  alone, and imported nowhere, is orphaned. Run the same query before the raise as well: the
+  parent that used to reach it is still there, and the answer is what tells the two states
+  apart.
+- **Taking one out is a manifest decision, so it belongs to this pass** rather than to a later
+  one. Deferred, it leaves the manifest claiming a dependency the tree has no reason for, and
+  the next reader cannot tell it from one that is load-bearing.
 
 ## An advisory the pass did not clear is the vulnerability convention's
 
