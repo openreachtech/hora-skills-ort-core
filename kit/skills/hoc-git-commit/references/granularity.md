@@ -138,6 +138,19 @@ second fact goes missing.
 
 ## What to keep together
 
+**One modification of one kind is one decision, however many files it lands in.** Where the edit
+is the same edit everywhere it appears, the file count is no reason to split: a reviewer cannot
+accept it in one place and reject it in another, so splitting hands them one judgement several
+times over and buys nothing. The cases below are instances of this rather than exemptions from
+it — a rename followed into every call site, a relocation followed into every path that pointed
+at the old one, a term respelt wherever it appears.
+
+**What makes it one decision is that the modification is uniform, not that the files are alike.**
+The moment one edit in the sweep is of another kind, the split returns and that edit takes a
+commit of its own. This is the bound `## What to split` states from the other side: a mechanical
+rename is verified by scanning that it is uniform, and one hand-edited line among two hundred
+renamed ones is invisible.
+
 - A change and the **type annotations or JSDoc that describe it**. A signature and its
   documented contract are one decision; splitting them leaves a commit whose documentation
   contradicts its code.
