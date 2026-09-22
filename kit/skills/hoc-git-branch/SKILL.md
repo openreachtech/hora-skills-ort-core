@@ -519,6 +519,17 @@ Merge the core/ rename in the repository documents
 
     **Cutting from a local branch does not need the fetch, and does not get the guarantee
     either**: a local trunk is as old as the last time somebody moved it.
+  - **A local trunk that is merely behind is advanced by a fetch refspec, not by a checkout.**
+    Naming the branch on both sides of the colon moves the local ref to what the remote holds,
+    and the form refuses anything that is not a fast-forward — so the one operation these
+    branches must never take is not available to it.
+
+    ```bash
+    git fetch origin <trunk>:<trunk>
+    ```
+
+    Standing on another branch while it runs is the point: nothing is checked out, nothing is
+    merged, and a trunk that has diverged comes back refused rather than silently rebuilt.
 - **Merging several sub-branches back is a cycle, not a batch: merge one, rebase the next onto
   the trunk's new tip, merge it, rebase the one after that.** Every merge moves the tip, so each
   branch is rebased against a commit that did not exist while the branch before it was still
