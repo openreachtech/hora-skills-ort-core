@@ -328,6 +328,10 @@ git diff              # confirm what is being left for the next commit
   named is a commit nobody designed.
 - When hunks for two decisions are interleaved in the same file, stage the first, commit, and
   then stage the second. `git add -p` splits hunks with `s` and edits them with `e`.
+- **The two operations can sit inside one hunk**, so a split driven by asking which decision a
+  hunk belongs to does not see them. One entry of a table replaced and another added arrive as a
+  single hunk of one deletion and two insertions. What a hunk is asked is whether it holds one
+  operation, and the verbs are what answer it.
 
 ## Anti-patterns
 
