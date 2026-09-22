@@ -1,6 +1,6 @@
 ---
 name: hoc-git-branch
-description: "Conventions for the branches a repository carries: which five are trunks and what that obliges, the one worked on directly, which may be cut from `main`, per flow, how a general branch is named, and how work is split off a trunk and merged back with `--no-ff`. Use before cutting a branch, before merging one back, and before deciding whether work needs a branch structure. What a commit holds, and how its subject is worded, belong to the git commit convention. Every `git rebase` here takes `-r`."
+description: "Conventions for the branches a repository carries: which five are trunks, which may be cut from `main` per flow, how a general branch is named, how work is split off a trunk and merged back with `--no-ff`, and what tells whether a branch still carries anything. Use before cutting a branch, before merging one back, and before deciding whether work needs a branch structure or a branch may be discarded. What a commit holds belongs to the git commit convention. Every `git rebase` here takes `-r`."
 ---
 
 # Git Branch
@@ -632,3 +632,28 @@ Three tests answer three different questions, and none of them stands in for ano
   target shows what the two differ by, not what the branch contributed: where the target has
   moved on, the branch appears to hold work it never touched. Measured: the files filling such a
   diff had never been edited on the branch at all.
+
+### Deciding a branch may go
+
+**What decides it is what the branch uniquely holds — never its age, its name or how long it has
+been open.** Run the tests above, then look at what would be lost with the ref:
+
+- **Content.** Whatever the rebase leaves is the whole of what the branch adds. Where that is
+  empty, nothing is lost by deleting it.
+- **Descendants.** A branch something else was cut from is holding that base up, even if it
+  carries nothing itself.
+- **A pull request.** Deleting the branch closes it, and the discussion on it goes with the
+  ref rather than with the commits.
+- **The issue it answers.** An issue already closed, or answered by another branch, leaves the
+  branch with nothing to close.
+- **Its own base.** A branch whose base no longer exists cannot be judged by its diff until it
+  has been rebased onto something that does.
+
+Where all of these come back empty, the branch is a copy of work that is already elsewhere, and
+keeping it costs a reader the time it takes to establish that again.
+
+- **A branch whose one unique change nobody wants is in the same position**, and the argument
+  that it might be useful later is answered by how small the change was: writing it again costs
+  less than rebasing a stale branch onto a base that has moved.
+- **Delete it with `-d` where the test allows, and take a refusal as a question** rather than
+  reaching for `-D`. The refusal is the check described above doing its work.
