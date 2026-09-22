@@ -1,6 +1,6 @@
 ---
 name: hoc-npm-raise-deps
-description: "How a project's declared dependency versions are raised to the newest release each declared range already permits. A major a range excludes is a decision of its own and not this pass. Use when raising dependency versions or comparing them against the registry. Resolving an advisory belongs to the vulnerability convention, and an install script to the install-scripts convention."
+description: "How a project's declared dependency versions are raised to the newest release each declared range already permits, including one whose new release has moved to another registry. A major a range excludes is a decision of its own and not this pass. Use when raising dependency versions or comparing them against the registry. Resolving an advisory belongs to the vulnerability convention, and an install script to the install-scripts convention."
 ---
 
 # npm Raise Deps
@@ -70,6 +70,47 @@ raised.**
 - **A dependency the project never asked for is not written down here.** It moves when the
   pass's single install re-resolves the tree, under whatever range its own parent declares,
   and nothing in this manifest has an opinion about it.
+
+## A raise that crosses registries is uninstalled and installed again
+
+**Where the version being taken sits on a registry other than the one the package came from,
+raising the declared range does not reach it.** The manifest states a range; the lockfile states
+a `resolved` URL per package, and that URL names a host. An install run against an edited
+manifest reads the host the lockfile already holds and asks it for a version it never published.
+
+So the move is made by taking the package out and putting it back at the version wanted:
+
+```sh
+npm uninstall <package>
+npm install <flag> <package>@<version>
+```
+
+**This is not the command the section above turns away.** That one refreshes a lockfile and
+leaves the manifest untouched; this one writes the range into the manifest exactly as a hand
+edit would, so the reason the version is where it is stays on the line a reader looks at.
+
+- **A scope mapped to a registry is mapped for every package under it**, so the mapping outlives
+  whichever of them moved. Left in place it keeps resolving the whole scope to the old host, and
+  it overrides the command-line registry besides. Taking the mapping out is part of the move.
+- **An authentication failure on a scoped package is not first a credentials problem.** The host
+  being asked has no such version, and a request it cannot authorize and a request it cannot
+  satisfy come back the same way — so the message names the credential while the cause is the
+  address. **Establish where the version is published before arranging access to where it is
+  not.**
+
+### Reading a registry the mapping does not point at
+
+**A scope mapping outranks the registry option.** Setting the registry for one command leaves a
+scoped package resolving through its mapping exactly as before, and the command fails as it
+would have without the option. The override has to be made at the scope:
+
+```sh
+npm view <package>@<version> --@<scope>:registry=https://<registry>/
+```
+
+Measured on one package: the plain registry option resolved through the mapping and failed on
+authentication, and the scope-level override answered from the other registry with the version
+the mapped host had never carried.
 
 ## One install, one lockfile commit, at the end
 
