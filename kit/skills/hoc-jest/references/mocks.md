@@ -350,3 +350,50 @@ test.each(cases)('source: $input.source', ({ input, expected }) => {
     .toHaveBeenCalledWith(expected.source)
 })
 ```
+
+## A third-party module is stood in for by a `MockXxxx` class
+
+**A test never casts an object literal into a third-party type.** The stand-in is
+a class of its own — `MockXxxx`, for the type `Xxxx` it stands in for — living
+under `tests/mocks/`
+([directory.md](./directory.md#a-stand-in-for-a-third-party-module-lives-under-testsmocks)).
+Its `.create()` declares the real type as its return, so every test takes `Xxxx`
+from `MockXxxx.create()` and writes no cast at all.
+
+```js
+// tests/mocks/MockValidationContext.js
+export default class MockValidationContext {
+  /**
+   * Factory method.
+   *
+   * @returns {GraphqlType.ValidationContext} - Validation context.
+   */
+  static create () {
+    return /** @type {*} */ ({
+      getType: () => null,
+      reportError: () => {},
+    })
+  }
+}
+```
+
+```js
+// the test holds the real type, and casts nothing
+const mockContext = MockValidationContext.create()
+const reportErrorSpy = jest.spyOn(mockContext, 'reportError')
+```
+
+- **The cast is spent once.** `/** @type {*} */` sits inside `.create()` and
+  nowhere else, so that is the only place the checker is turned off. The JSDoc
+  convention allows it there and refuses it at a test site.
+- **A change to the third-party type has one place to land.** A literal cast
+  written at each test site would have to be found and corrected everywhere, and
+  nothing says where those places are.
+- **The stand-in is tested like anything else the project writes**, at
+  `tests/__tests__/tests/mocks/MockXxxx.js`: that `.create()` returns what it
+  declares, and that every member a subject reaches answers as the stand-in
+  promises.
+- **An in-house collaborator never takes this shape.** Build the real class and
+  hand the instance over, then take what the case needs from it with
+  `jest.spyOn()`. The stand-in exists because a third-party type cannot be built
+  here, which is a reason a class of ours never has.
