@@ -601,3 +601,34 @@ Merge the core/ rename in the repository documents
       success without committing — a `cherry-pick` refused for a bad flag, a patch that did not
       apply, a copied file identical to the one already there. The check does not care which.
   - **Two branches are the smallest case of this, not a rule of their own.**
+
+## What a branch still carries
+
+**Whether a branch's work has reached a trunk is not answered by ancestry.** `--is-ancestor`
+answers whether the trunk holds those commits, and a branch whose content arrived by another
+route — cherry-picked, rewritten, or done again on a different branch — fails that test while
+holding nothing the trunk lacks. Measured: a branch reported as not merged turned out to carry no
+change the target did not already have.
+
+Three tests answer three different questions, and none of them stands in for another.
+
+| Test | What it answers |
+| :-- | :-- |
+| `git merge-base --is-ancestor <target> <branch>` | Whether the trunk holds these very commits |
+| `git cherry -v <target> <branch>` | Which of the branch's patches the target already holds |
+| A rebase onto the target | What the branch would actually add |
+
+- **`git cherry` marks an upstream patch `-` and skips merge commits**, so a branch's merges
+  never appear in its output and a clean run of `-` is a statement about the non-merge commits
+  alone.
+- **A `+` is not evidence that anything is missing.** A patch id is computed from the change
+  against its own base, so a commit written on an older base comes out `+` although the file it
+  produces is identical to the target's. Measured: two commits marked `+` left no content
+  difference at all against the target.
+- **The rebase is the test that settles it**, because what survives it is what the branch adds
+  and nothing else. Measured on two branches: one of twenty-five commits came out holding three
+  that carried no change, and one of twenty-one came out holding a single commit.
+- **Read the direction of a content diff before concluding from its size.** A diff against the
+  target shows what the two differ by, not what the branch contributed: where the target has
+  moved on, the branch appears to hold work it never touched. Measured: the files filling such a
+  diff had never been edited on the branch at all.
