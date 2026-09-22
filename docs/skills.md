@@ -58,7 +58,8 @@ Each skill lives at `kit/skills/<name>/`, directly under the skills directory, a
 | :-- | :-- |
 | `hoc-naming` | Naming for classes, methods, properties and accessors — datetime suffixes (`At`/`On`, plus `From`/`To` for ranges), abbreviation criteria, American spelling, forbidden words, ASCII only. |
 | `hoc-comments` | Comments within actual code are written in English unless there is a reason otherwise. |
-| `hoc-jsdoc` | JSDoc writing conventions shared by backend and frontend — type annotations, the casts refused, `@typedef` and type-only imports, and the layout of the block itself, with the Vue/Nuxt-specific conventions in its references. |
+| `hoc-jsdoc` | JSDoc writing conventions shared by backend and frontend — type annotations, the casts refused on the right-hand side and the third-party-only exception, `@typedef` and type-only imports, and the layout of the block itself, with the Vue/Nuxt-specific conventions in its references. It is also where a type error reported by a checker is cleared. |
+| `hoc-type-errors` | How to read what a type checker reports before deciding what to change — the reported count is not the size of the work while casts are still silencing errors, and an error may be pointing at a value that is wrong rather than an annotation that is missing. |
 
 ## Testing
 

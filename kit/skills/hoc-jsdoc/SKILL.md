@@ -1,6 +1,6 @@
 ---
 name: hoc-jsdoc
-description: "JSDoc writing conventions shared by backend and frontend: the types a tag carries and the casts refused on the right-hand side, how far an `@override` block may be reduced, and the layout of the block itself — the one `*`-only line it may hold, and where a sentence breaks. Use when writing or reviewing JSDoc, in plain JavaScript or in Vue. Which lint rule enforces what is in the reference beside it."
+description: "JSDoc writing conventions shared by backend and frontend: the types a tag carries, the casts refused on the right-hand side, and the layout of the block itself. Use when writing or reviewing JSDoc, in plain JavaScript or in Vue. Use it also when clearing a type error a checker such as `tsc` reports: the error is cleared by writing the annotation, and which annotations may be written is decided here. Which lint rule enforces what is in the reference beside it."
 ---
 
 # Shared: JSDoc
@@ -295,9 +295,17 @@ generate ({
   not assignable to `Record<string, T>`" is pointing at the union TypeScript inferred from the
   literal, and the fix is to declare what the literal is. Casting deletes the message rather than
   the defect.
-- **The only `*` cast allowed is the temporary one**: the declaration carries a real type, and the
-  cast on the right-hand side bridges a literal that is deliberately partial — a mock standing in
-  for a wide interface. The variable still carries the real type, so its uses stay checked.
+- **The only `*` cast allowed is the temporary one, against a type the project does not own, and
+  inside the class that supplies the stand-in**: a `MockXxxx` under `tests/mocks/` whose
+  `.create()` declares the real type as its return, so the cast bridges a deliberately partial
+  literal exactly once and every caller holds the real type. The test convention (`/hoc-jest`)
+  settles where that class lives and what tests it.
+- **Against a type the project owns there is no exception.** Build the real thing and hand it
+  over. A cast literal standing in for one of ours declares itself complete while holding two
+  members, and that claim is one the checker can never test — the type gains a member, the
+  literal does not, and nothing reports it. Every place that stood the type in has to be found
+  and corrected by hand, and nothing says which places those are. A real instance follows its own
+  class instead, so the change reaches the test the way it reaches everything else.
 - **In a test this is absolute.** The implementation exists by the time its test is written, so
   every type the test needs is already declared somewhere in the code under test. A `*` there is
   never "the type cannot be narrowed"; it is "the type was not looked up".
@@ -332,11 +340,34 @@ const cases = [
   },
 ]
 
-// OK: a temporary cast, bridging a deliberately partial literal to the declared type
+// OK: the one temporary cast, inside the class standing in for a third-party type
+export default class MockValidationContext {
+  /**
+   * Factory method.
+   *
+   * @returns {GraphqlType.ValidationContext} - Validation context.
+   */
+  static create () {
+    return /** @type {*} */ ({
+      getType: () => null,
+      reportError: () => {},
+    })
+  }
+}
+
+// NG: the same cast written where it is used, instead of in the stand-in
 /** @type {GraphqlType.ValidationContext} */
 const mockContext = /** @type {*} */ ({
   getType: () => null,
-  reportError: jest.fn(),
+  reportError: () => {},
+})
+
+// NG: a stand-in for a type the project owns, wherever it is written
+/** @type {GraphqlType.ServerEngine} */
+const mockEngine = /** @type {*} */ ({
+  env: {
+    isProduction: () => true,
+  },
 })
 ```
 
