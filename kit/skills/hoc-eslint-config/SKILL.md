@@ -80,6 +80,33 @@ for each group whether a code change or a relaxation is indicated. A group of on
 eight violations and a group of six files with seven are different pieces of work, and the
 spread is what tells them apart.
 
+### A denied identifier stops for the name, not for its shape
+
+**The decision is the identifier itself, and an answer giving its shape has not made it.** Told
+to rename to something like an event-handler form or a qualified compound, a run that picks one
+and carries on has filled in the decision it stopped for — and the name that comes back
+afterwards corrects the run, not the rename.
+
+So the stop is an interview, and it is built so that the answer can be a word.
+
+| What the interview puts | Why it is there |
+| :-- | :-- |
+| Where the identifier sits and what it holds | Nobody names a value they cannot see |
+| How far it reaches — occurrences, files, and whether any is exported | A local binding is renamed freely; an exported one is a decision about consumers |
+| The words the surrounding code already uses for the same thing | This is where the answer usually already is |
+| Two or three candidates, each with what it says, each checked against the rule's own list | An answer can then be a choice rather than an invention |
+
+- **The third row is the one that gets left out, and it is the one that works.** A file names the
+  thing in its own documentation and in the members around it long before the rule fires.
+  Measured: an interview offering only general shapes was answered with a word taken from the
+  file's own vocabulary, which neither shape covered — and that word had been in the file's
+  documentation and in two function names the whole time.
+- **Check every candidate against the rule's list before offering it.** A candidate the same rule
+  denies spends a round saying nothing.
+- **The run does not choose among its own candidates**, and a list of them is not a ballot: the
+  answer may be a word none of them carries. Offering them narrows the work of answering; it does
+  not narrow what may be answered.
+
 ## The run
 
 1. Set the version in `package.json`. Commit.
