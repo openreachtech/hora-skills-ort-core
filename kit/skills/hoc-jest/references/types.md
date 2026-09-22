@@ -352,7 +352,7 @@ statement**. Don't stack a fixed cast inline on the value side.
 - Declare the type after assignment (i.e. the type that variable will hold
   from here on) with `@type` on **the line above**.
 - When the right-hand-side value cannot be directly assigned to the declared
-  type (e.g. putting `jest.fn()` into a function type), bridge the gap with
+  type (e.g. putting a `jest.spyOn()` result into a function type), bridge the gap with
   **a single temporary `/** @type {*} */` cast on the value side**. Place
   the temporary cast right before the value, keeping the declared type
   separated onto the line above.
@@ -363,12 +363,12 @@ statement**. Don't stack a fixed cast inline on the value side.
 ```js
 // Good: the type after assignment goes on the line above; the * temporary cast goes on the value side
 /** @type {typeof someFn} */
-const someFnSpy = /** @type {*} */ (jest.fn())
+const someFnSpy = /** @type {*} */ (jest.spyOn(args, 'someFn'))
 ```
 
 ```js
 // Avoid: stacking a fixed cast on the value side (the declared type gets buried in the right-hand side)
-const someFnSpy = /** @type {typeof someFn} */ (/** @type {*} */ (jest.fn()))
+const someFnSpy = /** @type {typeof someFn} */ (/** @type {*} */ (jest.spyOn(args, 'someFn')))
 ```
 
 ### Resolve dynamic-key types on the `cases` side, keeping the access site and Arrange clean

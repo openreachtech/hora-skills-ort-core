@@ -286,27 +286,27 @@ const received = builder.buildPathname(buildPathnameArgs)
 
 ## Variables That Hold a Spy
 
-This convention applies only to variables whose value is a `jest.fn()` (i.e. a
-spy/mock **function** itself). **The criterion is "does the held value equal
-`jest.fn()`"**, and any variable meeting that criterion must **without
-exception** get a `~Spy` suffix.
+This convention applies only to variables whose value is a spy **function**
+itself — what `jest.spyOn()` returns. **The criterion is "does the held value
+observe calls to a function"**, and any variable meeting that criterion must
+**without exception** get a `~Spy` suffix.
 
-- Name variables holding a `jest.fn()` with a `~Spy` suffix (e.g. `btoaSpy`,
+- Name variables holding a spy function with a `~Spy` suffix (e.g. `btoaSpy`,
   `fetchSpy`). Do not use other terms like `tally`. This makes it explicit by
   name that the subject of call verification "is a function spy."
 - If held in a constant (upper snake case), also uppercase the suffix, giving
   `XXXX_XXX_SPY` (e.g. `BTOA_SPY`, `FETCH_HANDLER_SPY`). This matches the naming
   convention's casing while still conveying the `~Spy` meaning via `_SPY`.
-- `constructorSpy.spyOn()` returns a **class** (not a `jest.fn()`), so it falls
+- `constructorSpy.spyOn()` returns a **class** (not a spy function), so it falls
   **outside** this convention — it remains `SpyClass` (not because it is
   excluded/exempted, but because it never meets the criterion in the first
   place). The actual function spy can be retrieved as `SpyClass.__spy__`. If you
-  bind this `__spy__` to a variable, it is equivalent to a `jest.fn()`, so give
-  it a `~Spy` suffix. See the constructorSpy section of [mocks.md](./mocks.md)
+  bind this `__spy__` to a variable, it is a spy function, so give it a `~Spy`
+  suffix. See the constructorSpy section of [mocks.md](./mocks.md)
   for details.
 
 ```js
-const btoaSpy = jest.fn()
+const btoaSpy = jest.spyOn(globalThis, 'btoa')
 
 // ...
 
