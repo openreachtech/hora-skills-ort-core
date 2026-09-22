@@ -341,31 +341,3 @@ test.each(cases)('source: $input.source', ({ input, expected }) => {
     .toHaveBeenCalledWith(expected.source)
 })
 ```
-
-**Only** when the real function has no independently spyable location (e.g. the
-getter generates a new function every time, or the return value is a closure
-that cannot be referenced from outside), define a derived class inside
-`test.each()`, override the getter, and plant a spy (`jest.fn()`). Because
-spyOn is not used, the `never` problem never arises structurally, and type
-safety is preserved. Perform the call on the derived class side
-(`OverriddenClass.method(...)`), taking advantage of the fact that the
-overridden getter is referenced via `this`.
-
-```js
-// Fallback: only when the real function cannot be spied on independently
-test.each(cases)('source: $input.source', ({ input, expected }) => {
-  const someSpy = jest.fn()
-
-  class OverriddenClass extends SomeClass {
-    /** @override */
-    static get factory () {
-      return someSpy
-    }
-  }
-
-  OverriddenClass.run(input)
-
-  expect(someSpy)
-    .toHaveBeenCalledWith(expected)
-})
-```
