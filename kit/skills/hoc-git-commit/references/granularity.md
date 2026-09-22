@@ -333,6 +333,42 @@ git diff              # confirm what is being left for the next commit
   single hunk of one deletion and two insertions. What a hunk is asked is whether it holds one
   operation, and the verbs are what answer it.
 
+### Splitting a hunk without the interactive prompt
+
+**`git add -p` needs somebody to answer it, and the granularity does not drop because nobody
+can.** Where the prompt cannot be reached — a scripted run, an agent driving the shell — the
+same split is built as a patch instead.
+
+Reconstruct the state this commit should leave behind, diff it against what the index holds, and
+apply that to the index alone:
+
+```bash
+git show HEAD:<path> > base          # what the index holds
+# write the state this commit should leave behind, as <step>
+diff -u --label a/<path> --label b/<path> base <step> > patch
+git apply --cached --check patch     # verify before the index is touched
+git apply --cached patch
+git diff --cached                    # what this commit takes
+git diff                             # what is left for the next one
+```
+
+- **The labels are required.** `diff -u` names its two input files in the `---` and `+++` lines,
+  and `git apply` reads those as the paths to patch. Without a `--label` on each side the patch
+  is refused, or lands somewhere nobody meant.
+- **Chain the steps rather than recomputing them.** The second commit's patch runs from the
+  first state to the second, not from the original, because the index already holds the first by
+  then.
+- **The working tree stays at the finished state throughout.** Only the index moves, one commit
+  at a time, so the last commit leaves the tree clean with nothing to restore.
+- **`--check` before every apply.** A hand-built intermediate is where a hunk header's line
+  counts go wrong, and `--check` reports that before anything is staged.
+- **Read `git diff --cached` and `git diff` after each apply.** Naming a path without reading
+  the diff is the same act the rule above refuses; building a patch without reading both sides
+  of it is that act one level down.
+
+Measured on two files, one split three ways and one split two: every patch applied first time,
+and the two diffs confirmed each split.
+
 ## Anti-patterns
 
 - **Checkpoint commits.** `wip`, `save progress`, `saving` — a commit holding real changes
