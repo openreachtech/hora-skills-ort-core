@@ -514,6 +514,12 @@ amends what is written here.
   subject joining two class declarations with `and` is wrong in the repository it was copied from
   as surely as in the one it was copied to, and citing it names a second offence rather than
   excusing the first.
+- **A precedent may be correct and still not transfer.** `Start`, `Release` and `Merge` carry no
+  change of their own, so nothing in their subjects answers to granularity — an `and` in one of
+  them joins nothing that could have been two commits. Citing such a subject for one that does
+  carry changes borrows a licence resting on that exemption, and the commit being written does
+  not hold it. This is the harder of the two to catch, because nothing in the commit cited is
+  wrong.
 - **The reach for a precedent is itself the signal.** It happens where the rule would otherwise
   cost something — more commits to write, a branch already shaped to rebuild. That pressure is
   the moment the rule is doing its work, so a precedent produced under it is being used to buy
