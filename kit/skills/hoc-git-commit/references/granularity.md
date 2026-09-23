@@ -72,6 +72,26 @@ disguise, and it is also how a subject fits one line without saying everything.
 
 So `and` is a prompt to look, never the verdict. The verdict comes from the test it sits under.
 
+**The verbs are the mechanical tell.** Where the items an `and` joins would take different verbs
+because one met something that was already there and the other met something that was not — an
+entry replaced beside an entry that never existed — the list is not one decision. The verb is the
+only record of what the target held before, and one commit carries one such record: written as
+`Update` it says both were there, written as `Add` it says neither was.
+
+```
+Bad:  Update the catalog for /hoc-alpha and /hoc-beta
+Good: Update the summary of /hoc-alpha in the catalog
+      Add /hoc-beta to the catalog
+```
+
+This is the tell that catches what the one-line test lets through, because two entries of one
+table read exactly like the list one decision is allowed to land as.
+
+**Two verbs are not by themselves the signal.** `Rename environment to Regenerable output and
+absorb Build output` takes two and is one decision, and both of them met something that was
+already there. What splits a list is the prior state differing across it, never the count of
+verbs.
+
 ## Scale
 
 Keep commits small. **1 to 4 files** is the working range, and a single-file commit is a
@@ -137,6 +157,19 @@ second fact goes missing.
   the work was done, which is the thing a subject never records. See the git branch convention.
 
 ## What to keep together
+
+**One modification of one kind is one decision, however many files it lands in.** Where the edit
+is the same edit everywhere it appears, the file count is no reason to split: a reviewer cannot
+accept it in one place and reject it in another, so splitting hands them one judgement several
+times over and buys nothing. The cases below are instances of this rather than exemptions from
+it — a rename followed into every call site, a relocation followed into every path that pointed
+at the old one, a term respelt wherever it appears.
+
+**What makes it one decision is that the modification is uniform, not that the files are alike.**
+The moment one edit in the sweep is of another kind, the split returns and that edit takes a
+commit of its own. This is the bound `## What to split` states from the other side: a mechanical
+rename is verified by scanning that it is uniform, and one hand-edited line among two hundred
+renamed ones is invisible.
 
 - A change and the **type annotations or JSDoc that describe it**. A signature and its
   documented contract are one decision; splitting them leaves a commit whose documentation
@@ -295,6 +328,46 @@ git diff              # confirm what is being left for the next commit
   named is a commit nobody designed.
 - When hunks for two decisions are interleaved in the same file, stage the first, commit, and
   then stage the second. `git add -p` splits hunks with `s` and edits them with `e`.
+- **The two operations can sit inside one hunk**, so a split driven by asking which decision a
+  hunk belongs to does not see them. One entry of a table replaced and another added arrive as a
+  single hunk of one deletion and two insertions. What a hunk is asked is whether it holds one
+  operation, and the verbs are what answer it.
+
+### Splitting a hunk without the interactive prompt
+
+**`git add -p` needs somebody to answer it, and the granularity does not drop because nobody
+can.** Where the prompt cannot be reached — a scripted run, an agent driving the shell — the
+same split is built as a patch instead.
+
+Reconstruct the state this commit should leave behind, diff it against what the index holds, and
+apply that to the index alone:
+
+```bash
+git show HEAD:<path> > base          # what the index holds
+# write the state this commit should leave behind, as <step>
+diff -u --label a/<path> --label b/<path> base <step> > patch
+git apply --cached --check patch     # verify before the index is touched
+git apply --cached patch
+git diff --cached                    # what this commit takes
+git diff                             # what is left for the next one
+```
+
+- **The labels are required.** `diff -u` names its two input files in the `---` and `+++` lines,
+  and `git apply` reads those as the paths to patch. Without a `--label` on each side the patch
+  is refused, or lands somewhere nobody meant.
+- **Chain the steps rather than recomputing them.** The second commit's patch runs from the
+  first state to the second, not from the original, because the index already holds the first by
+  then.
+- **The working tree stays at the finished state throughout.** Only the index moves, one commit
+  at a time, so the last commit leaves the tree clean with nothing to restore.
+- **`--check` before every apply.** A hand-built intermediate is where a hunk header's line
+  counts go wrong, and `--check` reports that before anything is staged.
+- **Read `git diff --cached` and `git diff` after each apply.** Naming a path without reading
+  the diff is the same act the rule above refuses; building a patch without reading both sides
+  of it is that act one level down.
+
+Measured on two files, one split three ways and one split two: every patch applied first time,
+and the two diffs confirmed each split.
 
 ## Anti-patterns
 
