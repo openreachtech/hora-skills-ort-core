@@ -1,6 +1,6 @@
 ---
 name: hoc-git-push
-description: "Conventions for `git push` itself: the permission each one takes and how narrowly that permission counts, and the force-push that is handed to a person rather than run here. What a branch is and where it merges belongs to the git branch convention; what a pull request says belongs to the pull request convention. Use before every push, and before any command that changes what the remote holds."
+description: "Conventions for `git push` itself: the permission each one takes and how narrowly that permission counts, the force-push that is handed to a person rather than run here, and the operation whose admissibility was read off the remote, handed over with the reading. What a branch is and where it merges belongs to the git branch convention; what a pull request says belongs to the pull request convention. Use before every push, and before any command that changes what the remote holds."
 ---
 
 # Git Push
@@ -39,6 +39,28 @@ stacked on it, the state of the working tree, and the base the pull request woul
 **Preparing the material needs no permission.** A pull request body, a list of commits, the
 command itself written out for a human to run — all of these can be produced freely. What
 takes permission is the operation against the remote.
+
+## A reading of the remote does not settle what happens next
+
+**Where an operation is admissible only because of something read off the remote, the reading is
+handed over with it and the operation is not run here.** The reading is of an instant; the
+operation comes later. In between, a branch can be pushed, a pull request opened, a merge landed
+— and none of those announces itself to a check that has already passed.
+
+- **What may be run is the fetch that refreshes the reading**, and nothing past it.
+  `git fetch origin --prune` brings the remote state in and drops what the host no longer has.
+  Report what it leaves standing.
+- **A verdict handed over as settled is a verdict the operation gets run on.** *Nothing on the
+  remote depends on this branch* reads as a fact somebody established, and whoever reads it
+  cannot see the clock attached to it. Say what the refs hold, and leave the inference where the
+  operation is.
+- **The loud case is no measure of the quiet one.** Measured: a base branch was detected, and was
+  merged and its branch deleted while the body of the pull request was still being written; the
+  create refused, naming the base. A command that checks its own preconditions reports the
+  staleness. One that does not, does not.
+- **`A force-push is the human's to run` below is this at its sharpest**, and it arrives there by
+  a second route besides — an author address that cannot tell two sessions apart. Either route
+  alone is enough to keep the operation out of here.
 
 ## A trunk is never force-pushed
 
