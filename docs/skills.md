@@ -73,9 +73,9 @@ Each skill lives at `kit/skills/<name>/`, directly under the skills directory, a
 
 | Skill | Summary |
 | :-- | :-- |
-| `hoc-git-branch` | Conventions for the branches a repository carries — which five are trunks and what that obliges, which may be cut from `main` per flow, how a general branch is named, the empty marker commit that opens a trunk, and the `--no-ff` merge that closes a sub-branch, along with the subject that merge commit carries and the `-r` every rebase takes. |
+| `hoc-git-branch` | Conventions for the branches a repository carries — which five are trunks and what that obliges, which may be cut from `main` per flow, how a general branch is named, the empty marker commit that opens a trunk, and the `--no-ff` merge that closes a sub-branch, along with the subject that merge commit carries and the `-r` every rebase takes, and what tells whether a branch still carries anything or may be discarded. |
 | `hoc-git-commit` | Commit conventions — what belongs in a single commit and the order commits land in, the message format (imperative or Conventional Commits, chosen per project), and the verb vocabulary shared by both. |
-| `hoc-git-push` | What a push takes before it is made — the permission each one needs and how narrowly it counts, the force-push handed to a person rather than run here, naming the remote and the branch instead of relying on configuration, and why tags and remote-branch deletions are not pushed by hand. |
+| `hoc-git-push` | What a push takes before it is made — the permission each one needs and how narrowly it counts, the force-push handed to a person rather than run here, the operation whose admissibility was read off the remote and is handed over with the reading, naming the remote and the branch instead of relying on configuration, and why tags and remote-branch deletions are not pushed by hand. |
 
 ## Dependencies and publishing
 
@@ -84,7 +84,7 @@ Each skill lives at `kit/skills/<name>/`, directly under the skills directory, a
 | `hoc-npm-install-scripts` | The gate deciding which packages may run an install script — denial as the default, the settings placed before the install they govern, and the dry run that reports a script without executing one. |
 | `hoc-npm-vulnerability` | Keeping a vulnerable version out — what the audit does and does not see, the release-age quarantine and the install it does not apply to, and resolving a report by raising a transitive dependency. |
 | `hoc-npm-publish` | Where a release's version bump sits among the commits, what to do when it turns out not to be last, and the audit that reads the artefact a consumer receives before anything goes out. Moving the dependency versions a release takes in belongs to `hoc-npm-raise-deps`. |
-| `hoc-npm-raise-deps` | Raising declared dependency versions to the newest release each range already permits, leaving a major it excludes for a decision of its own — reading the declared ranges rather than the lockfile, writing each move into the manifest instead of updating it into place, and the single install and one lockfile commit that close the pass. |
+| `hoc-npm-raise-deps` | Raising declared dependency versions to the newest release each range already permits, leaving a major it excludes for a decision of its own — reading the declared ranges rather than the lockfile, writing each move into the manifest instead of updating it into place, taking a package whose new release has moved to another registry out and in again, and the single install and one lockfile commit that close the pass. |
 | `hoc-dependency-defect` | Work around a bug in code this project uses but does not own — a subclass that overrides only the broken member, called by its own name, with a comment saying when it can be deleted. |
 | `hoc-eslint-config` | The shared ESLint config and the local `eslint.config.js` — which version a bump takes, what may be fixed and committed without a decision and what stops for one, narrowing a rule's options to a set of files, and when a rule may be relaxed rather than the code changed. |
 
