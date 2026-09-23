@@ -1,6 +1,6 @@
 ---
 name: hoc-npm-raise-deps
-description: "How a project's declared dependency versions are raised to the newest release each declared range already permits. A major a range excludes is a decision of its own and not this pass. Use when raising dependency versions or comparing them against the registry. Resolving an advisory belongs to the vulnerability convention, and an install script to the install-scripts convention."
+description: "How a project's declared dependency versions are raised to the newest release each declared range already permits, including one whose new release has moved to another registry. A major a range excludes is a decision of its own and not this pass. Use when raising dependency versions or comparing them against the registry. Resolving an advisory belongs to the vulnerability convention, and an install script to the install-scripts convention."
 ---
 
 # npm Raise Deps
@@ -71,11 +71,52 @@ raised.**
   pass's single install re-resolves the tree, under whatever range its own parent declares,
   and nothing in this manifest has an opinion about it.
 
+## A raise that crosses registries is uninstalled and installed again
+
+**Where the version being taken sits on a registry other than the one the package came from,
+raising the declared range does not reach it.** The manifest states a range; the lockfile states
+a `resolved` URL per package, and that URL names a host. An install run against an edited
+manifest reads the host the lockfile already holds and asks it for a version it never published.
+
+So the move is made by taking the package out and putting it back at the version wanted:
+
+```sh
+npm uninstall <package>
+npm install <flag> <package>@<version>
+```
+
+**This is not the command the section above turns away.** That one refreshes a lockfile and
+leaves the manifest untouched; this one writes the range into the manifest exactly as a hand
+edit would, so the reason the version is where it is stays on the line a reader looks at.
+
+- **A scope mapped to a registry is mapped for every package under it**, so the mapping outlives
+  whichever of them moved. Left in place it keeps resolving the whole scope to the old host, and
+  it overrides the command-line registry besides. Taking the mapping out is part of the move.
+- **An authentication failure on a scoped package is not first a credentials problem.** The host
+  being asked has no such version, and a request it cannot authorize and a request it cannot
+  satisfy come back the same way — so the message names the credential while the cause is the
+  address. **Establish where the version is published before arranging access to where it is
+  not.**
+
+### Reading a registry the mapping does not point at
+
+**A scope mapping outranks the registry option.** Setting the registry for one command leaves a
+scoped package resolving through its mapping exactly as before, and the command fails as it
+would have without the option. The override has to be made at the scope:
+
+```sh
+npm view <package>@<version> --@<scope>:registry=https://<registry>/
+```
+
+Measured on one package: the plain registry option resolved through the mapping and failed on
+authentication, and the scope-level override answered from the other registry with the version
+the mapped host had never carried.
+
 ## One install, one lockfile commit, at the end
 
-**The lockfile is not committed until the pass is finished.** However many declared versions
-move, and however many commits they take, there is **one** install and **one** lockfile
-commit, and it is last.
+**The lockfile is not committed until the pass is finished.** However many decisions the pass
+writes into the manifest, and however many commits they take, there is **one** install and
+**one** lockfile commit, and it is last.
 
 The alternative — a lockfile commit beside each declared version — fails twice:
 
@@ -85,16 +126,22 @@ The alternative — a lockfile commit beside each declared version — fails twi
   one resolution, not a sum of parts: raising three versions produces a single tree in which
   the three are already entangled with whatever else moved underneath them.
 
-So the shape of the pass is N commits that move declared versions, then one that records the
+So the shape of the pass is N commits that move the manifest, then one that records the
 resolution:
 
 ```
 Update alpha-package version to 1.3.0 in <manifest>
 Update beta-package version to 2.7.1 in <manifest>
 Update gamma-package version to 4.0.2 in <manifest>
+Uninstall delta-package
 <the single lockfile commit>
 ```
 
+- **A decision that is not a version move takes the same position.** A package the raise has
+  orphaned comes out in a commit of its own, and that commit goes **before** the lockfile
+  commit rather than after it: one install resolved the removal and the raises together, so one
+  lockfile commit records them together. Putting it after would need a second install, which is
+  what this section refuses.
 - **The intermediate commits carry no matching lockfile, and that is the shape rather than
   an oversight.** A reader checking one of them out finds a manifest ahead of its lockfile,
   which is the same state the project sits in whenever a range is widened.
@@ -115,6 +162,25 @@ a native package as a regular — not optional — dependency of something two l
   decision outstanding, and a project whose gate is strict stops instead.
 - **How to settle it is not this convention's** — `hoc-npm-install-scripts` covers reviewing
   the script, denying or approving it, and what the record looks like.
+
+## A raise can also orphan one
+
+**A consolidation upstream leaves packages behind.** Where a dependency used to reach several
+narrow packages and its new release reaches one that subsumes them, the narrow ones stay in the
+manifest with nothing left to pull them in. They look required for as long as nobody checks,
+because they were being installed the whole time — by the parent, not by the declaration.
+
+Measured on one raise: two packages the manifest declared were reached, before it, through a
+parent the new release replaced with a single consolidated one. Afterwards nothing but the root
+requested either, and nothing in the project imported them.
+
+- **They are found in the lockfile, never by reading code.** A package requested by the root
+  alone, and imported nowhere, is orphaned. Run the same query before the raise as well: the
+  parent that used to reach it is still there, and the answer is what tells the two states
+  apart.
+- **Taking one out is a manifest decision, so it belongs to this pass** rather than to a later
+  one. Deferred, it leaves the manifest claiming a dependency the tree has no reason for, and
+  the next reader cannot tell it from one that is load-bearing.
 
 ## An advisory the pass did not clear is the vulnerability convention's
 
