@@ -64,6 +64,19 @@ words in the order that reads. **The swap is easy to perform without noticing**,
 supplies it already knows what the skill does, and a reader meeting the name in a flat list does
 not.
 
+**A name made of the thing being decided is the commonest way the test fails, and verbing that
+thing is the repair.** The words are already the right words; what is missing is the one that says
+a decision is being taken. A candidate naming where a package comes from, and another naming which
+manifest field it lands in, both expanded into noun phrases — and both read as instructions the
+moment the noun became a verb, *adopt* and *categorize*, with nothing else changed.
+
+- **Reach for the repair before reaching for other words.** A candidate that survives it was
+  already about the right subject, and replacing the words instead loses whatever made the first
+  attempt fit.
+- **An established compound noun is the exception the section above allows**, so the repair is not
+  applied to one. The test is whether the phrase is read as a thing outside this library: a code
+  review is, a dependency category is not.
+
 **Naming a skill after the outcome it exists to prevent inverts it.** A skill written to keep a
 refactor from moving a published interface was proposed as `hoc-breaking-change` — which expands
 to *how to make a breaking change*, instructions for producing the very thing. The argument for
