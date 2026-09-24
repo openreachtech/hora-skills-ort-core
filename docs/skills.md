@@ -81,6 +81,7 @@ Each skill lives at `kit/skills/<name>/`, directly under the skills directory, a
 
 | Skill | Summary |
 | :-- | :-- |
+| `hoc-npm-categorize-deps` | Which field of the manifest a package is declared in — what a peer dependency buys that a plain one does not, what the package manager does when the two disagree, and why a second copy is the failure worth designing against. Moving a version already declared belongs to `hoc-npm-raise-deps`. |
 | `hoc-npm-install-scripts` | The gate deciding which packages may run an install script — denial as the default, the settings placed before the install they govern, and the dry run that reports a script without executing one. |
 | `hoc-npm-vulnerability` | Keeping a vulnerable version out — what the audit does and does not see, the release-age quarantine and the install it does not apply to, and resolving a report by raising a transitive dependency. |
 | `hoc-npm-publish` | Where a release's version bump sits among the commits, what to do when it turns out not to be last, and the audit that reads the artefact a consumer receives before anything goes out. Moving the dependency versions a release takes in belongs to `hoc-npm-raise-deps`. |
