@@ -248,6 +248,14 @@ split the line into sub-branches.
 - **This holds only while the commits are unshared.** Folding and splitting both rewrite
   history. Once the work has been pushed, the line stands as it is, and a structure it did not
   get is a structure it does not get.
+- **A change found after the structure is built is folded by kind, never by cause.** A
+  documentation fix that surfaces once the code and documentation sub-branches exist goes onto the
+  documentation sub-branch, as one more commit beneath its single merge. It does not go into the
+  code commit whose change left the document stale, and it does not open a second documentation
+  sub-branch beside the first.
+  - **Folding into the causing commit is the move that reads as tidy**, the change and its
+    consequence side by side, and it is the one ruled out: it carries a documentation edit into a
+    code sub-branch, which the ordering below keeps apart.
 - **The marker is cut as part of that shaping**, which is why there is no separate rule for
   rewinding a trunk to insert one that was forgotten. A marker cannot be forgotten by a process
   that ends with cutting it.
@@ -309,6 +317,11 @@ where they cost nothing, at the bottom, passed over on the way.
   several sub-branches each clear the way for one change to a file they share, that change is not
   spread across them: it gathers into a sub-branch of its own, placed after them. A relaxation
   removed only once every file it named has been fixed is the ordinary shape of this.
+  - **Documentation that follows the code takes this shape.** Where the work moves
+    something a document states — a default, a return value, what is thrown — the document's
+    update exists only because the code moved. It is not placed in the sub-branch that moved it,
+    nor in that sub-branch's commit: it gathers into a documentation sub-branch of its own, merged
+    after the code sub-branches, however many of them moved what it states.
 - **The order reverses where the sub-branches reach the trunk through pull requests.** Then the
   substantial one goes first and the cheap ones follow it. The reason above does not reach that
   case: a pull request is read on its own rather than as one diff worked down from the top, so
