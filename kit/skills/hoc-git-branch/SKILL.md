@@ -614,6 +614,38 @@ Merge the core/ rename in the repository documents
       apply, a copied file identical to the one already there. The check does not care which.
   - **Two branches are the smallest case of this, not a rule of their own.**
 
+## Carrying a change onto a branch by hand
+
+**A rebase moves a change between branches and keeps a record of what it moved. Writing a file
+does neither.** Where an edit was made against one base and is then written onto a branch that
+carries its own commits on the same file, whatever those commits added is reverted — and the
+revert appears in no diff of its own, because the file simply arrives as the edit left it.
+
+Measured: a file edited against a trunk was about to be written onto a branch carrying six commits
+on that same file. Written whole, all six would have been undone, and the commit doing it would
+have read as an ordinary update.
+
+**So the first act is to read what is already there.** Not the file — the two of them against each
+other:
+
+```bash
+git diff <the branch> -- <the path>          # what the branch has that the base does not
+```
+
+- **Compare the structure, not the text.** Which sections the branch holds and the edit does not,
+  and the reverse. A run of differing lines says the two disagree; a list of section names says
+  where and why, and it is short enough to check by eye.
+- **Apply section by section.** Take the edit's version where the edit touched a section, and the
+  branch's version everywhere else. What comes out is the branch's work with the edit laid over
+  it, which is what writing the file whole was supposed to produce and does not.
+- **What the edit lacks is not what the branch should lose.** A section standing in the branch and
+  absent from the edit is the branch's own work, and dropping it is the same overwrite arriving by
+  omission rather than by replacement.
+
+**Confirm afterwards by naming what should have survived.** The edit's own additions are easy to
+see because they are what was just written; the branch's are the ones a wrong application
+removes, so those are the ones to look for by name.
+
 ## What a branch still carries
 
 **Whether a branch's work has reached a trunk is not answered by ancestry.** `--is-ancestor`
