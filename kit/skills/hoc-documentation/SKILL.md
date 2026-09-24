@@ -1,6 +1,6 @@
 ---
 name: hoc-documentation
-description: "Documentation writing conventions. Referenced when updating or writing READMEs, design documents, comments, etc. Defines what a document may state as fact and what it must reach for instead, the language a document generated for a reader is written in, and the notation used when referring to class members, among other things."
+description: "Documentation writing conventions. Referenced when updating or writing READMEs, design documents, comments, etc., and when a change moves a fact a document states. Defines what a document may state as fact and what it must reach for instead, how a stated fact follows its source, the language a document generated for a reader is written in, and the notation used when referring to class members."
 ---
 
 # Documentation
