@@ -1,6 +1,6 @@
 ---
 name: hoc-git-branch
-description: "Conventions for the branches a repository carries: which five are trunks, which may be cut from `main` per flow, how a general branch is named, how work is split off a trunk and merged back with `--no-ff`, and what tells whether a branch still carries anything. Use before cutting a branch, before merging one back, and before deciding whether work needs a branch structure or a branch may be discarded. What a commit holds belongs to the git commit convention. Every `git rebase` here takes `-r`."
+description: "Conventions for the branches a repository carries: which five are trunks, which may be cut from `main` per flow, how a general branch is named, how work is split off a trunk and merged back with `--no-ff`, how a change is carried onto a branch that already holds its own work, and what tells whether a branch still carries anything. Use before cutting a branch, merging one back, or discarding one. What a commit holds belongs to the git commit convention. Every `git rebase` here takes `-r`."
 ---
 
 # Git Branch
@@ -248,6 +248,14 @@ split the line into sub-branches.
 - **This holds only while the commits are unshared.** Folding and splitting both rewrite
   history. Once the work has been pushed, the line stands as it is, and a structure it did not
   get is a structure it does not get.
+- **A change found after the structure is built is folded by kind, never by cause.** A
+  documentation fix that surfaces once the code and documentation sub-branches exist goes onto the
+  documentation sub-branch, as one more commit beneath its single merge. It does not go into the
+  code commit whose change left the document stale, and it does not open a second documentation
+  sub-branch beside the first.
+  - **Folding into the causing commit is the move that reads as tidy**, the change and its
+    consequence side by side, and it is the one ruled out: it carries a documentation edit into a
+    code sub-branch, which the ordering below keeps apart.
 - **The marker is cut as part of that shaping**, which is why there is no separate rule for
   rewinding a trunk to insert one that was forgotten. A marker cannot be forgotten by a process
   that ends with cutting it.
@@ -309,6 +317,11 @@ where they cost nothing, at the bottom, passed over on the way.
   several sub-branches each clear the way for one change to a file they share, that change is not
   spread across them: it gathers into a sub-branch of its own, placed after them. A relaxation
   removed only once every file it named has been fixed is the ordinary shape of this.
+  - **Documentation that follows the code takes this shape.** Where the work moves
+    something a document states — a default, a return value, what is thrown — the document's
+    update exists only because the code moved. It is not placed in the sub-branch that moved it,
+    nor in that sub-branch's commit: it gathers into a documentation sub-branch of its own, merged
+    after the code sub-branches, however many of them moved what it states.
 - **The order reverses where the sub-branches reach the trunk through pull requests.** Then the
   substantial one goes first and the cheap ones follow it. The reason above does not reach that
   case: a pull request is read on its own rather than as one diff worked down from the top, so
@@ -613,6 +626,38 @@ Merge the core/ rename in the repository documents
       success without committing — a `cherry-pick` refused for a bad flag, a patch that did not
       apply, a copied file identical to the one already there. The check does not care which.
   - **Two branches are the smallest case of this, not a rule of their own.**
+
+## Carrying a change onto a branch by hand
+
+**A rebase moves a change between branches and keeps a record of what it moved. Writing a file
+does neither.** Where an edit was made against one base and is then written onto a branch that
+carries its own commits on the same file, whatever those commits added is reverted — and the
+revert appears in no diff of its own, because the file simply arrives as the edit left it.
+
+Measured: a file edited against a trunk was about to be written onto a branch carrying six commits
+on that same file. Written whole, all six would have been undone, and the commit doing it would
+have read as an ordinary update.
+
+**So the first act is to read what is already there.** Not the file — the two of them against each
+other:
+
+```bash
+git diff <the branch> -- <the path>          # what the branch has that the base does not
+```
+
+- **Compare the structure, not the text.** Which sections the branch holds and the edit does not,
+  and the reverse. A run of differing lines says the two disagree; a list of section names says
+  where and why, and it is short enough to check by eye.
+- **Apply section by section.** Take the edit's version where the edit touched a section, and the
+  branch's version everywhere else. What comes out is the branch's work with the edit laid over
+  it, which is what writing the file whole was supposed to produce and does not.
+- **What the edit lacks is not what the branch should lose.** A section standing in the branch and
+  absent from the edit is the branch's own work, and dropping it is the same overwrite arriving by
+  omission rather than by replacement.
+
+**Confirm afterwards by naming what should have survived.** The edit's own additions are easy to
+see because they are what was just written; the branch's are the ones a wrong application
+removes, so those are the ones to look for by name.
 
 ## What a branch still carries
 
