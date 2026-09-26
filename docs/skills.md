@@ -81,6 +81,7 @@ Each skill lives at `kit/skills/<name>/`, directly under the skills directory, a
 
 | Skill | Summary |
 | :-- | :-- |
+| `hoc-npm-adopt-tool` | Whether a third-party tool may be brought in at all — what counts as a reason to reach for one and what does not, the audit its tarball takes before anybody installs it, and the wrapper that leaves only one module naming it. Moving the version of a package already taken on belongs to `hoc-npm-raise-deps`. |
 | `hoc-npm-categorize-deps` | Which field of the manifest a package is declared in — what a peer dependency buys that a plain one does not, what the package manager does when the two disagree, and why a second copy is the failure worth designing against. Moving a version already declared belongs to `hoc-npm-raise-deps`. |
 | `hoc-npm-install-scripts` | The gate deciding which packages may run an install script — denial as the default, the settings placed before the install they govern, and the dry run that reports a script without executing one. |
 | `hoc-npm-vulnerability` | Keeping a vulnerable version out — what the audit does and does not see, the release-age quarantine and the install it does not apply to, and resolving a report by raising a transitive dependency. |
