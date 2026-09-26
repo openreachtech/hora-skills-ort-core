@@ -1,6 +1,6 @@
 ---
 name: hoc-documentation
-description: "Documentation writing conventions. Referenced when updating or writing READMEs, design documents, comments, etc. Defines what a document may state as fact and what it must reach for instead, the language a document generated for a reader is written in, and the notation used when referring to class members, among other things."
+description: "Documentation writing conventions. Referenced when updating or writing READMEs, design documents, comments, etc., and when a change moves a fact a document states. Defines what a document may state as fact and what it must reach for instead, how a stated fact follows its source, the language a document generated for a reader is written in, and the notation used when referring to class members."
 ---
 
 # Documentation
@@ -39,6 +39,27 @@ it does, ask whether the document needs to say it at all.
 This is the same instinct as naming one governing source for a rule, turned on facts. **A rule
 restated elsewhere is aligned to its source; a fact restated elsewhere is deleted in favour of
 reaching it.**
+
+### A fact the repository owns moves with every copy of it
+
+**Owning a fact decides whether a document may state it. It does not keep the statement in
+step.** A document stating a fact its own repository holds is still carrying a copy, and that copy
+rots exactly as the copied rows above did. So a change that moves such a fact moves every copy of
+it, in the same piece of work.
+
+Measured: a change moved a parameter's default by editing the one line of code that held it. The
+API reference, kept in two languages, had stated the old default for less than two hours, and was
+still stating it in both when the change reached a release branch.
+
+- **What obliges the update is a moved fact, not a touched file.** A default, a return value, what
+  is thrown — anything the document states as the behaviour. Code a document merely mentions can
+  be rewritten underneath it without any of that moving, and then the document owes nothing.
+- **Find the copies by searching for the old value, as the document writes it**, across `docs/`
+  and every `README*`. A value the document sets in markup — in backticks, in a table cell — is
+  searched for with that markup around it, because the bare value can fail to match the line that
+  holds it.
+- **Every language version is a copy.** A document kept in two languages states the old value
+  twice, and repairing one leaves the other asserting it.
 
 ## Notation of Class Members
 
