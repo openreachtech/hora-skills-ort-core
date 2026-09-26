@@ -142,6 +142,15 @@ second fact goes missing.
   means resetting the commit and stripping the implementation back out of the diff by hand, every
   time somebody wants to know. **A test nobody can watch fail is a test nobody has grounds to
   trust**, and that — not tidiness — is what the split buys.
+- **A test that holds a ceiling turns the order round.** A byte budget, a size limit, a threshold
+  recorded per file: raising the ceiling first turns nothing red, because nothing is over it yet.
+  So the change it guards goes first and fails the suite, and the raised ceiling after it is what
+  passes. Shrinking runs the other way — the lowered ceiling first, failing, then the cut that
+  fits under it. **Commit whichever side turns the suite red first**; that is the rule above, read
+  against the kind of test rather than the word "test".
+  - Measured on a kit of skills held to per-file byte budgets: with each budget committed ahead
+    of the text it made room for, none of eight budget commits failed. Reordered, all eight text
+    commits failed and every budget after them passed.
 - **The count is per file, not per folder.** Five route classes arriving in a package are five
   `Declare` commits and five `Add tests for` commits, not one of each covering the set. The
   collective subject that lets such a commit fit one line — `Declare the express routes`,
