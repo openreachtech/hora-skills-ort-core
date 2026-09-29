@@ -517,6 +517,23 @@ Merge the core/ rename in the repository documents
   - **A merge commit's two parents are not evidence that `--no-ff` did anything.** A three-way
     merge has two parents as well, and nothing in the finished history separates the two. That
     is why this is checked before the merge, and cannot be checked after it.
+  - **The tip it is checked against has to be the trunk's current one.** Where the trunk also
+    takes pull requests on the host, the local ref is only as new as the last time it was moved,
+    and a merge landed there on the host is not in it. The check then passes against a tip the
+    remote has left behind, the merge lands on that stale tip, and the trunk no longer
+    fast-forwards to what the remote holds. So fetch first, and advance a trunk that is behind
+    before checking anything — standing on the branch, since the refspec will not move the ref
+    that is checked out:
+
+    ```bash
+    git fetch origin <trunk>:<trunk>
+    git rebase -r <trunk> <branch>
+    git merge-base --is-ancestor <trunk> <branch>
+    ```
+
+    Measured: a local release trunk stood one pull request behind its remote, and a branch cut
+    from it passed the ancestry check against the local ref. Only a comparison with the
+    remote-tracking ref showed that a pull request had already merged there.
 - **Delete the branch once it is merged.** Its name was written for whoever watched the work in
   flight, and that reader is gone. This includes a trunk that merges into another trunk —
   `release/x.x.x`, `hotfix/xxxx`, `dev` and `env` are all deleted once they land on `main`.
