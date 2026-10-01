@@ -229,15 +229,30 @@ before.
   else. Reordering control flow is not this: two `if` statements swapped is a behavior change
   wearing the clothes of an ordering, and it takes the verb its behavior deserves. Relocating
   something to another file is `Move`; `Rearrange` never crosses a file.
-- **`Move` stays `Move` when the relocation itself forces an edit.** A file that changes
-  directory takes its relative paths with it, and whatever pointed at the old place has
-  to point at the new one. Those edits are not a second decision riding along — they are
-  what the move consists of, and a subject naming anything else would hide the one thing
-  that happened. The row's `content untouched` means the substance is untouched: what the
-  file says, not the depth of a path it says it at.
+- **`Move` stays `Move` when the relocation forces an edit inside the moved file.** A file
+  that changes directory takes its own relative paths with it. Those edits are not a second
+  decision riding along — they are what the move consists of, and a subject naming anything
+  else would hide the one thing that happened. The row's `content untouched` means the
+  substance is untouched: what the file says, not the depth of a path it says it at.
   - The test is whether the edit would stand on its own. A path following its file would
     not: revert the move and the edit has nothing to do. An edit that still makes sense
     with the file where it was is a separate decision, and takes its own commit.
+  - **What pointed at the old place from another file is not part of the move.** Each such
+    file takes a commit of its own, after the move and one file apiece:
+
+    ```
+    Move index.js to lib/index.js
+    Update the import in tests/__tests__/index.js to lib/index.js
+    Update main: in package.json to lib/index.js
+    ```
+
+    Folded into the move, those edits sit under a subject that names none of the files they
+    touch, and a reviewer can no longer check each reference on its own. Measured: a move
+    carrying its test's import and the manifest's `main:` in one commit was asked back as
+    mixed; split per file, the tree at the tip came out identical.
+  - **The commits in between leave a reference pointing at the old place**, until the last of
+    them lands. The sub-branch carrying them merges as one, so the trunk never holds that
+    state.
 - **`Update` and `Retake` split on what was there before.** `Update` carries a sound
   implementation forward and leaves it giving something it did not give before — the gain is the
   point. `Retake` replaces what was poor, hurried or a stopgap with what should have been there,
