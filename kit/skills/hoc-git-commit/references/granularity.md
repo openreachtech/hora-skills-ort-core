@@ -171,8 +171,11 @@ second fact goes missing.
 is the same edit everywhere it appears, the file count is no reason to split: a reviewer cannot
 accept it in one place and reject it in another, so splitting hands them one judgement several
 times over and buys nothing. The cases below are instances of this rather than exemptions from
-it — a rename followed into every call site, a relocation followed into every path that pointed
-at the old one, a term respelt wherever it appears.
+it — a rename followed into every call site, a term respelt wherever it appears.
+
+**A relocation is not one of them.** The paths other files hold to a moved file follow it one
+file per commit, after the move, and the move commit carries the moved file alone. `SKILL.md`
+states it under the `Move` row.
 
 **What makes it one decision is that the modification is uniform, not that the files are alike.**
 The moment one edit in the sweep is of another kind, the split returns and that edit takes a
