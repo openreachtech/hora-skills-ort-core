@@ -269,9 +269,17 @@ What the finished line is looked at for:
   then restates the single commit beneath it, and the structure costs more commits than the work
   contains. A trunk is worth its cost when a merge commit names something its commits do not say
   individually.
-- **One sub-branch with something to group is enough.** The others may carry a single commit
-  each; what makes the trunk worth having is that at least one merge names a piece of work
-  assembled from parts.
+- **One sub-branch with something to group is enough to decide for a trunk.** What makes the
+  trunk worth having is that at least one merge names a piece of work assembled from parts.
+- **Once the line is to be a trunk, a sub-branch carrying a single commit is avoided as far as
+  the work allows.** Its merge restates the one commit beneath it, which is the cost the bullet
+  above weighs against having a trunk at all; deciding for the trunk does not make that cost go
+  away for the sub-branch.
+  - **A commit touching a pair of files is split into one commit per file.** `README.md` and
+    `README.ja.md`, `docs/x.md` and `docs/x.ja.md`: the change to each is a commit of its own,
+    and the sub-branch carries two where it would have carried one.
+  - **This is decided after the trunk, never before it.** Splitting a commit to give a
+    sub-branch two is not a reason to cut a trunk; the bullets above settle whether there is one.
 - **A sub-branch of its own is decided twice over: by what the piece carries, and by whether it
   stands beside the others as work in its own right.** The bullets above settle the first. The
   second asks whether the pieces are siblings — each a thing that was done, reviewable on its own
