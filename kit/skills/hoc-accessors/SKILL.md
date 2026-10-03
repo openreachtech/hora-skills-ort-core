@@ -1,6 +1,6 @@
 ---
 name: hoc-accessors
-description: "Conventions for class accessor (getter/setter) definitions: setters are prohibited for immutability; `#get:Ctor` is reserved for `this.constructor`; getter bodies forbid branching and method calls, staying pure property references, the getters that wire dependencies included. Which getter a dependency takes belongs to the dependency-wiring convention."
+description: "Conventions for class accessors, getters and setters alike. Use when adding or reviewing an accessor, a getter that holds a dependency included. Which getter a dependency takes, and the factory method beside it, belong to the dependency-wiring convention; where members sit in the class body, to the class notation convention."
 ---
 
 # Classes: Members / Accessors
