@@ -1,6 +1,6 @@
 ---
 name: hoc-methods
-description: "Conventions for class method definitions. Covers named arguments, passing properties into private methods, factory methods, and related policies. How a factory method builds a dependency belongs to the dependency-wiring convention."
+description: "Conventions for class method definitions and their signatures. Use when defining, calling or reviewing a method. Method names belong to the naming convention; what the body is written with, to the statements convention; how a factory method builds a dependency, to the dependency-wiring convention."
 ---
 
 # Classes: Members / Methods
