@@ -1,6 +1,6 @@
 ---
 name: hoc-skill-updating
-description: "Conventions for creating new skills (SKILL.md) or updating existing ones. Defines how to name a skill and which library repository it belongs to, where one skill stops and a neighbouring convention takes over, how a rule several skills already share is pulled out into one of its own, the flat layout every library keeps under `kit/skills/`, and the conventions to follow when writing the body and the description."
+description: "Conventions for creating new skills (`SKILL.md`) or updating existing ones, in any of the libraries. Use before naming, placing, writing or splitting a skill, or editing its description. How prose is written in general belongs to the documentation convention."
 ---
 
 # Skill Updating
