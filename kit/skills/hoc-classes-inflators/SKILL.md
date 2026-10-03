@@ -1,6 +1,6 @@
 ---
 name: hoc-classes-inflators
-description: "Convention for class inflator methods (binding methods). Defines the pattern of binding the class passed as an argument and returning a derived subclass memoized via BoundCtorRegistry, along with its naming (.as / .use / .to / .of / .from / .via / .each / .by / .with / .for / .on / .onto / .into), arguments, and the policy for overriding abstract members."
+description: "Convention for class inflator methods (binding methods): static methods that bind a value to a class and return a derived subclass. Use when writing, naming or reviewing an inflator, or when a class needs a variant configured by another class. Where inflators sit in the class body belongs to the class notation convention."
 ---
 
 # Classes: Inflators
