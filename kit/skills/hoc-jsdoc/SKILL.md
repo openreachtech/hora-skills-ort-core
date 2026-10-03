@@ -1,6 +1,6 @@
 ---
 name: hoc-jsdoc
-description: "JSDoc writing conventions shared by backend and frontend: the types a tag carries, the casts refused on the right-hand side, and the layout of the block itself. Use when writing or reviewing JSDoc, in plain JavaScript or in Vue. Use it also when clearing a type error a checker such as `tsc` reports: the error is cleared by writing the annotation, and which annotations may be written is decided here. Which lint rule enforces what is in the reference beside it."
+description: "JSDoc writing conventions shared by backend and frontend. Use when writing or reviewing JSDoc, the type a tag carries included, in plain JavaScript or in Vue. Use it also when clearing a type error a checker such as `tsc` reports: the error is cleared by writing the annotation, and which annotations may be written is decided here. Reading what the checker reported belongs to the type-errors convention."
 ---
 
 # Shared: JSDoc
