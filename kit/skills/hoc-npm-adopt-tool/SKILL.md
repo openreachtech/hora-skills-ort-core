@@ -1,6 +1,6 @@
 ---
 name: hoc-npm-adopt-tool
-description: "Whether a third-party tool may be brought into a project at all — what counts as a reason to reach for one, the audit its tarball takes before anybody installs it, and the wrapper the project meets it through so that only one module ever names it. Use when a package is proposed for a problem the project could close by other means. What happens once it is in belongs to the dependency conventions beside this one."
+description: "Whether a third-party tool may be brought into a project at all. Use when a package is proposed for a problem the project could close by other means, and before anybody installs one the project does not yet carry. What happens once it is in belongs to the dependency conventions beside this one."
 ---
 
 # Adopting a third-party tool
