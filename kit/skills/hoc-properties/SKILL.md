@@ -1,6 +1,6 @@
 ---
 name: hoc-properties
-description: "Conventions for class property definitions. Covers setting properties on `this` within the constructor, immutability (no reassignment, prohibiting Map), and the policy of not using JavaScript native private."
+description: "Conventions for class properties — where they are set, whether they may change, and what may hold them. Use when declaring, assigning or reviewing a property of a class, including when a note writes a member as `#alpha` or a value is about to be kept in a `Map`. Accessors belong to the accessors convention; whether a class needs properties at all, to the class design principles convention."
 ---
 
 # Classes: Members / Properties
