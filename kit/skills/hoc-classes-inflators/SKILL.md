@@ -115,7 +115,7 @@ inflateMessageCtor () {
 ## Override abstract members in inflators
 
 - In the derived class returned by `deriver`, **override the base's abstract member** to return the binding.
-- When the overridden target is "a getter that holds the constructor of the delegate target class," name that getter `[TargetClassName]Ctor` (see "static getter holding the constructor used for delegation" in the accessor-definition convention). If the target is an undetermined abstract target, a generic name expressing the role (e.g. `TargetCtor`) is fine.
+- When the overridden target is "a getter that holds the constructor of the delegate target class," name that getter `[TargetClassName]Ctor` (see `/hoc-wire-dependencies`). If the target is an undetermined abstract target, a generic name expressing the role (e.g. `TargetCtor`) is fine.
 - Annotate overrides with `/** @override */`.
 
 ```javascript
