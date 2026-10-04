@@ -1,6 +1,6 @@
 ---
 name: hoc-resolve-shorthand
-description: "Resolve a shorthand where the reader meets it, so that following it costs no lookup. Covers the handle standing in for something longer — a phase or issue number, a rule number, a letter invented for an entry in a list — the name to write instead where one already exists, the content a real identifier has to carry with it, and the origin an invented label owes. Applies to anything written for a reader. The `#instanceMember` notation belongs to the documentation convention."
+description: "Resolve a shorthand where the reader meets it, so that following it costs no lookup. Use when anything written for a reader points at an issue, a phase, a rule or a list entry by a number or a label instead of by what it is. The `#instanceMember` notation belongs to the documentation convention."
 ---
 
 # Resolve Shorthand

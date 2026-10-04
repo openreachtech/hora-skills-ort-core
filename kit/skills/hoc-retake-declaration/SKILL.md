@@ -1,6 +1,6 @@
 ---
 name: hoc-retake-declaration
-description: "Conventions for redoing existing code without moving what its callers see. A retake claims no gain, so the declaration it comes out with is the one it went in with — the logic stays where callers already reach it, an added argument carries a default, and a defect found on the way is left alone. Use before reshaping a class or a member that already has callers, and to tell a retake from an update. The release that would admit a moved interface belongs to the npm publish convention."
+description: "Conventions for redoing existing code without moving what its callers see, and for telling a retake from an update. Use before reshaping a class or a member that already has callers. The release that would admit a moved interface belongs to the npm publish convention."
 ---
 
 # Retake a Declaration

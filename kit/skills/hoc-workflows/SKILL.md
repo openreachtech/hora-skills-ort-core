@@ -1,6 +1,6 @@
 ---
 name: hoc-workflows
-description: "Development workflow procedural rules. Defines how to proceed with implementation, which of the two to follow where a convention and the surrounding code disagree, and the steps that must always be performed before committing / before completion."
+description: "Development workflow conventions for carrying an implementation from its start to its completion. Use when starting implementation work, when the surrounding code disagrees with a convention, before committing, and before declaring the work complete. What a commit holds and how it is worded belongs to the git commit convention."
 ---
 
 # Workflows

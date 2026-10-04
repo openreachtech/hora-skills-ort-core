@@ -1,6 +1,6 @@
 ---
 name: hoc-constants
-description: "Conventions for constants. Covers naming (uppercase SNAKE_CASE / singular for enum-like objects), chopping down, and the file organization and placement of object-type constants."
+description: "Conventions for constants — how they are named and written, and where the files holding them live. Use when declaring a constant or an enum-like object, or when deciding where one belongs. Names of everything else belong to the naming convention."
 ---
 
 # Constants

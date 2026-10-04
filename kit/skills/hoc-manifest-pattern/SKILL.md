@@ -1,6 +1,6 @@
 ---
 name: hoc-manifest-pattern
-description: "The manifest pattern, also called the super strategy pattern: a structure keeps one shared object declaring its wiring, and everything the structure is made of may take that object. Covers why an interface taking it stays the same as the structure grows, the line between it and the per-call objects a member has to justify taking, and taking it without holding it. Use when deciding what a class receives, or when a collector starts naming each member's own parameters."
+description: "The manifest pattern, also called the super strategy pattern: a structure keeps one shared object declaring its wiring, and everything the structure is made of may take that object. Use when deciding what a class receives, or when a collector starts naming each member's own parameters. The shape of a method's arguments in general belongs to the methods convention."
 ---
 
 # Manifest Pattern

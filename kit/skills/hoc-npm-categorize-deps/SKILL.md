@@ -1,6 +1,6 @@
 ---
 name: hoc-npm-categorize-deps
-description: "Which field of the manifest a package is declared in — what a peer dependency buys that a plain one does not, what the package manager does when the two disagree, and why a second copy is the failure worth designing against. Use when adding a package to a manifest, and whenever a published package has to say what it needs from whoever installs it. Moving a version already declared belongs to the dependency-raising convention."
+description: "Which field of the manifest a package is declared in. Use when adding a package to a manifest, and whenever a published package has to say what it needs from whoever installs it. Moving a version already declared belongs to the dependency-raising convention."
 ---
 
 # Categorizing a dependency

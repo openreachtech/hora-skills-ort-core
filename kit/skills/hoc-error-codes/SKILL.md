@@ -1,6 +1,6 @@
 ---
 name: hoc-error-codes
-description: "The string an error carries so a caller can tell it apart from every other: the parts of `Aaa.XBBB.CCC`, the categories a failure is sorted into, and the bands a client fills from the top. Which letters `X` takes, and what `BBB` counts, are settled per server kind in the detail files. Use when adding an error, or when choosing a category for a new failure. Declaring and throwing the code belong to each stack's own convention; whether a failure throws at all belongs to the errors convention."
+description: "The string an error carries so a caller can tell it apart from every other, in the form `Aaa.XBBB.CCC`. Use when adding an error, or when choosing a category for a new failure. Declaring and throwing the code belong to each stack's own convention; whether a failure throws at all belongs to the errors convention."
 ---
 
 # Error Codes

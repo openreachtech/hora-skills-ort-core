@@ -1,6 +1,6 @@
 ---
 name: hoc-type-errors
-description: "How to read what a type checker reports, before deciding what to change: the reported count is not the size of the work while casts are still silencing errors, and an error may be pointing at a value that is wrong rather than an annotation that is missing. Use when a `tsc` or editor diagnostic is being cleared. Which annotation to write, and which casts are refused, belong to the JSDoc convention; what a test's fixtures hold belongs to the Jest convention."
+description: "How to read what a type checker reports, before deciding what to change. Use when a `tsc` or editor diagnostic is being cleared. Which annotation to write, and which casts are refused, belong to the JSDoc convention; what a test's fixtures hold belongs to the Jest convention."
 ---
 
 # Shared: Type Errors
