@@ -1,6 +1,6 @@
 # `XxxxFactory` class and the two-stage separation
 
-This covers the `XxxxFactory` pattern, which consolidates creation of a frequently used dependency class into one place, and the intent behind separating its creation into "selection (`.get:TargetCtor`)" and "instantiation (`.createTarget()`)." Referenced from the method-definition convention itself (`SKILL.md`).
+This covers the `XxxxFactory` pattern, which consolidates creation of a frequently used dependency class into one place, and the intent behind separating its creation into "selection (`.get:TargetCtor`)" and "instantiation (`.createTarget()`)." Referenced from the dependency-wiring convention itself (`SKILL.md`).
 
 ## Example of an `XxxxFactory` class
 
