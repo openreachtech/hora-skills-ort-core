@@ -1,6 +1,6 @@
 ---
 name: hoc-git-branch
-description: "Conventions for the branches a repository carries: which five are trunks, which may be cut from `main` per flow, how a general branch is named, how work is split off a trunk and merged back with `--no-ff`, how a change is carried onto a branch that already holds its own work, and what tells whether a branch still carries anything. Use before cutting a branch, merging one back, or discarding one. What a commit holds belongs to the git commit convention. Every `git rebase` here takes `-r`."
+description: "Conventions for the branches a repository carries — trunks, general branches, and the commits that open and merge them. Use before cutting a branch, merging one back, carrying a change onto one, or discarding one. What a commit holds belongs to the git commit convention; pushing, to the git push convention."
 ---
 
 # Git Branch
@@ -458,6 +458,20 @@ git commit --allow-empty -m 'Start updating the domains a repository selects'
   second belongs beside it rather than under it. Writing the marker is therefore the moment the
   contents get checked, which is one more reason it is cut while the structure is being shaped
   rather than at the start.
+- **Hold the marker's verb against the verbs each sub-branch's commits open with.** Those verbs
+  were settled one commit at a time, by what each commit did, so they are the record of what the
+  branch holds; the marker's verb is chosen once, for the whole, and nothing else reads the two
+  side by side. Where a sub-branch opens with a verb the marker's verb cannot speak for, that
+  sub-branch is the second piece of work the bullet above describes.
+  - **The verbs do not have to match.** A trunk-scale verb gathers several commit verbs beneath
+    it: an update of things that already exist takes `Add`, `Kick out` and `Fulfill` as parts of
+    itself. The question is whether the marker's verb still names what each of them did. A verb
+    that brings a new thing into being — `Author`, `Declare`, `Build` — does not sit under one
+    that changes things already there.
+  - **Measured.** A trunk opened with `Start updating the skills by feedback` took in a sub-branch
+    whose commits opened with `Author`: a skill written for the first time, which no update of
+    the existing skills covers. The issue written at the trunk's altitude inherited the marker and
+    took the new skill in under it, so the mismatch outlived the branch.
 - The subject names **what is being started**, which depends on the kind of trunk.
   - A **`dev` trunk** is named directly: `Start dev`. Here `dev` is the branch, not a
     placeholder word.

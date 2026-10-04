@@ -22,7 +22,7 @@
 | `hoc-classes-prohibits` | クラス定義における禁止事項。static のみのクラスと、状態(プロパティ)を持たないクラスを禁止する方針とその理由。 |
 | `hoc-classes-inflators` | inflator(バインドメソッド)の規約。引数で渡されたクラスをバインドし、`BoundCtorRegistry` でメモ化した派生サブクラスを返すパターンと、その命名・引数。 |
 | `hoc-properties` | プロパティの規約。コンストラクタ内で `this` に設定、不変(再代入禁止・`Map` 禁止)、JavaScript ネイティブ private は使いません。 |
-| `hoc-accessors` | アクセサ(getter/setter)の規約。不変性のため setter は禁止、`#get:Ctor` は `this.constructor` 専用、依存参照は getter に切り出し、getter 本体は分岐もメソッド呼び出しも持たないプロパティ参照に留めます。 |
+| `hoc-accessors` | アクセサ(getter/setter)の規約。不変性のため setter は禁止、`#get:Ctor` は `this.constructor` 専用、getter 本体は分岐もメソッド呼び出しも持たないプロパティ参照に留めます。 |
 
 ## メンバーとスコープ
 
@@ -30,6 +30,7 @@
 | :-- | :-- |
 | `hoc-manifest-pattern` | manifest パターン（別名 super strategy パターン）。構造は配線を宣言する共有オブジェクトを 1 つ持ち、その構造を成すものはすべてそれを引数に取れます。 |
 | `hoc-methods` | メソッド定義の規約。名前付き引数、private メソッドへのプロパティの渡し方、ファクトリメソッドなど。 |
+| `hoc-wire-dependencies` | クラスが依存先に届く経路の規約。インスタンス化する依存クラスには `[TargetClassName]Ctor` の static getter と専用のファクトリメソッド、そのまま使うモジュールには static getter を置き、サブクラスでの差し替えとテストでの置き換えを可能にします。 |
 | `hoc-functions` | 関数の規約。引数はメソッドの引数に準じ、名前付き引数を原則とします。 |
 | `hoc-constants` | 定数の規約。命名(大文字 `SNAKE_CASE`、enum 的オブジェクトは単数形)、chop down、オブジェクト型定数のファイル構成と配置。 |
 | `hoc-contracts` | 関数・メソッドの引数と戻り値の型契約、および契約型の定義方法。 |
@@ -84,7 +85,7 @@
 | `hoc-npm-adopt-tool` | サードパーティ製ツールをそもそも導入してよいかを定める。導入の理由として通るものと通らないもの、install 前に tarball を精査する監査、そのツールを名指すモジュールをひとつに閉じるラッパー。導入後の版の移動は `hoc-npm-raise-deps` のもの。 |
 | `hoc-npm-categorize-deps` | パッケージをマニフェストのどの欄に宣言するかを定める。peer が買うもの、両者の範囲が食い違ったときにパッケージマネージャが何をするか、そして 2 本目のコピーがなぜ設計で避けるべき失敗なのか。宣言済みの版を動かすのは `hoc-npm-raise-deps` のもの。 |
 | `hoc-npm-install-scripts` | install スクリプトの実行を許可制で決める仕組み。deny を既定とすること、設定を先に置いて install を後にする順序、スクリプトの有無を実行せずに報告する dry run。 |
-| `hoc-npm-vulnerability` | 脆弱な版を入れないための規約。audit が見るものと見ないもの、公開日数による検疫とそれが効かないインストール、推移的依存だけを引き上げて報告を解決する方法。 |
+| `hoc-npm-vulnerability` | 脆弱な版を入れないための規約。audit が見るものと見ないもの、公開日数による検疫とそれが効かないインストール、推移的依存だけを引き上げて報告を解決する方法、修正版のない報告の判断。 |
 | `hoc-npm-publish` | リリースにおける version bump のコミット位置、それが最後でなくなったときの扱い、そして公開前に「利用者が受け取る配布物」を読む監査。リリースが取り込む依存バージョンを動かすことは `hoc-npm-raise-deps` の担当です。 |
 | `hoc-npm-raise-deps` | 宣言済みの依存バージョンを、各レンジが既に許す最新版まで引き上げる規約。レンジの外にある major は対象外とし、パッケージごとの別判断に回します。lockfile ではなく宣言レンジを突合すること、版の移動を暗黙の update ではなくマニフェストへ書き下すこと、新しい版が別の registry へ移ったパッケージを入れ直すこと、そしてパスを閉じる一度の install と一つの lockfile コミット。 |
 | `hoc-dependency-defect` | 自分が所有していないコード(パッケージなど)の不具合への対処。壊れているメンバーだけを override するサブクラスを作り、自分の名前で呼び出し、いつ削除できるかをコメントに残します。 |

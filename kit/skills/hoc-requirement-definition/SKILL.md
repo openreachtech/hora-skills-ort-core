@@ -1,11 +1,11 @@
 ---
 name: hoc-requirement-definition
 description: >
-  Turn a rough, incomplete request into a requirement definition document through conversation
-  with the requester — identified requirements, observable acceptance criteria, an out-of-scope
-  list, and the points still undecided. Use this skill whenever the user brings a feature request,
-  ticket or rough idea and asks to define or write up the requirements, and before implementing
-  anything whose scope is not already written down.
+  Turn a rough, incomplete request into a requirement definition document through conversation with
+  the requester. Use this skill whenever the user brings a feature request, ticket or rough idea and
+  asks to define or write up the requirements, and before implementing anything whose scope is not
+  already written down. Tracking progress against the requirements belongs to the implementation-
+  progress convention.
 ---
 
 # Requirement Definition

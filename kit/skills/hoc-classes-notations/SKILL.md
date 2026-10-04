@@ -1,6 +1,6 @@
 ---
 name: hoc-classes-notations
-description: "Convention for the order members are written in a class body — the eight-block placement order (fields, constructor, factory methods, inflators, getters, methods) plus the ordering within getters and within methods, falling back to source order where undetermined. What a class may hold belongs to the class design principles convention; this covers only writing order. Refer to it when arranging or reviewing member order."
+description: "Convention for the order members are written in a class body. Use when arranging or reviewing member order. What a class may hold belongs to the class design principles convention; this covers only writing order."
 ---
 
 # Classes: Notations

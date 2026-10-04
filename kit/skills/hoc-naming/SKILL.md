@@ -1,6 +1,6 @@
 ---
 name: hoc-naming
-description: "Naming conventions. Covers naming of classes, methods, properties, and accessors, datetime suffixes (`At` / `On`, plus `From` / `To` for ranges), criteria for abbreviations, American spelling, forbidden words, and the prohibition of non-ASCII characters."
+description: "Naming conventions for the identifiers in code — classes, members, variables and parameters. Use when choosing or reviewing a name. Constants belong to the constants convention; a skill's name, to the skill-updating convention; commit verbs, to the git commit convention."
 ---
 
 # Shared: Naming

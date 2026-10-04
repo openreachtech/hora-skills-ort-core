@@ -1,11 +1,9 @@
 ---
 name: hoc-deployment-document
 description: >
-  Write a server deployment runbook through conversation with whoever will run it — the hosting
-  and process-management profile, the first-time build, the repeatable release, migrations,
-  rollback and the post-release checks. Every step carries the output that confirms it worked.
-  Use when the user asks for deployment steps, a release procedure or a server setup document.
-  Executing the deployment and building the CI/CD pipeline are out of scope.
+  Write a server deployment runbook through conversation with whoever will run it. Use when the user
+  asks for deployment steps, a release procedure or a server setup document. Executing the
+  deployment and building the CI/CD pipeline are out of scope.
 ---
 
 # Deployment Document

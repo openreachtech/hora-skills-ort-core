@@ -22,7 +22,7 @@ Each skill lives at `kit/skills/<name>/`, directly under the skills directory, a
 | `hoc-classes-prohibits` | Prohibitions in class definitions: static-only classes and classes without state are not allowed, and why. |
 | `hoc-classes-inflators` | The inflator (binding) method pattern — bind the class passed as an argument and return a derived subclass memoized via `BoundCtorRegistry` — plus its naming and arguments. |
 | `hoc-properties` | Property conventions — set on `this` in the constructor, immutable (no reassignment, no `Map`), and no JavaScript native private. |
-| `hoc-accessors` | Getter/setter conventions — setters prohibited for immutability, `#get:Ctor` reserved for `this.constructor`, dependency references extracted into getters, and getter bodies kept to a property reference, with no branching and no method call. |
+| `hoc-accessors` | Getter/setter conventions — setters prohibited for immutability, `#get:Ctor` reserved for `this.constructor`, and getter bodies kept to a property reference, with no branching and no method call. |
 
 ## Members and scope
 
@@ -30,6 +30,7 @@ Each skill lives at `kit/skills/<name>/`, directly under the skills directory, a
 | :-- | :-- |
 | `hoc-manifest-pattern` | The manifest pattern, also called the super strategy pattern — a structure keeps one shared object declaring its wiring, and everything inside the structure may take it. |
 | `hoc-methods` | Method definition conventions — named arguments, passing properties into private methods, and factory methods. |
+| `hoc-wire-dependencies` | How a class reaches what it depends on — a `[TargetClassName]Ctor` static getter and a dedicated factory method for a class it instantiates, a static getter for a module used as it is — so a subclass can patch either and a test can swap it. |
 | `hoc-functions` | Function conventions. Parameters follow method parameters: named arguments as a principle. |
 | `hoc-constants` | Constant conventions — naming (uppercase `SNAKE_CASE`, singular for enum-like objects), chopping down, and the file organization and placement of object-type constants. |
 | `hoc-contracts` | Type contracts for function and method arguments and return values, and how contract types are defined. |
@@ -84,7 +85,7 @@ Each skill lives at `kit/skills/<name>/`, directly under the skills directory, a
 | `hoc-npm-adopt-tool` | Whether a third-party tool may be brought in at all — what counts as a reason to reach for one and what does not, the audit its tarball takes before anybody installs it, and the wrapper that leaves only one module naming it. Moving the version of a package already taken on belongs to `hoc-npm-raise-deps`. |
 | `hoc-npm-categorize-deps` | Which field of the manifest a package is declared in — what a peer dependency buys that a plain one does not, what the package manager does when the two disagree, and why a second copy is the failure worth designing against. Moving a version already declared belongs to `hoc-npm-raise-deps`. |
 | `hoc-npm-install-scripts` | The gate deciding which packages may run an install script — denial as the default, the settings placed before the install they govern, and the dry run that reports a script without executing one. |
-| `hoc-npm-vulnerability` | Keeping a vulnerable version out — what the audit does and does not see, the release-age quarantine and the install it does not apply to, and resolving a report by raising a transitive dependency. |
+| `hoc-npm-vulnerability` | Keeping a vulnerable version out — what the audit does and does not see, the release-age quarantine and the install it does not apply to, resolving a report by raising a transitive dependency, and deciding one no release fixes. |
 | `hoc-npm-publish` | Where a release's version bump sits among the commits, what to do when it turns out not to be last, and the audit that reads the artefact a consumer receives before anything goes out. Moving the dependency versions a release takes in belongs to `hoc-npm-raise-deps`. |
 | `hoc-npm-raise-deps` | Raising declared dependency versions to the newest release each range already permits, leaving a major it excludes for a decision of its own — reading the declared ranges rather than the lockfile, writing each move into the manifest instead of updating it into place, taking a package whose new release has moved to another registry out and in again, and the single install and one lockfile commit that close the pass. |
 | `hoc-dependency-defect` | Work around a bug in code this project uses but does not own — a subclass that overrides only the broken member, called by its own name, with a comment saying when it can be deleted. |

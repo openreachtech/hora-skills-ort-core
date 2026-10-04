@@ -1,6 +1,6 @@
 ---
 name: hoc-errors
-description: "Error-handling conventions. Covers returning null on failure from value-generating methods, and the two throws an abstract member declares itself unimplemented with — a plain Error carrying the fixed wording, or the error class the module declares for its own failures — along with the member notation and the run-time class name both of them carry."
+description: "Conventions for how code reports a failure, from a method that cannot produce its value to an abstract member a subclass has not implemented. Use when a method can fail, or when declaring an abstract member. The string an error carries for its callers belongs to the error-codes convention."
 ---
 
 # Shared: Errors

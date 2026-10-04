@@ -1,6 +1,6 @@
 ---
 name: hoc-readme
-description: "The README a project carries — the file it keeps per language, the section order and the fixed text of each, the parts split out under `docs/` and linked back, the API reference, and the naming used in code examples. Use whenever a README is created or updated. Which `LICENSE` file the project carries belongs to the license convention, and what a document may state as fact to the documentation convention."
+description: "The README a project carries, in every language it keeps, and the parts of it split out under `docs/`. Use whenever a README is created or updated. Which `LICENSE` file the project carries belongs to the license convention, and what a document may state as fact to the documentation convention."
 ---
 
 # README

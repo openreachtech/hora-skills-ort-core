@@ -1,6 +1,6 @@
 ---
 name: hoc-methods
-description: "Conventions for class method definitions. Covers named arguments, passing properties into private methods, factory methods, and related policies."
+description: "Conventions for class method definitions and their signatures. Use when defining, calling or reviewing a method. Method names belong to the naming convention; what the body is written with, to the statements convention; how a factory method builds a dependency, to the dependency-wiring convention."
 ---
 
 # Classes: Members / Methods
@@ -247,37 +247,12 @@ static create (...) {
 
 - The exceptions where a direct `new` expression is allowed without going through a factory method (JavaScript built-in classes, DTO-like third-party modules, and the DTO whitelist) are collected in [references/instantiation.md](./references/instantiation.md).
 
-#### `XxxxFactory` class and the two-stage separation
+### A dependency is built in a factory method of its own
 
-- The `XxxxFactory` pattern for consolidating creation of a frequently used class (with the `BaseFactory` example), and the intent behind the selection (`.get:TargetCtor`) / instantiation (`.createTarget()`) two-stage separation, are collected in [references/factory-class.md](./references/factory-class.md).
-
-### Instantiation of a dependency class should go through a factory method
-
-- Do not directly create a dependency class in a default argument of `.create(...)`, etc. That is, do not directly write either `new Dependency(...)` (a `new` expression) or `Dependency.create(...)` (calling the dependency class's factory method). Extract the creation of the dependency class into a dedicated factory method (e.g. `this.createExternalApiClient()`) and go through it.
-- Unless there is a specific reason otherwise, the name of the dedicated factory method should basically be "`create` + class name" (e.g. `ExternalApiClient` → `createExternalApiClient`).
-
-```javascript
-// NG: directly instantiating a dependency class
-static create ({
-  externalApiClient = ExternalApiClient.create({ env }),
-} = {}) {
-  // ...
-}
-
-// OK: go through a factory method
-static create ({
-  externalApiClient = this.createExternalApiClient(),
-} = {}) {
-  // ...
-}
-```
-
-Reason:
-
-- **Patching/overriding is easy**: if a dependency has a bug and you need to apply an emergency patch in a subclass, you only need to override the factory method in the subclass, without changing the call sites. If the dependency were instantiated directly, every call site would need to explicitly pass the patched instance.
-- **Encapsulation of the dependency**: the caller's concern is the class in question, not its internal dependencies. The factory method hides the dependency relationship inside the class, lowering coupling.
-- **Testing/DI is easy**: you can inject a mock via an argument, or swap the factory's return value with `jest.spyOn(ThisClass, 'createExternalApiClient')`, and test with the same call form as production.
-- The factory method is lightweight DI (Dependency Injection), achieving, without a DI container: production = creation of the real dependency / testing = swap / hotfix = swap to a patched dependency.
+- **A dependency `static create (...)` needs is never built in its default argument.** It is built
+  by a dedicated factory method — `this.createExternalApiClient()` — instantiating through a
+  `[TargetClassName]Ctor` getter. That structure, and the seams it leaves for patching and
+  testing, belong to `/hoc-wire-dependencies`.
 
 ### When asynchronous creation is needed, define `.createAsync(...)`
 

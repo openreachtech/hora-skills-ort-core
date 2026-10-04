@@ -1,6 +1,6 @@
 ---
 name: hoc-statements
-description: "Conventions for statements and control flow. Covers prohibiting `let` — in test files too — and the literal `undefined`, which test files are exempt from, avoiding sequential processing in favor of higher-order functions, and policies on ternary expressions and if statements."
+description: "Conventions for statements and control flow inside a function or method body, test files included. Use when writing or reviewing any body of code. Where an expression is wrapped across lines belongs to the coding style convention; a method's signature, to the methods convention."
 ---
 
 # Shared: Statements

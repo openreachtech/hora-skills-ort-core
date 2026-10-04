@@ -1,6 +1,6 @@
 ---
 name: hoc-coding-styles
-description: "Coding style conventions. Covers where to chop down (wrap) expressions, method/property chains, function-call arguments, template literals, regular-expression flags, and more."
+description: "Coding style conventions for how code is laid out across lines, and the forms literals are written in. Use when writing or reviewing the layout of any expression or statement. Which statements may be written belongs to the statements convention; the layout of a JSDoc block, to the JSDoc convention."
 ---
 
 # Coding Styles

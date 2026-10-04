@@ -1,12 +1,10 @@
 ---
 name: hoc-git-commit
 description: >
-  Conventions for git commits. Covers what belongs in a single commit and the order commits
-  land in, the message format (imperative or Conventional Commits), and the verb vocabulary
-  shared by both. The branches commits land on, and the two commits a branch makes about
-  itself, belong to the git branch convention; the commands that gate a commit belong to the
-  workflows convention. Use before writing a commit message, and before splitting a working
-  tree into commits.
+  Conventions for git commits, in either message format. Use before writing a commit message, and
+  before splitting a working tree into commits. The branches commits land on, and the two commits a
+  branch makes about itself, belong to the git branch convention; the commands that gate a commit
+  belong to the workflows convention.
 ---
 
 # Git Commit

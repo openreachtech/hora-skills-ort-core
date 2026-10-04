@@ -1,6 +1,6 @@
 ---
 name: hoc-test-cache
-description: "Reuse a recorded test pass when a verification unit's inputs are unchanged, through the mentsu-testcase-cache CLI — declaring the cache units in `.hora-cache.json`, and judging when a recorded pass may stand in for an execution. Use when wiring cached test execution into a repository, or when reading a cached run's verdict. Driving a failing suite to green belongs to the test-execution convention; recording the verdict belongs to the acceptance run."
+description: "Reuse a recorded test pass when a verification unit's inputs are unchanged, through the `mentsu-testcase-cache` CLI. Use when wiring cached test execution into a repository, or when reading a cached run's verdict. Driving a failing suite to green belongs to the test-execution convention; recording the verdict belongs to the acceptance run."
 ---
 
 # Test Cache

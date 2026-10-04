@@ -1,11 +1,10 @@
 ---
 name: hoc-code-review
 description: >
-  Run a READ-ONLY, code-level review of a change and produce a findings report — specification
-  compliance against the feature's requirement definition document, correctness, and conformance
-  to the project's coding conventions. Never fixes anything. Use this skill whenever the user asks
-  to review a change or pull request before it is merged, or to verify that what was built matches
-  what was specified.
+  Run a READ-ONLY, code-level review of a change and produce a findings report. Never fixes
+  anything. Use this skill whenever the user asks to review a change or pull request before it is
+  merged, or to verify that what was built matches what was specified. Writing the requirement
+  document it checks against belongs to the requirement definition convention.
 ---
 
 # Code Review
