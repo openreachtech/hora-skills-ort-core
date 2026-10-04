@@ -1,6 +1,6 @@
 ---
 name: hoc-git-branch
-description: "Conventions for the branches a repository carries: which five are trunks and what that obliges, the one worked on directly, which may be cut from `main`, per flow, how a general branch is named, and how work is split off a trunk and merged back with `--no-ff`. Use before cutting a branch, before merging one back, and before deciding whether work needs a branch structure. What a commit holds, and how its subject is worded, belong to the git commit convention. Every `git rebase` here takes `-r`."
+description: "Conventions for the branches a repository carries — trunks, general branches, and the commits that open and merge them. Use before cutting a branch, merging one back, carrying a change onto one, or discarding one. What a commit holds belongs to the git commit convention; pushing, to the git push convention."
 ---
 
 # Git Branch
@@ -87,6 +87,28 @@ downstream catches it.
   both times the two-argument form recreated its merges inside the sub-branch, and both times
   `--onto` naming the commit the branch was cut from replayed only what the branch held.
 
+### A commit the base already holds is dropped, not resolved
+
+**A rebase onto a base that has moved past the branch replays commits whose change is already
+there**, and the ones that conflict are the safe half. A conflict stops and asks; a commit that
+applies cleanly does not, and where the base holds the same change at a different place in the
+file, what lands is the change twice.
+
+Measured twice, on two branches against one base: a conflict was resolved by taking the base's
+side, a later commit in the same rebase then applied without conflict at its own anchor, and both
+times the result was a configuration file carrying the same key on two lines. Both times the tree
+was correct at every other point, the rebase reported success, and nothing downstream refused it.
+
+- **Establish which commits the base already holds before starting**, and skip those rather than
+  resolving them. A patch already upstream has nothing to contribute, so the resolution never
+  needed judgment in the first place.
+- **The repair is to drop the commit, never to tidy the result.** Editing the duplicate away
+  leaves a commit in the branch claiming a change the base had already made, and the next rebase
+  of that branch makes the same duplicate again. Drop it with `-i -r`, which keeps the merges the
+  `-i` would otherwise cost.
+- **Read the result against the base before merging.** Where a branch was expected to add
+  something and the diff shows a line the base already had, the duplicate is what it is showing.
+
 ## The trunk branch
 
 A **trunk branch** is one that other branches are cut from and merged back into.
@@ -156,6 +178,18 @@ The shape of the name settles nothing. `release/x.x.x` is a trunk and
     merges in like any other. A subject worded badly, a value that turned out wrong, a file that
     should not have gone in: the trunk gains a commit that says so, and the record of the
     mistake stays. A history a reader can trust is worth more than one that is tidy.
+  - **A trunk may be re-cut while nothing on the remote descends from it, and both halves of
+    that are a person's.** Where no branch has been pushed from it and no pull request is open
+    against it, the commits the rule protects are held by nobody, and the reason above does not
+    reach the case.
+    - **What may be run here is `git fetch`, and nothing past it.** The condition is read at an
+      instant and the push is not, so a check that passed is not a check that still holds — and
+      a verdict handed over as settled is one the operation gets run on. Refresh the
+      remote-tracking refs, show what they now hold, and leave both the judgement and the push
+      where they belong.
+    - **Local branches cut from it are recovered afterwards**, by `--onto` naming the commit
+      each was cut from. That half is ordinary work and asks no permission of its own.
+    - **A single pushed branch, or one open pull request, ends it** and the rule is back whole.
   - **A sub-branch is the opposite**, until it is pushed and opened for review: rewriting it is
     how the structure described below gets cut at all. Nobody else is holding it, so nothing
     disagrees.
@@ -214,6 +248,14 @@ split the line into sub-branches.
 - **This holds only while the commits are unshared.** Folding and splitting both rewrite
   history. Once the work has been pushed, the line stands as it is, and a structure it did not
   get is a structure it does not get.
+- **A change found after the structure is built is folded by kind, never by cause.** A
+  documentation fix that surfaces once the code and documentation sub-branches exist goes onto the
+  documentation sub-branch, as one more commit beneath its single merge. It does not go into the
+  code commit whose change left the document stale, and it does not open a second documentation
+  sub-branch beside the first.
+  - **Folding into the causing commit is the move that reads as tidy**, the change and its
+    consequence side by side, and it is the one ruled out: it carries a documentation edit into a
+    code sub-branch, which the ordering below keeps apart.
 - **The marker is cut as part of that shaping**, which is why there is no separate rule for
   rewinding a trunk to insert one that was forgotten. A marker cannot be forgotten by a process
   that ends with cutting it.
@@ -227,9 +269,17 @@ What the finished line is looked at for:
   then restates the single commit beneath it, and the structure costs more commits than the work
   contains. A trunk is worth its cost when a merge commit names something its commits do not say
   individually.
-- **One sub-branch with something to group is enough.** The others may carry a single commit
-  each; what makes the trunk worth having is that at least one merge names a piece of work
-  assembled from parts.
+- **One sub-branch with something to group is enough to decide for a trunk.** What makes the
+  trunk worth having is that at least one merge names a piece of work assembled from parts.
+- **Once the line is to be a trunk, a sub-branch carrying a single commit is avoided as far as
+  the work allows.** Its merge restates the one commit beneath it, which is the cost the bullet
+  above weighs against having a trunk at all; deciding for the trunk does not make that cost go
+  away for the sub-branch.
+  - **A commit touching a pair of files is split into one commit per file.** `README.md` and
+    `README.ja.md`, `docs/x.md` and `docs/x.ja.md`: the change to each is a commit of its own,
+    and the sub-branch carries two where it would have carried one.
+  - **This is decided after the trunk, never before it.** Splitting a commit to give a
+    sub-branch two is not a reason to cut a trunk; the bullets above settle whether there is one.
 - **A sub-branch of its own is decided twice over: by what the piece carries, and by whether it
   stands beside the others as work in its own right.** The bullets above settle the first. The
   second asks whether the pieces are siblings — each a thing that was done, reviewable on its own
@@ -243,6 +293,20 @@ What the finished line is looked at for:
     work set out to clear, they are halves of one job and belong on one branch.
   - Deciding on size alone splits a pair that should have been one branch, because size is the
     test that a pair of one-commit steps passes and a pair of large steps fails.
+  - **New definitions and the adoption of them are the asymmetric pair, and they split.** Where
+    a change introduces classes or members that did not exist and then adapts the existing code
+    to use them, the seam between the two is where the sub-branches part: one defines, one
+    adapts. The pair looks like steps of one piece — nothing uses the definitions until the
+    adoption lands — but only one half of the test holds. **The definitions stand on their own**:
+    they compile, they carry their own tests, and they could be taken while the adoption is left.
+    The adoption could not. That asymmetry is what the earlier examples lack, where neither half
+    means anything without the other.
+    - **The adapting half is not split further by class or by file.** Three classes changed so
+      that one new family can be used are three parts of one adoption, and they belong on one
+      sub-branch; splitting them by class produces siblings that are not siblings, which is the
+      failure the bullet above describes.
+    - Which half merges first follows the ordering rules below — the adoption cannot land before
+      what it adopts.
 
 ### The order the sub-branches merge in
 
@@ -261,6 +325,11 @@ where they cost nothing, at the bottom, passed over on the way.
   several sub-branches each clear the way for one change to a file they share, that change is not
   spread across them: it gathers into a sub-branch of its own, placed after them. A relaxation
   removed only once every file it named has been fixed is the ordinary shape of this.
+  - **Documentation that follows the code takes this shape.** Where the work moves
+    something a document states — a default, a return value, what is thrown — the document's
+    update exists only because the code moved. It is not placed in the sub-branch that moved it,
+    nor in that sub-branch's commit: it gathers into a documentation sub-branch of its own, merged
+    after the code sub-branches, however many of them moved what it states.
 - **The order reverses where the sub-branches reach the trunk through pull requests.** Then the
   substantial one goes first and the cheap ones follow it. The reason above does not reach that
   case: a pull request is read on its own rather than as one diff worked down from the top, so
@@ -382,6 +451,27 @@ git commit --allow-empty -m 'Start updating the domains a repository selects'
 - **The subject is written at the altitude the branch name is written at.** Both name one piece
   of work, so a marker listing what the branch will carry fails the same way a label does, and
   the two then disagree besides.
+- **The marker tests what the branch holds.** Where the subject cannot name everything the branch
+  carries without stretching, the branch is what is wrong — not the subject. A marker reading
+  `Start implementing the validator family` over a branch that also rewrites the engine using it
+  is not a marker that needs rewording; it is a branch carrying two pieces of work, and the
+  second belongs beside it rather than under it. Writing the marker is therefore the moment the
+  contents get checked, which is one more reason it is cut while the structure is being shaped
+  rather than at the start.
+- **Hold the marker's verb against the verbs each sub-branch's commits open with.** Those verbs
+  were settled one commit at a time, by what each commit did, so they are the record of what the
+  branch holds; the marker's verb is chosen once, for the whole, and nothing else reads the two
+  side by side. Where a sub-branch opens with a verb the marker's verb cannot speak for, that
+  sub-branch is the second piece of work the bullet above describes.
+  - **The verbs do not have to match.** A trunk-scale verb gathers several commit verbs beneath
+    it: an update of things that already exist takes `Add`, `Kick out` and `Fulfill` as parts of
+    itself. The question is whether the marker's verb still names what each of them did. A verb
+    that brings a new thing into being — `Author`, `Declare`, `Build` — does not sit under one
+    that changes things already there.
+  - **Measured.** A trunk opened with `Start updating the skills by feedback` took in a sub-branch
+    whose commits opened with `Author`: a skill written for the first time, which no update of
+    the existing skills covers. The issue written at the trunk's altitude inherited the marker and
+    took the new skill in under it, so the mismatch outlived the branch.
 - The subject names **what is being started**, which depends on the kind of trunk.
   - A **`dev` trunk** is named directly: `Start dev`. Here `dev` is the branch, not a
     placeholder word.
@@ -449,6 +539,23 @@ Merge the core/ rename in the repository documents
   - **A merge commit's two parents are not evidence that `--no-ff` did anything.** A three-way
     merge has two parents as well, and nothing in the finished history separates the two. That
     is why this is checked before the merge, and cannot be checked after it.
+  - **The tip it is checked against has to be the trunk's current one.** Where the trunk also
+    takes pull requests on the host, the local ref is only as new as the last time it was moved,
+    and a merge landed there on the host is not in it. The check then passes against a tip the
+    remote has left behind, the merge lands on that stale tip, and the trunk no longer
+    fast-forwards to what the remote holds. So fetch first, and advance a trunk that is behind
+    before checking anything — standing on the branch, since the refspec will not move the ref
+    that is checked out:
+
+    ```bash
+    git fetch origin <trunk>:<trunk>
+    git rebase -r <trunk> <branch>
+    git merge-base --is-ancestor <trunk> <branch>
+    ```
+
+    Measured: a local release trunk stood one pull request behind its remote, and a branch cut
+    from it passed the ancestry check against the local ref. Only a comparison with the
+    remote-tracking ref showed that a pull request had already merged there.
 - **Delete the branch once it is merged.** Its name was written for whoever watched the work in
   flight, and that reader is gone. This includes a trunk that merges into another trunk —
   `release/x.x.x`, `hotfix/xxxx`, `dev` and `env` are all deleted once they land on `main`.
@@ -498,6 +605,17 @@ Merge the core/ rename in the repository documents
 
     **Cutting from a local branch does not need the fetch, and does not get the guarantee
     either**: a local trunk is as old as the last time somebody moved it.
+  - **A local trunk that is merely behind is advanced by a fetch refspec, not by a checkout.**
+    Naming the branch on both sides of the colon moves the local ref to what the remote holds,
+    and the form refuses anything that is not a fast-forward — so the one operation these
+    branches must never take is not available to it.
+
+    ```bash
+    git fetch origin <trunk>:<trunk>
+    ```
+
+    Standing on another branch while it runs is the point: nothing is checked out, nothing is
+    merged, and a trunk that has diverged comes back refused rather than silently rebuilt.
 - **Merging several sub-branches back is a cycle, not a batch: merge one, rebase the next onto
   the trunk's new tip, merge it, rebase the one after that.** Every merge moves the tip, so each
   branch is rebased against a commit that did not exist while the branch before it was still
@@ -547,3 +665,91 @@ Merge the core/ rename in the repository documents
       success without committing — a `cherry-pick` refused for a bad flag, a patch that did not
       apply, a copied file identical to the one already there. The check does not care which.
   - **Two branches are the smallest case of this, not a rule of their own.**
+
+## Carrying a change onto a branch by hand
+
+**A rebase moves a change between branches and keeps a record of what it moved. Writing a file
+does neither.** Where an edit was made against one base and is then written onto a branch that
+carries its own commits on the same file, whatever those commits added is reverted — and the
+revert appears in no diff of its own, because the file simply arrives as the edit left it.
+
+Measured: a file edited against a trunk was about to be written onto a branch carrying six commits
+on that same file. Written whole, all six would have been undone, and the commit doing it would
+have read as an ordinary update.
+
+**So the first act is to read what is already there.** Not the file — the two of them against each
+other:
+
+```bash
+git diff <the branch> -- <the path>          # what the branch has that the base does not
+```
+
+- **Compare the structure, not the text.** Which sections the branch holds and the edit does not,
+  and the reverse. A run of differing lines says the two disagree; a list of section names says
+  where and why, and it is short enough to check by eye.
+- **Apply section by section.** Take the edit's version where the edit touched a section, and the
+  branch's version everywhere else. What comes out is the branch's work with the edit laid over
+  it, which is what writing the file whole was supposed to produce and does not.
+- **What the edit lacks is not what the branch should lose.** A section standing in the branch and
+  absent from the edit is the branch's own work, and dropping it is the same overwrite arriving by
+  omission rather than by replacement.
+
+**Confirm afterwards by naming what should have survived.** The edit's own additions are easy to
+see because they are what was just written; the branch's are the ones a wrong application
+removes, so those are the ones to look for by name.
+
+## What a branch still carries
+
+**Whether a branch's work has reached a trunk is not answered by ancestry.** `--is-ancestor`
+answers whether the trunk holds those commits, and a branch whose content arrived by another
+route — cherry-picked, rewritten, or done again on a different branch — fails that test while
+holding nothing the trunk lacks. Measured: a branch reported as not merged turned out to carry no
+change the target did not already have.
+
+Three tests answer three different questions, and none of them stands in for another.
+
+| Test | What it answers |
+| :-- | :-- |
+| `git merge-base --is-ancestor <target> <branch>` | Whether the trunk holds these very commits |
+| `git cherry -v <target> <branch>` | Which of the branch's patches the target already holds |
+| A rebase onto the target | What the branch would actually add |
+
+- **`git cherry` marks an upstream patch `-` and skips merge commits**, so a branch's merges
+  never appear in its output and a clean run of `-` is a statement about the non-merge commits
+  alone.
+- **A `+` is not evidence that anything is missing.** A patch id is computed from the change
+  against its own base, so a commit written on an older base comes out `+` although the file it
+  produces is identical to the target's. Measured: two commits marked `+` left no content
+  difference at all against the target.
+- **The rebase is the test that settles it**, because what survives it is what the branch adds
+  and nothing else. Measured on two branches: one of twenty-five commits came out holding three
+  that carried no change, and one of twenty-one came out holding a single commit.
+- **Read the direction of a content diff before concluding from its size.** A diff against the
+  target shows what the two differ by, not what the branch contributed: where the target has
+  moved on, the branch appears to hold work it never touched. Measured: the files filling such a
+  diff had never been edited on the branch at all.
+
+### Deciding a branch may go
+
+**What decides it is what the branch uniquely holds — never its age, its name or how long it has
+been open.** Run the tests above, then look at what would be lost with the ref:
+
+- **Content.** Whatever the rebase leaves is the whole of what the branch adds. Where that is
+  empty, nothing is lost by deleting it.
+- **Descendants.** A branch something else was cut from is holding that base up, even if it
+  carries nothing itself.
+- **A pull request.** Deleting the branch closes it, and the discussion on it goes with the
+  ref rather than with the commits.
+- **The issue it answers.** An issue already closed, or answered by another branch, leaves the
+  branch with nothing to close.
+- **Its own base.** A branch whose base no longer exists cannot be judged by its diff until it
+  has been rebased onto something that does.
+
+Where all of these come back empty, the branch is a copy of work that is already elsewhere, and
+keeping it costs a reader the time it takes to establish that again.
+
+- **A branch whose one unique change nobody wants is in the same position**, and the argument
+  that it might be useful later is answered by how small the change was: writing it again costs
+  less than rebasing a stale branch onto a base that has moved.
+- **Delete it with `-d` where the test allows, and take a refusal as a question** rather than
+  reaching for `-D`. The refusal is the check described above doing its work.

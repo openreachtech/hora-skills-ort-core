@@ -1,6 +1,6 @@
 ---
 name: hoc-skill-updating
-description: "Conventions for creating new skills (SKILL.md) or updating existing ones. Defines how to name a skill (the prefix its library owns, the folder name that must equal `name:`, and the practice the rest of the name has to state), which library repository a skill belongs to, where one skill stops and a neighbouring convention takes over, the flat layout every library keeps under `kit/skills/`, and the conventions to follow when writing the body and the description."
+description: "Conventions for creating new skills (`SKILL.md`) or updating existing ones, in any of the libraries. Use before naming, placing, writing or splitting a skill, or editing its description. How prose is written in general belongs to the documentation convention."
 ---
 
 # Skill Updating
@@ -63,6 +63,19 @@ words have to be swapped before the instruction appears. `hoc-npm-deps-raise` wa
 words in the order that reads. **The swap is easy to perform without noticing**, because whoever
 supplies it already knows what the skill does, and a reader meeting the name in a flat list does
 not.
+
+**A name made of the thing being decided is the commonest way the test fails, and verbing that
+thing is the repair.** The words are already the right words; what is missing is the one that says
+a decision is being taken. A candidate naming where a package comes from, and another naming which
+manifest field it lands in, both expanded into noun phrases — and both read as instructions the
+moment the noun became a verb, *adopt* and *categorize*, with nothing else changed.
+
+- **Reach for the repair before reaching for other words.** A candidate that survives it was
+  already about the right subject, and replacing the words instead loses whatever made the first
+  attempt fit.
+- **An established compound noun is the exception the section above allows**, so the repair is not
+  applied to one. The test is whether the phrase is read as a thing outside this library: a code
+  review is, a dependency category is not.
 
 **Naming a skill after the outcome it exists to prevent inverts it.** A skill written to keep a
 refactor from moving a published interface was proposed as `hoc-breaking-change` — which expands
@@ -198,11 +211,41 @@ restating the other.
   what the practice *adds* gets the direction backwards, and sends the reader next door for the
   cases the practice was about to settle itself.
 
+## Extracting what several skills share
+
+**Where several skills carry a heading of the same name, that is not evidence they carry the same
+rule.** Measured across three skills of one family: four headings appeared in more than one of
+them, and **not one pair matched.** Each had been written for its own reader, and the wording had
+drifted with the reason.
+
+So an extraction begins by reading every version, not by moving one of them.
+
+- **What is shared is the rule; what differs is the reason.** All three said the same thing about
+  which names take backticks, and each gave a different account of why — one reader deciding
+  whether to pick the work up with nothing else open, one reading at merge with the diff beside
+  them, one holding the versions they are already on. The rule goes to the new skill and the
+  reasons stay where they were.
+- **A section may carry a paragraph that is not shared at all.** Two of the four held a test that
+  belonged to that artefact alone, buried under a heading the others also used. Moving the section
+  whole took those tests out of the skills that needed them, and they had to be put back. **Read
+  to the paragraph, not to the heading.**
+- **The new skill is written neutral, not copied from one sibling.** Built from a single copy, it
+  arrives carrying that sibling's vocabulary — section names, examples, the shape of its
+  particular body — and the other siblings then point at a convention that talks about somebody
+  else. Every term naming one artefact is replaced by what the term was standing for.
+- **Each sibling keeps a short section saying what the shared convention is read for there.** It
+  names that skill's reader and the one place the shared rule bites hardest, and nothing else. A
+  sibling left with only a pointer has lost the reason, which was the part that was its own.
+
+**The extraction is finished when each sibling still answers why, and only the new skill answers
+how.**
+
 ## Keep skills self-contained
 
 - Write a skill so that it is meaningfully complete on its own. **Information that is not self-contained within the skill must not be put into `SKILL.md`.**
 - Specifically, do not cite links to external websites (URLs to internal documents, tickets, articles, etc.) in `SKILL.md` as the basis or reference for a convention. If the reader cannot access the link destination, the meaning of the convention is lost.
 - Information that exists only at the link destination (tables, concrete examples, rationale, etc.) should not be replaced by a link; instead, transcribe the necessary content into `SKILL.md` (or into `references/` within the same skill) so it is self-contained.
 - Cross-skill relative path references are prohibited. A link that traverses to another skill via `../` describes this repository's source tree, which the consuming repository does not have: installed skills are siblings under `.claude/skills/`, so the path is wrong the moment it ships.
-- Referring to another skill **by its name** is fine, and is the clearer choice when the reader has to go there ("see `hoc-jsdoc`"). The name is stable — it changes only by a deliberate rename, which is a breaking change decided on purpose, never as a side effect of reorganizing the source. Where the reader only needs to know that a convention exists elsewhere, name the concept instead ("see the documentation convention").
+- Referring to another skill **by its name** is fine, and is the clearer choice when the reader has to go there ("see `/hoc-jsdoc`"). The name is stable — it changes only by a deliberate rename, which is a breaking change decided on purpose, never as a side effect of reorganizing the source. Where the reader only needs to know that a convention exists elsewhere, name the concept instead ("see the documentation convention").
+- **A skill named in prose carries the leading slash it is invoked with**: `/hoc-jsdoc`, never `hoc-jsdoc`. The slash is what marks the word as a skill. Without it the same string reads as a directory, a package or a branch prefix, all of which a repository of skills is full of, and the reader has to work out which one each mention was. Where the text is about the string itself — the `name:` value, the folder name, a candidate name being weighed — no skill is being pointed at, and the string is written without the slash.
 - Relative references to files within the same skill folder (e.g., `./references/structure.md`) are permitted, since they move together with the skill and their relative relationship is preserved.

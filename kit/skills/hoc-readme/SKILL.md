@@ -1,9 +1,9 @@
 ---
 name: hoc-readme
-description: "Write and update README files for projects. Use this skill whenever the user asks to create or update a README file."
+description: "The README a project carries, in every language it keeps, and the parts of it split out under `docs/`. Use whenever a README is created or updated. Which `LICENSE` file the project carries belongs to the license convention, and what a document may state as fact to the documentation convention."
 ---
 
-# README Skill
+# README
 
 When creating or updating a README, follow the rules in the following files.
 

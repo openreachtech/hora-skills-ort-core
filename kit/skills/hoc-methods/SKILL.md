@@ -1,6 +1,6 @@
 ---
 name: hoc-methods
-description: "Conventions for class method definitions. Covers named arguments, passing properties into private methods, factory methods, and related policies."
+description: "Conventions for class method definitions and their signatures. Use when defining, calling or reviewing a method. Method names belong to the naming convention; what the body is written with, to the statements convention; how a factory method builds a dependency, to the dependency-wiring convention."
 ---
 
 # Classes: Members / Methods
@@ -92,6 +92,94 @@ formatName () {
 }
 ```
 
+## A method that extracts resolves the value; it does not interpret it
+
+**Where a method's job is to take a value out of something — a config, a payload, a
+response — it returns what is there, and `null` where nothing is.** What absence means is
+the caller's to decide, and deciding it inside the extractor hides the decision in the one
+member whose name promises not to make any.
+
+```javascript
+// NG: the extractor decides that no cap means an unreachable one
+static extractMaxDocumentDepth ({
+  config,
+}) {
+  return config.maxDocumentDepth
+    ?? Infinity
+}
+
+// OK: it resolves, and leaves the meaning to whoever asked
+static extractMaxDocumentDepth ({
+  config: {
+    maxDocumentDepth = null,
+  },
+}) {
+  return maxDocumentDepth
+}
+```
+
+- **A default at the destructuring point is not interpretation.** `= null` states that an
+  absent key and an explicit `null` arrive the same way; `?? Infinity` states what absence
+  is worth, which is a different claim.
+- **The caller skips the work rather than being handed a value that stands in for nothing.**
+  Where the value is absent, the member that would have used it returns early, and the
+  behaviour that depends on it does not run.
+
+```javascript
+// The consumer decides what an absent cap means
+exceedsMaxDocumentDepth ({
+  depth,
+}) {
+  if (!this.maxDocumentDepth) {
+    return false
+  }
+
+  return depth > this.maxDocumentDepth
+}
+```
+
+- Two members then each hold one thing: the extractor holds where the value comes from, and
+  the consumer holds what its absence does. A substitute value inside the extractor merges
+  the two, and the merged version reads as though no decision had been made.
+
+## A parameter default belongs to the entry point of a recursion
+
+**Where a recursion carries an accumulator — a visited list, a depth, a path — only the
+member the recursion is entered through gives it a default.** The members reached from
+inside take it as a required parameter.
+
+```javascript
+// The entry point: callers state nothing about the accumulator
+deepMeasureSelectionDepth ({
+  context,
+  selection,
+  visitedFragmentNames = [],
+}) {
+  // ...
+}
+
+// Reached only from inside the recursion: the accumulator is required
+measureSelectionSetDepth ({
+  context,
+  selectionSet,
+  visitedFragmentNames,
+}) {
+  // ...
+}
+```
+
+- **A default on an inner member says it can be entered directly**, which is the one thing
+  it cannot do: called from outside with the accumulator empty, it starts a walk with no
+  record of where it has been. Requiring the parameter is what states that it is a step,
+  not a door.
+- **The initial value stops leaking into the caller.** Before the default existed, the entry
+  point's own caller wrote `visitedFragmentNames: []` — the recursion's internal state
+  stated by code that has nothing to do with the recursion.
+- **Which member is the entry point is readable from its name as well.** The naming
+  convention gives the entry the `deep~` super-prefix, so the name and this default point at
+  the same member — and a default later added to a step contradicts the naming, which is what
+  makes it visible.
+
 ## Factory methods must be defined without exception
 
 - Class definitions must define a factory method without exception.
@@ -159,37 +247,12 @@ static create (...) {
 
 - The exceptions where a direct `new` expression is allowed without going through a factory method (JavaScript built-in classes, DTO-like third-party modules, and the DTO whitelist) are collected in [references/instantiation.md](./references/instantiation.md).
 
-#### `XxxxFactory` class and the two-stage separation
+### A dependency is built in a factory method of its own
 
-- The `XxxxFactory` pattern for consolidating creation of a frequently used class (with the `BaseFactory` example), and the intent behind the selection (`.get:TargetCtor`) / instantiation (`.createTarget()`) two-stage separation, are collected in [references/factory-class.md](./references/factory-class.md).
-
-### Instantiation of a dependency class should go through a factory method
-
-- Do not directly create a dependency class in a default argument of `.create(...)`, etc. That is, do not directly write either `new Dependency(...)` (a `new` expression) or `Dependency.create(...)` (calling the dependency class's factory method). Extract the creation of the dependency class into a dedicated factory method (e.g. `this.createExternalApiClient()`) and go through it.
-- Unless there is a specific reason otherwise, the name of the dedicated factory method should basically be "`create` + class name" (e.g. `ExternalApiClient` → `createExternalApiClient`).
-
-```javascript
-// NG: directly instantiating a dependency class
-static create ({
-  externalApiClient = ExternalApiClient.create({ env }),
-} = {}) {
-  // ...
-}
-
-// OK: go through a factory method
-static create ({
-  externalApiClient = this.createExternalApiClient(),
-} = {}) {
-  // ...
-}
-```
-
-Reason:
-
-- **Patching/overriding is easy**: if a dependency has a bug and you need to apply an emergency patch in a subclass, you only need to override the factory method in the subclass, without changing the call sites. If the dependency were instantiated directly, every call site would need to explicitly pass the patched instance.
-- **Encapsulation of the dependency**: the caller's concern is the class in question, not its internal dependencies. The factory method hides the dependency relationship inside the class, lowering coupling.
-- **Testing/DI is easy**: you can inject a mock via an argument, or swap the factory's return value with `jest.spyOn(ThisClass, 'createExternalApiClient')`, and test with the same call form as production.
-- The factory method is lightweight DI (Dependency Injection), achieving, without a DI container: production = creation of the real dependency / testing = swap / hotfix = swap to a patched dependency.
+- **A dependency `static create (...)` needs is never built in its default argument.** It is built
+  by a dedicated factory method — `this.createExternalApiClient()` — instantiating through a
+  `[TargetClassName]Ctor` getter. That structure, and the seams it leaves for patching and
+  testing, belong to `/hoc-wire-dependencies`.
 
 ### When asynchronous creation is needed, define `.createAsync(...)`
 

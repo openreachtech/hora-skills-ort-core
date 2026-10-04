@@ -1,6 +1,6 @@
 ---
 name: hoc-dependency-defect
-description: "How to deal with a bug in code this project uses but does not own — a framework, an in-house package, anything inside `node_modules/`. Covers where to put the workaround, what to name it, and how to mark it so it can be deleted later. Use when a package behaves wrongly and the correction has to live in this project. A bug in code this project owns is fixed directly instead."
+description: "How to deal with a bug in code this project uses but does not own — a framework, an in-house package, anything inside `node_modules/`. Use when a package behaves wrongly and the correction has to live in this project. A bug in code this project owns is fixed directly instead."
 ---
 
 # Dependency Defect

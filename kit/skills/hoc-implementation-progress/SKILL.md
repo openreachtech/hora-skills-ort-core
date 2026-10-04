@@ -2,10 +2,9 @@
 name: hoc-implementation-progress
 description: >
   Make the state of an in-flight implementation visible, in a progress document anchored to the
-  requirement ids of the feature being built — a status per requirement, advanced only against
-  recorded evidence, mirrored by the session's todo list. Use this skill whenever implementing a
-  defined feature spans more than one work item or session, or whenever the user asks how far
-  along the work is or what is blocked.
+  requirement ids of the feature being built. Use this skill whenever implementing a defined feature
+  spans more than one work item or session, or whenever the user asks how far along the work is or
+  what is blocked. Defining the requirements belongs to the requirement definition convention.
 ---
 
 # Implementation Progress

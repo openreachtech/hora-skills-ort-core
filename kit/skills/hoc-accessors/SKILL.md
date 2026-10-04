@@ -1,6 +1,6 @@
 ---
 name: hoc-accessors
-description: "Conventions for class accessor (getter/setter) definitions: setters are prohibited for immutability; `#get:Ctor` is reserved for `this.constructor`; dependency references are extracted into getters — a static `[TargetClassName]Ctor` for classes to instantiate, and a static getter reached through `#get:Ctor` for non-instantiated dependencies like native modules; getter bodies forbid branching and method calls, staying pure property references."
+description: "Conventions for class accessors, getters and setters alike. Use when adding or reviewing an accessor, a getter that holds a dependency included. Which getter a dependency takes, and the factory method beside it, belong to the dependency-wiring convention; where members sit in the class body, to the class notation convention."
 ---
 
 # Classes: Members / Accessors
@@ -23,131 +23,14 @@ This summarizes conventions related to class accessor (getter / setter) definiti
   (For usage, type resolution, and override details, see the scope-reference convention.)
 - Therefore, do not use the name `Ctor` as a member name for any other purpose.
 
-## Extract references to dependency modules into a getter
+## Getters that wire dependencies
 
-- When a module (the class itself) depends on another module — whether a native module, a third-party module, or an in-house module — do not use the reference to that dependency directly as the imported identifier. **Extract it into a getter.**
-- Reason:
-  - **Easy patching**: if the dependency module has a bug and needs an emergency patch, it suffices to override the getter in a subclass; call sites do not need to change.
-  - **Easy mocking**: in tests, swapping the getter is enough to replace the dependency module entirely.
-- When the dependency is a **class to be instantiated** via `new` / `.create(...)`, extract it into a static getter named `[TargetClassName]Ctor` per the next section, and instantiate via a dedicated factory method (see "Instantiate dependency classes via a factory method" in the method-definition convention).
-
-```javascript
-// NG: using a dependency class directly
-import Aggregator from './Aggregator.js'
-
-export default class BaseRewardCalculator {
-  constructor ({
-    config,
-    aggregator,
-  }) {
-    this.config = config
-    this.aggregator = aggregator
-  }
-
-  static create ({
-    config,
-  } = {}) {
-    const aggregator = Aggregator.create({ config }) // NG: instantiated directly
-
-    return new this({
-      config,
-      aggregator,
-    })
-  }
-}
-```
-
-```javascript
-// OK: extract into a static getter named [TargetClassName]Ctor, and instantiate via a dedicated factory method
-import Aggregator from './Aggregator.js'
-
-export default class BaseRewardCalculator {
-  constructor ({
-    config,
-    aggregator,
-  }) {
-    this.config = config
-    this.aggregator = aggregator
-  }
-
-  static create ({
-    config,
-  } = {}) {
-    const aggregator = this.createAggregator({ config }) // OK: via a dedicated factory method
-
-    return new this({
-      config,
-      aggregator,
-    })
-  }
-
-  static get AggregatorCtor () {
-    return Aggregator
-  }
-
-  static createAggregator ({
-    config,
-  }) {
-    return this.AggregatorCtor.create({ config })
-  }
-}
-```
-
-- When applying an emergency patch in a subclass, overriding `AggregatorCtor` alone suffices.
-
-```javascript
-// OK: swapping the corrected class in only requires overriding AggregatorCtor
-import RoundHalfUpAggregator from './RoundHalfUpAggregator.js'
-
-export default class UserRewardCalculator extends BaseRewardCalculator {
-  /** @override */
-  static get AggregatorCtor () {
-    return RoundHalfUpAggregator
-  }
-}
-```
-
-## Static getters holding a constructor used for delegation should be named `[TargetClassName]Ctor`
-
-- When holding a target class's constructor in a static getter for delegation purposes, the getter name should be "**target class name + `Ctor`**".
-- Example: for the `Constraint` class's constructor → `.get:ConstraintCtor`; for `Client` → `.get:ClientCtor`.
-- When the target class is undetermined, such as in an abstract base class, a generic name expressing the role (e.g. `TargetCtor`) is fine.
-
-```javascript
-// OK: static getter holding the constructor of the delegate target class ([TargetClassName]Ctor)
-static get ConstraintCtor () {
-  return SampleConstraint
-}
-```
-
-## Native modules and other dependencies that involve no instantiation are returned as-is via a static getter
-
-- When the dependency is a native module such as `fs` — where the module itself is the value and there is no instantiation via `new` / `.create(...)` — neither the `Ctor` suffix nor a dedicated factory method is needed. Define a single **static getter** that returns the dependency module as-is.
-- **It is static because the body never touches `this`.** `return fs` is the whole of it, so nothing in it belongs to an instance. What decides the kind of a getter is its body, not the kind of value it holds — a getter that reaches for no instance state is a static getter, whatever it returns.
-- **An instance reaches it through `#get:Ctor`**, as `this.Ctor.fs`. That is what the reserved getter is for, and going through the constructor is what keeps a subclass's override the one that answers.
-- Calling a function of the module from within the getter is prohibited, per the "do not call a method from a getter" convention. The getter must return nothing but the module reference itself.
-
-```javascript
-// OK: a static getter that returns a native module as-is, reached through #get:Ctor
-import fs from 'node:fs'
-
-export default class DeepLoader {
-  static get fs () {
-    return fs
-  }
-
-  get Ctor () {
-    return /** @type {typeof DeepLoader} */ (this.constructor)
-  }
-
-  collectFileNames ({
-    poolPath = this.poolPath,
-  } = {}) {
-    return this.Ctor.fs.readdirSync(poolPath)
-      .filter(it => !it.startsWith('.'))
-  }
-}
-```
+- A class reaches what it depends on through static getters — `[TargetClassName]Ctor` for a class
+  it instantiates, a getter returning the module as-is for one it uses directly. Which getter a
+  dependency takes, and the factory method beside it, belong to `/hoc-wire-dependencies`.
+- **They are getters, so everything below holds for them in full.** A `Ctor` getter returns the
+  class and nothing else; the `.create(...)` call belongs in the factory method, never in the
+  getter.
 
 ## Do not write branching inside a getter
 

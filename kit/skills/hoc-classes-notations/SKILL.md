@@ -1,6 +1,6 @@
 ---
 name: hoc-classes-notations
-description: "Convention for the order members are written in a class body — the eight-block placement order (fields, constructor, factory methods, inflators, getters, methods) plus the ordering within getters and within methods, falling back to source order where undetermined. What a class may hold belongs to the class design principles convention; this covers only writing order. Refer to it when arranging or reviewing member order."
+description: "Convention for the order members are written in a class body. Use when arranging or reviewing member order. What a class may hold belongs to the class design principles convention; this covers only writing order."
 ---
 
 # Classes: Notations
@@ -46,6 +46,18 @@ The naming of `~Ctor` is governed by the accessor-definition convention.
 Within the method categories (6 and 8), the order is **the order of appearance in an outline that writes out the nesting structure of calls**. Immediately after a method, place the methods that it calls (depth-first, first appearance). Members belonging to another category (getters and the like), and anything that is not an own member of the class (methods of a delegate or of a dependency class), are left out of this enumeration.
 
 **For instance methods, the call outline of the private methods takes priority.** Therefore abstract members are not collected and placed at the end; they go at their first-appearance position in the outline.
+
+**The outline never reaches across the placement order above.** The blocks are settled first, and the
+outline only ever orders the members inside one of them. A member does not leave its block because
+something in another block calls it earlier.
+
+**The factory methods are where that pull is strongest, and where giving in to it is the plainest
+mistake.** A caller asks other members before it asks `.createAsync()` — whether the class applies,
+what it should be built from — so a strict reading of the outline would place those ahead of it. It
+does not, because item 3 is not a position the outline earned: **how a class is constructed is part
+of its structure rather than of its call flow**, which is why the factory methods are a block of
+their own directly under the `constructor`. Ordering them by who calls them first reads the local
+sequence and loses what the block was marking.
 
 An outline example for a `Sample` class.
 

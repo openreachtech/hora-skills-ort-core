@@ -12,6 +12,11 @@ each member, and put only **one** member into each class-name describe().
 
 - Do not bundle multiple members into a single class-name describe().
 - The nesting order is `describe(class) > describe(member) > describe(behavior) > test()`.
+- **The member describes appear in the order the class writes its members.** The test file
+  is read beside the implementation, and a reader who has just found a member in the class
+  reaches its tests by counting the same distance down the test file. Where the class is
+  reordered, the test file is reordered with it in the same change — two orders that drift
+  apart cost the reader the one thing this index was for.
 - Name the behavior-layer describe() after the expected behavior using
   **`should [verb]`** (e.g. `describe('should keep property')` /
   `describe('should call constructor')`). Do not use `to [verb]`. However, when the
@@ -233,13 +238,19 @@ describe('BoundCtorRegistry', () => {
 })
 ```
 
-### Instance getters require `test.each()` (the variable element is the instance)
+### Instance members require `test.each()` (the variable element is the instance)
 
 An instance getter (e.g. `get Ctor () { return this.constructor }`), or a getter whose
 value **varies depending on the instance's state or type**, is not a "fixed value". Do
 not reduce it to a single `test()` under `when called as is` — instead, put the
 **variable element (i.e. which instance it is) into `cases` and drive it with
 `test.each()`**.
+
+**This reaches every instance member of a class that holds properties, not getters
+alone.** An instance method taking no arguments still reads the instance, so the instance
+is its variable element, and a single `test()` fixes it — the same shortcut the argument
+rule below turns away. Build two or more instances differing in the property the member
+reads, and drive them with `test.each()`.
 
 - Do not shrink it to a single `test()` just because "the base class currently being
   verified always yields the same value". That is a **shortcut justified by the
@@ -356,7 +367,7 @@ value passed in), you must **not** fix a single input in a single `test()`. Turn
 argument into the variable element as `cases`, and drive **two or more inputs** with
 `test.each()`. With only one input, an implementation that ignores the argument and
 hardcodes the value would still pass (the QA stance in [SKILL.md](../SKILL.md)).
-Whereas [Instance getters require `test.each()`](#instance-getters-require-testeach-the-variable-element-is-the-instance)
+Whereas [Instance members require `test.each()`](#instance-members-require-testeach-the-variable-element-is-the-instance)
 has "the variable element is the instance," here "the variable element is the
 argument."
 
@@ -810,6 +821,48 @@ describe('SomeClass', () => {
   })
 })
 ```
+
+## Build the subject with its factory; take `new` to replace a defaulted module
+
+**A test builds the instance the way the class says instances are built — with `.create()`
+/ `.createAsync()`.** The defaults the factory fills in are part of what the class offers,
+so a case that wants them takes them, and the test says only what distinguishes it.
+
+```js
+// Good: the factory, so the defaults the class declares are the ones under test
+const validator = DocumentTooDeepGraphqlRequestValidator.create({
+  maxDocumentDepth: input.maxDocumentDepth,
+})
+```
+
+**Where the default is a dependency module and the case has to substitute it, the factory
+is the wrong door.** It names that module itself, so nothing the test passes can displace
+it. The constructor is the only seam that takes the replacement, and the subject is built
+with `new`.
+
+```js
+// Good: the defaulted module replaced, so the constructor takes it directly
+const validator = new DocumentTooDeepGraphqlRequestValidator({
+  ErrorCtor: DocumentTooDeepErrorMock,
+  maxDocumentDepth: input.maxDocumentDepth,
+})
+```
+
+- **What sends a test to `new` is the substitution, never the existence of a default.** A
+  factory filling in a threshold, a flag or a formatted value is left to fill it in — the
+  case has no quarrel with the value. `new` is reached for when the case has to observe or
+  control what the default is: the module the subject calls through.
+- **`new` then states the whole list.** Once the constructor is the door, every property
+  comes from the case, and the substitute arrives beside the real values instead of being
+  planted behind the subject. That is the same seam
+  [mocks.md](./mocks.md#spy-the-instance-the-subject-will-use-never-a-class-prototype)
+  reaches for where a collaborator refuses a spy.
+- **An async factory is not avoided for being async.** `createAsync()` running a boot path
+  is what a case wanting the booted instance awaits. It is left on the one ground above —
+  a module it defaults to, which the case must replace.
+- The constructor's own tests use `new` by nature
+  ([Constructor Tests](#constructor-tests)), and in `describe('.create()')` the factory is
+  the subject. Neither is decided by this rule.
 
 ## Constructor Tests
 
@@ -1416,8 +1469,15 @@ fits this.
   does not affect the behavior** — not because "reading the implementation shows it
   has no effect, so I'll use a single loop" (the QA principle in
   [SKILL.md](../SKILL.md)).
+- **The outer axis is whatever state the member reads, which is not always a property of
+  the subject.** A static member handed a collaborator (`isAcceptable({ engine })` /
+  `createAsync({ engine })`) reads that collaborator's state, and the double loop puts it
+  on the outside — the collaborator's error hash, the environment it reports — with the
+  member's own argument inside. What decides the outer axis is **what varies independently
+  of the argument**, never where the value happens to be stored.
 - Each element of the outer `cases` **bundles together** `input` (the constructor
-  property) with its own dedicated inner cases (`~Cases`).
+  property, or the collaborator whose state the member reads) with its own dedicated inner
+  cases (`~Cases`).
 - For the naming convention of the inner cases variable (the prefixed `~Cases`), see
   [naming.md](./naming.md).
 - Use `override` / `input` / `tally` on the **outer** element side. `expected` may be

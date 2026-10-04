@@ -59,12 +59,14 @@ conventions in other files reinforce one another.
 - **Every line must start with `*`.** — `jsdoc/require-asterisk-prefix` (`'always'`)
 - **Keep the `*` column aligned and the spacing after tags (one space after the tag /
   type / name / hyphen).** — `jsdoc/check-alignment` / `jsdoc/check-line-alignment`
-- **Exactly one blank line between the description and the first tag; no blank lines
-  between tags; no blank line before the closing.** — `jsdoc/tag-lines`
-  (`'never'`, `startLines: 1`, `endLines: 0`, `applyToEndTag: true`)
+- **Exactly one `*`-only line between the description and the first tag; none between
+  tags; none before the closing.** — `jsdoc/tag-lines`
+  (`'never'`, `startLines: 1`, `endLines: 0`, `applyToEndTag: true`). A block holds no
+  blank line to begin with, so the separator this rule counts is a line carrying nothing
+  but `*`, and the skill body settles where one may appear
 - **Order tags by the default `tagSequence`** (roughly
   `@param` → `@returns` → `@throws` → … → `@public`/`@access` → `@example`), with no
-  blank lines between tags (`linesBetween: 0`). — `jsdoc/sort-tags`
+  `*`-only lines between tags (`linesBetween: 0`). — `jsdoc/sort-tags`
 - **Do not place stray `*` (`**`) in the middle or at the end of a line** (leading
   whitespace is allowed). — `jsdoc/no-multi-asterisks` (`allowWhitespace: true`)
 - **`@description` / `@param` / `@returns` and others are excluded from the indentation
@@ -84,6 +86,7 @@ conventions in other files reinforce one another.
 | Avoid vague types (`object`/`Object`/`any`/`*`); write the most specific type and concrete generics | This skill's own convention (not lint-enforced). However, using `object`/`Object` as a type makes `require-param`/`check-param-names` demand sub-property documentation, so a detailed type literal aligns with lint (reinforced). See also the "object types as named parameters" row |
 | Prohibit `object`/`Object` (use `Record<string, *>`) | This skill's own convention (not lint-enforced). The reason is that `object` tolerates ambiguity including `null` |
 | Write the any type as `*` (no `any`) | This skill's own convention (not lint-enforced). `*` itself is not overused either; it is a last resort for when the type cannot be narrowed |
+| Prohibit a `*` cast on the right-hand side of an unannotated declaration | This skill's own convention (not lint-enforced). Lint reads JSDoc as comments, so a cast that turns the type checker off raises nothing at all — only the type checker would have reported what it silenced |
 | Do not write undefined type names (define custom types via `@typedef`/import) | `jsdoc/no-undefined-types` is **off** in the base default (overridden to `error` by this project's `eslint.config.js`). Built-in types and TS utility types (`Record`, etc.) count as defined. Enforced by this skill rather than relying on lint |
 | Do not write `undefined` as a type (use `null`) | This skill's own convention (not lint-enforced). `undefined` is a defined type, so `no-undefined-types` allows it. Exception: permitted when a third party requires it |
 | Do not place a delimiter after each chopped-down property | Inside a type literal, so lint does not parse it. This skill's own convention |

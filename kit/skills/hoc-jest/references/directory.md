@@ -92,6 +92,23 @@ describe name at level 1 then matches the source path it mirrors
 | `lib/i18n/locales/*/message.json` | `tests/__tests__/i18n/locales/message.js` |
 | `lib/fixtures/*/user.json` | `tests/__tests__/fixtures/user.js` |
 
+### A stand-in for a third-party module lives under `tests/mocks/`
+
+A class written to stand in for a third-party module is not source, so it has no
+`lib/` path to mirror. It lives at `tests/mocks/MockXxxx.js`, and **its own test
+keeps the `tests/` segment** rather than stripping it.
+
+| Stand-in | Test |
+| --- | --- |
+| `tests/mocks/MockValidationContext.js` | `tests/__tests__/tests/mocks/MockValidationContext.js` |
+
+`lib/` is the base point only for what `lib/` holds. Anything else the project
+writes and tests mirrors from the repository root, which is why `tests/` survives
+here where `lib/` never does.
+
+What the class holds, and why the stand-in is a class at all, is in
+[mocks.md](./mocks.md#a-third-party-module-is-stood-in-for-by-a-mockxxxx-class).
+
 ## One Source File, One Test File
 
 A source file's tests live in **the single test file its path mirrors**, and

@@ -117,6 +117,51 @@ different about this case."
   declared type** ("prepare a real value matching the declared type" in
   [types.md](./types.md)). Don't substitute `{ id: 100001 }` and paper over
   the type with `/** @type {*} */`; pass the real thing, like `new WeakMap()`.
+- **Never add a property that exists only to render the title.** A field the
+  subject is never handed — a prose label such as `situation`, or a list of
+  names copied out of the value beside it — is a second statement of what the
+  case is, and nothing keeps the two in step. Read the title off a value the
+  case already carries.
+
+```js
+// Avoid: errorNames exists only so the title has something short to print
+const cases = [
+  {
+    input: {
+      errorNames: ['Alpha', 'Beta'],
+      errorHash: {
+        Alpha: AlphaError,
+        Beta: BetaError,
+      },
+    },
+  },
+]
+
+describe.each(cases)('errorHash: $input.errorNames', ({ input }) => {
+  // ...
+})
+
+// Good: the title reads the value the subject is handed
+const cases = [
+  {
+    input: {
+      errorHash: {
+        Alpha: AlphaError,
+        Beta: BetaError,
+      },
+    },
+  },
+]
+
+describe.each(cases)('errorHash: $input.errorHash', ({ input }) => {
+  // ...
+})
+```
+
+- A title fragment another key already identifies is dropped rather than
+  repeated: where `maxDocumentDepth` distinguishes the cases, the title is
+  `'maxDocumentDepth: $input.maxDocumentDepth'` and says nothing about the
+  document beside it.
 
 ```js
 // No distinguishable readable property exists (two empty WeakMaps) -> use $# as a last resort
@@ -493,15 +538,52 @@ Valid / Invalid Values split in [structure.md](./structure.md) to separate
 `describe()`s instead of this ordering. The ordering here is only about the
 order **among valid values that live within the same `describe()`**.
 
+## A case carries the collaborator, already built
+
+**What the subject under test receives is written into `cases` as the value it will
+receive** — the parsed document, the configured collaborator, the instance standing in for
+a dependency. The test body does not hold the raw material and turn it into that value.
+
+```js
+// Good: the case carries what the subject is handed
+const cases = [
+  {
+    input: {
+      document: parse('{ alpha { child { id } } }'),
+    },
+    expected: 3,
+  },
+]
+
+// Avoid: the case carries source text, and every test body parses it again
+const cases = [
+  {
+    input: {
+      query: '{ alpha { child { id } } }',
+    },
+    expected: 3,
+  },
+]
+```
+
+- **The building is repeated once per case otherwise**, in the body, where it reads as part
+  of the exercise rather than as data. Moving it into `cases` leaves the body holding
+  Arrange, Act and Assert and nothing else.
+- **The value is built by something already tested** — a library's parser, a factory with
+  its own tests — which is what makes it data rather than logic
+  ([anti-pattern.md](./anti-pattern.md#only-logic-that-is-verified-by-a-test-may-be-used)).
+- **The title reads the built value**, not a second copy of the source. `parse()` keeps the
+  text it was given, so `$input.document.loc.source.body` prints the query without a field
+  existing to print it.
+- Where the collaborator refuses to be spied — a frozen object, a proxy that throws on
+  assignment — this is the only way to vary it at all
+  ([mocks.md](./mocks.md#spy-the-instance-the-subject-will-use-never-a-class-prototype)).
+
 ## At most one property key per line
 
 Format `cases` objects so that **no more than one property key (`foo:`)
 appears on a single line**.
 
-- Structural containers (where the value of `input` / `tally` / `override`
-  is an object) must **always be broken onto new lines**, with child
-  properties on separate lines. Don't put parent and child on the same line
-  like `input: { replacer: X }`.
 - Leaf data values (payload objects held by things like `value` /
   `valueHash`) **may be inline if there is a single key**
   (`valueHash: { id: 100001 }`). **Expand if there are multiple keys**.
@@ -509,11 +591,6 @@ appears on a single line**.
   onto its own line**. If an element has just a single key, it may be inline.
 
 ```js
-// Avoid: placing input and replacer on the same line (inlining a structural container)
-const cases = [
-  { input: { replacer: alphaReplacer } },
-]
-
 // Avoid: placing value and id / name on the same line (inlining a multi-key payload)
 const cases = [
   {
@@ -554,6 +631,62 @@ const cases = [
   },
 ]
 ```
+
+### The array decides the height of its elements, not each element on its own
+
+**Whether an element is written on one line is decided for the whole array.** Where every
+element carries a single key at each level, write them all on one line; where even one
+element has to be chopped down, chop every element down — including the ones that would
+have fitted.
+
+```js
+// Good: every element fits, so every element is one line
+const cases = [
+  { input: { maxDocumentDepth: 1 } },
+  { input: { maxDocumentDepth: 3 } },
+  { input: { maxDocumentDepth: 10 } },
+]
+
+// Good: one element carries a structure, so all of them are chopped down
+const cases = [
+  {
+    input: {
+      selectionSet: null,
+    },
+  },
+  {
+    input: {
+      selectionSet: {
+        kind: Kind.SELECTION_SET,
+        selections: [],
+      },
+    },
+  },
+]
+
+// Avoid: deciding per element, so the array comes out at two heights
+const cases = [
+  { input: { selectionSet: null } },
+  {
+    input: {
+      selectionSet: {
+        kind: Kind.SELECTION_SET,
+        selections: [],
+      },
+    },
+  },
+]
+```
+
+- **What a reader scans is the boundary between elements**, and a mixed array hides it: a
+  one-line element and a five-line element look like one entry and its continuation. Uniform
+  height turns the array back into a list that can be counted at a glance.
+- The per-line rule above still governs **what fits**: a multi-key object is never inline,
+  so an array holding one is chopped down entirely. The array-level decision only settles
+  the elements that could have gone either way.
+- This is the same judgement the next section makes for a long flat array, applied to the
+  short ones: both ask **what the array as a whole can carry**, never what one element
+  could.
 
 ### A flat enumeration may put one element per line
 

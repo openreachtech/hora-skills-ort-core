@@ -1,6 +1,6 @@
 ---
 name: hoc-jsdoc
-description: "JSDoc writing conventions shared by backend and frontend. Use when writing or reviewing JSDoc type annotations, in plain JavaScript or in Vue."
+description: "JSDoc writing conventions shared by backend and frontend. Use when writing or reviewing JSDoc, the type a tag carries included, in plain JavaScript or in Vue. Use it also when clearing a type error a checker such as `tsc` reports: the error is cleared by writing the annotation, and which annotations may be written is decided here. Reading what the checker reported belongs to the type-errors convention."
 ---
 
 # Shared: JSDoc
@@ -282,6 +282,206 @@ generate ({
  * @param {*} value - Value.
  */
 ```
+
+## A `*` cast on the right-hand side is prohibited
+
+- **A variable whose declaration carries no type annotation must not be cast with `*` on its
+  right-hand side.** Both `/** @type {*} */ (...)` and `/** @type {Array<*>} */ ([...])` are
+  prohibited there, as is `any` written in place of `*`.
+- Nothing about the variable then states a type: the declaration says nothing, and the cast says
+  `any`. Every use of that variable downstream is unchecked, so the cast is not a type — it is a
+  switch that turns the checker off for everything the value reaches.
+- **The type error the cast silences is evidence.** A message such as "`{ Gamma?: undefined }` is
+  not assignable to `Record<string, T>`" is pointing at the union TypeScript inferred from the
+  literal, and the fix is to declare what the literal is. Casting deletes the message rather than
+  the defect.
+- **The only `*` cast allowed is the temporary one, against a type the project does not own, and
+  inside the class that supplies the stand-in**: a `MockXxxx` under `tests/mocks/` whose
+  `.create()` declares the real type as its return, so the cast bridges a deliberately partial
+  literal exactly once and every caller holds the real type. The test convention (`/hoc-jest`)
+  settles where that class lives and what tests it.
+- **Against a type the project owns there is no exception.** Build the real thing and hand it
+  over. A cast literal standing in for one of ours declares itself complete while holding two
+  members, and that claim is one the checker can never test — the type gains a member, the
+  literal does not, and nothing reports it. Every place that stood the type in has to be found
+  and corrected by hand, and nothing says which places those are. A real instance follows its own
+  class instead, so the change reaches the test the way it reaches everything else.
+- **In a test this is absolute.** The implementation exists by the time its test is written, so
+  every type the test needs is already declared somewhere in the code under test. A `*` there is
+  never "the type cannot be narrowed"; it is "the type was not looked up".
+
+```javascript
+// NG: nothing declares the type, and the cast removes the check
+const cases = /** @type {Array<*>} */ ([
+  {
+    input: {
+      errorHash: {
+        Alpha: AlphaError,
+      },
+    },
+  },
+])
+
+// OK: the declaration carries the type
+/**
+ * @type {Array<{
+ *   input: {
+ *     errorHash: Record<string, typeof RenchanGraphqlError>
+ *   }
+ * }>}
+ */
+const cases = [
+  {
+    input: {
+      errorHash: {
+        Alpha: AlphaError,
+      },
+    },
+  },
+]
+
+// OK: the one temporary cast, inside the class standing in for a third-party type
+export default class MockValidationContext {
+  /**
+   * Factory method.
+   *
+   * @returns {GraphqlType.ValidationContext} - Validation context.
+   */
+  static create () {
+    return /** @type {*} */ ({
+      getType: () => null,
+      reportError: () => {},
+    })
+  }
+}
+
+// NG: the same cast written where it is used, instead of in the stand-in
+/** @type {GraphqlType.ValidationContext} */
+const mockContext = /** @type {*} */ ({
+  getType: () => null,
+  reportError: () => {},
+})
+
+// NG: a stand-in for a type the project owns, wherever it is written
+/** @type {GraphqlType.ServerEngine} */
+const mockEngine = /** @type {*} */ ({
+  env: {
+    isProduction: () => true,
+  },
+})
+```
+
+- The rule names `const` because that is the only declaration written: `let` is prohibited
+  (see `/hoc-statements`), and `var` errors under lint.
+
+## An override is reduced to `/** @override */` only where nothing else is stated
+
+A member that overrides another, and whose JSDoc adds nothing the base does not already
+say, is written as the one-line block. **It may be reduced that far only when the block
+carries no `@param` and no `@returns`** — those two are read by the type checker, and
+**TypeScript does not inherit them from the base member.**
+
+```javascript
+// OK: a getter with no parameters, whose return type the literal already gives
+/** @override */
+static get errorName () {
+  return 'DocumentTooDeep'
+}
+
+// NG: @param dropped, so the destructured argument becomes an implicit any
+/** @override */
+static isAcceptable ({
+  engine,
+}) {
+  // ...
+}
+```
+
+- **Measured**: dropping `@param` from an override reported `TS7031` on the destructured
+  binding, and dropping `@returns` from a member returning a visitor reported `TS7006` on
+  that visitor's own parameters — the return type was what gave them their shape. **Lint
+  stayed at zero through both**, so nothing but the type checker reports this.
+- A description the override adds of its own keeps the block, even where `@param` and
+  `@returns` would be redundant: the sentence is the thing being added.
+- The one-line form is permitted by `jsdoc/multiline-blocks`, which exempts `override`
+  among a few others ([eslint-jsdoc-rules.md](./references/eslint-jsdoc-rules.md)). What
+  decides whether to use it is this rule, not that exemption.
+
+## A `*`-only line is the block's one separator, and it goes in one place
+
+**A JSDoc block cannot hold a blank line.** Every line inside it carries the leading `*`
+(`jsdoc/require-asterisk-prefix`), so a line left truly blank is not a wider gap — it is a
+lint error, reported alongside `jsdoc/check-alignment`. What reads as a blank line is a line
+carrying nothing but `*`, and that is the only separator the block has.
+
+**It is spent in one place: between the block description and the first tag**, where
+`jsdoc/tag-lines` requires exactly one. Nowhere else — not between tags, not before the
+closing, and **not inside a type literal**.
+
+```javascript
+// OK: the one place it goes, between the description and the first tag
+/**
+ * Generate a random text of the given length.
+ *
+ * @param {{
+ *   length: number
+ * }} params - Parameters.
+ */
+
+// NG: a `*`-only line used to group the parameters
+/**
+ * @param {{
+ *   ErrorCtor: typeof RenchanGraphqlError
+ *
+ *   maxDocumentDepth: number
+ * }} params - Parameters of this constructor.
+ */
+
+// OK: the properties stand as one list
+/**
+ * @param {{
+ *   ErrorCtor: typeof RenchanGraphqlError
+ *   maxDocumentDepth: number
+ * }} params - Parameters of this constructor.
+ */
+```
+
+- A grouping worth showing is shown **in the code**, where a blank line is a blank line:
+  the argument list of the constructor or the factory carries it, and the JSDoc above
+  stays a flat list of the same properties.
+- **Lint places the separator and then stops at the brace.** `jsdoc/tag-lines` counts the
+  lines around the tags, so it is what reports a missing separator before the first tag and
+  a stray one between two tags. Inside a type literal it sees one `@param` and nothing else,
+  so a `*`-only line between two properties is not a line it counts; and
+  `jsdoc/require-asterisk-prefix` passes it too, because the line has its asterisk. The
+  block comes out green, reading as though the grouping were sanctioned, which is why this
+  convention carries the rest.
+
+## Wrap a JSDoc sentence at a clause boundary
+
+**Where a sentence in a JSDoc block runs past the line, break it where the clause breaks**
+— after a comma, at a conjunction, between two sentences — rather than filling to a column
+and breaking wherever the word count lands.
+
+```javascript
+// NG: filled to the margin, so the line ends mid-clause
+/**
+ * A fragment already on the path contributes nothing, which is what stops a
+ * cyclic document from being walked forever.
+ */
+
+// OK: the break falls where the clause does
+/**
+ * A fragment already on the path contributes nothing,
+ * which is what stops a cyclic document from being walked forever.
+ */
+```
+
+- **The unit a reader takes in is the line.** Broken at a clause, each line is one
+  statement and the comment can be read down the left edge; broken at a column, a line
+  ends on `stops a` and carries no meaning of its own.
+- This governs prose. A type literal is already one property per line, and `@param` /
+  `@returns` descriptions follow the same break where they run long.
 
 ## Do not place a delimiter after each chopped-down property
 

@@ -1,11 +1,10 @@
 ---
 name: hoc-code-review
 description: >
-  Run a READ-ONLY, code-level review of a change and produce a findings report — specification
-  compliance against the feature's requirement definition document, correctness, and conformance
-  to the project's coding conventions. Never fixes anything. Use this skill whenever the user asks
-  to review a change or pull request before it is merged, or to verify that what was built matches
-  what was specified.
+  Run a READ-ONLY, code-level review of a change and produce a findings report. Never fixes
+  anything. Use this skill whenever the user asks to review a change or pull request before it is
+  merged, or to verify that what was built matches what was specified. Writing the requirement
+  document it checks against belongs to the requirement definition convention.
 ---
 
 # Code Review
@@ -28,7 +27,9 @@ behind it. Without that document the first pass cannot be run; see
 3. **Leave to the linter what the linter enforces.** Run the project's lint command; report its
    result as one line. Do not turn lint-enforced formatting into findings — that noise buries
    the findings that matter. Where the project has no lint command, say so on that line; the
-   formatting rules then fall to the convention pass, judged against the surrounding code.
+   formatting rules then fall to the convention pass, judged there the way every other point
+   is — against what the conventions state, and against the surrounding code only where they
+   state nothing.
 4. **Detect, don't assume.** Read the surrounding code before judging a line. A call that looks
    wrong is often correct against a convention you have not read yet.
 5. **Report the defect, not the taste.** A finding states what breaks, or which stated

@@ -100,13 +100,46 @@ arrived.
   value that goes **into** a call and is never returned, which is where a filled-in default is
   observed.
 
-## Do Not Write `jest.fn()` Directly Inline Inside `test()`
+## Take the Matcher a Value Has, Rather Than Routing It Through `expected`
 
-Creating and using a `jest.fn()` inside `test()` (injecting it into args,
-plugging it into a member) is **prohibited in principle**. Mocks and stubs
-should spy on **a real seam** (a member of the real class / a function property
-of args / a global function, etc.) using `jest.spyOn()`. There are three
-reasons for this.
+Where Jest names a matcher for the value being asserted — `toBeNull()`, `toBeUndefined()`,
+`toBeNaN()`, `toHaveLength()` — that matcher is the assertion. Binding the value to
+`expected` and comparing it with `toBe()` says the same thing in more lines, and says it
+where lint cannot see it.
+
+```js
+// ❌️ The expectation routed through a variable
+const expected = null
+
+const received = SomeClass.extractValue(args)
+
+expect(received)
+  .toBe(expected)
+
+// ✅️ The matcher that names the value
+const received = SomeClass.extractValue(args)
+
+expect(received)
+  .toBeNull()
+```
+
+- **The variable is what hides it.** `jest/prefer-to-be` rewrites `toBe(null)` into
+  `toBeNull()`, but it reads the argument at the call site; once the literal is bound to
+  `expected`, the rule has nothing to match and the looser form survives review.
+- The failure message differs too: `toBeNull()` reports what it received against "null",
+  while `toBe(expected)` reports it against a variable the reader then has to look up.
+- This is the matcher-choice list in
+  [eslint-jest-rules.md](./eslint-jest-rules.md#how-to-choose-matchers-follow-these-otherwise-they-error)
+  applied to the case lint cannot reach.
+
+## `jest.fn()` is never written
+
+**`jest.fn()` does not appear in a test, anywhere.** Not injected into args,
+not plugged into a member, not planted in a derived class, not held by a
+fixture. Mocks and stubs spy on **a real seam** (a member of the real class / a
+function property of args / a global function, etc.) using `jest.spyOn()`.
+There are three reasons for this, and a fourth that closes the case the first
+three leave open.
 
 - **It amounts to writing out a stub implementation**: `jest.fn()` is an empty
   fake function; to give it meaning you end up having to
@@ -123,12 +156,14 @@ reasons for this.
   anything real, so it hides whether the actual collaborator works.
   `jest.spyOn()` targets a real, existing seam, observing calls while letting
   the real thing run.
+- **The one case that ever wanted a planted spy is already supplied**: a
+  constructor has no member to spy on, and `@openreachtech/jest-constructor-spy`
+  builds that seam — `constructorSpy.spyOn()` returns a class carrying
+  `__spy__`. An application writes none of it, so no case is left over for which
+  `jest.fn()` would be the answer, and the prohibition carries no exception.
 
 See [mocks.md](./mocks.md) for the concrete techniques
-(`jest.spyOn(args, key)` / `constructorSpy` / spying on global functions) and
-for the **one exception** where `jest.fn()` is allowed (only when there is no
-seam through which the real function can be spied on independently, override a
-getter in a derived class and plant a `jest.fn()` there).
+(`jest.spyOn(args, key)` / `constructorSpy` / spying on global functions).
 
 ```js
 // ❌️ Creating a jest.fn() and injecting it into args (writing out a stub implementation)

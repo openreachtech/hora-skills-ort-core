@@ -1,12 +1,10 @@
 ---
 name: hoc-git-commit
 description: >
-  Conventions for git commits. Covers what belongs in a single commit and the order commits
-  land in, the message format (imperative or Conventional Commits), and the verb vocabulary
-  shared by both. The branches commits land on, and the two commits a branch makes about
-  itself, belong to the git branch convention; the commands that gate a commit belong to the
-  workflows convention. Use before writing a commit message, and before splitting a working
-  tree into commits.
+  Conventions for git commits, in either message format. Use before writing a commit message, and
+  before splitting a working tree into commits. The branches commits land on, and the two commits a
+  branch makes about itself, belong to the git branch convention; the commands that gate a commit
+  belong to the workflows convention.
 ---
 
 # Git Commit
@@ -229,15 +227,30 @@ before.
   else. Reordering control flow is not this: two `if` statements swapped is a behavior change
   wearing the clothes of an ordering, and it takes the verb its behavior deserves. Relocating
   something to another file is `Move`; `Rearrange` never crosses a file.
-- **`Move` stays `Move` when the relocation itself forces an edit.** A file that changes
-  directory takes its relative paths with it, and whatever pointed at the old place has
-  to point at the new one. Those edits are not a second decision riding along — they are
-  what the move consists of, and a subject naming anything else would hide the one thing
-  that happened. The row's `content untouched` means the substance is untouched: what the
-  file says, not the depth of a path it says it at.
+- **`Move` stays `Move` when the relocation forces an edit inside the moved file.** A file
+  that changes directory takes its own relative paths with it. Those edits are not a second
+  decision riding along — they are what the move consists of, and a subject naming anything
+  else would hide the one thing that happened. The row's `content untouched` means the
+  substance is untouched: what the file says, not the depth of a path it says it at.
   - The test is whether the edit would stand on its own. A path following its file would
     not: revert the move and the edit has nothing to do. An edit that still makes sense
     with the file where it was is a separate decision, and takes its own commit.
+  - **What pointed at the old place from another file is not part of the move.** Each such
+    file takes a commit of its own, after the move and one file apiece:
+
+    ```
+    Move index.js to lib/index.js
+    Update the import in tests/__tests__/index.js to lib/index.js
+    Update main: in package.json to lib/index.js
+    ```
+
+    Folded into the move, those edits sit under a subject that names none of the files they
+    touch, and a reviewer can no longer check each reference on its own. Measured: a move
+    carrying its test's import and the manifest's `main:` in one commit was asked back as
+    mixed; split per file, the tree at the tip came out identical.
+  - **The commits in between leave a reference pointing at the old place**, until the last of
+    them lands. The sub-branch carrying them merges as one, so the trunk never holds that
+    state.
 - **`Update` and `Retake` split on what was there before.** `Update` carries a sound
   implementation forward and leaves it giving something it did not give before — the gain is the
   point. `Retake` replaces what was poor, hurried or a stopgap with what should have been there,
@@ -279,8 +292,18 @@ before.
   - `Remove` reads the same whether a whole file went or one line inside it did — `Purge` and
     `Kick out` split exactly that, and `Delete` is `Remove`'s twin in this.
   - `Create` leaves open whether a class, one of its members, or something else arrived, which
-    `Declare`, `Define` and `Add` settle between them. `Make` is `Create`'s twin, and
-    `Make changes to syntax` is what it comes to.
+    `Declare`, `Define` and `Add` settle between them.
+- **`Make` is `Create`'s twin, and is barred on wider ground than the trio.** Standing for
+  `Create` it inherits that fault — `Make changes to syntax` settles nothing between `Declare`,
+  `Define` and `Add`. What `Create` cannot do and `Make` can is take an outcome as its object:
+  `Make the written conventions reach the writer` names the state the tree is meant to be in
+  once the change is applied, and every verb in the table could have brought that state about.
+  A word that fits in front of any object marks nothing by standing there, so the subject tells
+  a reader only that something was done. It is the fault `Keep` is kept out for and the fault
+  `Put` is kept out for, arriving in one word.
+  - **The bar reaches the `-ing` form a branch-opening marker takes.** `Start making xxxx`
+    says no more than `Make xxxx` does. The marker carries the verb the branch's own commits
+    would use, and this is not one of them.
 - **The table carries no `Refine` either.** It claims the thing got better without saying what
   changed, so the reader is left with the writer's satisfaction and nothing else. Whatever the
   improvement was, a listed verb names it: the wording redone is `Retake`, the formatting
@@ -504,6 +527,12 @@ amends what is written here.
   subject joining two class declarations with `and` is wrong in the repository it was copied from
   as surely as in the one it was copied to, and citing it names a second offence rather than
   excusing the first.
+- **A precedent may be correct and still not transfer.** `Start`, `Release` and `Merge` carry no
+  change of their own, so nothing in their subjects answers to granularity — an `and` in one of
+  them joins nothing that could have been two commits. Citing such a subject for one that does
+  carry changes borrows a licence resting on that exemption, and the commit being written does
+  not hold it. This is the harder of the two to catch, because nothing in the commit cited is
+  wrong.
 - **The reach for a precedent is itself the signal.** It happens where the rule would otherwise
   cost something — more commits to write, a branch already shaped to rebuild. That pressure is
   the moment the rule is doing its work, so a precedent produced under it is being used to buy

@@ -1,6 +1,6 @@
 ---
 name: hoc-classes-prohibits
-description: "Convention on prohibitions in class definitions. Establishes the policy of prohibiting static-only classes and classes without properties (state), and the reasons for them."
+description: "Convention on what a class definition may not be. Use when deciding whether a class should exist, or when reviewing one that holds no state. The principles these prohibitions rest on belong to the class design principles convention."
 ---
 
 # Classes: Prohibits

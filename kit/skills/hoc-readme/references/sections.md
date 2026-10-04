@@ -140,7 +140,7 @@ Write according to `license` in `package.json`.
 
 - `UNLICENSED`: the body is the single word `UNLICENSED`.
 - `Apache-2.0`: use the template below.
-- `MIT`: use the template below (the current README's format).
+- `MIT`: use the template below.
 
 `README.md` (Apache-2.0):
 
