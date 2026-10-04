@@ -30,6 +30,7 @@ Each skill lives at `kit/skills/<name>/`, directly under the skills directory, a
 | :-- | :-- |
 | `hoc-manifest-pattern` | The manifest pattern, also called the super strategy pattern — a structure keeps one shared object declaring its wiring, and everything inside the structure may take it. |
 | `hoc-methods` | Method definition conventions — named arguments, passing properties into private methods, and factory methods. |
+| `hoc-wire-dependencies` | How a class reaches what it depends on — a `[TargetClassName]Ctor` static getter and a dedicated factory method for a class it instantiates, a static getter for a module used as it is — so a subclass can patch either and a test can swap it. |
 | `hoc-functions` | Function conventions. Parameters follow method parameters: named arguments as a principle. |
 | `hoc-constants` | Constant conventions — naming (uppercase `SNAKE_CASE`, singular for enum-like objects), chopping down, and the file organization and placement of object-type constants. |
 | `hoc-contracts` | Type contracts for function and method arguments and return values, and how contract types are defined. |
