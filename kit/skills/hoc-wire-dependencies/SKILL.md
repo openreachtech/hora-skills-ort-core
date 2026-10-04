@@ -198,6 +198,13 @@ export default class DeepLoader {
 }
 ```
 
+## Consolidating the creation of a frequently used class
+
+- The `XxxxFactory` pattern for consolidating creation of a frequently used dependency class (with
+  the `BaseFactory` example), and the intent behind the selection (`.get:TargetCtor`) /
+  instantiation (`.createTarget()`) two-stage separation, are collected in
+  [references/factory-class.md](./references/factory-class.md).
+
 ## Where this stops
 
 - **How a getter's body is written** — no branching, no method call — belongs to the accessors
