@@ -319,6 +319,14 @@ whatever sits on top is what they see first and read hardest. Put a one-line cha
 substantial one is buried beneath it; put the substantial one there and the small changes sit
 where they cost nothing, at the bottom, passed over on the way.
 
+- **Size is read off the diff, never off the commit count.** What sits on top is read as a diff,
+  so the diff is what ranks the branches. A branch of four commits that raise versions and
+  regenerate a lock file is cheaper to read than one of two commits that change a procedure.
+- **An octopus merge ranks its legs by commit count instead, fewest first.** Its branches arrive
+  in one merge commit, side by side, and `git log --graph` draws each as a leg of its own — so
+  the reader takes the structure in from the shape of the legs before reading any diff, and legs
+  that lengthen from left to right are the shape that reads at a glance. How the octopus merge
+  is made is under `## Merging back into a trunk`.
 - **This is not an argument about risk.** Ordering by cost so that the cheap gains survive if the
   expensive work is rejected reaches the same order by another route, and it is not the reason.
 - **A change that only becomes possible once the others land goes last, whatever it costs.** Where
@@ -665,6 +673,22 @@ Merge the core/ rename in the repository documents
       success without committing — a `cherry-pick` refused for a bad flag, a patch that did not
       apply, a copied file identical to the one already there. The check does not care which.
   - **Two branches are the smallest case of this, not a rule of their own.**
+- **An octopus merge takes the sub-branches in one merge commit instead of the cycle.** Where one
+  is asked for, it is the shape to make, and the cycle is not offered as another reading of the
+  request.
+
+  ```bash
+  git switch <trunk>
+  git merge --no-ff -m 'Merge …' <fewest commits> <more> <most>
+  ```
+
+  - **Every branch sits on the trunk's current tip before it starts.** No tip moves between
+    merges, so no rebase happens in the middle — but each branch is checked against the tip
+    first, with `--is-ancestor` and with a count above zero, exactly as in the cycle.
+  - **The branches are listed by commit count, fewest first**, as `### The order the sub-branches
+    merge in` says. The order of the arguments is the order of the legs in the graph.
+  - **The subject names the whole the trunk gathers**, at the altitude of its opening marker,
+    since one commit now stands for every branch it received.
 
 ## Carrying a change onto a branch by hand
 
