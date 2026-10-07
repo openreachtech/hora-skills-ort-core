@@ -9,12 +9,17 @@ A skill for writing Jest unit tests for JavaScript classes, and for the modules
 and data files a project tests alongside them.
 The conventions are split across the detail files below.
 
-**Three of them are read in full before the first line of a test is written, in a new test file
+**Five of them are read in full before the first line of a test is written, in a new test file
 or in one that already exists:**
-[naming.md](./references/naming.md), [anti-pattern.md](./references/anti-pattern.md) and
-[structure.md](./references/structure.md). They hold the prohibitions no lint rule catches, so a
+[naming.md](./references/naming.md), [anti-pattern.md](./references/anti-pattern.md),
+[structure.md](./references/structure.md), [mocks.md](./references/mocks.md) and
+[prohibit.md](./references/prohibit.md). They hold the prohibitions no lint rule catches, so a
 file written without them passes lint and passes its own tests while breaking this convention
 throughout, and nothing anywhere reports it. The rest are read as the work reaches them.
+
+Measured: tests written with only the first three read carried a `jest.fn()` standing in for a
+collaborator and a spy planted on a class prototype — both forbidden in the two files left
+unread, and neither reported by lint.
 
 > **Notation convention**: Throughout this skill, when we simply write
 > `describe()` / `test()` / `expect()`, each is a **generic term that implies**
