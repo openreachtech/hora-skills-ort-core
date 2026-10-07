@@ -31,7 +31,7 @@ For sections whose content is fixed boilerplate, copy the following templates in
 
 ### Installation
 
-Almost entirely fixed text. Use the template below, replacing `<node-version>` (e.g., `20.x`) and `<package-name>`. Packages are published to npmjs.com, so `npm install` is all a consumer needs — do not add registry configuration or an authentication step to this section.
+Almost entirely fixed text. Use the template below, replacing `<node-version>` (e.g., `20.x`) and `<package-name>`. `npm install` is all a consumer needs — do not add registry configuration or an authentication step to this section. A package published to npmjs.com needs none, and a package distributed privately needs none either: reading it is granted when it is bought, before anybody installs it.
 
 `README.md` (English):
 
