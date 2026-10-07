@@ -58,6 +58,7 @@ Each skill lives at `kit/skills/<name>/`, directly under the skills directory, a
 | Skill | Summary |
 | :-- | :-- |
 | `hoc-naming` | Naming for classes, methods, properties and accessors — datetime suffixes (`At`/`On`, plus `From`/`To` for ranges), abbreviation criteria, American spelling, forbidden words, ASCII only. |
+| `hoc-vscode-cspell` | The spell checker's vocabulary in `.vscode/cspell.json` — settling a reported word in `words:` or `ignoreWords:` before rewording any code, the fragments a pattern produces that are silenced rather than taught, kicking out entries no tracked file uses, and the order a checklist records it in. |
 | `hoc-comments` | Comments within actual code are written in English unless there is a reason otherwise. |
 | `hoc-jsdoc` | JSDoc writing conventions shared by backend and frontend — type annotations, the casts refused on the right-hand side and the third-party-only exception, `@typedef` and type-only imports, and the layout of the block itself, with the Vue/Nuxt-specific conventions in its references. It is also where a type error reported by a checker is cleared. |
 | `hoc-type-errors` | How to read what a type checker reports before deciding what to change — the reported count is not the size of the work while casts are still silencing errors, and an error may be pointing at a value that is wrong rather than an annotation that is missing. |
