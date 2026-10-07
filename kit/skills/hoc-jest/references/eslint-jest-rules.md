@@ -71,6 +71,11 @@ Items that overlap with conventions in other files reinforce one another.
   `toHaveBeenNthCalledWith(1, ...)` … `toHaveBeenNthCalledWith(n, ...)` n times,
   pinning the arguments of every call. Verifying only the count lets arguments pass
   through (QA stance; a convention of this skill, not lint-enforced).
+- **A call count never stands in for the outcome the subject produces.** Where the
+  member under test leaves a result behind — a value it returns, a file it removes, a
+  directory it leaves empty — the test reads that result. Asserting that a member it
+  delegates to was called once says only that something was attempted, and a call that
+  did nothing passes it all the same.
 - **Where both are written, the argument matcher goes first and
   `toHaveBeenCalledTimes(n)` goes last.** What the test is looking at is what the spy
   was called with; the count is the supplement. Writing the supplement first puts the
