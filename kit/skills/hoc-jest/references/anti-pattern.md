@@ -91,6 +91,26 @@ function createSamples ({ options }) {
 3. Once a helper function has tests this way, it becomes a **tested helper
    function** that may be used freely inside test files.
 
+## Logic a Test Cannot Import Is Extracted, Never Evaluated
+
+Some logic sits where a test cannot reach it as a module: inside a script that
+does its work the moment it is imported, or one that ends by exiting the
+process. **Do not make it testable by cutting its source text out of the file
+and evaluating it** — `new Function()`, `eval()`, the `vm` module. What such a
+test runs is a string rather than a module: it passes against a copy of the
+text, says nothing of the file that ships, and hides that the logic has no
+importable home.
+
+- **Extract the logic into a class per responsibility**, in a file of its own
+  beside the script, and let the script import it. The test then imports that
+  class as it would any other subject.
+- **Where two tools keep the same logic on purpose, each keeps its copy as a
+  whole file.** Two tools that import nothing from each other carry two copies
+  of one class, and a test pins them together by comparing the two files whole —
+  never by comparing ranges sliced out of larger scripts, whose boundaries are a
+  guess the test cannot check. A comparison like this is a reconciliation; see
+  [structure.md](./structure.md#a-reconciliation-is-indexed-by-the-relation).
+
 ## Prohibited Syntax
 
 Since a test consists solely of input/output assertions, do not write control
