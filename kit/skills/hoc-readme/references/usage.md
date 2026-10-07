@@ -20,3 +20,9 @@ bundled into the npm package, they need not live in a `readme/` directory next t
 - Once Usage grows past a certain length, split it out into `docs/en/usage/usage.md` (and, per language, `docs/<xx>/usage/usage.xx.md`), and turn the README body into a link reference.
 - When there are multiple independent features, use a Features section instead of a single Usage, splitting each feature out into `docs/en/features/<feature>.md` (and, per language, `docs/<xx>/features/<feature>.xx.md`) and linking to it (see Features in `sections.md`).
 - For splitting the API, see `api-references.md` (multiple classes are split into `docs/<lang>/api/<ClassName>...` and bundled together via `docs/<lang>/api/index...`).
+
+## A package distributed privately
+
+A package published privately — readable by the members of an npm organization alone, from a repository that is private as well — is read where it is installed and nowhere else. Its readers cannot open the repository, so what the rules above arrange for a public package does not reach them.
+
+- **The documents the reader needs travel in the tarball.** `files` in `package.json` lists `docs/` beside the executable code, so the README and everything it links to are read in `node_modules/` alone. This is the decision the default above leaves to the repository, taken the one way a private package can take it.
