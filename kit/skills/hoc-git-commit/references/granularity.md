@@ -248,6 +248,15 @@ renamed ones is invisible.
       split costs four commits saying one thing and buys a reviewer nothing. The test is whether
       a reviewer could accept it in one document and reject it in another: where they could not,
       it is one decision, and the subject then names the edit rather than a document.
+  - **Where the pair would be the only commit of its sub-branch, it splits by language.** A
+    sub-branch holding one commit merges under a subject that only restates that commit — the
+    reason the git branch convention gives for a line of one-commit sub-branches needing no
+    trunk. One commit per language gives the sub-branch steps of its own, and costs the reviewer
+    nothing the rule above protects: the two commits still carry one edit, side by side.
+    - **The split lasts only while its condition does.** Once the sub-branch takes another
+      commit, the pair folds back into one, because the reason for splitting is gone and the
+      rule above applies again. Folding rewrites the commits, so it is open only while they are
+      unshared, which the git branch convention bounds.
 
 ## Order
 
