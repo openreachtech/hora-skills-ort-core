@@ -66,7 +66,7 @@ ES モジュール（`"type": "module"`）です。ESM の `import` 構文でイ
 For libraries with multiple independent features, use `Features` in place of `Usage`, and list only the feature list in the README body. Split the details of each feature out into a separate file, `docs/en/features/<feature>.md` (and, for each language, `docs/<xx>/features/<feature>.xx.md`), and link to it.
 
 - Link destinations should match the README's language (`README.md` links to `docs/en/features/<feature>.md`; `README.ja.md` links to `docs/ja/features/<feature>.ja.md`).
-- Links should use absolute GitHub URLs. Split-out files live under `docs/` and are not bundled into the npm package (see `usage.md`).
+- Links should use absolute GitHub URLs. Split-out files live under `docs/` and are not bundled into the npm package (see `usage.md`). A package distributed privately links relatively instead (see `usage.md`).
 
 `README.md` (English):
 
