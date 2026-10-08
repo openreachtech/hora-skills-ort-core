@@ -108,6 +108,12 @@ convention — when to make one, and what its subject says — because what they
 inseparable from what they are for. Here they surface only in the verb table below, where
 `Start`, `Release` and `Merge` are reserved for them.
 
+- **A marker made on the wrong branch is taken back with `git reset --soft HEAD~1`, while it is
+  still local.** The marker is empty, so the soft reset leaves the tree exactly as it was.
+  `git reset --hard` and `git branch -D` reach the same state by discarding, and a session run
+  under a permission classifier refuses both as irreversible. Once the commit is pushed it
+  stays, and a new commit corrects it.
+
 ### Verbs
 
 A subject opens with a verb naming what actually happened. The vocabulary is the same in both
