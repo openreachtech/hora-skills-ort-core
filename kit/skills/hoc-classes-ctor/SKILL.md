@@ -1,6 +1,6 @@
 ---
 name: hoc-classes-ctor
-description: "The `Ctor` getter an instance reaches its own class through: how `#get:Ctor` is defined, typed and overridden, why the name is reserved, and why `this.constructor` is never written outside it. Use when an instance member refers to a static member or to its own class, or when about to write `this.constructor`. Getters that hold a dependency's class belong to the dependency-wiring convention."
+description: "The `Ctor` getter an instance reaches its own class through: how `#get:Ctor` is defined, typed and overridden, why the name is reserved, and why a static member is never reached through `this.constructor` outside it. Use when an instance member refers to a static member or to its own class, or when about to write `this.constructor`. Getters that hold a dependency's class belong to the dependency-wiring convention."
 ---
 
 # Classes: Ctor
