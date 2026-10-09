@@ -124,8 +124,8 @@ docs/deployment/
   pressure.
 - If the project already has a place for operational documents, use it, and keep the file name
   `<environment>.md`.
-- Write it in the language the person running it speaks, as the documentation convention asks for
-  any document written for a reader.
+- Write it in the language the person running it speaks, as `/hoc-writing-language` resolves it
+  for any document written for a reader.
 
 ## Scope
 

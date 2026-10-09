@@ -1,6 +1,6 @@
 ---
 name: hoc-documentation
-description: "Documentation writing conventions for READMEs, design documents, comments and any other prose a project carries. Use when writing or updating a document, and when a change moves a fact a document states. The README's own structure belongs to the README convention."
+description: "Documentation writing conventions for READMEs, design documents, comments and any other prose a project carries. Use when writing or updating a document, and when a change moves a fact a document states. The README's own structure belongs to the README convention; which language a document is written in, to the writing-language convention."
 ---
 
 # Documentation
@@ -88,31 +88,9 @@ still stating it in both when the change reached a release branch.
 
 ## What language a document is written in
 
-- **A document written for a person to read is written in the language that person is using.** If
-  someone asks for a requirement definition in Japanese, the requirement definition is in Japanese.
-  If they ask in English, it is in English.
-- **An explicit instruction wins.** If the requester asks for a particular language, use that one,
-  whatever language the conversation is in.
-- **This skill is the governing source for this rule.** Other skills that produce a document refer
-  to it in one line rather than restating it, so there is one place to change.
-
-This covers anything generated for a reader — a requirement definition, a progress document, a
-review or audit report, an acceptance report, a deployment runbook.
-
-It does **not** cover the following, each of which has its own rule elsewhere.
-
-| Not covered | Rule, and where it lives |
-| :-- | :-- |
-| Code and identifiers | ASCII only, in the naming convention |
-| Comments in code, those in a document's code examples included | English unless something specifies otherwise, in the comment convention |
-| `LICENSE` | The original text, unchanged |
-| `SKILL.md` and its `references/` | English, so that every skill in a package reads the same way |
-
-**Which language files a README has is settled by the README convention** (`/hoc-readme`).
-
-**Why the rule is worth stating.** A document nobody can read has not been delivered. Writing a
-requirement definition in English for a team that works in Japanese means the one person who has to
-approve it reads it slowest — and approval is the step the document exists for.
+- Which language a document is written in belongs to `/hoc-writing-language`. It is read here for
+  the default it gives a document written for a reader — the language that reader is using — which
+  holds wherever no instruction, and no language code in the file's name, has settled it first.
 
 ## Scope of application (applies beyond prose)
 
