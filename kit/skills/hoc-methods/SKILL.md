@@ -164,8 +164,8 @@ exceedsMaxDocumentDepth ({
 
 ### Instantiation
 
-- Within `.create(...)`, do not call `new` using the class name. Instantiate with `new this(...)`.
-  (Using `this` ensures that even when called from an inheriting subclass, an instance of that subclass is created.)
+- Within `.create(...)`, do not call `new` using the class name. Instantiate with `new this(...)`
+  — why a static member refers to its own class through `this` belongs to `/hoc-scope`.
 - Since every defined class always has a factory method defined, whenever depending on another class, always instantiate it via its factory method (`.create(...)`).
 - Consequently, the form `new Sample(...)` against a defined class never appears outside test files.
   (The exception is `new this(...)` inside `.create(...)`. This creates an instance of the class itself using `this`, not the class name.)
