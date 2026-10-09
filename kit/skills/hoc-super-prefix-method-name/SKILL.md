@@ -105,5 +105,6 @@ async invokeCloseWorker ({
 - **An `invoke~` member is private wherever it can be**, wrapped by the public member that
   calls it. It is the seam between the class and its delegate, and keeping it off the
   interface keeps the delegate's call out of what callers can couple to. Private here is the
-  member being left out of the published contract, never a native `#` method — see the class
-  design principles convention.
+  member being left out of the published contract: the public member that calls it carries
+  `@public` in its JSDoc (see `/hoc-jsdoc`), and the `invoke~` member does not. A native `#`
+  method is never the means — see `/hoc-prohibit-native-features`.
