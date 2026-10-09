@@ -95,6 +95,36 @@ const endpoint = config.prefix
   : config.graphqlEndpoint
 ```
 
+## An instance is never taken apart by destructuring
+
+**The members of an instance are not destructured — not on the right of a destructuring
+assignment, and not in a parameter.** An instance of a class, `this` included, is asked for what
+it holds. Destructuring is left for data: a named-argument object, a payload being read.
+
+```javascript
+// NG: an instance taken apart on the right of an assignment
+const {
+  send,
+} = this.mailClient
+
+// NG: an instance taken apart in a parameter
+.filter(({ account }) => account.isActive())
+
+// OK: the instance asked, and answering for itself
+.filter(it => it.hasActiveAccount())
+```
+
+- **A method taken out of its instance no longer has it.** Called as `send()`, the method runs
+  with `this` unbound, and the first line of it that reaches `this` fails.
+- **A member taken out states what the instance holds inside.** The local is a second name for one
+  value from then on, and the code around it now depends on the instance's insides.
+- **Where the body needs something behind the instance, the instance grows the member that
+  answers.** `it.hasActiveAccount()` keeps what an account is to the item that holds it.
+- **`this` is the case met most often**, and why a property of `this` is read where it is used
+  belongs to `/hoc-scope`.
+- **A class or a module is not an instance.** Taking a named export or a static member out of one
+  is not what this rule refuses.
+
 ## Sequential processing is prohibited; write with higher-order functions
 
 - Sequential processing (imperative loops) using `for` and the like is prohibited.
