@@ -139,6 +139,11 @@ constructor ({
 A plain object is avoided wherever it can be. What holds values is a class, so that the values
 arrive with a name and with the members that work on them.
 
+- **What decides it is that a class can be overridden in part.** A subclass replaces one member
+  and keeps every other one as it was, which is how a hotfix, a variant or a test stand-in reaches
+  the one place it needs. A plain object offers nothing to override, and neither does a module of
+  exported functions — which is why a module is never used in place of a class either.
+
 - **A type declaration does not make a plain object a value object.** `@typedef` writes down a
   shape, and the name it gives lives in the annotation alone: at run time the value is the same
   nameless object, with nothing on it to work on what it holds. Calling a plain object something
