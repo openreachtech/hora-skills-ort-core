@@ -44,6 +44,10 @@ deepLoadFiles ({
 }
 ```
 
+- **Private is written as the absence of `@public`.** The entry point carries `@public` in its
+  JSDoc, as every entry point reached from outside does (see `/hoc-jsdoc`); the `deep~` member
+  does not, and that is what leaves it out of the published contract. A native `#` method is
+  never the means (see `/hoc-prohibit-native-features`).
 - **The entry point is what hides the initial value.** It is written inside the entry point,
   never as a default on any signature a caller can reach, so the recursion's internal state is
   stated by the member that starts it and by nothing else.
