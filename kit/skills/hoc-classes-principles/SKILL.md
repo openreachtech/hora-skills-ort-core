@@ -10,8 +10,9 @@ This summarizes the principles for class property declaration and design.
 ## Core principle: Do not create classes without properties
 
 - A class must hold at least one instance property.
-- Do not create a class that is nothing but a collection of static methods / static fields (a static-only class). Design it as a state-holding instance class, or delegate to a single-responsibility class.
-- The class prohibitions convention is the canonical source for the detailed reasons and exceptions of this prohibition (no-properties / static-only). This skill sets that as the core principle and then systematizes the surrounding design conventions on top of it.
+- What the prohibition covers — static-only classes and classes without properties — and its
+  exceptions and reasons belong to `/hoc-classes-prohibits`. This skill takes it as the core
+  principle and builds the surrounding design conventions on top of it.
 
 ## The five points of the system (a bundle of premises)
 
@@ -84,10 +85,6 @@ Derived.ensure(key)
 - **Do not reassign the reference itself.** Deep immutability extends to `static` as well. Only the inside of a collection may change, and that is constrained by the property-definition convention (`Map` is not used, even for `static`).
 - **Adding `static` fields does not relax the core principle of not creating classes without properties.** A `static` field is not an instance property, so a class holding only those remains prohibited as a static-only class.
 
-### Handling of derived classes
-
-- A class that has `extends` is out of scope even if it only overrides static members. The responsibility belongs to the base class.
-
 ## What not to use
 
 ### `#private`
@@ -115,7 +112,7 @@ Therefore soft-private (`this._x`) is visible and correct. Do not use `#private`
 
 ## Rules
 
-- A class holds at least one instance property (if it cannot, replace it with a method of a state-holding class / delegation to a single-responsibility class)
+- A class holds at least one instance property (see `/hoc-classes-prohibits`)
 - Properties are only `this.xxx = xxx` inside the `constructor`; class fields and private fields are not allowed
 - `static` fields are allowed (`static #X` is not); put accumulating associations, pools, and caches in `static` + `WeakMap`; do not reassign the reference
 - Every property that stores a value is received via a constructor argument of the same name; do not reassign it (deep
@@ -123,7 +120,6 @@ Therefore soft-private (`this._x`) is visible and correct. Do not use `#private`
   `/hoc-properties`
 - Do not directly access members not in the references; do not enumerate instances
 - Do not use `#private` or `decorator` (except when a human explicitly specifies it)
-- A class that has `extends` is out of scope
 
 ## Proviso
 
