@@ -64,24 +64,9 @@ operation comes later. In between, a branch can be pushed, a pull request opened
 
 ## A trunk is never force-pushed
 
-The trunks are `main` and the four branches that may merge into it — `release/x.x.x`,
-`hotfix/xxxx`, `dev` and `env`. **None of them takes `git push --force` or
-`--force-with-lease`**, and none takes the local rewrites that would make one necessary —
-`rebase`, `commit --amend`, or `reset` onto a commit that has been pushed.
-
-**There is no permission that unlocks this.** Asking does not produce it, and being asked
-directly does not either. It is what the names mean, and the git branch convention states it
-as a property of the branches rather than a preference about commands.
-
-- **The reason is who else is holding the branch.** A trunk is what every other branch is
-  cut from, so its commits are already in clones, in merge commits' parents, and in
-  whatever CI recorded against them. Rewriting it does not correct a mistake — it makes
-  everyone else's copy disagree with the remote, silently, until they try to push.
-- **A mistake already on a trunk is corrected by a new commit**, on a branch that merges in
-  like any other.
-- **On `main` of a repository that deploys from it, a rewrite goes further than that.** The
-  branch is the record of what was released — published, handed to whoever cloned it, or put
-  in front of users. Rewriting it rewrites when each of those happened.
+**No trunk takes `git push --force`, `-f` or `--force-with-lease`, and no permission unlocks
+it.** Which branches are trunks, and why their published history is never rewritten, belong to
+`/hoc-git-branch-remote`.
 
 ## What a push is for
 
@@ -155,7 +140,7 @@ characters, and the command carries no record of which one was in effect.
 
 ## A force-push is the human's to run
 
-**No `git push --force` or `--force-with-lease` is run here, on any branch, in any state.**
+**No `git push --force`, `-f` or `--force-with-lease` is run here, on any branch, in any state.**
 Not after asking, either — the question is not withheld out of caution. An answer to it
 cannot carry what the act needs.
 
