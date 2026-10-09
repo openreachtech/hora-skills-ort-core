@@ -116,13 +116,13 @@ A **trunk branch** is one that other branches are cut from and merged back into.
 **Five are trunks by name, in every repository: `main`, and the four branches that may merge
 into it.**
 
-| branch | what it carries | may merge into `main` |
-| :-- | :-- | :-- |
-| `main` | the mainline every other branch descends from | — |
-| `release/x.x.x` | one version's work, until it merges into `main` | yes |
-| `hotfix/xxxx` | one fix that cannot wait for a release | yes |
-| `dev` | long-lived integration. **Legacy** | yes |
-| `env` | the initial environment setup, and changes that leave the released artefact untouched | yes |
+| branch | what it carries |
+| :-- | :-- |
+| `main` | the mainline every other branch descends from |
+| `release/x.x.x` | one version's work, until it merges into `main` |
+| `hotfix/xxxx` | one fix that cannot wait for a release |
+| `dev` | long-lived integration. **Legacy** |
+| `env` | the initial environment setup, and changes that leave the released artefact untouched |
 
 **Every other branch is a general branch, and takes the role rather than holding it.** A
 general branch behaves as a trunk for as long as work is split off it. The five above behave as
@@ -130,11 +130,9 @@ trunks whether anything is outstanding against them or not.
 
 - **`dev` is legacy.** It stays in the set for backward compatibility, and nothing new is opened
   on it. A repository still carrying one holds it to every rule here.
-- **Which of the four a given repository actually uses is narrower than the set**, and it is
-  decided by what that repository releases rather than by this convention. A repository that
-  ships its own contents to whoever clones it merges nothing but `release/x.x.x` into `main`;
-  one that publishes a tarball can also merge `env`, because a change the tarball does not carry
-  needs no version. **The set here is the ceiling, not the instruction.**
+- **Which of the four a given repository may merge into `main` is narrower than the set**, and
+  it is decided by the kind of repository — see `/hoc-git-branch-remote`. **The set here is the
+  ceiling, not the instruction.**
 
 The shape of the name settles nothing. `release/x.x.x` is a trunk and
 `retake/save-of-UserRepository` is not, and the two are the same shape.
