@@ -108,9 +108,7 @@ It does **not** cover the following, each of which has its own rule elsewhere.
 | `LICENSE` | The original text, unchanged |
 | `SKILL.md` and its `references/` | English, so that every skill in a package reads the same way |
 
-**A README follows the project.** Some projects keep one file, some keep one per language
-(`README.md` alongside `README.ja.md`). Match what the repository already does rather than
-introducing a second pattern.
+**Which language files a README has is settled by the README convention** (`/hoc-readme`).
 
 **Why the rule is worth stating.** A document nobody can read has not been delivered. Writing a
 requirement definition in English for a team that works in Japanese means the one person who has to
