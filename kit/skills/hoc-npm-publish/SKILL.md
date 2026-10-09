@@ -1,6 +1,6 @@
 ---
 name: hoc-npm-publish
-description: "How a package release is ordered and checked before it goes out. Use this skill when preparing a release, bumping a package's own version, when work lands after the bump, or deciding whether a package is ready to publish. Moving the dependency versions a release takes in belongs to the dependency-raising convention."
+description: "How a package release orders the commits it makes about itself. Use this skill when preparing a release, bumping a package's own version, or when work lands after the bump. Reading the tarball before it goes out belongs to the publish audit convention; moving the dependency versions a release takes in, to the dependency-raising convention."
 ---
 
 # npm Publish
