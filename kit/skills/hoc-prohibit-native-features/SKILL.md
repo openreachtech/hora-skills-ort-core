@@ -13,6 +13,47 @@ each costs something that way of working depends on.
   (`/hoc-classes-principles`): what it rules out is part of what a property is, so it stays
   with the definition of a property.
 
+## Object literals shared across scopes
+
+**An object literal is not shared across scopes on the strength of its shape.** Built and used
+up where it stands, a literal is fine. Handed out — returned, kept in a property, passed on to
+be read elsewhere — it becomes a value whose reader trusts only that it has the right keys, and
+what holds values is a class. Why a shape is not a value belongs to the class design principles
+convention (`/hoc-classes-principles`).
+
+- **A named-argument object is not sharing.** `fn({ title })` hands a literal across a call, and
+  the callee destructures it on arrival into separate parameters; nothing keeps it as a value.
+- **A `@typedef` naming the shape does not change this.** It describes the literal, and the
+  reader still holds a nameless object.
+
+```javascript
+// NG: a literal leaves the method, and its reader relies on the shape
+computeTotalPerRegion () {
+  return this.extractKeptSales()
+    .reduce((totals, it) => ({
+      ...totals,
+      [it.region]: (totals[it.region] ?? 0) + it.amount,
+    }), {})
+}
+
+// OK: what leaves the method is an instance of a class
+computeRegionTotals () {
+  const keptSales = this.extractKeptSales()
+
+  return [
+    ...new Set(
+      keptSales.map(it => it.region)
+    ),
+  ]
+    .map(region => this.Ctor.RegionTotalCtor.create({
+      region,
+      amount: keptSales
+        .filter(sale => sale.region === region)
+        .reduce((total, sale) => total + sale.amount, 0),
+    }))
+}
+```
+
 ## `Map`
 
 - **`Map` is prohibited (enforced by ESLint).** Do not use it unless there is a special reason in module development. In application code, there has been no case where `Map` was used other than as an evasion.
