@@ -191,8 +191,11 @@ measureSelectionSetDepth ({
 
 ### Division of responsibility between the constructor and `static create (...)`
 
-- The constructor should receive required arguments (e.g. `{ characters }`). It should not have default values.
-- Applying default values for arguments is the responsibility of `static create (...)`.
+- What the constructor decides, and what it leaves to the factory methods, belong to
+  `/hoc-classes-constructor`. It is read here for the two things that land in
+  `static create (...)`: a value the caller did not supply gets its default here, and where the
+  constructor's parameter list divides what goes up to the base from what the class keeps, the
+  factory method's parameter list repeats that division.
 
 ### Variations should be distinguished by suffix
 
