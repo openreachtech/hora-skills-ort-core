@@ -1,8 +1,7 @@
 # The `import()` Type Expression
 
-One of the two type-only-import styles. The established style in renchan backends, and the
-alternative in Furo / Nuxt apps — the examples below are frontend ones, but the expression
-itself is not frontend-specific. The other style is the [`@import`](import-tag.md) block tag.
+One of the two type-only-import styles, established in renchan backends. The other style is
+the [`@import`](import-tag.md) block tag.
 
 ## Purpose
 
@@ -29,32 +28,6 @@ import('~/components/units/AppDialog.vue').default
 Always include the filename extension (`.js`/`.vue`) in the module path — never omit it (`import('@openreachtech/furo-nuxt/lib/contexts/BaseFuroContext.js')`, not `import('@openreachtech/furo-nuxt/lib/contexts/BaseFuroContext')`).
 
 ## Where it appears
-
-### Vue prop types
-
-Inline `import('vue').PropType<...>` on the prop's `type` field:
-
-```js
-props: {
-  data: {
-    /** @type {import('vue').PropType<NuxtError>} */
-    type: Object,
-    required: true,
-  },
-
-  items: {
-    /** @type {import('vue').PropType<Array<string>>} */
-    type: Array,
-    default: () => [],
-  },
-
-  onUpdate: {
-    /** @type {import('vue').PropType<(value: string) => void>} */
-    type: Function,
-    required: true,
-  },
-}
-```
 
 ### Reactive declarations
 
@@ -91,7 +64,3 @@ An imported type can be aliased to a local name in one line, then used bare:
 | Best when | a type is used once or twice | a type recurs, or many types share a module |
 
 When the repository's convention is `@import`, promote a recurring inline `import('…')` to a named block rather than repeating the path.
-
-## Ambient globals: still no import
-
-As with `@import`, types declared under `declare global` in `types/*.d.ts` are used **unqualified** — `RequiredExcept`, `OptionalExcept`, `NullableExcept`, and the `schema.graphql.*`, `furo.*`, `GraphqlType.*` namespaces. Never wrap them in `import('…')`. See [[hof-nuxt]].

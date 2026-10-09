@@ -8,10 +8,7 @@ description: "JSDoc writing conventions shared by backend and frontend. Use when
 Summarizes JSDoc writing conventions. All typing is JSDoc — no TypeScript syntax, no `.ts`
 files — so always annotate types with JSDoc.
 
-The rules in this body apply to every JavaScript file, backend and frontend alike. Conventions
-that only apply when writing Vue / Nuxt (block placement, Furo class and factory typing, Vue
-`PropType`, ambient globals) are in the reference files listed at the end, each marked with
-its scope.
+The rules in this body apply to every JavaScript file, backend and frontend alike.
 
 > How the jsdoc-plugin rules actually in effect under this project's ESLint map to
 > each of this skill's conventions is summarized in
@@ -552,6 +549,3 @@ See [import-tag.md](./references/import-tag.md) and
 | [eslint-jsdoc-rules.md](./references/eslint-jsdoc-rules.md) | Common | ESLint (jsdoc plugin) mapping — follow it and `npm run lint` passes / where this skill is stricter than lint / intentionally relaxed rules |
 | [import-tag.md](./references/import-tag.md) | Common | Type-only import via the `@import` block tag — placement, named/default forms, source modules, consuming by bare name |
 | [import-expression.md](./references/import-expression.md) | Common | Type-only import via the inline `import('…')` expression — forms, use sites, trade-offs vs `@import` |
-| [placement.md](./references/placement.md) | Frontend | Where `@typedef` / `@import` blocks go, inline `@type` on reactive declarations, Params / FactoryParams naming |
-| [class-typing.md](./references/class-typing.md) | Frontend | Params / FactoryParams typedef pair, `create()` factory template idiom, `@template` / `@extends` / `@override` / `@property` |
-| [vue-props-and-globals.md](./references/vue-props-and-globals.md) | Frontend | Vue `PropType` on prop definitions, ambient globals used unqualified |

@@ -1,8 +1,7 @@
 # The `@import` Tag
 
-One of the two type-only-import styles. The established style in Furo / Nuxt apps, so the
-examples below are frontend ones; the tag itself is not frontend-specific. The other style is
-the inline [`import('…')`](import-expression.md) expression, established in renchan backends.
+One of the two type-only-import styles. The other style is the inline
+[`import('…')`](import-expression.md) expression, established in renchan backends.
 
 ## Purpose
 
@@ -99,8 +98,6 @@ Do **not** use the braced `default as` form for a class default export (`.js` co
 | --- | --- |
 | `'vue'` | `Reactive`, `Ref`, `ShallowRef`, `PropType`, `ComponentCustomProps`, … |
 | `'vue-router'` | `useRoute`, `useRouter` (consumed via `ReturnType<typeof …>`) |
-| `'#app'` | Nuxt types such as `NuxtError` |
-| `'@openreachtech/furo-nuxt'` / `'@openreachtech/furo-nuxt/lib/contexts/BaseFuroContext.js'` | `BaseFuroContextParams`, furo base types |
 | `'~/composables/*.js'` | `use*` / `useApp*` composable defaults |
 | `'~/stores/*.js'` | `use*Store` return types (e.g. `CustomerStore`) |
 | `'~/app/graphql/client/**/*.js'` | GraphQL `*Payload` / `*Capsule` classes |
@@ -140,7 +137,3 @@ const timeoutIdRef = ref(null)
 /** @type {import('vue').Ref<ReturnType<typeof setTimeout> | null>} */
 const timeoutIdRef = ref(null)
 ```
-
-## Do not `@import` ambient globals
-
-Types declared under `declare global` in `types/*.d.ts` are used **unqualified, with no `@import`**: `RequiredExcept`, `OptionalExcept`, `NullableExcept`, and the `schema.graphql.*`, `furo.*`, and `GraphqlType.*` namespaces. Importing them is redundant. See the parent `/hoc-jsdoc` skill and [[hof-nuxt]].
