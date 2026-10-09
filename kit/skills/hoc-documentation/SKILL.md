@@ -92,7 +92,7 @@ still stating it in both when the change reached a release branch.
 | `SampleClass#extractValue()` | instance method of `SampleClass` |
 | `SampleClass.createValue()` | static method of `SampleClass` |
 
-## Scope of application (applies beyond prose)
+### Scope of application (applies beyond prose)
 
 - This notation applies not only to Markdown prose, but to **any text within implementation code that refers to a class member**. Specifically, this includes the following.
   - **Error messages** (message strings in `throw new Error(...)`, etc.)
