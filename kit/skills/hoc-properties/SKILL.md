@@ -49,6 +49,25 @@ the factory method instead.
 This holds wherever the collection sits — a property, or anything under its object path — and a
 Set is held to it exactly as an Array is.
 
+- **A builder edits its collection until it builds.** In the Builder Pattern, the editing period
+  runs until `#buildXxxx()` is called on the values the collection property holds. Until then,
+  elements are added to it; from that call on, it is used all at once like any other.
+
+  ```javascript
+  // OK: the builder's collection is edited until #buildQuery() uses it
+  addCondition ({
+    condition,
+  }) {
+    this.conditions.push(condition)
+  }
+
+  buildQuery () {
+    return this.conditions
+      .map(it => it.toClause())
+      .join(' AND ')
+  }
+  ```
+
 - **Its elements are used through a higher-order function**, as `/hoc-higher-order-functions`
   settles. Taking an individual element out — `[n]` on an Array, `values().next()` or
   `[...set][0]` on a Set — is not using the collection all at once.
