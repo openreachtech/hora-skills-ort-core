@@ -100,3 +100,28 @@ between the two markers keeps its leading `*`.
  * @typedef {*} NumberLike
  */
 ```
+
+## Lines are commented out with `//`, never with a block comment
+
+**Where several lines are commented out, each takes its own `//`.** A block comment is not used
+for it: `/* */` does not nest, so a block wrapped around code that already holds a block comment
+ends at that comment's `*/`, and the rest of the code runs again.
+
+```javascript
+// NG: the block ends early, at the */ of the JSDoc inside it
+/*
+/**
+ * @returns {number}
+ */
+computeDelay () { ... }
+*/
+
+// OK: one // per line
+// /**
+//  * @returns {number}
+//  */
+// computeDelay () { ... }
+```
+
+- **This is how lines are commented out while the work is in progress.** What reaches a commit
+  carries no commented-out code at all, as "What a comment says" above holds.
