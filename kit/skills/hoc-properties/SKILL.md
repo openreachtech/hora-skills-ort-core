@@ -54,6 +54,11 @@ const next = Scalar.create({
     read, so it is a counter in disguise, a scalar kept as mutable state by pushing onto the array
     and emptying it, which is exactly what the reassignment prohibition rules out. When you want
     to change scalar state, generate a new instance via a factory method.
+    - **The holder is where this is judged.** It has at least one member that hands the elements
+      to a higher-order function and works on them. A holder whose only members reading the
+      collection are its count and its emptiness — `itemCount`, `isEmpty ()` — is that counter
+      in disguise, with `isEmpty ()` as its cover, and is prohibited. Because the count is read
+      nowhere but the holder, reading the holder is enough to tell.
   - Adding and removing elements stays allowed (for the policy of not deep-freezing collections,
     see the class design principles convention).
 
