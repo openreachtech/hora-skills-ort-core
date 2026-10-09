@@ -68,8 +68,15 @@ directories can produce a tarball holding six things.
 **The repository finds a file by its location; a consumer finds it through the manifest.** Those
 are two resolvers, and only one of them is the consumer's.
 
-So install the packed tarball into an empty project and use it there — import it, read the
-exports back, run the type checker. **A runtime import is the only check that sees what a
+**The dry run above writes no tarball, so this one is packed for real** — into a scratch
+directory outside the tree, where the file cannot be committed by accident:
+
+```sh
+npm pack --pack-destination <scratch directory>
+```
+
+Install that file into an empty project and use it there — import it, read the exports back,
+run the type checker. **A runtime import is the only check that sees what a
 consumer's code will see**, and a declaration that resolves in this tree can fail to resolve in
 theirs.
 
