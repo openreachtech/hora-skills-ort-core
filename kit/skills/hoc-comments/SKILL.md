@@ -27,6 +27,12 @@ there, and it is the one most often missing.
   comment would.
 - **Code is not commented out and left.** The history keeps what was removed; a commented-out
   block keeps only the question of whether it still matters.
+- **`TODO:`, `FIXME:`, `XXX:` and their kind are avoided wherever they can be.** Work still to do
+  is filed as an issue instead: an issue is seen by whoever plans the work, carries its own
+  discussion, and is closed when the work lands, while an annotation in the code waits for someone
+  to happen to read that line.
+- **A comment saying why a workaround exists, and what retires it, is not such an annotation.** It
+  explains the code as it stands — see `/hoc-dependency-defect`.
 
 ## An inline comment stands on the line above
 
