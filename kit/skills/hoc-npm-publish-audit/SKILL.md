@@ -1,6 +1,6 @@
 ---
 name: hoc-npm-publish-audit
-description: "The last audit of a package before it reaches the npm registry: it reads what is in the tarball. Use when a package is about to go out, or when asked whether one is fit to."
+description: "The last audit of a package before it reaches the npm registry: it reads what is in the tarball. Use when a package is about to go out, or when asked whether one is fit to. The order of the commits a release makes about itself belongs to the npm publish convention."
 ---
 
 # npm publish audit
@@ -54,6 +54,17 @@ directories can produce a tarball holding six things.
 - **The manifest states an intention. The inventory states a fact.** Reading the first in place
   of the second is the mistake this section exists to prevent.
 
+### Diff the inventories of packages released together
+
+**Where two or more packages go out as a set, their inventories are read against each other.**
+They should differ only where they must — in the domain each one covers — and match everywhere
+else.
+
+- **The diff finds what reading one package cannot**: a file added to one and forgotten in the
+  other, a config that drifted, an untracked file in one working tree.
+- **It finds the reverse as well**: a file identical in both where it should have been made
+  specific to one. Read both directions.
+
 ## What the inventory is read for
 
 | Read for | What it catches |
@@ -68,10 +79,32 @@ directories can produce a tarball holding six things.
 **The repository finds a file by its location; a consumer finds it through the manifest.** Those
 are two resolvers, and only one of them is the consumer's.
 
-So install the packed tarball into an empty project and use it there — import it, read the
-exports back, run the type checker. **A runtime import is the only check that sees what a
+**The dry run above writes no tarball, so this one is packed for real** — into a scratch
+directory outside the tree, where the file cannot be committed by accident:
+
+```sh
+npm pack --pack-destination <scratch directory>
+```
+
+Install that file into an empty project and use it there — import it, read the exports back,
+run the type checker. **A runtime import is the only check that sees what a
 consumer's code will see**, and a declaration that resolves in this tree can fail to resolve in
 theirs.
+
+## Install the way continuous integration will
+
+**The tarball can be fit while the install that builds it is not.** The pipeline runs a lockfile
+install before anything is packed, and nothing above makes one.
+
+```sh
+npm ci --foreground-scripts
+```
+
+- **Run it under the project's own quarantine setting.** A version pinned recently can be younger
+  than the quarantine admits, and the question is whether the pipeline still installs. The
+  vulnerability convention gives the reason it does; confirm it rather than reason about it.
+- **Read what the install scripts print, and expect nothing.** Zero lines is the gate the
+  install-scripts convention sets up, holding where it can be seen. A line is a script that ran.
 
 ## Follow the document the way a reader follows it
 
