@@ -64,7 +64,7 @@ Rewrite the whole class, and it stops getting them the moment you write it. Noth
 - Override a getter when the parent computes a value wrongly.
 - Do not copy the parent's code into the child and change two lines.
 - Do not override a member that already works, just to keep the class tidy.
-- Put `/** @override */` above every override.
+- Mark every override with `@override`, in the form the JSDoc convention (`/hoc-jsdoc`) settles.
 
 **When the correct answer needs part of the parent's work, call the parent and correct its result.**
 Do not rewrite what it does.
