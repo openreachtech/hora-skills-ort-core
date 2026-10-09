@@ -80,7 +80,9 @@ left here is the plain object, which is a matter of design rather than of a lang
 ### Plain objects
 
 A plain object is avoided wherever it can be. What holds values is a class, so that the values
-arrive with a name and with the members that work on them.
+arrive with a name and with the members that work on them. The rule that draws the line — an
+object literal is not shared across scopes on the strength of its shape — belongs to
+`/hoc-prohibit-native-features`; what follows is why.
 
 - **What decides it is that a class can be overridden in part.** A subclass replaces one member
   and keeps every other one as it was, which is how a hotfix, a variant or a test stand-in reaches
@@ -144,7 +146,7 @@ addEntry ({
   `/hoc-properties`
 - Do not directly access members not in the references; do not enumerate instances
 - Do not use `Map`, `Object.freeze()`, native private members or decorators (see `/hoc-prohibit-native-features`)
-- Avoid plain objects; capsulize what an API returns
+- Do not share an object literal across scopes (see `/hoc-prohibit-native-features`); capsulize what an API returns
 
 ## Proviso
 
