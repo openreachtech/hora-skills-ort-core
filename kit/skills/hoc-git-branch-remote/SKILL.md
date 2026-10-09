@@ -30,6 +30,11 @@ the repository is, because what reaches `main` is what the repository releases.
   `/hoc-boilerplate`.
 - **An application developed with Hora Kit takes `release/x.x.x`, `env` and `hotfix/xxxx`.**
   `hotfix/xxxx` is the application's alone; neither an npm package nor a boilerplate merges one.
+- **`hotfix/xxxx` exists for the case with no time to run a version through.** An npm package is
+  published to the registry and taken from there, and a boilerplate is there to be cloned into
+  other repositories; both reach their users through a version. An application runs in front of
+  its users, and a failure there is measured in a different sense of time altogether — the fix
+  goes out before a release could be cut for it.
 
 ### `dev` in an older application
 
