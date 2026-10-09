@@ -63,7 +63,7 @@ if (
 - Write one method per line.
 - When writing a method chain, allow at most one receiver per line, and at most one method per line.
 - **`this` and `it` do not count as receivers.** They are the context variables: `this` names the
-  object the code is already inside, and `it` is the fixed name the naming convention gives the
+  object the code is already inside, and `it` is the fixed name `/hoc-higher-order-functions` gives the
   current item of a higher-order callback. Neither carries information of its own, so counting
   either would chop a line that states one receiver and one member — `this.converter.toFixed({ value })`
   and `it.name.toUpperCase()` each say one thing, and each stays on one line.

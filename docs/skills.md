@@ -24,7 +24,7 @@ Each skill lives at `kit/skills/<name>/`, directly under the skills directory, a
 | `hoc-classes-prohibits` | Prohibitions in class definitions: static-only classes and classes without state are not allowed, and why. |
 | `hoc-prohibit-native-features` | The native JavaScript features this library does not use — `Map`, `Object.freeze()`, native private members (`#x`, `static #x`) and decorators — and why each is refused. |
 | `hoc-classes-inflators` | The inflator (binding) method pattern — bind the class passed as an argument and return a derived subclass memoized via `BoundCtorRegistry` — plus its naming and arguments. |
-| `hoc-properties` | Property conventions — set on `this` in the constructor, immutable (no reassignment), and no JavaScript native private. |
+| `hoc-properties` | Property conventions — set on `this` in the constructor, immutable (no reassignment, under the property path too), and a collection built, then used all at once. |
 | `hoc-accessors` | Getter/setter conventions — setters prohibited for immutability, and getter bodies kept to a property reference, with no branching and no method call. |
 
 ## Members and scope
