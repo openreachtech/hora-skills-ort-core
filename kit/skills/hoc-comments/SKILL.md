@@ -28,6 +28,46 @@ there, and it is the one most often missing.
 - **Code is not commented out and left.** The history keeps what was removed; a commented-out
   block keeps only the question of whether it still matters.
 
+## An inline comment stands on the line above
+
+**An inline comment goes on a line of its own, above the code it describes.** It is put at the
+end of a line only where moving it there keeps the code's format from breaking:
+
+- **A seeder or a test's `cases` written one element per line.** A comment on a line of its own
+  would sit between two elements and break the run of one element per line.
+- **An ESLint option that overrides a default.** The default value goes at the end of the line,
+  so the option keeps the layout it has everywhere else.
+
+```javascript
+// OK: the default noted at the end of the line, the option keeping its layout
+'max-len': [
+  'error',
+  {
+    code: 120, // default: 80
+  },
+],
+```
+
+### A comment naming a group stands before the group
+
+- **A comment that names a group of elements goes on the line before the group**, never at the
+  end of its first element.
+- **Where groups are marked, a blank line separates one group from the next.**
+
+```javascript
+// OK: each group named on the line before it, a blank line between groups,
+// and a remark on one element kept at the end of its line
+const invalidDates = [
+  // Days that do not exist
+  '2026-02-30',
+  '2026-04-31',
+
+  // Strings that are not dates
+  'tomorrow', // a word a person would type
+  '',
+]
+```
+
 ## A long comment breaks where its sentence does
 
 **Where a comment runs to more than one line, break it at a point the sentence itself offers** —
