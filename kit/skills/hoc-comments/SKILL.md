@@ -1,6 +1,6 @@
 ---
 name: hoc-comments
-description: "Comment-writing conventions — where a comment that runs to several lines breaks: at a clause, never at a column. Use when writing or reviewing a JSDoc block, a block comment or an inline comment, or a code example that carries one. Which language a comment is written in — English by default, in source, in generated tests and in code examples — belongs to the writing-language convention."
+description: "Comment-writing conventions — what a comment says (the why the code cannot, never a restatement of it), keeping it true as the code changes, no commented-out code, and where a comment that runs to several lines breaks: at a clause, never at a column. Use when writing or reviewing a JSDoc block, a block comment or an inline comment, or a code example that carries one. Which language a comment is written in — English by default — belongs to the writing-language convention."
 ---
 
 # Shared: Comments
