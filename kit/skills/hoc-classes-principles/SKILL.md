@@ -15,7 +15,7 @@ This summarizes the principles for class property declaration and design.
 
 ## The five points of the system (a bundle of premises)
 
-1. **Deep immutability** — Do not reassign after construction; keep nested values (e.g. instances of other immutable classes) immutable too. **The collection types Array / Set are not deep-frozen; updates (adding/removing elements) are allowed.** The reasons are that "the set of retained items" is premised on being treated as equal regardless of count, and that it also serves to support the Builder Pattern. **However, a structure that references an individual element (e.g. pulling out a single element via `array[i]`) is prohibited** — because it is a circumvention of the prohibition on mutable objects. A collection's value must always be "used all at once" (scanned/transformed/aggregated over every element as a whole). When you need to associate by object, use `WeakMap` (if you need to enumerate, hold the keys in an Array and traverse through them). Do not use `Map` (see the property-definition convention).
+1. **Deep immutability** — Do not reassign after construction; keep nested values (e.g. instances of other immutable classes) immutable too. **The collection types Array / Set are not deep-frozen; updates (adding/removing elements) are allowed.** The reasons are that "the set of retained items" is premised on being treated as equal regardless of count, and that it also serves to support the Builder Pattern. How a collection's value may be used, and why `Map` gives way to `WeakMap`, belong to `/hoc-properties`.
 2. **Property = a constructor argument of the same name** — Every property that stores a value is passed as a
    constructor argument of the same name. This makes the set of property names a class occupies appear in the
    constructor signature itself, so hidden fields cannot exist in principle.
@@ -119,8 +119,8 @@ Therefore soft-private (`this._x`) is visible and correct. Do not use `#private`
 - Properties are only `this.xxx = xxx` inside the `constructor`; class fields and private fields are not allowed
 - `static` fields are allowed (`static #X` is not); put accumulating associations, pools, and caches in `static` + `WeakMap`; do not reassign the reference
 - Every property that stores a value is received via a constructor argument of the same name; do not reassign it (deep
-  immutability). Array / Set may be updated but referencing an individual element is prohibited (always use the whole
-  at once); use `WeakMap` for association, do not use `Map`
+  immutability). Array / Set may be updated; how their value is used, and `Map` against `WeakMap`, follow
+  `/hoc-properties`
 - Do not directly access members not in the references; do not enumerate instances
 - Do not use `#private` or `decorator` (except when a human explicitly specifies it)
 - A class that has `extends` is out of scope
