@@ -12,7 +12,7 @@ Summarizes conventions for statements and control flow. Applied across both func
 - Do not write the literal text `undefined` (as a literal or identifier) in real code files (production code).
 - Reason: `undefined` is not a "value." If `undefined` is used intentionally as a value, it becomes impossible to distinguish between "a bug" and "intentional logic."
 - When you intentionally want to express "no value," use `null` instead of `undefined`. Since `null` does not arise naturally in context, it can be used as an intentional value.
-- Do not write `undefined` in JSDoc either. When a type annotation needs to express "no value," use `null` instead of `undefined` (e.g. `@returns {string | null}`).
+- How a JSDoc type expresses "no value" — `null` rather than `undefined`, and the exception a third-party module forces — belongs to `/hoc-jsdoc`.
 - This convention is enforced by ESLint's `no-undefined` rule. However, in `eslint.config.js`, `no-undefined: 'off'` is set for `tests/**/*.js`, so writing `undefined` in test files is exempt from this prohibition.
 
 ### Cannot distinguish between a bug and an intentional value
