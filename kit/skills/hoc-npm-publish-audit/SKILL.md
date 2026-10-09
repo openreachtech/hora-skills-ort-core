@@ -154,12 +154,20 @@ change is gathered at the end of the report, one line each, saying what to fix. 
 reader looks for the verdict, and a finding left beside the check that turned it up is one they
 have to ask about.
 
+**Each line opens with its weight.** `🚨` marks a finding that holds this release up; `⚠️` marks one
+that does not, and belongs to a later release. The mark, not the wording, is what separates the
+two, so a reader can count the blockers without reading a line.
+
 ```markdown
 ## What to fix
 
-- `--help` is read as an option missing its value
+- ⚠️ `--help` is read as an option missing its value
+- 🚨 `README.md` documents `--out` as the default, and the CLI defaults to `--stdout`
 ```
 
+- **A finding too small to hold the release still goes on the list**, under `⚠️`. Left in the
+  middle of the reading, it comes back as the question the report was meant to answer — whether
+  anything needs fixing.
 - **Listing a fix is not making it.** The list says what the owner has to do, and nothing on it is
   done here ("Out of scope", below).
 
