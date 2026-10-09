@@ -80,6 +80,21 @@ run the type checker. **A runtime import is the only check that sees what a
 consumer's code will see**, and a declaration that resolves in this tree can fail to resolve in
 theirs.
 
+## Install the way continuous integration will
+
+**The tarball can be fit while the install that builds it is not.** The pipeline runs a lockfile
+install before anything is packed, and nothing above makes one.
+
+```sh
+npm ci --foreground-scripts
+```
+
+- **Run it under the project's own quarantine setting.** A version pinned recently can be younger
+  than the quarantine admits, and the question is whether the pipeline still installs. The
+  vulnerability convention gives the reason it does; confirm it rather than reason about it.
+- **Read what the install scripts print, and expect nothing.** Zero lines is the gate the
+  install-scripts convention sets up, holding where it can be seen. A line is a script that ran.
+
 ## Follow the document the way a reader follows it
 
 **This is the check that finds the most, and reading is the only way to run it.** Take the
