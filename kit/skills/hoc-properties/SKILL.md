@@ -65,6 +65,13 @@ const next = Scalar.create({
     elements is an ordinary collection. What is prohibited is a Set held to get around the
     reassignment prohibition: values added and deleted to stand for a state that changes —
     `this.flags.add('open')` / `this.flags.delete('open')` in place of a boolean.
+  - **An element is never replaced in place.** Taking a position — `indexOf()`, `findIndex()` —
+    and replacing what sits there with `splice(index, 1, newItem)` is `array[index] = newItem`
+    under another name, and is prohibited. The changed collection is another array, built with
+    `map()`, and it reaches a new instance through the factory method.
+    - **This is what closes the array as a way around the reassignment prohibition.** Another
+      array cannot be reassigned to the property, so a changed collection has nowhere to go but
+      a new instance — the same place every other changed value goes.
 
 ```javascript
 // NG: the array stands in for a number that changes — its elements are never used
@@ -90,6 +97,31 @@ get itemCount () {
 
 isEmpty () {
   return this.items.length === 0
+}
+
+// NG: the element at a position is replaced in the array the instance holds
+markItemDone ({
+  title,
+}) {
+  const index = this.items.findIndex(it => it.title === title)
+
+  this.items.splice(index, 1, this.items.find(it => it.title === title).generateDone())
+}
+
+// OK: another array, held by a new instance
+markItemDone ({
+  title,
+}) {
+  return this.Ctor.create({
+    items: this.items
+      .map(it => {
+        if (it.title !== title) {
+          return it
+        }
+
+        return it.generateDone()
+      }),
+  })
 }
 ```
 
