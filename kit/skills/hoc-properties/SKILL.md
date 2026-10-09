@@ -18,7 +18,9 @@ This summarizes conventions related to class property definitions.
 
 - Basically, all classes are implemented as immutable. Once a property is set in the constructor, it must **not be reassigned** thereafter.
 - `this.xxx = ...` within the constructor (the initial set) is permitted. ESLint also does not prohibit this.
-- What is prohibited is **property reassignment outside the constructor**. This is enforced by ESLint.
+- What is prohibited is **property reassignment outside the constructor, including anything under
+  the property's object path** — `this.state.count += 1` as much as `this.state = ...`. ESLint
+  enforces the direct form; what lies under the path is held by this rule alone.
 - Being immutable means that even a property with public access scope is "protected by coding rules." Hence there is
   no need to make it native private for encapsulation purposes (for why, see `/hoc-classes-principles`).
 - **Updating a collection (Array/Set) itself is permitted. What is prohibited is a structure that references individual elements** — pulling out a single element via `array[i]` and treating it as mutable state. This subverts the prohibition on mutable objects and is not permitted. A collection's value must always be "used all at once" (scanned/transformed/aggregated over every element as a whole). When you want to change scalar state, generate a new instance via a factory method (for the policy of not deep-freezing collections, see the class design principles convention).
@@ -52,6 +54,9 @@ recordClick () {
 ```javascript
 // NG: reassigning a property after creation
 scalar.normalizedValue = anotherValue
+
+// NG: reassigning under a property's object path
+this.state.count += 1
 
 // OK: if a different state is needed, generate a new instance via a factory method
 const next = Scalar.create({
