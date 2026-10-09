@@ -29,42 +29,9 @@ generate ({
 
 ### Exception: binding (inflator) methods pass arguments flat
 
-- Binding (inflator) methods do not use a named-argument object; they receive **the arguments to pass, flat**.
-- An inflator method is a static method that binds the class passed as an argument and returns a memoized derived subclass (following the naming convention described later, such as `.use()` / `.of()` / `.to()`).
-- Basically it receives **a single argument**. Only use multiple/array arguments when dealing with variadic or array input.
-  - Single argument: `use(ConstraintCtor)` / `as(Schema)` / `toKey(MessageKeyCtor)` / `toValue(MessageValueCtor)`
-  - Variadic: `of(...Ctors)`
-  - Single array: `from(Ctors)` (it is standard practice for `from` to delegate to `of`)
-
-```javascript
-// NG: named-argument object
-static use ({
-  ConstraintCtor,
-}) {
-  // ...
-}
-
-// OK: flat single argument
-static use (ConstraintCtor) {
-  // ...
-}
-
-// OK: variadic / array arguments
-static of (...Ctors) {
-  // ...
-}
-
-static from (Ctors) {
-  return this.of(...Ctors)
-}
-```
-
-- Reason: this is so that calls read **declaratively**, as in `Document.as(bindingSchema)` or `UnionScalar.of(A, B)`. Wrapping them in a named-argument object would undermine this declarative feel.
-
-#### Naming convention (short, preposition-like names)
-
-- Inflator methods should be given short, preposition-like names (so that `Receiver.word(binding)` reads declaratively). Examples: `.as()` / `.use()` / `.of()` / `.to()`, etc.
-- These are only representative examples, not the full vocabulary. The full vocabulary — the semantics of each word, its arguments, the forward vs. graft distinction, and how `.toKey()` / `.toValue()` are used — is owned by the inflator-methods convention as its single source of truth; it is not duplicated here.
+- An inflator method — a static method that binds a value to the class and returns a derived
+  subclass, such as `.use()` / `.of()` / `.to()` — is the exception to the rule above. What it
+  receives instead, the exceptions to that, and its naming belong to `/hoc-classes-inflators`.
 
 ## Do not pass properties directly to private methods
 
