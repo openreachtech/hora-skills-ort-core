@@ -11,8 +11,8 @@ and `#get:Ctor` is the one getter that hands an instance its own.
 ## An instance reaches its class through `#get:Ctor`
 
 - **When an instance method or getter refers to a static member, it goes through `this.Ctor`.**
-  Neither the class name nor `this.constructor` is written there: `this.constructor` appears in
-  one place only, the body of `#get:Ctor`.
+  Neither the class name nor `this.constructor` is written there: for a static member,
+  `this.constructor` appears in one place only, the body of `#get:Ctor`.
 - Hardcoding the class name fixes the reference to the base class's definition. Going through
   the instance's own constructor is what lets a call from an inheriting subclass reach the
   subclass's own static definition.
@@ -20,6 +20,10 @@ and `#get:Ctor` is the one getter that hands an instance its own.
   checker to know which static members exist. `#get:Ctor` is where that type is settled, once.
 - In the body of `#get:Ctor`, **type resolution (a type cast) is needed** between `return` and
   `this.constructor`: cast it to the type of the class in question.
+- **`#get:Ctor` is an adapter that exists to resolve the type.** A native property of the
+  constructor that needs no type resolution — `this.constructor.name` above all — is read
+  directly, as the class name in an error message is:
+  `` throw new Error(`${this.constructor.name}#normalizeValue() must be inherited`) ``.
 
 ```javascript
 /**
