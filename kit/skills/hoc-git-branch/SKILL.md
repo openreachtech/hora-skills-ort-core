@@ -387,9 +387,8 @@ is deliberately descriptive. Nothing reads it after the branch is gone.
   class and `Define` names a member, a function or a constant, which is why
   `declare/AlphaClass` and `define/sendMessage-of-AlphaClass` say what they carry without any
   further explanation. The verbs are listed in the git commit convention.
-  - **A verb of two words joins into one, with no hyphen** — `Tidy up` gives `tidyup/xxxx`,
-    `Kick out` gives `kickout/xxxx`, `Turn off` gives `turnoff/xxxx`. The slash ends the token,
-    so nothing inside it has to.
+  - **A verb of two words joins into one**, as `/hoc-git-commit` says — `Tidy up` gives
+    `tidyup/xxxx`.
 - **A member is written `<member>-of-<class>`.** The slash is already spent on the verb, so what
   is left spells the relation out instead of punctuating it.
 - **Work of a scale that will make the branch a trunk takes a category at a higher level of
