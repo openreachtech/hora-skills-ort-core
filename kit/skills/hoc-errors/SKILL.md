@@ -118,7 +118,7 @@ static get config () {
 
 ### The member is named as the documentation convention names it
 
-- `<member-notation>` follows "Notation of Class Members" from the documentation convention
+- `<member-notation>` follows `/hoc-classes-member-notation`
   (instance method `#instanceMethod()` / static getter `.get:staticGetter` / static method
   `.staticMethod()`, etc.).
 - This holds in the plain error's message and in the `memberName` the module's own error
