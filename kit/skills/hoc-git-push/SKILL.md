@@ -140,7 +140,7 @@ characters, and the command carries no record of which one was in effect.
 
 ## A force-push is the human's to run
 
-**No `git push --force` or `--force-with-lease` is run here, on any branch, in any state.**
+**No `git push --force`, `-f` or `--force-with-lease` is run here, on any branch, in any state.**
 Not after asking, either — the question is not withheld out of caution. An answer to it
 cannot carry what the act needs.
 
