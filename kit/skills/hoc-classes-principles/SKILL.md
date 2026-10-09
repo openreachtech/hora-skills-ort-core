@@ -1,6 +1,6 @@
 ---
 name: hoc-classes-principles
-description: "Principles of class design — what a class has to hold to exist at all, and the premises the other class conventions rest on. Use when deciding whether something should be a class, when reaching for a `#` private member (a static one included), a decorator, a class field, `Object.freeze()` or a plain object, or when the reason behind a class convention is in question. Specific prohibitions belong to the class prohibitions convention; member order, to the class notation convention."
+description: "Principles of class design — what a class has to hold to exist at all, and the premises the other class conventions rest on. Use when deciding whether something should be a class, when reaching for a class field or a plain object, or when the reason behind a class convention is in question. Native features the system does not use belong to the native-feature prohibition convention; specific prohibitions, to the class prohibitions convention; member order, to the class notation convention."
 ---
 
 # Classes: Principles
