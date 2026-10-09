@@ -92,12 +92,12 @@ const names = users
 
 ```javascript
 // NG: extracting the body of map into a method just to use if
-items.map(it =>
-  this.convertItem({ item: it }) // convertItem merely branches internally with if
+values.map(it =>
+  this.convertValue({ value: it }) // convertValue merely branches internally with if
 )
 
 // OK: separate the condition with filter, then map
-items
+values
   .filter(it => it.enabled)
   .map(it => it.value)
 ```
