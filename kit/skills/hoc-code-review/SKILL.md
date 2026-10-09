@@ -121,8 +121,8 @@ End the review with, in this order:
 5. **Counts by severity**, and the lint result on one line.
 6. **A one-line statement that nothing was modified.**
 
-Write the report in the language the reader is using, as the documentation convention requires of
-any document generated for a reader.
+Write the report in the language the reader is using, as `/hoc-writing-language` resolves it
+for any document written for a reader.
 
 If any `BLOCKER` or any `PARTIAL` / `MISSING` verdict exists, say plainly that the change does
 not yet satisfy its specification. Do not soften it, and do not bury it under the passing rows.
