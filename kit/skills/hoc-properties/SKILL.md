@@ -27,8 +27,7 @@ constructor ({
 - `this.xxx = ...` within the constructor (the initial set) is permitted. ESLint also does not prohibit this.
 - What is prohibited is **property reassignment outside the constructor**. This is enforced by ESLint.
 - Being immutable means that even a property with public access scope is "protected by coding rules." Hence there is
-  no need to make it native private for encapsulation purposes (for details, see "The meaning of `#alpha` notation and
-  the treatment of native private" below).
+  no need to make it native private for encapsulation purposes (for why, see `/hoc-classes-principles`).
 - **Updating a collection (Array/Set) itself is permitted. What is prohibited is a structure that references individual elements** — pulling out a single element via `array[i]` and treating it as mutable state. This subverts the prohibition on mutable objects and is not permitted. A collection's value must always be "used all at once" (scanned/transformed/aggregated over every element as a whole). When you want to change scalar state, generate a new instance via a factory method (for the policy of not deep-freezing collections, see the class design principles convention).
 
 ```javascript
@@ -52,11 +51,7 @@ const next = Scalar.create({
 
 - `#` notation such as `#alpha` is not a JavaScript native private designation; it means "instance-private" in member notation.
   (Member notation follows "Notation of Class Members" in the documentation convention.)
-- **JavaScript native private fields (`#` fields / `#` methods) must never be used unless a human specifically instructs it.**
+- **JavaScript native private fields (`#` fields / `#` methods) are not used unless a human specifically instructs it.**
+  That rule, and why it holds, belong to `/hoc-classes-principles`. It is read here for what it
+  means when a property is named.
 - Therefore, even if an instruction says `#alpha`, that alone is not a reason to implement it as a `#` field. It is normally defined as `this.alpha`.
-
-### Reason
-
-- Native private cannot be read even from an inheriting subclass, which blocks extension/substitution via inheritance.
-- This codebase basically implements all classes as immutable and does not permit reassignment of properties at all (this is also prohibited by ESLint). Therefore, even with a public access scope, it is protected by coding rules, and there is no need to make it native private.
-- Rather, it is more beneficial to avoid the disadvantage where, when you want to apply a patch (such as a hotfix) that temporarily changes behavior via inheritance, a parent class's private property would block that.

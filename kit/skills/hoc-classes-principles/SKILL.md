@@ -62,7 +62,7 @@ This is because none of the three grounds for the prohibition apply to `static`.
 - **Initialization order** — `static` fields are initialized in source order at class-definition time, so no problem arises from the interplay of `super()` and the constructor body.
 - **Split-brain** — There is no constructor to override in, so no double declaration occurs.
 
-The reason not to use `static #X` is that the reason not to use native private (a subclass cannot read it, which blocks extension and substitution through inheritance — see the property-definition convention) holds for `static` as well, and its impact is broader: when a `static` method refers to `this.#X`, **a call through a derived class throws a TypeError.**
+The reason not to use `static #X` is that the reason not to use native private (a subclass cannot read it, which blocks extension and substitution through inheritance — see `#private` below) holds for `static` as well, and its impact is broader: when a `static` method refers to `this.#X`, **a call through a derived class throws a TypeError.**
 
 ```javascript
 // NG: a static native private cannot be used from a derived class
@@ -91,6 +91,7 @@ Derived.ensure(key)
 
 Under an immutable property design, **there is no work left that is unique to `#private`**. One might initially evaluate abandoning it as "the biggest cost," but within this system it is not even a cost.
 
+- **It blocks extension through inheritance** — A native private member cannot be read even from an inheriting subclass. A patch that changes behavior temporarily through inheritance, such as a hotfix that overrides in a subclass, is then blocked by the parent class's private member.
 - **The write axis that private protected evaporates** — Private answers "who may touch it" (access control); immutability answers "can it change at all" (mutation control). Private's historical main purpose is preventing "invariants being broken by external rewrites," but under deep immutability there is not a single write to protect, inside or out. Private is the strategy of "guarding the hazard (mutable state)," immutability is the strategy of "removing the hazard itself"; with no hazard, the guard is redundant.
 - **The remaining read axis is not `#`'s job either** — The read axis splits in two. (1) Decoupling (hiding the
   representation to refactor) is carried by references = the contract. Coupling to a member not in the references is
