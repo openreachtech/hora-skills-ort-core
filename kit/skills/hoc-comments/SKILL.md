@@ -1,6 +1,6 @@
 ---
 name: hoc-comments
-description: "Comment-writing conventions — what a comment says (the why, never a restatement of the code), where a long comment breaks (at a clause, never at a column), a multi-line block of three lines or more, and lines commented out with `//`. Use when writing or reviewing a JSDoc block, a block comment or an inline comment, a code example that carries one, or when commenting lines out. Which language a comment is written in belongs to the writing-language convention."
+description: "Comment-writing conventions — what a comment says (the why, never a restatement of the code), where an inline comment stands (above the code, at a line end only to keep a format), where a long comment breaks (at a clause, never at a column), the form of a multi-line block, and lines commented out with `//`. Use when writing or reviewing any comment, or when commenting lines out. Which language a comment is written in belongs to the writing-language convention."
 ---
 
 # Shared: Comments
