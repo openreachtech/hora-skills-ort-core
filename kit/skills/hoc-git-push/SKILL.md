@@ -82,9 +82,6 @@ as a property of the branches rather than a preference about commands.
 - **On `main` of a repository that deploys from it, a rewrite goes further than that.** The
   branch is the record of what was released — published, handed to whoever cloned it, or put
   in front of users. Rewriting it rewrites when each of those happened.
-- **`dev` is legacy, and the rule still covers it.** It stays in the `main-guard` allowlist
-  for backward compatibility and nothing new is opened on it, but a repository still carrying
-  one holds it to everything above.
 
 ## What a push is for
 

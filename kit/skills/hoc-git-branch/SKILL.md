@@ -387,9 +387,8 @@ is deliberately descriptive. Nothing reads it after the branch is gone.
   class and `Define` names a member, a function or a constant, which is why
   `declare/AlphaClass` and `define/sendMessage-of-AlphaClass` say what they carry without any
   further explanation. The verbs are listed in the git commit convention.
-  - **A verb of two words joins into one, with no hyphen** — `Tidy up` gives `tidyup/xxxx`,
-    `Kick out` gives `kickout/xxxx`, `Turn off` gives `turnoff/xxxx`. The slash ends the token,
-    so nothing inside it has to.
+  - **A verb of two words joins into one**, as `/hoc-git-commit` says — `Tidy up` gives
+    `tidyup/xxxx`.
 - **A member is written `<member>-of-<class>`.** The slash is already spent on the verb, so what
   is left spells the relation out instead of punctuating it.
 - **Work of a scale that will make the branch a trunk takes a category at a higher level of
@@ -505,8 +504,8 @@ git commit --allow-empty -m 'Start updating the domains a repository selects'
   - **Where the work carries content in from elsewhere, the marker names the origin** — `Start
     migrating the mail templates from sample-app`. Stated once here, it covers every
     commit on the branch, and the merge commit keeps it in the history after the branch is gone.
-- **The marker takes no type prefix, in either message format.** Repositories on Conventional
-  Commits write `Start dev`, not `chore: start dev`. The marker sits outside the format.
+- **The marker takes no type prefix, in either message format** — see `format-conventional.md`
+  of `/hoc-git-commit`.
 
 ## The merge commit
 
@@ -524,9 +523,8 @@ Merge the core/ rename in the repository documents
 - **It stands in for the message a host would have written.** A merge that goes through a pull
   request is described for free — `Merge pull request #53 from …`. A merge made locally has no
   such author, and this subject fills the gap.
-- **It takes no type prefix, in either message format**, for the same reason the branch-opening
-  marker takes none: it carries no change of its own. Repositories on Conventional Commits
-  write `Merge …`, not `chore: merge …`.
+- **It takes no type prefix, in either message format** — see `format-conventional.md` of
+  `/hoc-git-commit`.
 - **A merge made through a pull request is left alone.** The host writes it, and no one here
   chooses its wording.
 
