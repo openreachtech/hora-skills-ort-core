@@ -5,7 +5,7 @@ This covers the exceptions where a direct `new` expression is allowed without go
 ## Exception: JavaScript built-in classes
 
 - JavaScript's built-in classes (`Date` / `WeakMap` / `Set` / `RegExp` / `Error`, etc.) are not subject to the `new`-expression restriction. They may be freely instantiated directly with `new`, without going through a dedicated factory method.
-  - `Map` is the exception. Even though it is a built-in class, `Map` is entirely prohibited and must not be instantiated directly with `new` either (see "`Map` is prohibited; `WeakMap` is free" in the property-definition convention). Use `WeakMap` when association is needed.
+  - `Map` is the exception: it is not used at all, so it is not instantiated either (see `/hoc-prohibit-native-features`). Use `WeakMap` when association is needed.
 - These are neither classes defined by this codebase nor its dependency classes, and they have no `.create(...)` factory method, so they fall outside this convention.
 
 ```javascript
