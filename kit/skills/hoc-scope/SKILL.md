@@ -41,9 +41,9 @@ static create ({
 
 ## Do not destructure `this`
 
-**`this` never stands alone on the right of a destructuring assignment.** Taking a property
-out of it (`const { alpha } = this`) is prohibited; a property is read where it is used, as
-`this.alpha`.
+**`this` never stands alone on the right of a destructuring assignment.** That an instance is
+never taken apart belongs to `/hoc-statements`; it is read here for `this`, where a property is
+read where it is used, as `this.alpha`, rather than taken out into a local.
 
 ```javascript
 // NG: the property taken into a local first
