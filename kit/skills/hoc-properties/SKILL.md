@@ -49,9 +49,9 @@ the factory method instead.
 This holds wherever the collection sits — a property, or anything under its object path — and a
 Set is held to it exactly as an Array is.
 
-- **Its elements are used through a higher-order function** — `map()` / `filter()` /
-  `reduce()` and the like. Taking an individual element out — `[n]` on an Array,
-  `values().next()` or `[...set][0]` on a Set — is not using the collection all at once.
+- **Its elements are used through a higher-order function**, as `/hoc-higher-order-functions`
+  settles. Taking an individual element out — `[n]` on an Array, `values().next()` or
+  `[...set][0]` on a Set — is not using the collection all at once.
 - **An element is never replaced in place.** Taking a position — `indexOf()`, `findIndex()` —
   and replacing what sits there with `splice(index, 1, newEntity)` is `array[index] = newEntity`
   under another name. The changed collection is another array, built with `map()`.
