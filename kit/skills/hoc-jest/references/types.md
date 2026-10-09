@@ -25,7 +25,8 @@ abnormal-value series needs the cast**.
   `Array<*>` cast).
 - Abnormal-value series: since you are deliberately passing type-violating
   values, cast the array literal with `@type {Array<*>}` in addition to
-  `@type`, to suppress the intentional type error.
+  `@type`, to suppress the intentional type error. That this is the one
+  deliberate violation a cast may let through belongs to `/hoc-jsdoc`.
 
 ### Whether `@type` is needed should be confirmed with a type checker (where `tsc` is available)
 
