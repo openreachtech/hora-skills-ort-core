@@ -98,11 +98,12 @@ Whoever starts a new repository takes the tip of `main`, so **every commit that 
 `main` is something released.** There is no such thing as a change that arrives there without
 being part of a version.
 
-- **`env` is not used for it.** A repository that publishes a tarball can merge `env`,
-  because a change the tarball does not carry needs no version. A boilerplate has no such
-  change: the workflows, the configuration and the documents are exactly what it hands over.
+- **Which branches a boilerplate merges into `main` belongs to `/hoc-git-branch-remote`.** Why
+  it refuses the others is the boilerplate's own, and stays here.
+- **`env` is not used for it.** A boilerplate has no change that what it hands over leaves out:
+  the workflows, the configuration and the documents are exactly what it hands over.
 - **`hotfix/xxxx` is not used either.** A fix that cannot wait still goes out as a release,
   on a `release/x.x.x` with the patch raised. Sending it any other way skips the guard above,
   which only inspects `release/*`, and puts a change into `main` that no version names.
 - The rest of the branching — what a trunk is, how a branch is named, what opens one — is the
-  git branch convention's, and this narrowing is one of the examples it already describes.
+  git branch convention's.
