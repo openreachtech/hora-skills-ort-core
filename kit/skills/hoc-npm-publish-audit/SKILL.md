@@ -158,6 +158,11 @@ have to ask about.
 that does not, and belongs to a later release. The mark, not the wording, is what separates the
 two, so a reader can count the blockers without reading a line.
 
+**The `⚠️` lines come first, then the `🚨` lines, each kind together.** The two are never
+interleaved. A report is read from where it stops: the lines nearest its end are the ones on
+screen when it finishes, and the first a reader sees. Putting the `🚨` lines there shows what holds
+the release up without a scroll, and leaves the `⚠️` lines above for whoever reads on.
+
 ```markdown
 ## What to fix
 
