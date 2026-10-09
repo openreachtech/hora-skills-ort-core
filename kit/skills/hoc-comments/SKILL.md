@@ -54,3 +54,49 @@ criterion: filling each line to a margin breaks wherever the word count happens 
 - **This holds for every comment that runs long** — a JSDoc block, a `/* */` block, and a run of
   `//` lines alike.
 - This governs prose. A type literal inside a JSDoc tag is already one property per line.
+
+## A block comment that runs to several lines takes at least three
+
+**A block comment written over more than one line takes three lines at the least**: the opening
+marker on a line of its own, the text, and the closing marker on a line of its own. Every line
+between the two markers keeps its leading `*`.
+
+```javascript
+// NG: two lines, with the text sharing a line with each marker
+/* Retries are spaced exponentially,
+   so a struggling server is given room to recover. */
+
+// NG: the leading * dropped from the lines between the markers
+/**
+   Retries are spaced exponentially,
+   so a struggling server is given room to recover.
+ */
+
+// OK: three lines or more, every line between the markers marked
+/**
+ * Retries are spaced exponentially,
+ * so a struggling server is given room to recover.
+ */
+```
+
+- **Two block comments in a row are separated by a blank line.** Placed against each other, the
+  closing marker of one runs straight into the opening marker of the next.
+
+```javascript
+// NG: two blocks with nothing between them
+/**
+ * @typedef {*} BooleanLike
+ */
+/**
+ * @typedef {*} NumberLike
+ */
+
+// OK: a blank line between the two
+/**
+ * @typedef {*} BooleanLike
+ */
+
+/**
+ * @typedef {*} NumberLike
+ */
+```
