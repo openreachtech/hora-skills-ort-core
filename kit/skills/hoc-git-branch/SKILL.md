@@ -503,7 +503,7 @@ git commit --allow-empty -m 'Start updating the domains a repository selects'
   - A **`release/x.x.x` trunk** is opened by its version alone: `Release 0.2.0`. The word
     `Start` does not appear, because the version is the whole of what is being started.
   - **Where the work carries content in from elsewhere, the marker names the origin** — `Start
-    migrating the mail templates from lunas-ec-cart-backend`. Stated once here, it covers every
+    migrating the mail templates from sample-app`. Stated once here, it covers every
     commit on the branch, and the merge commit keeps it in the history after the branch is gone.
 - **The marker takes no type prefix, in either message format.** Repositories on Conventional
   Commits write `Start dev`, not `chore: start dev`. The marker sits outside the format.
