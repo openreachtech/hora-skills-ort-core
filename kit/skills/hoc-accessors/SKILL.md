@@ -17,11 +17,10 @@ This summarizes conventions related to class accessor (getter / setter) definiti
   be defined as needed. This is not a reassignment of a class property but the definition of `Proxy` behavior, and
   does not conflict with the intent of immutability.
 
-## Reserve `#get:Ctor` as a conventional getter
+## The `#get:Ctor` getter
 
-- `#get:Ctor` is reserved as the conventional getter that "returns `this.constructor`."
-  (For usage, type resolution, and override details, see the scope-reference convention.)
-- Therefore, do not use the name `Ctor` as a member name for any other purpose.
+- `#get:Ctor` is a getter, so everything below holds for it in full. How it is defined, and why
+  its name is reserved, belong to `/hoc-classes-ctor`.
 
 ## Getters that wire dependencies
 
