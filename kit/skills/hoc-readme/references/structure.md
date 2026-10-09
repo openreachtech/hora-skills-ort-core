@@ -9,7 +9,7 @@ Rules concerning the structure of a README's language files.
     an English file standing alone. Older repositories are where this is common.
   - In a repository that already has a README, another language file is added only when it is
     explicitly asked for.
-- Comments in the code examples of `README.xx.md` should be written in the natural language indicated by `xx` (e.g., `README.ja.md` uses Japanese). `README.md`, which has no `xx`, uses the default language (English).
+- The language each file is written in, the comments of its code examples included, belongs to `/hoc-writing-language`: `README.xx.md` in the language `xx` names, an existing `README.md` in the language it is already written in, and a new one in English.
 - After creating or updating `README.md` and `README.xx.md`, verify consistency across all READMEs. Items to check:
   - Structure of sample code (code lines match across languages, with differences only in comment language).
   - Order of sections.
