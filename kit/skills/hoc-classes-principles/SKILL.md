@@ -139,6 +139,16 @@ constructor ({
 A plain object is avoided wherever it can be. What holds values is a class, so that the values
 arrive with a name and with the members that work on them.
 
+- **A type declaration does not make a plain object a value object.** `@typedef` writes down a
+  shape, and the name it gives lives in the annotation alone: at run time the value is the same
+  nameless object, with nothing on it to work on what it holds. Calling a plain object something
+  else through its type is writing HTML in nothing but `<div>` and `<span>` — a class attribute
+  does not make a `<div>` an `<article>`.
+- **This is why typing stays in JSDoc and never moves to TypeScript.** A structural type system
+  accepts any object of the right shape, so declaring the shape is enough to pass the check, and
+  the value object is never written. What it would have held — completing an entry, comparing two
+  of them — goes to whoever uses the object, and is written again in each place.
+
 - **Data that arrives from outside is wrapped where it arrives.** The JSON an API returns is never
   parsed and spread through the application as it is. An API is reached through the Payload /
   Capsule / Launcher structure, and its response is always capsulized: what the application holds
