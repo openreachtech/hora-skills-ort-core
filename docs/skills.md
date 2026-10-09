@@ -18,11 +18,12 @@ Each skill lives at `kit/skills/<name>/`, directly under the skills directory, a
 | :-- | :-- |
 | `hoc-classes-principles` | Class design principles — no classes without properties, and the system underpinning it (deep immutability, constructor-only, references-as-contract). |
 | `hoc-classes-constructor` | Class constructor conventions — the constructor holds what its parameters receive and decides no value, so its parameters carry no defaults and the factory methods resolve them. |
+| `hoc-classes-ctor` | The `#get:Ctor` getter an instance reaches its own class through — its definition, type cast and override, the reserved name, and `this.constructor` written nowhere else. |
 | `hoc-classes-notations` | The order members are written in a class body: the eight-block placement order, the ordering within getters and within methods, and the fallback to source order where none of it decides. |
 | `hoc-classes-prohibits` | Prohibitions in class definitions: static-only classes and classes without state are not allowed, and why. |
 | `hoc-classes-inflators` | The inflator (binding) method pattern — bind the class passed as an argument and return a derived subclass memoized via `BoundCtorRegistry` — plus its naming and arguments. |
 | `hoc-properties` | Property conventions — set on `this` in the constructor, immutable (no reassignment, no `Map`), and no JavaScript native private. |
-| `hoc-accessors` | Getter/setter conventions — setters prohibited for immutability, `#get:Ctor` reserved for `this.constructor`, and getter bodies kept to a property reference, with no branching and no method call. |
+| `hoc-accessors` | Getter/setter conventions — setters prohibited for immutability, and getter bodies kept to a property reference, with no branching and no method call. |
 
 ## Members and scope
 
@@ -35,7 +36,7 @@ Each skill lives at `kit/skills/<name>/`, directly under the skills directory, a
 | `hoc-functions` | Function conventions. Parameters follow method parameters: named arguments as a principle. |
 | `hoc-constants` | Constant conventions — naming (uppercase `SNAKE_CASE`, singular for enum-like objects), chopping down, and the file organization and placement of object-type constants. |
 | `hoc-contracts` | Type contracts for function and method arguments and return values, and how contract types are defined. |
-| `hoc-scope` | Scope references among class members — `this` between static members, `#get:Ctor` when referring from an instance to a static member, and no destructuring of `this`. |
+| `hoc-scope` | Scope references among class members — `this` between static members, `this.Ctor` from an instance to a static member, and no destructuring of `this`. |
 
 ## Modules
 
