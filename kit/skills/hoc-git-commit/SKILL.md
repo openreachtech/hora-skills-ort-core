@@ -2,9 +2,10 @@
 name: hoc-git-commit
 description: >
   Conventions for git commits, in either message format. Use before writing a commit message, and
-  before splitting a working tree into commits. The branches commits land on, and the two commits a
-  branch makes about itself, belong to the git branch convention; the commands that gate a commit
-  belong to the workflows convention.
+  before splitting a working tree into commits. The order commits land in belongs to the commit
+  order convention; the branches commits land on, and the two commits a branch makes about
+  itself, to the git branch convention; the commands that gate a commit, to the workflows
+  convention.
 ---
 
 # Git Commit
@@ -520,8 +521,8 @@ scanning subjects for where a convention changed has to work out which one each 
   commit should find a coherent tree.
 - **What must pass before a commit is not settled here.** Which commands run before a commit,
   and which before the work is called complete, belongs to the workflows convention. This one
-  settles what goes into a commit, how it is worded, and the order the commits land in — never
-  whether a command's result permits the commit.
+  settles what goes into a commit and how it is worded — never whether a command's result permits
+  the commit. The order the commits land in belongs to `/hoc-git-commit-order`.
 
 ## The history is a record, never a licence
 
@@ -557,11 +558,11 @@ whether one plain subject line states everything it does. Everything — a subje
 leaving something out has failed the test rather than passed it, and "and" joining two
 decisions is only the most visible way it fails.
 
-The full heuristic — what to split, what to keep together, the order the commits land in, and
-how to stage a mixed working tree — is in [granularity.md](./references/granularity.md).
+The full heuristic — what to split, what to keep together, and how to stage a mixed working
+tree — is in [granularity.md](./references/granularity.md).
 
 ## Detail files
 
-- [granularity.md](./references/granularity.md) — what belongs in one commit, the order the commits land in, splitting a mixed working tree
+- [granularity.md](./references/granularity.md) — what belongs in one commit, splitting a mixed working tree
 - [format-imperative.md](./references/format-imperative.md) — capitalized imperative subject, no type prefix
 - [format-conventional.md](./references/format-conventional.md) — Conventional Commits (`type: summary`)
