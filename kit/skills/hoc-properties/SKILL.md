@@ -23,33 +23,6 @@ This summarizes conventions related to class property definitions.
   enforces the direct form; what lies under the path is held by this rule alone.
 - Being immutable means that even a property with public access scope is "protected by coding rules." Hence there is
   no need to make it native private for encapsulation purposes (for why, see `/hoc-classes-principles`).
-- **Updating a collection (Array/Set) itself is permitted. What is prohibited is a structure that references individual elements** — pulling out a single element via `array[i]` and treating it as mutable state. This subverts the prohibition on mutable objects and is not permitted. A collection's value must always be "used all at once" (scanned/transformed/aggregated over every element as a whole). When you want to change scalar state, generate a new instance via a factory method (for the policy of not deep-freezing collections, see the class design principles convention).
-- **An array a property holds is read only through its elements, by a higher-order function.**
-  A use that never passes its elements to `map()` / `filter()` / `reduce()` and the like is not
-  allowed — `this.clicks.length` read as a count is the plain case.
-  - **An array whose only use is its `length` is not being used as an array.** Its elements are
-    never read, so it is a counter in disguise: a scalar kept as mutable state by pushing onto
-    the array and emptying it, which is exactly what the reassignment prohibition rules out.
-  - Adding and removing elements stays allowed, as above. What this rules out is the reading
-    side: an array whose elements nobody consumes has no reason to be an array.
-
-```javascript
-// NG: the array stands in for a number that changes
-recordClick () {
-  this.clicks.push(new Date())
-}
-
-get count () {
-  return this.clicks.length
-}
-
-// OK: a changed count is a new instance
-recordClick () {
-  return this.Ctor.create({
-    count: this.count + 1,
-  })
-}
-```
 
 ```javascript
 // NG: reassigning a property after creation
@@ -62,6 +35,42 @@ this.state.count += 1
 const next = Scalar.create({
   normalizedValue: anotherValue,
 })
+```
+
+- **Updating a collection (Array/Set) itself is permitted. What is prohibited, where a property —
+  or anything under its object path — is an array, is a use that does not pass its elements to a
+  higher-order function**: reading only its `.length`, or reaching individual elements with
+  `[n]`. A collection's value is always used all at once, its elements handed to `map()` /
+  `filter()` / `reduce()` and the like. When you want to change scalar state, generate a new
+  instance via a factory method (for the policy of not deep-freezing collections, see the class
+  design principles convention).
+  - **An array whose only use is its `length` is not being used as an array.** Its elements are
+    never read, so it is a counter in disguise: a scalar kept as mutable state by pushing onto
+    the array and emptying it, which is exactly what the reassignment prohibition rules out.
+  - Adding and removing elements stays allowed. What this rules out is the reading side: an
+    array whose elements nobody consumes has no reason to be an array.
+
+```javascript
+// NG: the array stands in for a number that changes
+recordClick () {
+  this.clicks.push(new Date())
+}
+
+get count () {
+  return this.clicks.length
+}
+
+// NG: the same, wrapped in an object
+get count () {
+  return this.state.values.length
+}
+
+// OK: a changed count is a new instance
+recordClick () {
+  return this.Ctor.create({
+    count: this.count + 1,
+  })
+}
 ```
 
 ### `Map` is prohibited; `WeakMap` is free to use
