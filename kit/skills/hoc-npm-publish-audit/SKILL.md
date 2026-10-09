@@ -54,6 +54,17 @@ directories can produce a tarball holding six things.
 - **The manifest states an intention. The inventory states a fact.** Reading the first in place
   of the second is the mistake this section exists to prevent.
 
+### Diff the inventories of packages released together
+
+**Where two or more packages go out as a set, their inventories are read against each other.**
+They should differ only where they must — in the domain each one covers — and match everywhere
+else.
+
+- **The diff finds what reading one package cannot**: a file added to one and forgotten in the
+  other, a config that drifted, an untracked file in one working tree.
+- **It finds the reverse as well**: a file identical in both where it should have been made
+  specific to one. Read both directions.
+
 ## What the inventory is read for
 
 | Read for | What it catches |
