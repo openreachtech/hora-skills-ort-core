@@ -1,6 +1,6 @@
 ---
 name: hoc-npm-publish-audit
-description: "The last audit of a package before it reaches the npm registry: it reads what is in the tarball. Use when a package is about to go out, or when asked whether one is fit to."
+description: "The last audit of a package before it reaches the npm registry: it reads what is in the tarball. Use when a package is about to go out, or when asked whether one is fit to. The order of the commits a release makes about itself belongs to the npm publish convention."
 ---
 
 # npm publish audit
