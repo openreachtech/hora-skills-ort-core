@@ -1,6 +1,6 @@
 ---
 name: hoc-naming
-description: "Naming conventions for the identifiers in code — classes, members, variables and parameters. Use when choosing or reviewing a name. Constants belong to the constants convention; a skill's name, to the skill-updating convention; commit verbs, to the git commit convention."
+description: "Naming conventions for the identifiers in code — classes, members, variables and parameters. Use when choosing or reviewing a name. The super-prefix a method name carries belongs to the method super-prefix convention; constants, to the constants convention; a skill's name, to the skill-updating convention; commit verbs, to the git commit convention."
 ---
 
 # Shared: Naming
