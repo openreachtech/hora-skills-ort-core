@@ -61,6 +61,10 @@ const next = Scalar.create({
       nowhere but the holder, reading the holder is enough to tell.
   - Adding and removing elements stays allowed (for the policy of not deep-freezing collections,
     see the class design principles convention).
+  - **A Set is not prohibited, as `Map` is.** Holding distinct values in a Set and using its
+    elements is an ordinary collection. What is prohibited is a Set held to get around the
+    reassignment prohibition: values added and deleted to stand for a state that changes —
+    `this.flags.add('open')` / `this.flags.delete('open')` in place of a boolean.
 
 ```javascript
 // NG: the array stands in for a number that changes — its elements are never used
