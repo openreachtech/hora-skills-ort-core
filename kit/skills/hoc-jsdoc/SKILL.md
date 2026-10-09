@@ -306,9 +306,15 @@ generate ({
   literal does not, and nothing reports it. Every place that stood the type in has to be found
   and corrected by hand, and nothing says which places those are. A real instance follows its own
   class instead, so the change reaches the test the way it reaches everything else.
-- **In a test this is absolute.** The implementation exists by the time its test is written, so
-  every type the test needs is already declared somewhere in the code under test. A `*` there is
-  never "the type cannot be narrowed"; it is "the type was not looked up".
+- **The one other `*` cast allowed is a deliberate type violation in a test**: an abnormal-value
+  case that hands the code under test `null`, a missing key or another value its contract
+  refuses, on purpose. The declaration above `cases` states the contract type, and
+  `/** @type {Array<*>} */` on the literal lets the violation through. It is allowed only where
+  the type error is the point of the test and plain to see; the test convention (`/hoc-jest`)
+  settles which `describe()` holds those cases.
+- **Outside these two, in a test this is absolute.** The implementation exists by the time its
+  test is written, so every type the test needs is already declared somewhere in the code under
+  test. A `*` there is never "the type cannot be narrowed"; it is "the type was not looked up".
 
 ```javascript
 // NG: nothing declares the type, and the cast removes the check
