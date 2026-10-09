@@ -1,6 +1,6 @@
 ---
 name: hoc-npm-publish
-description: "How a package release is ordered and checked before it goes out. Use this skill when preparing a release, bumping a package's own version, when work lands after the bump, or deciding whether a package is ready to publish. Moving the dependency versions a release takes in belongs to the dependency-raising convention."
+description: "How a package release orders the commits it makes about itself. Use this skill when preparing a release, bumping a package's own version, or when work lands after the bump. Reading the tarball before it goes out belongs to the publish audit convention; moving the dependency versions a release takes in, to the dependency-raising convention."
 ---
 
 # npm Publish
@@ -14,9 +14,8 @@ So a release is guarded twice.
 
 - **Nothing unfinished can get out.** The ordering rules below make a premature publish fail
   rather than succeed.
-- **Nothing goes out unread.** The audit in
-  [pre-publish-audit.md](./references/pre-publish-audit.md) reads the artefact a consumer
-  will receive, not the repository it was built from.
+- **Nothing goes out unread.** The tarball a consumer will receive is read before it goes out,
+  not the repository it was built from. That reading is `/hoc-npm-publish-audit`.
 
 ## The version bump is the last commit of the release
 
