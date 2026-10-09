@@ -149,6 +149,57 @@ the second-hand statement the reading exists to stop trusting.
 - **Where nothing was found, say that.** A clean run is a result, and a report that only ever
   appears when something is wrong teaches everybody to skip it.
 
+**What should be fixed is listed last, as a list of its own.** Every finding that calls for a
+change is gathered at the end of the report, one line each, saying what to fix. The end is where a
+reader looks for the verdict, and a finding left beside the check that turned it up is one they
+have to ask about.
+
+**Each line opens with its weight.** `🚨` marks a finding that holds this release up; `⚠️` marks one
+that does not, and belongs to a later release. The mark, not the wording, is what separates the
+two, so a reader can count the blockers without reading a line.
+
+**The `⚠️` lines come first, then the `🚨` lines, each kind together.** The two are never
+interleaved. A report is read from where it stops: the lines nearest its end are the ones on
+screen when it finishes, and the first a reader sees. Putting the `🚨` lines there shows what holds
+the release up without a scroll, and leaves the `⚠️` lines above for whoever reads on.
+
+**The last heading carries the verdict in its mark.** With any `🚨` on the list, the heading opens
+with `🚨`; with only `⚠️`, it opens with `⚠️`; with nothing, the report closes on a line opening with
+`✅️` that says the package can be published.
+
+```markdown
+## 🚨 What to fix
+
+- ⚠️ `--help` is read as an option missing its value
+- 🚨 `README.md` documents `--out` as the default, and the CLI defaults to `--stdout`
+```
+
+```markdown
+## ⚠️ What to fix
+
+- ⚠️ `--help` is read as an option missing its value
+```
+
+```markdown
+✅️ Ready to publish. Nothing to fix
+```
+
+The three marks rank `✅️`, `⚠️`, `🚨`, from lightest to heaviest, and the heading takes the
+heaviest the list holds: one `🚨`, among however many `⚠️`, makes it `🚨`. A reader scrolling to
+the end takes the verdict from the mark before reading a word.
+
+- **A finding too small to hold the release still goes on the list**, under `⚠️`. Left in the
+  middle of the reading, it comes back as the question the report was meant to answer — whether
+  anything needs fixing.
+- **`⚠️` is not `✅️`.** A list of `⚠️` alone says the tarball can go out, and that there is still
+  something to fix; closing on `✅️` would drop the second half.
+- **With nothing to fix, the `✅️` line stands in the list's place**, not silence. An absent list
+  would read as a report that forgot the question.
+- **Neither `⚠️` nor `✅️` says the tarball goes out.** They say it is fit; whether to publish, and
+  when, stays a person's call ("Out of scope", below).
+- **Listing a fix is not making it.** The list says what the owner has to do, and nothing on it is
+  done here ("Out of scope", below).
+
 ## Out of scope
 
 - **Repairing what the reading finds.** A file that must not ship, an entry point that resolves
