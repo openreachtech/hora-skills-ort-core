@@ -21,6 +21,7 @@
 | `hoc-classes-ctor` | インスタンスが自分のクラスに届くための `#get:Ctor`。定義、型のキャスト、override、名前の予約、そして `this.constructor` をそれ以外の場所に書かないこと。 |
 | `hoc-classes-notations` | クラス本体でメンバーを書く順序。8 ブロックの配置順、getter 内・メソッド内での並び順、そしてそれらで決まらない場合にソース順へ戻すことを定義します。 |
 | `hoc-classes-prohibits` | クラス定義における禁止事項。static のみのクラスと、状態(プロパティ)を持たないクラスを禁止する方針とその理由。 |
+| `hoc-prohibit-native-features` | このライブラリが使わない JavaScript の言語機能。`Map`、`Object.freeze()`、ネイティブ private（`#x`、`static #x`）、decorator と、それぞれを使わない理由。 |
 | `hoc-classes-inflators` | inflator(バインドメソッド)の規約。引数で渡されたクラスをバインドし、`BoundCtorRegistry` でメモ化した派生サブクラスを返すパターンと、その命名・引数。 |
 | `hoc-properties` | プロパティの規約。コンストラクタ内で `this` に設定、不変(再代入禁止・`Map` 禁止)、JavaScript ネイティブ private は使いません。 |
 | `hoc-accessors` | アクセサ(getter/setter)の規約。不変性のため setter は禁止、getter 本体は分岐もメソッド呼び出しも持たないプロパティ参照に留めます。 |
