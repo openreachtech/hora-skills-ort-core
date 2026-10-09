@@ -1,6 +1,6 @@
 ---
 name: hoc-prohibit-native-features
-description: "The native JavaScript features this library does not use, and why each is refused. Use as the criterion whenever code is about to reach for a native feature — `Map`, `Object.freeze()`, a `#` private member, a decorator — or when reviewing code that does. A class field is refused by the class design principles, which define what a property is."
+description: "The native JavaScript features this library does not use, and why each is refused. Use as the criterion whenever code is about to reach for a native feature — `Map`, `Object.freeze()`, a `#` private member, a decorator, an object literal handed across scopes — or when reviewing code that does. A class field is refused by the class design principles, which define what a property is."
 ---
 
 # Prohibit Native Features
