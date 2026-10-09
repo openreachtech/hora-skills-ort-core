@@ -47,6 +47,8 @@ const next = Scalar.create({
   - **Its count is asked of the class that holds it.** `.length` / `.size` is read only inside
     that class, in a member that answers the count — `get itemCount ()`. A caller handed the
     collection does not read its length itself; it asks the holder.
+    - **Whether it is empty is asked the same way.** The holder may answer it with a method —
+      `isEmpty ()` — and a caller asks that rather than comparing `.length` with `0` itself.
   - **A collection whose elements nobody uses is prohibited, however its count is read.** An
     array whose only use is its `length` is not being used as an array: its elements are never
     read, so it is a counter in disguise, a scalar kept as mutable state by pushing onto the array
@@ -75,6 +77,10 @@ listItemLabels () {
 
 get itemCount () {
   return this.items.length
+}
+
+isEmpty () {
+  return this.items.length === 0
 }
 ```
 
