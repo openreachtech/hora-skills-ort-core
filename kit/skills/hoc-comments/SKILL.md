@@ -1,6 +1,6 @@
 ---
 name: hoc-comments
-description: "Comment-writing conventions — where a comment that runs to several lines breaks: at a clause, never at a column. Use when writing or reviewing a JSDoc block, a block comment or an inline comment, or a code example that carries one. Which language a comment is written in — English by default, in source, in generated tests and in code examples — belongs to the writing-language convention."
+description: "Comment-writing conventions — what a comment says (the why the code cannot, never a restatement of it), keeping it true as the code changes, no commented-out code, and where a comment that runs to several lines breaks: at a clause, never at a column. Use when writing or reviewing a JSDoc block, a block comment or an inline comment, or a code example that carries one. Which language a comment is written in — English by default — belongs to the writing-language convention."
 ---
 
 # Shared: Comments
@@ -13,6 +13,20 @@ Conventions related to comment writing. Applies across JSDoc, block comments (`/
   the default it gives every comment — English, in source, in the tests generated under `tests/`
   and in the code examples of a document or a skill — which holds wherever no instruction, and no
   language code in the file's name, has settled it first.
+
+## What a comment says
+
+**A comment carries what the code cannot say for itself — above all, why.** Where the code makes
+a choice a reader would question, the comment stating the reason is the one that has to be
+there, and it is the one most often missing.
+
+- **A comment that restates the code is not written.** It says nothing the line beside it does
+  not, and it is one more thing to keep in step with that line.
+- **A comment moves with the code it describes.** Where a change makes a comment untrue, the
+  change corrects it; a comment describing code that is no longer there misleads more than no
+  comment would.
+- **Code is not commented out and left.** The history keeps what was removed; a commented-out
+  block keeps only the question of whether it still matters.
 
 ## A long comment breaks where its sentence does
 
