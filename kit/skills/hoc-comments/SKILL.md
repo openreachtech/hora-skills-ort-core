@@ -36,14 +36,14 @@ end of a line only where moving it there keeps the code's format from breaking:
 - **A seeder or a test's `cases` written one element per line.** A comment on a line of its own
   would sit between two elements and break the run of one element per line.
 - **An ESLint option that overrides a default.** The default value goes at the end of the line,
-  so the option keeps the layout it has everywhere else.
+  written as the value alone, so the option keeps the layout it has everywhere else.
 
 ```javascript
 // OK: the default noted at the end of the line, the option keeping its layout
 'max-len': [
   'error',
   {
-    code: 120, // default: 80
+    code: 120, // 80
   },
 ],
 ```
