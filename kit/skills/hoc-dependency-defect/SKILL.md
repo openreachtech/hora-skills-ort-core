@@ -64,7 +64,7 @@ Rewrite the whole class, and it stops getting them the moment you write it. Noth
 - Override a getter when the parent computes a value wrongly.
 - Do not copy the parent's code into the child and change two lines.
 - Do not override a member that already works, just to keep the class tidy.
-- Put `/** @override */` above every override.
+- Mark every override with `@override`, in the form the JSDoc convention (`/hoc-jsdoc`) settles.
 
 **When the correct answer needs part of the parent's work, call the parent and correct its result.**
 Do not rewrite what it does.
@@ -72,7 +72,16 @@ Do not rewrite what it does.
 ```javascript
 // NG: the parent's code is copied here, so the package's later fixes never reach this class
 export default class SingleDayDateRangeFormatter extends DateRangeFormatter {
-  /** @override */
+  /**
+   * Format a date range.
+   *
+   * @param {{
+   *   startedOn: string
+   *   endedOn: string
+   * }} params - Parameters.
+   * @returns {string} Formatted range.
+   * @override
+   */
   formatRange ({
     startedOn,
     endedOn,
@@ -87,7 +96,16 @@ export default class SingleDayDateRangeFormatter extends DateRangeFormatter {
 
 // OK: only the broken case is handled here, and the rest stays with the parent
 export default class SingleDayDateRangeFormatter extends DateRangeFormatter {
-  /** @override */
+  /**
+   * Format a date range.
+   *
+   * @param {{
+   *   startedOn: string
+   *   endedOn: string
+   * }} params - Parameters.
+   * @returns {string} Formatted range.
+   * @override
+   */
   formatRange ({
     startedOn,
     endedOn,
