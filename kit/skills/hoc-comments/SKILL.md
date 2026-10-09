@@ -31,6 +31,8 @@ there, and it is the one most often missing.
   is filed as an issue instead: an issue is seen by whoever plans the work, carries its own
   discussion, and is closed when the work lands, while an annotation in the code waits for someone
   to happen to read that line.
+- **`NOTE:` is not one of them, and may be written.** It points out something about the code as it
+  stands, not work left to do.
 - **A comment saying why a workaround exists, and what retires it, is not such an annotation.** It
   explains the code as it stands — see `/hoc-dependency-defect`.
 
