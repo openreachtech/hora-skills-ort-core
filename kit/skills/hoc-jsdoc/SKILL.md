@@ -465,29 +465,9 @@ closing, and **not inside a type literal**.
 
 ## Wrap a JSDoc sentence at a clause boundary
 
-**Where a sentence in a JSDoc block runs past the line, break it where the clause breaks**
-— after a comma, at a conjunction, between two sentences — rather than filling to a column
-and breaking wherever the word count lands.
-
-```javascript
-// NG: filled to the margin, so the line ends mid-clause
-/**
- * A fragment already on the path contributes nothing, which is what stops a
- * cyclic document from being walked forever.
- */
-
-// OK: the break falls where the clause does
-/**
- * A fragment already on the path contributes nothing,
- * which is what stops a cyclic document from being walked forever.
- */
-```
-
-- **The unit a reader takes in is the line.** Broken at a clause, each line is one
-  statement and the comment can be read down the left edge; broken at a column, a line
-  ends on `stops a` and carries no meaning of its own.
-- This governs prose. A type literal is already one property per line, and `@param` /
-  `@returns` descriptions follow the same break where they run long.
+- Where a long comment breaks — at a clause, never at a column — belongs to `/hoc-comments`. It
+  is read here for the `@param` and `@returns` descriptions, which follow the same break where
+  they run long.
 
 ## Do not place a delimiter after each chopped-down property
 
