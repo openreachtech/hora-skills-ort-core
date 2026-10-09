@@ -14,6 +14,20 @@ Conventions related to comment writing. Applies across JSDoc, block comments (`/
   and in the code examples of a document or a skill — which holds wherever no instruction, and no
   language code in the file's name, has settled it first.
 
+## What a comment says
+
+**A comment carries what the code cannot say for itself — above all, why.** Where the code makes
+a choice a reader would question, the comment stating the reason is the one that has to be
+there, and it is the one most often missing.
+
+- **A comment that restates the code is not written.** It says nothing the line beside it does
+  not, and it is one more thing to keep in step with that line.
+- **A comment moves with the code it describes.** Where a change makes a comment untrue, the
+  change corrects it; a comment describing code that is no longer there misleads more than no
+  comment would.
+- **Code is not commented out and left.** The history keeps what was removed; a commented-out
+  block keeps only the question of whether it still matters.
+
 ## A long comment breaks where its sentence does
 
 **Where a comment runs to more than one line, break it at a point the sentence itself offers** —
