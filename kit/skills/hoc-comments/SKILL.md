@@ -1,6 +1,6 @@
 ---
 name: hoc-comments
-description: "Comment-writing conventions — what a comment says (the why, never a restatement of the code), where an inline comment stands (above the code, at a line end only to keep a format), where a long comment breaks (at a clause, never at a column), the form of a multi-line block, and lines commented out with `//`. Use when writing or reviewing any comment, or when commenting lines out. Which language a comment is written in belongs to the writing-language convention."
+description: "Comment-writing conventions — what a comment says (the why, never a restatement of the code or a `TODO:` an issue should hold), where an inline comment stands (above the code, at a line end only to keep a format), where a long comment breaks (at a clause, never at a column), the form of a multi-line block, and lines commented out with `//`. Use when writing or reviewing any comment, or when commenting lines out. Which language a comment is written in belongs to the writing-language convention."
 ---
 
 # Shared: Comments
@@ -27,6 +27,12 @@ there, and it is the one most often missing.
   comment would.
 - **Code is not commented out and left.** The history keeps what was removed; a commented-out
   block keeps only the question of whether it still matters.
+- **`TODO:`, `FIXME:`, `XXX:` and their kind are avoided wherever they can be.** Work still to do
+  is filed as an issue instead: an issue is seen by whoever plans the work, carries its own
+  discussion, and is closed when the work lands, while an annotation in the code waits for someone
+  to happen to read that line.
+- **A comment saying why a workaround exists, and what retires it, is not such an annotation.** It
+  explains the code as it stands — see `/hoc-dependency-defect`.
 
 ## An inline comment stands on the line above
 
