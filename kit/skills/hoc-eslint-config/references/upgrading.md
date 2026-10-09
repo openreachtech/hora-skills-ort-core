@@ -87,10 +87,8 @@ though nothing has moved.
 
 ## What a bump costs the manifest
 
-**The version and the lockfile are two commits, not one.** The manifest states the intent;
-the lockfile records what the install resolved. Splitting them lets a reader see the
-resolution separately from the decision, and the lockfile commit takes whatever subject the
-repository's history already uses for it.
+**The version and the lockfile are two commits, not one**, and the lockfile commit takes the
+subject the git commit convention (`/hoc-git-commit`) gives a generated file.
 
 **Confirm the whole chain is available before setting the version.** The named package being
 published where the install will look for it says nothing about its dependencies: a rule-set
