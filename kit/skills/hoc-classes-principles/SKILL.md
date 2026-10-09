@@ -111,6 +111,29 @@ Therefore soft-private (`this._x`) is visible and correct. Do not use `#private`
 - This policy chooses "explicitness > brevity." A decorator's real benefits (co-locating declarative metadata, reducing DI boilerplate) are ergonomics, not capability, and they sell explicitness in return. Augmentation that is implicit, mutating, and action-at-a-distance conflicts with "explicit, immutable, single manifest."
 - A field decorator attaches to a class field, so it does not fit at the syntactic level under this policy, which prohibits class fields.
 
+### `Object.freeze()`
+
+`Object.freeze()` is not used. Immutability is held by the conventions, so freezing guards a
+hazard this system has already removed — the same reasoning that sets `#private` aside above.
+
+- **A frozen instance cannot be stood in for.** `jest.spyOn()` replaces a method by adding a
+  property of the same name to the instance, and a frozen object takes no new property: the spy
+  fails with `TypeError: Cannot add property …, object is not extensible`. A subclass patching the
+  instance is shut out the same way.
+- **Freezing a collection contradicts how one is built.** A collection is added to while it is
+  assembled (see `/hoc-properties`); a frozen one cannot be.
+
+```javascript
+// NG: the instance is frozen, so a test cannot spy on it
+constructor ({
+  value,
+}) {
+  this.value = value
+
+  Object.freeze(this)
+}
+```
+
 ## Rules
 
 - A class holds at least one instance property (see `/hoc-classes-prohibits`)
@@ -121,6 +144,7 @@ Therefore soft-private (`this._x`) is visible and correct. Do not use `#private`
   `/hoc-properties`
 - Do not directly access members not in the references; do not enumerate instances
 - Do not use `#private` or `decorator` (except when a human explicitly specifies it)
+- Do not use `Object.freeze()`
 
 ## Proviso
 
