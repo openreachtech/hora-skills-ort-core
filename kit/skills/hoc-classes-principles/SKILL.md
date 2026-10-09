@@ -1,6 +1,6 @@
 ---
 name: hoc-classes-principles
-description: "Principles of class design — what a class has to hold to exist at all, and the premises the other class conventions rest on. Use when deciding whether something should be a class, when reaching for a `#` private member (a static one included), a decorator, a class field or `Object.freeze()`, or when the reason behind a class convention is in question. Specific prohibitions belong to the class prohibitions convention; member order, to the class notation convention."
+description: "Principles of class design — what a class has to hold to exist at all, and the premises the other class conventions rest on. Use when deciding whether something should be a class, when reaching for a `#` private member (a static one included), a decorator, a class field, `Object.freeze()` or a plain object, or when the reason behind a class convention is in question. Specific prohibitions belong to the class prohibitions convention; member order, to the class notation convention."
 ---
 
 # Classes: Principles
@@ -134,6 +134,48 @@ constructor ({
 }
 ```
 
+### Plain objects
+
+A plain object is avoided wherever it can be. What holds values is a class, so that the values
+arrive with a name and with the members that work on them.
+
+- **Data that arrives from outside is wrapped where it arrives.** The JSON an API returns is never
+  parsed and spread through the application as it is. An API is reached through the Payload /
+  Capsule / Launcher structure, and its response is always capsulized: what the application holds
+  is the capsule, never the parsed object. How the three are built belongs to each stack's API
+  client convention.
+
+```javascript
+// NG: an entry held as a plain object
+addEntry ({
+  title,
+}) {
+  return this.Ctor.create({
+    entries: [
+      ...this.entries,
+      {
+        title,
+        isDone: false,
+      },
+    ],
+  })
+}
+
+// OK: an entry is an instance of its own class
+addEntry ({
+  title,
+}) {
+  return this.Ctor.create({
+    entries: [
+      ...this.entries,
+      this.Ctor.TodoEntryCtor.create({
+        title,
+      }),
+    ],
+  })
+}
+```
+
 ## Rules
 
 - A class holds at least one instance property (see `/hoc-classes-prohibits`)
@@ -145,6 +187,7 @@ constructor ({
 - Do not directly access members not in the references; do not enumerate instances
 - Do not use `#private` or `decorator` (except when a human explicitly specifies it)
 - Do not use `Object.freeze()`
+- Avoid plain objects; capsulize what an API returns
 
 ## Proviso
 
