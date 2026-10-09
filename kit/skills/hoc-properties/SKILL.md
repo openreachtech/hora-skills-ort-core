@@ -37,91 +37,91 @@ const next = Scalar.create({
 })
 ```
 
-- **Updating a collection (Array/Set) itself is permitted.** Where a property — or anything under
-  its object path — is an Array or a Set, how it is read is held as follows. A Set is held to this
-  exactly as an Array is.
-  - **Its elements are used through a higher-order function.** Taking an individual element out —
-    `[n]` on an Array, `values().next()` or `[...set][0]` on a Set — is prohibited. A collection's
-    value is always used all at once, its elements handed to `map()` / `filter()` / `reduce()`
-    and the like.
-  - **Its count is asked of the class that holds it.** `.length` / `.size` is read only inside
-    that class, in a member that answers the count — `get itemCount ()`. A caller handed the
-    collection does not read its length itself; it asks the holder.
-    - **Whether it is empty is asked the same way.** The holder may answer it with a method —
-      `isEmpty ()` — and a caller asks that rather than comparing `.length` with `0` itself.
-  - **A collection whose elements nobody uses is prohibited, however its count is read.** An
-    array whose only use is its `length` is not being used as an array: its elements are never
-    read, so it is a counter in disguise, a scalar kept as mutable state by pushing onto the array
-    and emptying it, which is exactly what the reassignment prohibition rules out. When you want
-    to change scalar state, generate a new instance via a factory method.
-    - **The holder is where this is judged.** It has at least one member that hands the elements
-      to a higher-order function and works on them. A holder whose only members reading the
-      collection are its count and its emptiness — `itemCount`, `isEmpty ()` — is that counter
-      in disguise, with `isEmpty ()` as its cover, and is prohibited. Because the count is read
-      nowhere but the holder, reading the holder is enough to tell.
-  - Adding and removing elements stays allowed (for the policy of not deep-freezing collections,
-    see the class design principles convention).
-  - **A Set is not prohibited, as `Map` is.** Holding distinct values in a Set and using its
-    elements is an ordinary collection. What is prohibited is a Set held to get around the
-    reassignment prohibition: values added and deleted to stand for a state that changes —
-    `this.flags.add('open')` / `this.flags.delete('open')` in place of a boolean.
-  - **An element is never replaced in place.** Taking a position — `indexOf()`, `findIndex()` —
-    and replacing what sits there with `splice(index, 1, newItem)` is `array[index] = newItem`
-    under another name, and is prohibited. The changed collection is another array, built with
-    `map()`, and it reaches a new instance through the factory method.
-    - **This is what closes the array as a way around the reassignment prohibition.** Another
-      array cannot be reassigned to the property, so a changed collection has nowhere to go but
-      a new instance — the same place every other changed value goes.
+### A collection is built, then used all at once
+
+**Code that makes an instance mutable is prohibited, uniformly — the reassignment prohibition is
+one means to that, and a collection is no exception.** The one thing an Array or a Set allows is
+being built: elements are added while the collection is assembled, and the finished collection is
+then used all at once, every element together. A collection added to or taken from between reads,
+while the instance is in use, is state that changes; the change goes to a new instance through
+the factory method instead.
+
+This holds wherever the collection sits — a property, or anything under its object path — and a
+Set is held to it exactly as an Array is.
+
+- **Its elements are used through a higher-order function** — `map()` / `filter()` /
+  `reduce()` and the like. Taking an individual element out — `[n]` on an Array,
+  `values().next()` or `[...set][0]` on a Set — is not using the collection all at once.
+- **An element is never replaced in place.** Taking a position — `indexOf()`, `findIndex()` —
+  and replacing what sits there with `splice(index, 1, newEntity)` is `array[index] = newEntity`
+  under another name. The changed collection is another array, built with `map()`.
+- **Its count is asked of the class that holds it.** `.length` / `.size` is read only inside that
+  class, in a member that answers the count — `get entityCount ()` — and whether it is empty is
+  answered the same way, by `isEmpty ()`. A caller handed the collection asks the holder rather
+  than reading its length itself.
+- **A collection is held for its elements.** An array whose only use is its `length` is not
+  being used as an array; what it holds is a number.
+- For the policy of not deep-freezing collections, see the class design principles convention.
 
 ```javascript
-// NG: the array stands in for a number that changes — its elements are never used
-recordClick () {
-  this.clicks.push(new Date())
-}
-
-get clickCount () {
-  return this.clicks.length
-}
-
-// NG: the caller reads the length of a collection it was handed
-const count = cart.items.length
-
-// OK: the holder uses the elements, and answers the count itself
-listItemLabels () {
-  return this.items.map(it => it.label)
-}
-
-get itemCount () {
-  return this.items.length
-}
-
-isEmpty () {
-  return this.items.length === 0
-}
-
-// NG: the element at a position is replaced in the array the instance holds
-markItemDone ({
+// NG: the collection grows while the instance is in use
+addEntity ({
   title,
 }) {
-  const index = this.items.findIndex(it => it.title === title)
-
-  this.items.splice(index, 1, this.items.find(it => it.title === title).generateDone())
+  this.entities.push(
+    TodoEntity.create({
+      title,
+    })
+  )
 }
 
-// OK: another array, held by a new instance
-markItemDone ({
+// OK: the changed collection goes to a new instance
+addEntity ({
   title,
 }) {
   return this.Ctor.create({
-    items: this.items
-      .map(it => {
-        if (it.title !== title) {
-          return it
-        }
-
-        return it.generateDone()
+    entities: [
+      ...this.entities,
+      TodoEntity.create({
+        title,
       }),
+    ],
   })
+}
+
+// NG: the element at a position is replaced in place
+markEntityDone ({
+  title,
+}) {
+  const index = this.entities.findIndex(it => it.title === title)
+
+  this.entities.splice(index, 1, this.entities.find(it => it.title === title).generateDone())
+}
+
+// OK: another array, held by a new instance
+markEntityDone ({
+  title,
+}) {
+  return this.Ctor.create({
+    entities: this.entities
+      .map(it => (
+        it.title === title
+          ? it.generateDone()
+          : it
+      )),
+  })
+}
+
+// NG: the caller reads the length of a collection it was handed
+const count = todoList.entities.length
+
+// OK: the holder answers its count and its emptiness
+get entityCount () {
+  return this.entities.length
+}
+
+isEmpty () {
+  return this.entities.length === 0
 }
 ```
 
