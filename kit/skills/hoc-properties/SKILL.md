@@ -38,9 +38,10 @@ const next = Scalar.create({
 ```
 
 - **Updating a collection (Array/Set) itself is permitted. What is prohibited, where a property —
-  or anything under its object path — is an array, is a use that does not pass its elements to a
-  higher-order function**: reading only its `.length`, or reaching individual elements with
-  `[n]`. A collection's value is always used all at once, its elements handed to `map()` /
+  or anything under its object path — is an Array or a Set, is a use that does not pass its
+  elements to a higher-order function**: reading only its `.length` or `.size`, or taking
+  individual elements out — `[n]` on an Array, `values().next()` or `[...set][0]` on a Set. A Set
+  is held to this exactly as an Array is. A collection's value is always used all at once, its elements handed to `map()` /
   `filter()` / `reduce()` and the like. When you want to change scalar state, generate a new
   instance via a factory method (for the policy of not deep-freezing collections, see the class
   design principles convention).
