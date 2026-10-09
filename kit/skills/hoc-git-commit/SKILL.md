@@ -317,7 +317,7 @@ before.
   forward is `Update`.
 - **The table carries no `Migrate`.** Carrying content in from elsewhere is bracketed by the
   branch, not repeated on every commit: the marker names the origin once — `Start migrating the
-  mail templates from lunas-ec-cart-backend` — and each commit inside then says what kind of
+  mail templates from sample-app` — and each commit inside then says what kind of
   thing arrived, `Declare` or `Define` or `Add`. A subject reading `Migrate BaseInputValidator`
   says less than `Declare BaseInputValidator` does, and the origin it gestures at is nowhere.
 - **The subject names the thing that changed, not the thing that was brought to it.** This is
