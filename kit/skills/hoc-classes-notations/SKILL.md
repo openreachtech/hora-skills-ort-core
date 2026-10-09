@@ -39,7 +39,7 @@ Within the getter categories (5 and 7), use the following order.
 2. The rest (getters that compute the value they return).
 3. List abstract getters last, together.
 
-The naming of `~Ctor` is governed by the accessor-definition convention.
+The naming of `~Ctor` is governed by `/hoc-wire-dependencies`.
 
 ### Order among methods
 
