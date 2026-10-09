@@ -22,6 +22,32 @@ This summarizes conventions related to class property definitions.
 - Being immutable means that even a property with public access scope is "protected by coding rules." Hence there is
   no need to make it native private for encapsulation purposes (for why, see `/hoc-classes-principles`).
 - **Updating a collection (Array/Set) itself is permitted. What is prohibited is a structure that references individual elements** — pulling out a single element via `array[i]` and treating it as mutable state. This subverts the prohibition on mutable objects and is not permitted. A collection's value must always be "used all at once" (scanned/transformed/aggregated over every element as a whole). When you want to change scalar state, generate a new instance via a factory method (for the policy of not deep-freezing collections, see the class design principles convention).
+- **An array a property holds is read only through its elements, by a higher-order function.**
+  A use that never passes its elements to `map()` / `filter()` / `reduce()` and the like is not
+  allowed — `this.clicks.length` read as a count is the plain case.
+  - **An array whose only use is its `length` is not being used as an array.** Its elements are
+    never read, so it is a counter in disguise: a scalar kept as mutable state by pushing onto
+    the array and emptying it, which is exactly what the reassignment prohibition rules out.
+  - Adding and removing elements stays allowed, as above. What this rules out is the reading
+    side: an array whose elements nobody consumes has no reason to be an array.
+
+```javascript
+// NG: the array stands in for a number that changes
+recordClick () {
+  this.clicks.push(new Date())
+}
+
+get count () {
+  return this.clicks.length
+}
+
+// OK: a changed count is a new instance
+recordClick () {
+  return this.Ctor.create({
+    count: this.count + 1,
+  })
+}
+```
 
 ```javascript
 // NG: reassigning a property after creation
