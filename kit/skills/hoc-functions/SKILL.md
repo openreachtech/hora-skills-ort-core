@@ -1,6 +1,6 @@
 ---
 name: hoc-functions
-description: "Conventions for functions. Function parameters follow method parameters: named arguments as a principle."
+description: "Conventions for functions. Use when defining a function. Its parameters follow the rule for method parameters, which belongs to the methods convention."
 ---
 
 # Functions
