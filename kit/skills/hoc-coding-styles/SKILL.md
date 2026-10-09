@@ -85,7 +85,7 @@ if (
   - **Two receivers on a line is usually the Law of Demeter showing through.** Reaching a property
     of a property is yours to do only inside the top-receiver, which is why `this.` reaches one
     further and a named object does not. Where the line is `manifest.env.isProduction()`, what the
-    count is reporting is that the method belongs on `manifest`.
+    count is reporting belongs to `/hoc-manifest-pattern`.
     - **Destructuring answers the count, not the design.** It is the right move where the object
       is data the body consumes — an item being iterated, a payload being read. It is a dodge
       where the object is an interface that should have answered for itself: taking
