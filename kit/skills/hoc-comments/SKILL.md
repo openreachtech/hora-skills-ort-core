@@ -9,7 +9,7 @@ Conventions related to comment writing. Applies across both JSDoc and inline com
 
 ## Language
 
-- Comments in actual code are written in English unless there is a reason otherwise. **Generated code** (such as test code) is also included as actual code.
-- Only when there is a specific reason (such as needing to explain Japanese-specific background), it is acceptable to
-  write in Japanese.
-- **Exception**: Comments within **code examples intended for explanation** in documentation/skills (Markdown ` ``` ` code blocks) are not actual code, so they are exempt from this convention (English) and should be written in the same language as the surrounding explanatory text.
+- Which language a comment is written in belongs to `/hoc-writing-language`. It is read here for
+  the default it gives every comment — English, in source, in the tests generated under `tests/`
+  and in the code examples of a document or a skill — which holds wherever no instruction, and no
+  language code in the file's name, has settled it first.
