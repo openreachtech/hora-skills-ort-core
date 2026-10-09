@@ -1,6 +1,6 @@
 ---
 name: hoc-comments
-description: "Comment-writing conventions. Comments within actual code should be written in English unless there is a reason otherwise."
+description: "Comment-writing conventions. Use when writing or reviewing a JSDoc block or an inline comment, or a code example that carries one. Which language a comment is written in — English by default, in source, in generated tests and in code examples — belongs to the writing-language convention."
 ---
 
 # Shared: Comments
