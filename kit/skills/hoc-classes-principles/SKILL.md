@@ -89,6 +89,11 @@ object literal is not shared across scopes on the strength of its shape — belo
   the one place it needs. A plain object offers nothing to override, and neither does a module of
   exported functions — which is why a module is never used in place of a class either.
 
+- **A plain object narrows the design.** It cannot be asked, so whoever needs what is behind it
+  reaches through it or takes it apart, and the knowledge of its insides spreads to every place
+  that uses it. A class grows the member that answers — `it.hasActiveAccount()` in place of
+  `it.account.isActive()` — and the design keeps that room.
+
 - **A type declaration does not make a plain object a value object.** `@typedef` writes down a
   shape, and the name it gives lives in the annotation alone: at run time the value is the same
   nameless object, with nothing on it to work on what it holds. Calling a plain object something
