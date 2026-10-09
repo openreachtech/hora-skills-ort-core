@@ -1,6 +1,6 @@
 ---
 name: hoc-statements
-description: "Conventions for statements and control flow inside a function or method body, test files included. Use when writing or reviewing any body of code. Where an expression is wrapped across lines belongs to the coding style convention; a method's signature, to the methods convention."
+description: "Conventions for statements and control flow inside a function or method body, test files included. Use when writing or reviewing any body of code. How a higher-order function is used belongs to the higher-order function convention; where an expression is wrapped across lines, to the coding style convention; a method's signature, to the methods convention."
 ---
 
 # Shared: Statements
