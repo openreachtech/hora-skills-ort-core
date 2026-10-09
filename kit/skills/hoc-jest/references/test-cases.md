@@ -240,7 +240,7 @@ of the following:
   content doesn't matter," which is a separate concern from this convention.
   Only for strings you want to **carry specific meaning**, show the intent
   through a descriptive value or a comment.
-- Comments are written in English, per `/hoc-comments`.
+- Comments are written in English, per `/hoc-writing-language`.
 
 ```js
 // Good: the string itself conveys the role

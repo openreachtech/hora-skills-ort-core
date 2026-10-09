@@ -196,7 +196,7 @@ test()`.
 
 ## Write comments in the code in English
 
-- The language of a comment belongs to `/hoc-comments`. It is read here for the comments written
+- The language of a comment belongs to `/hoc-writing-language`. It is read here for the comments written
   into the tests generated under `tests/` (`// same reference` / `// neutral value; not under test`
   / `// all omitted → default; keep last`, etc.) and into this skill's own examples: both are
   English.
