@@ -1,6 +1,6 @@
 ---
 name: hoc-git-branch-remote
-description: "The branches a repository keeps on its remote: `main` as the default branch, and which branches may merge into `main` — decided by what kind of repository it is, an npm package, a boilerplate or an application. Use before opening a trunk, before a pull request into `main`, or when deciding whether a repository may use `env`, `hotfix/xxxx` or `dev`. What a trunk is and how branches are cut and merged belong to the git branch convention."
+description: "The branches a repository keeps on its remote: `main` as the default branch, which branches may merge into `main` by kind of repository — npm package, boilerplate or application — and why a trunk's published history is never rewritten. Use before opening a trunk, a pull request into `main`, or a rewrite or force-push of a trunk, or when deciding whether `env`, `hotfix/xxxx` or `dev` may be used. How branches are cut and merged belongs to the git branch convention."
 ---
 
 # Git: Remote Branches
