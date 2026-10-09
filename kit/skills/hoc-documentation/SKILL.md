@@ -104,7 +104,7 @@ It does **not** cover the following, each of which has its own rule elsewhere.
 | Not covered | Rule, and where it lives |
 | :-- | :-- |
 | Code and identifiers | ASCII only, in the naming convention |
-| Comments in real code | English unless there is a reason otherwise, in the comment convention |
+| Comments in code, those in a document's code examples included | English unless something specifies otherwise, in the comment convention |
 | `LICENSE` | The original text, unchanged |
 | `SKILL.md` and its `references/` | English, so that every skill in a package reads the same way |
 
