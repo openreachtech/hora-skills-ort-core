@@ -1,6 +1,6 @@
 ---
 name: hoc-super-prefix-method-name
-description: "The super-prefixes a method name may carry before its verb, and what each one promises about how the method behaves. Use when naming or reviewing a method that handles many items at once, realizes a recursion, or calls a delegate. The rest of a method name belongs to the naming convention; how a recursion is laid out, to the method recursion convention."
+description: "The super-prefixes a method name may carry before its verb, and what each one promises about how the method behaves. Use when naming or reviewing a method that handles many items at once, realizes a recursion, or calls a delegate. The rest of a method name belongs to the naming convention; how a recursion is laid out, to the method recursion convention; how the call to a delegate is isolated, to the delegation convention."
 ---
 
 # Super-Prefix: Method Name
