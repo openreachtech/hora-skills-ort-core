@@ -65,9 +65,8 @@ That is mostly a test value.
 uses, so a word that has left the repository leaves the vocabulary too. Check against the tracked
 files (`git ls-files`), not against whatever happens to be in the working tree.
 
-**Do not add `ignorePaths:` for `node_modules/`.** cspell skips `node_modules/` by default, and
-dot-prefixed paths as well, so an exclusion written for them excludes nothing and only suggests
-that something needed excluding.
+**Do not add `ignorePaths:` for `node_modules/`.** cspell skips `node_modules/` by default, so an
+exclusion written for it excludes nothing and only suggests that something needed excluding.
 
 ## Recording the work
 
