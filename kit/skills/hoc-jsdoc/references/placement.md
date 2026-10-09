@@ -1,7 +1,8 @@
 # Placement & Naming
 
 Frontend (Vue / Nuxt) only. How a `@typedef` block itself is written (multi-line, one per
-block, blank line between blocks) is in the skill body; this file covers where the blocks go.
+block) is in the skill body, and the blank line between blocks in `/hoc-comments`; this file
+covers where the blocks go.
 
 ## Placement rules
 

@@ -1,6 +1,6 @@
 ---
 name: hoc-comments
-description: "Comment-writing conventions — what a comment says (the why the code cannot, never a restatement of it), keeping it true as the code changes, no commented-out code, and where a comment that runs to several lines breaks: at a clause, never at a column. Use when writing or reviewing a JSDoc block, a block comment or an inline comment, or a code example that carries one. Which language a comment is written in — English by default — belongs to the writing-language convention."
+description: "Comment-writing conventions — what a comment says (the why, never a restatement of the code), where a long comment breaks (at a clause, never at a column), a multi-line block of three lines or more, and lines commented out with `//`. Use when writing or reviewing a JSDoc block, a block comment or an inline comment, a code example that carries one, or when commenting lines out. Which language a comment is written in belongs to the writing-language convention."
 ---
 
 # Shared: Comments
@@ -54,3 +54,74 @@ criterion: filling each line to a margin breaks wherever the word count happens 
 - **This holds for every comment that runs long** — a JSDoc block, a `/* */` block, and a run of
   `//` lines alike.
 - This governs prose. A type literal inside a JSDoc tag is already one property per line.
+
+## A block comment that runs to several lines takes at least three
+
+**A block comment written over more than one line takes three lines at the least**: the opening
+marker on a line of its own, the text, and the closing marker on a line of its own. Every line
+between the two markers keeps its leading `*`.
+
+```javascript
+// NG: two lines, with the text sharing a line with each marker
+/* Retries are spaced exponentially,
+   so a struggling server is given room to recover. */
+
+// NG: the leading * dropped from the lines between the markers
+/**
+   Retries are spaced exponentially,
+   so a struggling server is given room to recover.
+ */
+
+// OK: three lines or more, every line between the markers marked
+/**
+ * Retries are spaced exponentially,
+ * so a struggling server is given room to recover.
+ */
+```
+
+- **Two block comments in a row are separated by a blank line.** Placed against each other, the
+  closing marker of one runs straight into the opening marker of the next.
+
+```javascript
+// NG: two blocks with nothing between them
+/**
+ * @typedef {*} BooleanLike
+ */
+/**
+ * @typedef {*} NumberLike
+ */
+
+// OK: a blank line between the two
+/**
+ * @typedef {*} BooleanLike
+ */
+
+/**
+ * @typedef {*} NumberLike
+ */
+```
+
+## Lines are commented out with `//`, never with a block comment
+
+**Where several lines are commented out, each takes its own `//`.** A block comment is not used
+for it: `/* */` does not nest, so a block wrapped around code that already holds a block comment
+ends at that comment's `*/`, and the rest of the code runs again.
+
+```javascript
+// NG: the block ends early, at the */ of the JSDoc inside it
+/*
+/**
+ * @returns {number}
+ */
+computeDelay () { ... }
+*/
+
+// OK: one // per line
+// /**
+//  * @returns {number}
+//  */
+// computeDelay () { ... }
+```
+
+- **This is how lines are commented out while the work is in progress.** What reaches a commit
+  carries no commented-out code at all, as "What a comment says" above holds.

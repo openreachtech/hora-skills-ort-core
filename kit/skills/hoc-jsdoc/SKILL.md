@@ -485,10 +485,11 @@ closing, and **not inside a type literal**.
 
 ## Writing `@typedef`
 
-- Write `@typedef` as a block comment of at least three lines. A single-line
-  `@typedef` is also prohibited by lint (`jsdoc/multiline-blocks`).
+- Write `@typedef` as a block comment of at least three lines. A single-line `@typedef` is
+  refused by lint (`jsdoc/multiline-blocks`).
+- The form a multi-line block takes, and the blank line between two blocks, belong to
+  `/hoc-comments`.
 - Define one `@typedef` per block.
-- Separate `@typedef` block comments from one another with a blank line.
 
 ```javascript
 // NG: written on a single line
