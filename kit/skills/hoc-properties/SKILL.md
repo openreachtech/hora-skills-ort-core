@@ -37,40 +37,44 @@ const next = Scalar.create({
 })
 ```
 
-- **Updating a collection (Array/Set) itself is permitted. What is prohibited, where a property —
-  or anything under its object path — is an Array or a Set, is a use that does not pass its
-  elements to a higher-order function**: reading only its `.length` or `.size`, or taking
-  individual elements out — `[n]` on an Array, `values().next()` or `[...set][0]` on a Set. A Set
-  is held to this exactly as an Array is. A collection's value is always used all at once, its elements handed to `map()` /
-  `filter()` / `reduce()` and the like. When you want to change scalar state, generate a new
-  instance via a factory method (for the policy of not deep-freezing collections, see the class
-  design principles convention).
-  - **An array whose only use is its `length` is not being used as an array.** Its elements are
-    never read, so it is a counter in disguise: a scalar kept as mutable state by pushing onto
-    the array and emptying it, which is exactly what the reassignment prohibition rules out.
-  - Adding and removing elements stays allowed. What this rules out is the reading side: an
-    array whose elements nobody consumes has no reason to be an array.
+- **Updating a collection (Array/Set) itself is permitted.** Where a property — or anything under
+  its object path — is an Array or a Set, how it is read is held as follows. A Set is held to this
+  exactly as an Array is.
+  - **Its elements are used through a higher-order function.** Taking an individual element out —
+    `[n]` on an Array, `values().next()` or `[...set][0]` on a Set — is prohibited. A collection's
+    value is always used all at once, its elements handed to `map()` / `filter()` / `reduce()`
+    and the like.
+  - **Its count is asked of the class that holds it.** `.length` / `.size` is read only inside
+    that class, in a member that answers the count — `get itemCount ()`. A caller handed the
+    collection does not read its length itself; it asks the holder.
+  - **A collection whose elements nobody uses is prohibited, however its count is read.** An
+    array whose only use is its `length` is not being used as an array: its elements are never
+    read, so it is a counter in disguise, a scalar kept as mutable state by pushing onto the array
+    and emptying it, which is exactly what the reassignment prohibition rules out. When you want
+    to change scalar state, generate a new instance via a factory method.
+  - Adding and removing elements stays allowed (for the policy of not deep-freezing collections,
+    see the class design principles convention).
 
 ```javascript
-// NG: the array stands in for a number that changes
+// NG: the array stands in for a number that changes — its elements are never used
 recordClick () {
   this.clicks.push(new Date())
 }
 
-get count () {
+get clickCount () {
   return this.clicks.length
 }
 
-// NG: the same, wrapped in an object
-get count () {
-  return this.state.values.length
+// NG: the caller reads the length of a collection it was handed
+const count = cart.items.length
+
+// OK: the holder uses the elements, and answers the count itself
+listItemLabels () {
+  return this.items.map(it => it.label)
 }
 
-// OK: a changed count is a new instance
-recordClick () {
-  return this.Ctor.create({
-    count: this.count + 1,
-  })
+get itemCount () {
+  return this.items.length
 }
 ```
 
