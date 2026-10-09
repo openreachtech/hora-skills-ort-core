@@ -149,6 +149,20 @@ the second-hand statement the reading exists to stop trusting.
 - **Where nothing was found, say that.** A clean run is a result, and a report that only ever
   appears when something is wrong teaches everybody to skip it.
 
+**What should be fixed is listed last, as a list of its own.** Every finding that calls for a
+change is gathered at the end of the report, one line each, saying what to fix. The end is where a
+reader looks for the verdict, and a finding left beside the check that turned it up is one they
+have to ask about.
+
+```markdown
+## What to fix
+
+- `--help` is read as an option missing its value
+```
+
+- **Listing a fix is not making it.** The list says what the owner has to do, and nothing on it is
+  done here ("Out of scope", below).
+
 ## Out of scope
 
 - **Repairing what the reading finds.** A file that must not ship, an entry point that resolves
