@@ -14,9 +14,8 @@ So a release is guarded twice.
 
 - **Nothing unfinished can get out.** The ordering rules below make a premature publish fail
   rather than succeed.
-- **Nothing goes out unread.** The audit in
-  [pre-publish-audit.md](./references/pre-publish-audit.md) reads the artefact a consumer
-  will receive, not the repository it was built from.
+- **Nothing goes out unread.** The tarball a consumer will receive is read before it goes out,
+  not the repository it was built from. That reading is `/hoc-npm-publish-audit`.
 
 ## The version bump is the last commit of the release
 
