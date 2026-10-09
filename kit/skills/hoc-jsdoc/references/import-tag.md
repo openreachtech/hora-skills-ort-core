@@ -143,4 +143,4 @@ const timeoutIdRef = ref(null)
 
 ## Do not `@import` ambient globals
 
-Types declared under `declare global` in `types/*.d.ts` are used **unqualified, with no `@import`**: `RequiredExcept`, `OptionalExcept`, `NullableExcept`, and the `schema.graphql.*`, `furo.*`, and `GraphqlType.*` namespaces. Importing them is redundant. See the parent `hoc-jsdoc` skill and [[hof-nuxt]].
+Types declared under `declare global` in `types/*.d.ts` are used **unqualified, with no `@import`**: `RequiredExcept`, `OptionalExcept`, `NullableExcept`, and the `schema.graphql.*`, `furo.*`, and `GraphqlType.*` namespaces. Importing them is redundant. See the parent `/hoc-jsdoc` skill and [[hof-nuxt]].
