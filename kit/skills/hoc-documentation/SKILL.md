@@ -1,11 +1,11 @@
 ---
 name: hoc-documentation
-description: "Documentation writing conventions for READMEs, design documents, comments and any other prose a project carries. Use when writing or updating a document, and when a change moves a fact a document states. The README's own structure belongs to the README convention; which language a document is written in, to the writing-language convention."
+description: "Documentation writing conventions for READMEs, design documents and any other prose a project carries. Use when writing or updating a document, and when a change moves a fact a document states. The README's own structure belongs to the README convention; which language a document is written in, to the writing-language convention."
 ---
 
 # Documentation
 
-This gathers the conventions for writing documentation (READMEs, design documents, comments, etc.).
+This gathers the conventions for writing documentation (READMEs, design documents, etc.).
 
 - When writing or updating documentation, follow the conventions in this skill.
 - Follow this skill when writing or updating `SKILL.md` as well (referenced from the skill-updating convention).
