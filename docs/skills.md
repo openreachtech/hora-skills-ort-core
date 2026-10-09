@@ -19,6 +19,7 @@ Each skill lives at `kit/skills/<name>/`, directly under the skills directory, a
 | `hoc-classes-principles` | Class design principles — no classes without properties, and the system underpinning it (deep immutability, constructor-only, references-as-contract). |
 | `hoc-classes-constructor` | Class constructor conventions — the constructor holds what its parameters receive and decides no value, so its parameters carry no defaults and the factory methods resolve them. |
 | `hoc-classes-ctor` | The `#get:Ctor` getter an instance reaches its own class through — its definition, type cast and override, the reserved name, and `this.constructor` written nowhere else. |
+| `hoc-classes-delegation` | How a class uses a delegate it holds or is handed — the call isolated in an `invoke~` member of its own, the failure turned into a result by the public member around it, and why the test needs that seam. |
 | `hoc-classes-notations` | The order members are written in a class body: the eight-block placement order, the ordering within getters and within methods, and the fallback to source order where none of it decides. |
 | `hoc-classes-prohibits` | Prohibitions in class definitions: static-only classes and classes without state are not allowed, and why. |
 | `hoc-prohibit-native-features` | The native JavaScript features this library does not use — `Map`, `Object.freeze()`, native private members (`#x`, `static #x`) and decorators — and why each is refused. |

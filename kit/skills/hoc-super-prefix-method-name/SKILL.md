@@ -1,6 +1,6 @@
 ---
 name: hoc-super-prefix-method-name
-description: "The super-prefixes a method name may carry before its verb, and what each one promises about how the method behaves. Use when naming or reviewing a method that handles many items at once, realizes a recursion, or calls a delegate. The rest of a method name belongs to the naming convention; how a recursion is laid out, to the method recursion convention."
+description: "The super-prefixes a method name may carry before its verb, and what each one promises about how the method behaves. Use when naming or reviewing a method that handles many items at once, realizes a recursion, or calls a delegate. The rest of a method name belongs to the naming convention; how a recursion is laid out, to the method recursion convention; how the call to a delegate is isolated, to the delegation convention."
 ---
 
 # Super-Prefix: Method Name
@@ -62,49 +62,9 @@ saveCustomer ({ customer }) { /* ... */ }
 | `launchRequest()` | `invokeLaunchRequest()` |
 | `validate()` | `invokeValidate()` |
 
-```javascript
-// public: what the caller asks for, with the delegate's failure turned into a result
-async closeWorker ({
-  worker,
-}) {
-  try {
-    await this.invokeCloseWorker({
-      worker,
-    })
-
-    return {
-      isSuccess: true,
-      error: null,
-    }
-  } catch (error) {
-    return {
-      isSuccess: false,
-      error,
-    }
-  }
-}
-
-// invoke~: the call to the delegate is the body
-async invokeCloseWorker ({
-  worker,
-}) {
-  return worker.close()
-}
-```
-
-- **What it calls is a method of a delegate** — an instance the class holds as a property, or
-  one handed to the method as an argument. A call to one of the class's own members, or to a
-  function it was handed, is not an `invoke~`.
-- **Calling that method is its whole responsibility.** It does not transform what it passes on,
-  it does not branch on what comes back, and it does not catch what the call throws. Whatever
-  the class does with the outcome — a failure turned into a result included — belongs to the
-  member that calls the `invoke~`.
-- **The reason is the test.** With the delegate's call isolated in one member that holds
-  nothing else, a test replaces that member to make the delegate succeed, fail or return
-  whatever the case needs, and everything the class does around the call is still exercised.
-- **An `invoke~` member is private wherever it can be**, wrapped by the public member that
-  calls it. It is the seam between the class and its delegate, and keeping it off the
-  interface keeps the delegate's call out of what callers can couple to. Private here is the
-  member being left out of the published contract: the public member that calls it carries
-  `@public` in its JSDoc (see `/hoc-jsdoc`), and the `invoke~` member does not. A native `#`
-  method is never the means — see `/hoc-prohibit-native-features`.
+- **What it calls is a method of a delegate**, and calling it is the member's whole body. What a
+  delegate is, why its call is isolated in a member of its own, where the `try`/`catch` goes and
+  why the member stays private belong to `/hoc-classes-delegation`.
+- **What it is read for here is the name.** `invoke~` is worn by the member the delegation
+  convention isolates, and by nothing else: a member that also builds what it passes on or
+  handles what comes back is not an `invoke~`, whatever it calls.
