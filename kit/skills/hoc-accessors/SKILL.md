@@ -1,6 +1,6 @@
 ---
 name: hoc-accessors
-description: "Conventions for class accessors, getters and setters alike. Use when adding or reviewing an accessor, a getter that holds a dependency included. Which getter a dependency takes, and the factory method beside it, belong to the dependency-wiring convention; where members sit in the class body, to the class notation convention."
+description: "Conventions for class accessors, getters and setters alike. Use when adding or reviewing an accessor — a getter that holds a dependency included — and when about to write a getter that counts, filters or builds the value it returns. Which getter a dependency takes, and the factory method beside it, belong to the dependency-wiring convention; where members sit in the class body, to the class notation convention."
 ---
 
 # Classes: Members / Accessors
