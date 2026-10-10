@@ -351,24 +351,31 @@ statement**. Don't stack a fixed cast inline on the value side.
 
 - Declare the type after assignment (i.e. the type that variable will hold
   from here on) with `@type` on **the line above**.
-- When the right-hand-side value cannot be directly assigned to the declared
-  type (e.g. putting a `jest.spyOn()` result into a function type), bridge the gap with
-  **a single temporary `/** @type {*} */` cast on the value side**. Place
-  the temporary cast right before the value, keeping the declared type
-  separated onto the line above.
 - This way, "what is this variable's type" can be read in one line directly
-  above the declaration, and `*` is understood as playing the role of "a
-  temporary escape hatch just to let the assignment through."
+  above the declaration.
+- **A spy takes no annotation at all.** `jest.spyOn()` keeps the type of the
+  function it spies on, so its calls, its arguments and a stubbed return are
+  checked as they are. Declaring the spy as the spied function's type and
+  casting the value to fit throws that check away.
 
 ```js
-// Good: the type after assignment goes on the line above; the * temporary cast goes on the value side
-/** @type {typeof someFn} */
-const someFnSpy = /** @type {*} */ (jest.spyOn(args, 'someFn'))
+// Good: the type after assignment goes on the line above
+/** @type {Record<string, typeof BaseError>} */
+const errorHash = {
+  Alpha: AlphaError,
+}
 ```
 
 ```js
-// Avoid: stacking a fixed cast on the value side (the declared type gets buried in the right-hand side)
-const someFnSpy = /** @type {typeof someFn} */ (/** @type {*} */ (jest.spyOn(args, 'someFn')))
+// Avoid: a cast stacked on the value side (the declared type gets buried in the right-hand side)
+const errorHash = /** @type {Record<string, typeof BaseError>} */ ({
+  Alpha: AlphaError,
+})
+```
+
+```js
+// Good: the spy keeps the spied function's type without any annotation
+const someFnSpy = jest.spyOn(args, 'someFn')
 ```
 
 ### Resolve dynamic-key types on the `cases` side, keeping the access site and Arrange clean
