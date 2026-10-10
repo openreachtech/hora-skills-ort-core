@@ -134,96 +134,11 @@ const result = Array.from({ length }, () => pick())
   .join('')
 ```
 
-## Do not discard the return value of a higher-order function (except `Array#forEach()`)
+## How a higher-order function is used
 
-- Do not discard the return value of a higher-order function (`map` / `filter` / `reduce`, etc.). If the return value is neither assigned to a variable nor used as a return value, that code is prohibited.
-- If the sole purpose is a side effect on each element (such as logging), use `Array#forEach()`. `forEach` is a higher-order function that assumes an `undefined` return value, so it is exempt from this rule.
-- In particular, using `reduce` solely for side effects, returning the accumulator unchanged and discarding the return value, is a hack to evade the prohibition on sequential processing, and is prohibited.
-
-```javascript
-// NG: using reduce solely for side effects and discarding the return value (a workaround to evade the sequential-processing prohibition)
-array.reduce(
-  (_, it) => {
-    this.logger.log('value:', it)
-
-    return _
-  },
-  null
-)
-
-// OK: express a side effect on each element with forEach
-array.forEach(it => {
-  this.logger.log(
-    'value:',
-    it
-  )
-})
-```
-
-### The usage of `Array#forEach()` is limited
-
-- ESLint prohibits writing an assignment statement inside `Array#forEach()`.
-- Also, `if` statements are prohibited inside higher-order functions (express branching with `filter` or a conditional expression).
-- Therefore, what can be written with `forEach` is limited to **a pure side effect that involves no assignment or branching** (such as logging or calling an external API).
-- **An implementation that processes all elements equally while building up a result by pushing elements into an array or `Map` defined with `let`/`const` in the outer scope violates the spirit of the sequential-processing prohibition and is not allowed.** `push()` / `set()` are not assignment statements, so they slip past ESLint, but in substance this is an imperative loop and amounts to a workaround. Express iteration that assembles a result with `map` / `filter` / `reduce` / `Array.from`, etc., and receive it as a return value.
-
-```javascript
-// NG: assembling a result by pushing into an outer array inside forEach (violates the spirit of the sequential-processing prohibition)
-const results = []
-array.forEach(it => {
-  results.push(transform(it))
-})
-
-// NG: assembling by setting into an outer Map
-const map = new Map()
-array.forEach(it => {
-  map.set(it.id, transform(it))
-})
-
-// OK: assemble with map and receive the return value
-const results = array
-  .map(it => transform(it))
-```
-
-## The callback passed to a higher-order function should basically be a single statement
-
-- The body of a function (callback) passed as an argument to a higher-order function should ideally consist of **only a single statement**.
-- Even when writing multiple statements, limit it to what can be expressed as a single method name (i.e., extracted as
-  a single responsibility).
-- When there are multiple responsibilities, make full use of `Array#filter()` / `Array#map()` to split each stage into a single responsibility.
-
-```javascript
-// NG: the callback mixes multiple responsibilities (filtering + transformation)
-const names = users.map(it => {
-  if (!it.enabled) {
-    return null
-  }
-
-  return it.name.toUpperCase()
-})
-
-// OK: split into filtering with filter and transformation with map, making each stage a single responsibility
-const names = users
-  .filter(it => it.enabled)
-  .map(it => it.name.toUpperCase())
-```
-
-## Do not casually extract the body of map() into a method
-
-- Do not casually extract the body of the higher-order function passed to `Array#map()` into a method.
-- If the reason is "I want to use an `if` statement but can't inside a higher-order function," first consider using `.filter().map()`.
-
-```javascript
-// NG: extracting the body of map into a method just to use if
-items.map(it =>
-  this.convertItem({ item: it }) // convertItem merely branches internally with if
-)
-
-// OK: separate the condition with filter, then map
-items
-  .filter(it => it.enabled)
-  .map(it => it.value)
-```
+- What becomes of a higher-order function's return value, what `forEach()` may hold, what a
+  callback holds, and how its parameters are named belong to `/hoc-higher-order-functions`. It is
+  read here because the prohibition above is what sends iteration there.
 
 ## Conditional (ternary) expressions
 
@@ -333,54 +248,16 @@ generateValue () {
 }
 ```
 
-## Treat all elements of an array equally in higher-order functions
+## How the elements of an array are treated
 
-- When handling an array with a higher-order function such as `map` / `filter` / `forEach`, do not special-case a particular element (such as the first one) by checking `index`. Transform/process all elements equally with the same logic.
-- Even when it looks like you want to change the result only for the first element, first consider whether "processing all elements equally and absorbing the difference in a batch step such as after joining" is possible (see "Do not casually add if statements" in this skill for a concrete example).
-- Exception: when `reduce()` / `reduceRight()` omits the second argument (the initial value `initialValue`), **the first element of the array is used as the initial value of the accumulator**. In this case, since **the second element onward is folded equally**, excluding the first element which is assigned to the accumulator, this does not violate the principle.
-
-```javascript
-// OK: omitting initialValue -> first element becomes the accumulator, second element onward is folded equally
-const total = numbers
-  .reduce((total, it) => total + it)
-```
-
-## Do not access array elements by subscript (`[]`)
-
-- Accessing an individual array element via the `[]` operator (`array[0]` / `array[i]`) is prohibited.
-- Pulling out a specific element to handle it specially violates "Treat all elements of an array equally in higher-order functions" (above), and is a circumvention of the discipline that a collection is "always used all at once" (the class design principles convention / the property-definition convention).
-- Handle every element together with a higher-order function — `map` / `filter` / `reduce` / `Array.from`, etc. — without pulling out individual elements.
-
-```javascript
-// NG: accessing an individual element by subscript
-const head = segments[0]
-
-// OK: handle every element together with map / reduce, etc.
-segments
-  .map(it => this.normalize({ segment: it }))
-```
-
-### Exception: first / last element
-
-- The **last element** may only be obtained via `Array#at(-1)` (destructuring cannot express the last element).
-- The **first (leading) element(s)** are obtained via destructuring (`const [first] = array` / `const [first, second] = array`). Do not use `array[0]` / `Array#at(0)`.
-- Reason: destructuring lets you specify a default value at the point of assignment (`const [first = fallback] = array`), so completion such as `?? null` becomes unnecessary. It can also take multiple leading elements declaratively in a single statement.
-
-```javascript
-// NG
-const head = segments[0]
-const last = segments[segments.length - 1]
-
-// OK: destructuring for the leading element (with a default), at(-1) for the last
-const [head = ''] = segments
-const last = segments.at(-1)
-```
+- That every element is treated alike, that none is reached by subscript, and the exceptions for
+  the first and the last element belong to `/hoc-higher-order-functions`.
 
 ## Do not casually add if statements
 
 - Do not casually add `if` statements.
 - For a repeatable (iterative, regular) structure, first consider whether "it can be written with a single piece of logic."
-- In particular, branching only on the first element by checking `index` inside a higher-order function violates the principle of "treat all elements of an array equally in higher-order functions."
+- In particular, branching only on the first element by checking `index` inside a higher-order function violates the principle of "treat all elements of an array equally in higher-order functions" (see `/hoc-higher-order-functions`).
 
 ```javascript
 // NG: branching to special-case only the first element by checking index inside map
