@@ -9,9 +9,9 @@ a type error**. The purpose of `@type` is to make the type check pass; if the
 correct type can be inferred from the literal and there is no type error
 whether or not you attach it, it is **redundant, so it can be omitted**.
 
-A cast via `@type {Array<*>}` should be limited to suppressing type errors
-**to write irregular values** (`null` / `undefined` / missing keys, etc. that
-violate the declared type). Irregular values are isolated into the
+Whether a cast via `@type {Array<*>}` is allowed at all belongs to `/hoc-jsdoc`:
+only to let through irregular values (`null` / `undefined` / missing keys, etc.
+that violate the declared type) on purpose. Irregular values are isolated into the
 **abnormal-value-series `describe()`** by the valid/invalid separation
 ([Separate Valid / Invalid
 Values](./structure.md#separate-valid--invalid-values)), so **only the
@@ -25,8 +25,7 @@ abnormal-value series needs the cast**.
   `Array<*>` cast).
 - Abnormal-value series: since you are deliberately passing type-violating
   values, cast the array literal with `@type {Array<*>}` in addition to
-  `@type`, to suppress the intentional type error. That this is the one
-  deliberate violation a cast may let through belongs to `/hoc-jsdoc`.
+  `@type`, to suppress the intentional type error.
 
 ### Whether `@type` is needed should be confirmed with a type checker (where `tsc` is available)
 
