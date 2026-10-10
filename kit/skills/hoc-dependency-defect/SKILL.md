@@ -72,7 +72,16 @@ Do not rewrite what it does.
 ```javascript
 // NG: the parent's code is copied here, so the package's later fixes never reach this class
 export default class SingleDayDateRangeFormatter extends DateRangeFormatter {
-  /** @override */
+  /**
+   * Format a date range.
+   *
+   * @param {{
+   *   startedOn: string
+   *   endedOn: string
+   * }} params - Parameters.
+   * @returns {string} Formatted range.
+   * @override
+   */
   formatRange ({
     startedOn,
     endedOn,
@@ -87,7 +96,16 @@ export default class SingleDayDateRangeFormatter extends DateRangeFormatter {
 
 // OK: only the broken case is handled here, and the rest stays with the parent
 export default class SingleDayDateRangeFormatter extends DateRangeFormatter {
-  /** @override */
+  /**
+   * Format a date range.
+   *
+   * @param {{
+   *   startedOn: string
+   *   endedOn: string
+   * }} params - Parameters.
+   * @returns {string} Formatted range.
+   * @override
+   */
   formatRange ({
     startedOn,
     endedOn,
