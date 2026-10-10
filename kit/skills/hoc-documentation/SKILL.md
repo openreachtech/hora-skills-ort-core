@@ -10,6 +10,12 @@ This gathers the conventions for writing documentation (READMEs, design document
 - When writing or updating documentation, follow the conventions in this skill.
 - Follow this skill when writing or updating `SKILL.md` as well (referenced from the skill-updating convention).
 
+## What language a document is written in
+
+- Which language a document is written in belongs to `/hoc-writing-language`. It is read here for
+  the default it gives a document written for a reader — the language that reader is using — which
+  holds wherever no instruction, and no language code in the file's name, has settled it first.
+
 ## A document states only what it can check
 
 **A fact a document cannot verify is a copy, and a copy rots.** Where the fact lives somewhere
