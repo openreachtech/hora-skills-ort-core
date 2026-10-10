@@ -1,6 +1,6 @@
 ---
 name: hoc-wire-dependencies
-description: "How a class reaches the modules and classes it depends on, so that a subclass can patch one and a test can swap it. Use when a class imports something it uses, builds a dependency in `static create()` or anywhere else, or a dependency has to be patched or mocked. How a getter's body is written belongs to the accessors convention; `static create()` in general, to the methods convention."
+description: "How a class reaches the modules and classes it depends on: never by the name it imported, always through a static getter, so that a subclass can patch one and a test can swap it. Use when a class imports anything it uses, a native module such as `fs` included, builds a dependency in `static create()` or anywhere else, or a dependency has to be patched or mocked. How a getter's body is written belongs to the accessors convention; `static create()` in general, to the methods convention."
 ---
 
 # Wiring Dependencies
