@@ -146,7 +146,7 @@ Uninstall delta-package
   an oversight.** A reader checking one of them out finds a manifest ahead of its lockfile,
   which is the same state the project sits in whenever a range is widened.
 - The lockfile commit's own subject names the command that produced it, not the versions:
-  `hoc-git-commit` settles its wording, and the same convention keeps generated artefacts
+  `/hoc-git-commit` settles its wording, and the same convention keeps generated artefacts
   out of the commits that carry hand-written source.
 - Concentrating the install into one run at the end is the same shape a release takes when
   its version bump is left until last, and the same shape the install-scripts gate takes
@@ -196,7 +196,7 @@ the case the vulnerability convention opens with, and the override is its instru
   pass is about to replace, and every finding the raises are about to clear is still in it.
 - **A finding that remains does not hold up the pass.** The declared versions moved and the
   lockfile records the resolution; what is left is a separate errand against the same tree.
-- **How to settle it is not this convention's** — `hoc-npm-vulnerability` covers the override,
+- **How to settle it is not this convention's** — `/hoc-npm-vulnerability` covers the override,
   scoping its key, and checking that the version it names clears the quarantine.
 
 ## Read the deprecation flag on the version the project declares
