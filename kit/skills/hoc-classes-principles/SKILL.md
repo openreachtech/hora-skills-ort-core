@@ -54,7 +54,8 @@ class Foo {
 ### Handling of `static` fields
 
 - **`static` fields (`static X = ...`) may be used.** The prohibition on class fields and private fields is a convention **about instance properties**, and `static` fields are out of its scope.
-- However, **do not use `static #X` (the static form of native private).**
+- However, **`static #X` (the static form of native private) is not used** — see
+  `/hoc-prohibit-native-features`.
 
 This is because none of the three grounds for the prohibition apply to `static`.
 
@@ -62,22 +63,7 @@ This is because none of the three grounds for the prohibition apply to `static`.
 - **Initialization order** — `static` fields are initialized in source order at class-definition time, so no problem arises from the interplay of `super()` and the constructor body.
 - **Split-brain** — There is no constructor to override in, so no double declaration occurs.
 
-The reason not to use `static #X` is that the reason not to use native private (a subclass cannot read it, which blocks extension and substitution through inheritance — see the property-definition convention) holds for `static` as well, and its impact is broader: when a `static` method refers to `this.#X`, **a call through a derived class throws a TypeError.**
-
-```javascript
-// NG: a static native private cannot be used from a derived class
-class Base {
-  static #pool = new WeakMap()
-
-  static ensure (key) {
-    return this.#pool.has(key)
-  }
-}
-class Derived extends Base {}
-
-Derived.ensure(key)
-// TypeError: Cannot read private member #pool from an object whose class did not declare it
-```
+Why `static #X` is not used either belongs to `/hoc-prohibit-native-features`.
 
 #### What to put in a `static` field
 
