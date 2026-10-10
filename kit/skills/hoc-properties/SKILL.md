@@ -22,9 +22,7 @@ This summarizes conventions related to class property definitions.
   the property's object path** — `this.state.count += 1` as much as `this.state = ...`. ESLint
   enforces the direct form; what lies under the path is held by this rule alone.
 - Being immutable means that even a property with public access scope is "protected by coding rules." Hence there is
-  no need to make it native private for encapsulation purposes (for details, see "The meaning of `#alpha` notation and
-  the treatment of native private" below).
-- **Updating a collection (Array/Set) itself is permitted. What is prohibited is a structure that references individual elements** — pulling out a single element via `array[i]` and treating it as mutable state. This subverts the prohibition on mutable objects and is not permitted. A collection's value must always be "used all at once" (scanned/transformed/aggregated over every element as a whole). When you want to change scalar state, generate a new instance via a factory method (for the policy of not deep-freezing collections, see the class design principles convention).
+  no need to make it native private for encapsulation purposes (for why, see `/hoc-prohibit-native-features`).
 
 ```javascript
 // NG: reassigning a property after creation
