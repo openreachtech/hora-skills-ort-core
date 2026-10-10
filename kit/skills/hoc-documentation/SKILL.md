@@ -1,14 +1,20 @@
 ---
 name: hoc-documentation
-description: "Documentation writing conventions for READMEs, design documents, comments and any other prose a project carries. Use when writing or updating a document, and when a change moves a fact a document states. The README's own structure belongs to the README convention."
+description: "Documentation writing conventions for READMEs, design documents and any other prose a project carries. Use when writing or updating a document, and when a change moves a fact a document states. The README's own structure belongs to the README convention; which language a document is written in, to the writing-language convention."
 ---
 
 # Documentation
 
-This gathers the conventions for writing documentation (READMEs, design documents, comments, etc.).
+This gathers the conventions for writing documentation (READMEs, design documents, etc.).
 
 - When writing or updating documentation, follow the conventions in this skill.
 - Follow this skill when writing or updating `SKILL.md` as well (referenced from the skill-updating convention).
+
+## What language a document is written in
+
+- Which language a document is written in belongs to `/hoc-writing-language`. It is read here for
+  the default it gives a document written for a reader — the language that reader is using — which
+  holds wherever no instruction, and no language code in the file's name, has settled it first.
 
 ## A document states only what it can check
 
@@ -63,71 +69,5 @@ still stating it in both when the change reached a release branch.
 
 ## Notation of Class Members
 
-- When referring to a class member within documentation, use the following notation.
-- Instance members are prefixed with `#`, static members with `.`.
-- **This skill is the governing source for this notation.** When another skill restates the same table, it aligns with the content here.
-
-| notation | members |
-| :-- | :-- |
-| `#instanceProperty` | instance property |
-| `#instanceMethod()` | instance method |
-| `#get:instanceGetter` | instance getter |
-| `#set:instanceSetter` | instance setter |
-| `.staticProperty` | static property |
-| `.staticMethod()` | static method |
-| `.get:staticGetter` | static getter |
-| `.set:staticSetter` | static setter |
-
-- **Where the kind of member does not matter, write `#instanceMember` / `.staticMember`.** A rule that holds for every member alike turns on the prefix alone, and naming a kind it does not depend on would narrow it.
-- When attaching the class name, write it as in `SampleClass#extractValue()`.
-
-| notation | member |
-| :-- | :-- |
-| `SampleClass#extractValue()` | instance method of `SampleClass` |
-| `SampleClass.createValue()` | static method of `SampleClass` |
-
-## What language a document is written in
-
-- **A document written for a person to read is written in the language that person is using.** If
-  someone asks for a requirement definition in Japanese, the requirement definition is in Japanese.
-  If they ask in English, it is in English.
-- **An explicit instruction wins.** If the requester asks for a particular language, use that one,
-  whatever language the conversation is in.
-- **This skill is the governing source for this rule.** Other skills that produce a document refer
-  to it in one line rather than restating it, so there is one place to change.
-
-This covers anything generated for a reader — a requirement definition, a progress document, a
-review or audit report, an acceptance report, a deployment runbook.
-
-It does **not** cover the following, each of which has its own rule elsewhere.
-
-| Not covered | Rule, and where it lives |
-| :-- | :-- |
-| Code and identifiers | ASCII only, in the naming convention |
-| Comments in real code | English unless there is a reason otherwise, in the comment convention |
-| `LICENSE` | The original text, unchanged |
-| `SKILL.md` and its `references/` | English, so that every skill in a package reads the same way |
-
-**A README follows the project.** Some projects keep one file, some keep one per language
-(`README.md` alongside `README.ja.md`). Match what the repository already does rather than
-introducing a second pattern.
-
-**Why the rule is worth stating.** A document nobody can read has not been delivered. Writing a
-requirement definition in English for a team that works in Japanese means the one person who has to
-approve it reads it slowest — and approval is the step the document exists for.
-
-## Scope of application (applies beyond prose)
-
-- This notation applies not only to Markdown prose, but to **any text within implementation code that refers to a class member**. Specifically, this includes the following.
-  - **Error messages** (message strings in `throw new Error(...)`, etc.)
-  - **JSDoc / comments** (places within a member's description that refer to a member)
-- When dynamically embedding a class name, use the same notation. Prefix instance members with `#` and static members with `.`.
-
-```javascript
-// OK: instance method (the class name is resolved via this.constructor.name)
-throw new Error(`${this.constructor.name}#normalize() must be inherited`)
-
-// OK: static getter / static method (the class name is resolved via this.name)
-throw new Error(`${this.name}.get:rawSchema must be inherited`)
-throw new Error(`${this.name}.generateCredential() must be inherited`)
-```
+- How a class member is written when a document refers to it belongs to
+  `/hoc-classes-member-notation`.

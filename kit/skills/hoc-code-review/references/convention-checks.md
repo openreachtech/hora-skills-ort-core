@@ -103,13 +103,10 @@ Each category appears in the report as findings, `PASS` or `N/A`.
 
 ### C5. Comments
 
-- Comments follow the project's language and content conventions.
-- A comment that restates the line above it, or that describes code that no longer exists, is a
-  finding.
-- Commented-out code is a finding.
-- A comment that explains *why* a non-obvious choice was made is the one kind that should be
-  present and is often missing — note its absence where the code makes a choice a reader would
-  question.
+- Comments follow the project's comment conventions — in this library, what a comment says and
+  how it is laid out belong to `/hoc-comments`, and its language to `/hoc-writing-language`. A
+  rule of theirs that the change breaks is a finding; a missing *why* is noted where the code
+  makes a choice a reader would question.
 
 ### C6. Constants and configuration
 
