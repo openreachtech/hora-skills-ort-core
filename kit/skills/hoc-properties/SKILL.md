@@ -18,7 +18,9 @@ This summarizes conventions related to class property definitions.
 
 - Basically, all classes are implemented as immutable. Once a property is set in the constructor, it must **not be reassigned** thereafter.
 - `this.xxx = ...` within the constructor (the initial set) is permitted. ESLint also does not prohibit this.
-- What is prohibited is **property reassignment outside the constructor**. This is enforced by ESLint.
+- What is prohibited is **property reassignment outside the constructor, including anything under
+  the property's object path** — `this.state.count += 1` as much as `this.state = ...`. ESLint
+  enforces the direct form; what lies under the path is held by this rule alone.
 - Being immutable means that even a property with public access scope is "protected by coding rules." Hence there is
   no need to make it native private for encapsulation purposes (for details, see "The meaning of `#alpha` notation and
   the treatment of native private" below).
