@@ -5,7 +5,7 @@ description: "Documentation writing conventions for READMEs, design documents, c
 
 # Documentation
 
-This gathers the conventions for writing documentation (READMEs, design documents, comments, etc.).
+This gathers the conventions for writing documentation (READMEs, design documents, etc.).
 
 - When writing or updating documentation, follow the conventions in this skill.
 - Follow this skill when writing or updating `SKILL.md` as well (referenced from the skill-updating convention).
