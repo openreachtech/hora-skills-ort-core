@@ -69,7 +69,7 @@ trunk?**
 lockfile that follows it. Everything the release carries arrived before that, and how it
 arrived is not decided here.
 
-- **Moving the dependency versions a release takes in belongs to `hoc-npm-raise-deps`**, which
+- **Moving the dependency versions a release takes in belongs to `/hoc-npm-raise-deps`**, which
   settles what a raise compares against, how each move is written down, and where its single
   install sits.
 - What is left once that pass has run — an advisory still in the report, an install script
