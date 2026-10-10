@@ -24,29 +24,11 @@ throw new Error(`${this.constructor.name}#normalizeValue() must be inherited`)
    - However, writing a direct `new` expression is allowed **only if the module does not provide a factory method** such as `Model.build()` / `Sample.create()`. If a factory method is provided, use that factory method instead of a `new` expression.
    - When it is hard to determine whether something is DTO-like, **define a factory method instead of asking a
      human**.
-   - If the same class is instantiated **frequently across multiple classes**, introduce a new `XxxxFactory` class. It holds the target class's constructor as a property and **performs the `new` expression through that factory class**. If a common base `BaseFactory` class exists, use it (via inheritance); if not, provide a **generic implementation** that doesn't depend on a specific class.
-2. For **delegate-style functional classes** (classes held in a property and used by delegating their functionality), basically implement a factory method to go through (following "instantiation of a dependency class should go through a factory method").
-3. Delegate-style functional classes require a factory method **regardless of whether they are created on the fly within an instance method**. Even when created temporarily within a method, do not `new` them directly; go through a dedicated factory method (e.g. `this.createExternalApiClient()`).
-
-- Note that this principle (2)(3) is **not limited to third-party modules**. Even for classes defined within the application, if the structure delegates use of an instance, instantiation via a factory method is equally required.
+2. **Delegate-style functional classes** (classes held in a property and used by delegating their functionality) are not an exception: they are dependencies, and how they are built — through a dedicated factory method, wherever they are created, and through a factory class where one class is built across many — belongs to `/hoc-wire-dependencies`.
 
 ```javascript
 // OK (1): DTO-like modules may be instantiated directly with new
 const amount = new BigNumber(value)
-
-// NG (2)(3): directly `new`-ing a delegate-style functional class (not allowed even when created on the fly)
-sendRequest () {
-  const client = new ExternalApiClient({ env })
-
-  return client.send()
-}
-
-// OK (2)(3): go through a factory method
-sendRequest () {
-  const client = this.createExternalApiClient()
-
-  return client.send()
-}
 ```
 
 ## DTO whitelist
