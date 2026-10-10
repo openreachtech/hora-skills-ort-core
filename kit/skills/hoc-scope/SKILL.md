@@ -1,6 +1,6 @@
 ---
 name: hoc-scope
-description: "Conventions for how class members refer to one another across the static and instance sides. Use when a member refers to another member, to its own class, or to a property of `this`. What a class may hold belongs to the class design principles convention; how a getter is written, to the accessors convention."
+description: "Conventions for how class members refer to one another across the static and instance sides. Use when a member refers to another member, to its own class, or to a property of `this`. How an instance reaches its own class through `#get:Ctor` belongs to the Ctor convention; what a class may hold, to the class design principles convention; how a getter is written, to the accessors convention."
 ---
 
 # Classes: Shared / Scope
