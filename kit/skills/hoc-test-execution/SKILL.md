@@ -132,10 +132,8 @@ These are never acceptable, including "temporarily". See
 - Adding a branch to the implementation that exists only to satisfy the test.
 - Marking a test as expected-to-fail.
 
-**Reusing a recorded pass is not one of these.** A cache that re-reports a pass for inputs identical
-to the ones that produced it skips a second execution, not a test — nothing is skipped, loosened or
-deleted, and the numbers reported are still the ones the runner measured. When that reuse is allowed,
-and what a reused pass must be reported with, belong to `hoc-test-cache`.
+**Reusing a recorded pass is not one of these** — why, when it is allowed, and what a reused pass
+must be reported with belong to `/hoc-test-cache`.
 
 **Breaking the letter of these rules breaks their spirit too.** A suite whose failures were silenced
 is worse than no suite, because it is believed.
