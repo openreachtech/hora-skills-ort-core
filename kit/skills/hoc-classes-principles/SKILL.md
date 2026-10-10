@@ -104,11 +104,36 @@ Under an immutable property design, **there is no work left that is unique to `#
 
 Therefore soft-private (`this._x`) is visible and correct. Do not use `#private` unless a human explicitly specifies it.
 
-### `decorator`
+```javascript
+// NG: an entry held as a plain object
+addEntry ({
+  title,
+}) {
+  return this.Ctor.create({
+    entries: [
+      ...this.entries,
+      {
+        title,
+        isDone: false,
+      },
+    ],
+  })
+}
 
-- A `decorator` adds no capability at all. It is purely syntactic sugar over a higher-order function + metadata (`@memoize method(){}` ≡ `method = memoize(method)`); everything a decorator can do can be written explicitly.
-- This policy chooses "explicitness > brevity." A decorator's real benefits (co-locating declarative metadata, reducing DI boilerplate) are ergonomics, not capability, and they sell explicitness in return. Augmentation that is implicit, mutating, and action-at-a-distance conflicts with "explicit, immutable, single manifest."
-- A field decorator attaches to a class field, so it does not fit at the syntactic level under this policy, which prohibits class fields.
+// OK: an entry is an instance of its own class
+addEntry ({
+  title,
+}) {
+  return this.Ctor.create({
+    entries: [
+      ...this.entries,
+      this.Ctor.TodoEntryCtor.create({
+        title,
+      }),
+    ],
+  })
+}
+```
 
 ## Rules
 
