@@ -196,16 +196,10 @@ test()`.
 
 ## Write comments in the code in English
 
-Comments written inside test code (`.js`) must be written in **English**. This
-unifies the comment language to English, aligning with other comments in the
-codebase.
-
-- This applies to **comments inside the test code generated under tests/**
-  (`// same reference` / `// neutral value; not under test` /
-  `// all omitted → default; keep last`, etc. — `//` or `/* */` written in
-  `.js` files). These are generated artifacts, hence English.
-- Comments inside **this skill's own examples** (` ```js ``` ` blocks) follow the
-  same rule, since they illustrate the very code the rule governs.
+- The language of a comment belongs to `/hoc-writing-language`. It is read here for the comments written
+  into the tests generated under `tests/` (`// same reference` / `// neutral value; not under test`
+  / `// all omitted → default; keep last`, etc.) and into this skill's own examples: both are
+  English.
 
 ## Removing a member takes two commits, implementation first
 
