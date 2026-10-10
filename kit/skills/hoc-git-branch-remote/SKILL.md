@@ -42,6 +42,19 @@ the repository is, because what reaches `main` is what the repository releases.
   for the repository as it stands, not offered to a new one.
 - **Once `dev` has merged into `main`, move to `release/x.x.x` wherever it can be done.**
 
+## A named trunk advances only by a merged pull request
+
+**The tip of `main`, `release/x.x.x`, `dev` and `env` moves only when a pull request merges into
+it on the host.** A sub-branch is never merged into one of them locally and pushed: that puts the
+merge on the remote with no review behind it, and the `main-guard` and release workflows, which
+fire on pull requests, never run.
+
+- **Any other branch acting as a trunk is merged into locally**, with `--no-ff`, and the merge is
+  pushed like any other commit. What it is called settles nothing; only the named trunks above
+  take the pull request.
+- **`hotfix/xxxx` takes its own commits directly**, and its merge into `main` still goes through
+  a pull request.
+
 ## A trunk's published history is never rewritten
 
 **A trunk's published history is never rewritten.** `git push --force`, `-f` and
