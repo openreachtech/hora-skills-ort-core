@@ -152,6 +152,8 @@ isEmpty () {
 ## The meaning of `#alpha` notation and the treatment of native private
 
 - `#` notation such as `#alpha` is not a JavaScript native private designation; it means "instance-private" in member notation.
-  (Member notation follows "Notation of Class Members" in the documentation convention.)
-- **JavaScript native private fields (`#` fields / `#` methods) must never be used unless a human specifically instructs it.**
+  (Member notation follows `/hoc-classes-member-notation`.)
+- **JavaScript native private fields (`#` fields / `#` methods) are not used unless a human specifically instructs it.**
+  That rule, and why it holds, belong to `/hoc-prohibit-native-features`. It is read here for what it
+  means when a property is named.
 - Therefore, even if an instruction says `#alpha`, that alone is not a reason to implement it as a `#` field. It is normally defined as `this.alpha`.
