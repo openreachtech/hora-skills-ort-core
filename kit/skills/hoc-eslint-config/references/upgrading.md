@@ -39,13 +39,9 @@ that both are needed, which is the opposite of the truth.
 
 ### 4. What the release stopped requiring
 
-**A consolidation upstream leaves packages behind.** Where the shared config once needed
-several narrow plugins and now needs one that subsumes them, the narrow ones stay in the
-manifest with nothing importing them.
-
-They are found in the lockfile rather than by reading code: a package requested by the root
-alone, and imported nowhere, is orphaned. Report it — removing it needs another install,
-which the run may not be able to perform.
+**A consolidation upstream leaves packages behind.** What counts as one, and how the lockfile
+finds it, belong to `/hoc-npm-raise-deps`. Here, an orphan the raise left is reported, not
+removed — removing it needs another install, which the run may not be able to perform.
 
 ### 5. Which standing relaxations have gone quiet
 
