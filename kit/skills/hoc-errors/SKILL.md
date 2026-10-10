@@ -31,6 +31,15 @@ generate ({
 }
 ```
 
+## A delegate's failure turned into a result
+
+- Where a class calls a delegate — a client, a repository, a service — and reports the call's
+  failure as a result rather than throwing it, how the call is laid out belongs to
+  `/hoc-classes-delegation`.
+- **What it is read for here is where the `try`/`catch` sits.** The call to the delegate is
+  isolated in an `invoke~` member that catches nothing, and the `try`/`catch` belongs to the
+  public member that calls it.
+
 ## How an abstract member declares itself unimplemented
 
 An abstract method or getter that requires an override in a subclass throws where it is
