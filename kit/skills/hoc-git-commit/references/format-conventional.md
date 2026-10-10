@@ -73,7 +73,7 @@ feat(resolver): add unlockClientMemberSignIn mutation
 ## Summary
 
 The summary follows the same substance rules as any other format: name the concrete thing that
-changed, in the imperative mood, using the class-member notation given in `SKILL.md`.
+changed, in the imperative mood, using the notation of `/hoc-classes-member-notation`.
 
 **Its verb follows the shared table in `SKILL.md`** wherever that table fixes a role,
 lowercased to sit after the type: `feat: declare AlphaClass`, `refactor: extract the retry

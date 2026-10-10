@@ -196,38 +196,16 @@ test()`.
 
 ## Write comments in the code in English
 
-Comments written inside test code (`.js`) must be written in **English**. This
-unifies the comment language to English, aligning with other comments in the
-codebase.
-
-- This applies to **comments inside the test code generated under tests/**
-  (`// same reference` / `// neutral value; not under test` /
-  `// all omitted → default; keep last`, etc. — `//` or `/* */` written in
-  `.js` files). These are generated artifacts, hence English.
-- Comments inside **this skill's own examples** (` ```js ``` ` blocks) follow the
-  same rule, since they illustrate the very code the rule governs.
+- The language of a comment belongs to `/hoc-writing-language`. It is read here for the comments written
+  into the tests generated under `tests/` (`// same reference` / `// neutral value; not under test`
+  / `// all omitted → default; keep last`, etc.) and into this skill's own examples: both are
+  English.
 
 ## Removing a member takes two commits, implementation first
 
-**When a member or a class is removed, the implementation goes out first and
-the tests that covered it go out second.** Two commits, in that order.
-
-The order is what produces the evidence. The first commit leaves the suite
-failing, the second leaves it passing again, and that pairing is the only thing
-showing that the tests removed were the tests covering what was removed.
-
-- **In this order the red persists until the correct tests come out.** Remove
-  the wrong ones and the suite is still failing, because the tests for the
-  member just deleted are still sitting there. That is the check doing its
-  work.
-- **The reverse order is green at every step**, because a suite with fewer
-  tests still passes. Removing tests first and the member second reports
-  nothing at either commit, whether or not the right tests were taken.
-- **It is silent exactly where it matters most.** Take a member that never had
-  tests of its own. Remove tests first, take another member's by mistake, then
-  remove the member: both commits pass, the other member is now uncovered, and
-  nothing anywhere said so. There was no red to go missing, because there was
-  never a test to turn red.
+- When a member or a class is removed, the implementation goes out first and the tests that
+  covered it second. Why that order, and the other cases that take it, belong to
+  `/hoc-git-commit-order`.
 
 ## Detail files
 
