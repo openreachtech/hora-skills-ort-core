@@ -195,51 +195,12 @@ const modifiedAtTo = ...   // range upper bound
 
 ## Super-prefixes state how a method behaves
 
-**A method name may carry a prefix before its verb, marking what kind of behaviour it is.**
-The verb says what the method does; the super-prefix says how it goes about it, and it is
-what lets one member be told from its siblings at the call site.
-
-| Super-prefix | What it marks |
-| :-- | :-- |
-| `deep~` | The method descends into a nested structure, calling itself as it goes. It is the entry point of that walk |
-| `invoke~` | The method does nothing but call another — a delegate's method, a handler it was given, or one of its own private members |
-| `bulk~` | The method handles many at once, where a single-item member of the same name exists beside it |
-
-```javascript
-// deep~: the entry point of a recursive walk, told apart from the members it recurses through
-deepMeasureSelectionDepth ({ context, selection, visitedFragmentNames = [] }) { /* ... */ }
-
-measureSelectionSetDepth ({ context, selectionSet, visitedFragmentNames }) { /* ... */ }
-
-// invoke~: the body is the call and nothing else
-invokeFetch ({ url }) {
-  return fetch(url)
-}
-
-invokeFetchWithCredentials ({ url }) { /* ... */ }
-
-// bulk~: the many-at-once member, standing beside the one that takes a single item
-bulkSaveCustomers ({ customers }) { /* ... */ }
-
-saveCustomer ({ customer }) { /* ... */ }
-```
-
-- **`deep~` pairs with where the accumulator's default sits.** The entry point is the one
-  member whose accumulator parameter carries a default, so the name and the signature point
-  at the same member — see the method-definition convention. A reader meeting either one can
-  tell the entry from the steps, and a later edit that adds a default to a step contradicts
-  the naming, which is what makes the mistake visible.
-- **`invoke~` says the method holds no logic of its own.** What it wraps may be a delegate's
-  method, a handler passed in, or a private member of the same class; what the prefix
-  promises is that nothing else happens there. A method that also transforms, branches or
-  decides is not an `invoke~`, whatever it wraps.
-- **`bulk~` says a single-item member exists beside it.** The prefix is what tells the two
-  apart at the call site, so it is worn by the many-at-once member and never by the one that
-  takes a single item — a lone `bulk~` with nothing to contrast with is naming a distinction
-  the class does not make.
-- These prefixes come **before** the verb and leave the rest of the name alone: the
-  transitive-verb-plus-object rule above still applies, so it is `deepMeasureSelectionDepth()`
-  rather than `deepMeasure()`.
+- A method that handles many items at once, realizes a recursion, or calls a delegate
+  carries a super-prefix before its verb. Which prefixes there are, and what each one promises,
+  belong to `/hoc-super-prefix-method-name`.
+- **What it is read for here is that the prefix changes nothing behind it.** A prefixed name is
+  still chosen by the rules on this page, so a method's name is settled here first and the
+  prefix is put in front of it afterwards.
 
 ## Accessors (getter / setter)
 
