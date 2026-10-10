@@ -201,8 +201,7 @@ measureSelectionSetDepth ({
 
 ### Placement order
 
-- `static create (...)` should be placed immediately after the constructor.
-- If `static createAsync (...)` is defined, it should in principle be placed immediately after `.create(...)`.
+- Where the factory methods sit in a class body belongs to `/hoc-classes-notations`.
 
 ### JSDoc format
 
