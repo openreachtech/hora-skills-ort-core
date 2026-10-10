@@ -5,10 +5,9 @@ description: "Conventions for redoing existing code without moving what its call
 
 # Retake a Declaration
 
-A **retake** redoes what is already there — replacing something poor, hurried or a stopgap with
-what should have been written — and **claims no gain beyond that**. That is what separates it from
-an update, which carries a sound implementation forward and leaves it giving something it did not
-give before.
+A **retake** is what the commit verb `Retake` defines in `/hoc-git-commit`: it redoes what is
+already there and **claims no gain beyond that**. That is what separates it from an update, which
+carries a sound implementation forward and leaves it giving something it did not give before.
 
 The distinction is not a nuance of wording. It decides what the work is allowed to do.
 
