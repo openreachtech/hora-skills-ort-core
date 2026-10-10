@@ -318,12 +318,9 @@ any lives, i.e. the argument). If it's a property of an object literal, like
 `const args = { deriver: ({ Ctor }) => ... }`, place it **directly above that
 property**; for a standalone `const`, place it directly above that.
 
-Note the ESLint (jsdoc plugin) constraints:
-- Once you write `@param`, **`@returns` is also mandatory**
-  (`jsdoc/require-returns`). It cannot be omitted if the function returns a value.
-- A block containing `@param` **cannot be a single line**
-  (`jsdoc/multiline-blocks`; single-line is only allowed for some tags such as
-  `@type`). → It must always be written as a **multi-line block**.
+- The block follows the JSDoc convention (`/hoc-jsdoc`): **`@returns` is always
+  written**, `{void}` included, and a block holding `@param` is never a single
+  line.
 - A constructor type only needs `new () => *` if it's used only as
   `extends` (no need to go as far as `new (...args: Array<*>) => *`).
 
