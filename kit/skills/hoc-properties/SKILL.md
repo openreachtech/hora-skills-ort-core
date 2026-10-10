@@ -54,9 +54,3 @@ const next = Scalar.create({
   (Member notation follows "Notation of Class Members" in the documentation convention.)
 - **JavaScript native private fields (`#` fields / `#` methods) must never be used unless a human specifically instructs it.**
 - Therefore, even if an instruction says `#alpha`, that alone is not a reason to implement it as a `#` field. It is normally defined as `this.alpha`.
-
-### Reason
-
-- Native private cannot be read even from an inheriting subclass, which blocks extension/substitution via inheritance.
-- This codebase basically implements all classes as immutable and does not permit reassignment of properties at all (this is also prohibited by ESLint). Therefore, even with a public access scope, it is protected by coding rules, and there is no need to make it native private.
-- Rather, it is more beneficial to avoid the disadvantage where, when you want to apply a patch (such as a hotfix) that temporarily changes behavior via inheritance, a parent class's private property would block that.
