@@ -1,6 +1,6 @@
 ---
 name: hoc-npm-install-scripts
-description: "How to handle the install scripts npm would run while installing dependencies. Use this skill when an install reports scripts not yet covered by `allowScripts`, when deciding whether a dependency's install script may be denied, when turning the gate on in a project, or when judging whether an upgrade introduces a new script. Advisories belong to the vulnerability convention."
+description: "How to handle the install scripts npm would run while installing dependencies. Use this skill when an install reports scripts not yet covered by `allowScripts`, when deciding whether a dependency's install script may be denied, when turning the gate on in a project, or when judging whether an upgrade introduces a new script. Advisories belong to the vulnerability convention; how `.npmrc` is written, to the npmrc convention."
 ---
 
 # npm Install Scripts
