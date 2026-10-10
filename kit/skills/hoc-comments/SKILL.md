@@ -5,7 +5,7 @@ description: "Comment-writing conventions. Comments within actual code should be
 
 # Shared: Comments
 
-Conventions related to comment writing. Applies across both JSDoc and inline comments (`//`).
+Conventions related to comment writing. Applies across JSDoc, block comments (`/* */`) and inline comments (`//`).
 
 ## Language
 
