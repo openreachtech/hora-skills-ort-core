@@ -18,11 +18,15 @@ Each skill lives at `kit/skills/<name>/`, directly under the skills directory, a
 | :-- | :-- |
 | `hoc-classes-principles` | Class design principles — no classes without properties, and the system underpinning it (deep immutability, constructor-only, references-as-contract). |
 | `hoc-classes-constructor` | Class constructor conventions — the constructor holds what its parameters receive and decides no value, so its parameters carry no defaults and the factory methods resolve them. |
+| `hoc-classes-ctor` | The `#get:Ctor` getter an instance reaches its own class through — its definition, type cast and override, the reserved name, and a static member never reached through `this.constructor` anywhere else — a native property such as `name` is read directly. |
+| `hoc-classes-member-notation` | How a class member is written when it is referred to — `#` for an instance member, `.` for a static one, `get:` / `set:` for an accessor — in documents, commit messages, test names, error messages and comments. |
+| `hoc-classes-delegation` | How a class uses a delegate it holds or is handed — the call isolated in an `invoke~` member of its own, the failure turned into a result by the public member around it, and why the test needs that seam. |
 | `hoc-classes-notations` | The order members are written in a class body: the eight-block placement order, the ordering within getters and within methods, and the fallback to source order where none of it decides. |
 | `hoc-classes-prohibits` | Prohibitions in class definitions: static-only classes and classes without state are not allowed, and why. |
+| `hoc-prohibit-native-features` | The native JavaScript features this library does not use — `Map`, `Object.freeze()`, native private members (`#x`, `static #x`) and decorators — and why each is refused. |
 | `hoc-classes-inflators` | The inflator (binding) method pattern — bind the class passed as an argument and return a derived subclass memoized via `BoundCtorRegistry` — plus its naming and arguments. |
-| `hoc-properties` | Property conventions — set on `this` in the constructor, immutable (no reassignment, no `Map`), and no JavaScript native private. |
-| `hoc-accessors` | Getter/setter conventions — setters prohibited for immutability, `#get:Ctor` reserved for `this.constructor`, and getter bodies kept to a property reference, with no branching and no method call. |
+| `hoc-properties` | Property conventions — set on `this` in the constructor, immutable (no reassignment, under the property path too), and a collection built, then used all at once. |
+| `hoc-accessors` | Getter/setter conventions — setters prohibited for immutability, and getter bodies kept to a property reference, with no branching and no method call. |
 
 ## Members and scope
 
@@ -30,11 +34,12 @@ Each skill lives at `kit/skills/<name>/`, directly under the skills directory, a
 | :-- | :-- |
 | `hoc-manifest-pattern` | The manifest pattern, also called the super strategy pattern — a structure keeps one shared object declaring its wiring, and everything inside the structure may take it. |
 | `hoc-methods` | Method definition conventions — named arguments, passing properties into private methods, and factory methods. |
+| `hoc-methods-recursion` | How a recursive method is laid out — a plain-named entry point in front of a private `deep~` member, with the accumulator's initial value written inside the entry point so no caller can hand one in. |
 | `hoc-wire-dependencies` | How a class reaches what it depends on — a `[TargetClassName]Ctor` static getter and a dedicated factory method for a class it instantiates, a static getter for a module used as it is — so a subclass can patch either and a test can swap it. |
 | `hoc-functions` | Function conventions. Parameters follow method parameters: named arguments as a principle. |
 | `hoc-constants` | Constant conventions — naming (uppercase `SNAKE_CASE`, singular for enum-like objects), chopping down, and the file organization and placement of object-type constants. |
 | `hoc-contracts` | Type contracts for function and method arguments and return values, and how contract types are defined. |
-| `hoc-scope` | Scope references among class members — `this` between static members, `#get:Ctor` when referring from an instance to a static member, and no destructuring of `this`. |
+| `hoc-scope` | Scope references among class members — `this` between static members, `this.Ctor` from an instance to a static member, and no destructuring of `this`. |
 
 ## Modules
 
@@ -48,6 +53,7 @@ Each skill lives at `kit/skills/<name>/`, directly under the skills directory, a
 | Skill | Summary |
 | :-- | :-- |
 | `hoc-statements` | Statements and control flow — no `let` anywhere, no literal `undefined` in production code, higher-order functions over sequential processing, and ternary/`if` policies. |
+| `hoc-higher-order-functions` | How `map()`, `filter()`, `reduce()` and `forEach()` are used — no discarded return value, no assignment inside `forEach()`, single-statement callbacks, every element treated alike and none reached by subscript, a `reduce()` that folds what the elements hold, and how callback parameters are named. |
 | `hoc-async` | Asynchronous code conventions. When writing Promises, use `async`/`await` whenever possible. |
 | `hoc-errors` | Error handling — return `null` on failure from value-generating methods, and the two throws an abstract member declares itself unimplemented with: a plain `Error` carrying the fixed wording, or the error class the module declares for its own failures. |
 | `hoc-error-codes` | The string an error carries — the three parts of `Aaa.XBBB.CCC`, the categories a failure is sorted into, and the bands a client fills from the top, with `XBBB.CCC` settled per server kind for GraphQL and for a REST API. |
@@ -58,9 +64,10 @@ Each skill lives at `kit/skills/<name>/`, directly under the skills directory, a
 | Skill | Summary |
 | :-- | :-- |
 | `hoc-naming` | Naming for classes, methods, properties and accessors — datetime suffixes (`At`/`On`, plus `From`/`To` for ranges), abbreviation criteria, American spelling, forbidden words, ASCII only. |
+| `hoc-super-prefix-method-name` | The super-prefixes a method name carries before its verb — `bulk~` for many items at once, `deep~` for the member that realizes a recursion, `invoke~` for a member that only calls a delegate — and what each one promises. |
 | `hoc-vscode-cspell` | The spell checker's vocabulary in `.vscode/cspell.json` — settling a reported word in `words:` or `ignoreWords:` before rewording any code, the fragments a pattern produces that are silenced rather than taught, kicking out entries no tracked file uses, and the order a checklist records it in. |
-| `hoc-comments` | Comments within actual code are written in English unless there is a reason otherwise. |
-| `hoc-jsdoc` | JSDoc writing conventions shared by backend and frontend — type annotations, the casts refused on the right-hand side and the third-party-only exception, `@typedef` and type-only imports, and the layout of the block itself, with the Vue/Nuxt-specific conventions in its references. It is also where a type error reported by a checker is cleared. |
+| `hoc-comments` | Comment-writing conventions — a comment says why rather than restating the code, moves with the code it describes, never leaves code commented out, and writes no annotation but `NOTE:`, filing the rest as issues; an inline comment stands above the code, at a line end only to keep a format such as one element per line, and a comment naming a group stands before it; a comment that runs to several lines breaks at a clause, never at a column, and a multi-line block takes three lines or more; lines are commented out with `//`. Which language a comment is written in — English by default — belongs to `hoc-writing-language`. |
+| `hoc-jsdoc` | JSDoc writing conventions shared by backend and frontend — type annotations, the casts refused on the right-hand side and the third-party-only exception, `@typedef` and type-only imports, and the layout of the block itself. It is also where a type error reported by a checker is cleared. |
 | `hoc-type-errors` | How to read what a type checker reports before deciding what to change — the reported count is not the size of the work while casts are still silencing errors, and an error may be pointing at a value that is wrong rather than an annotation that is missing. |
 
 ## Testing
@@ -76,7 +83,9 @@ Each skill lives at `kit/skills/<name>/`, directly under the skills directory, a
 | Skill | Summary |
 | :-- | :-- |
 | `hoc-git-branch` | Conventions for the branches a repository carries — which five are trunks and what that obliges, which may be cut from `main` per flow, how a general branch is named, the empty marker commit that opens a trunk, and the `--no-ff` merge that closes a sub-branch, along with the subject that merge commit carries and the `-r` every rebase takes, and what tells whether a branch still carries anything or may be discarded. |
-| `hoc-git-commit` | Commit conventions — what belongs in a single commit and the order commits land in, the message format (imperative or Conventional Commits, chosen per project), and the verb vocabulary shared by both. |
+| `hoc-git-branch-remote` | The branches a repository keeps on its remote — `main` as the default branch, which branches may merge into `main` by kind of repository (npm package, boilerplate or application), and a trunk's published history never rewritten. |
+| `hoc-git-commit` | Commit conventions — what belongs in a single commit, the message format (imperative or Conventional Commits, chosen per project), and the verb vocabulary shared by both. |
+| `hoc-git-commit-order` | The order commits land in — the first commit is the one that turns the suite red (tests first when adding, implementation first when removing or lowering a limit), then behavior, structure and addition. |
 | `hoc-git-push` | What a push takes before it is made — the permission each one needs and how narrowly it counts, the force-push handed to a person rather than run here, the operation whose admissibility was read off the remote and is handed over with the reading, naming the remote and the branch instead of relying on configuration, and why tags and remote-branch deletions are not pushed by hand. |
 
 ## Dependencies and publishing
@@ -86,6 +95,7 @@ Each skill lives at `kit/skills/<name>/`, directly under the skills directory, a
 | `hoc-npm-adopt-tool` | Whether a third-party tool may be brought in at all — what counts as a reason to reach for one and what does not, the audit its tarball takes before anybody installs it, and the wrapper that leaves only one module naming it. Moving the version of a package already taken on belongs to `hoc-npm-raise-deps`. |
 | `hoc-npm-categorize-deps` | Which field of the manifest a package is declared in — what a peer dependency buys that a plain one does not, what the package manager does when the two disagree, and why a second copy is the failure worth designing against. Moving a version already declared belongs to `hoc-npm-raise-deps`. |
 | `hoc-npm-install-scripts` | The gate deciding which packages may run an install script — denial as the default, the settings placed before the install they govern, and the dry run that reports a script without executing one. |
+| `hoc-npm-npmrc` | How the npm configuration file `.npmrc` is written — each setting as `key = value` with spaces around the `=`, edited directly and never through `npm config set`. What each setting does belongs to the convention that turns it on. |
 | `hoc-npm-vulnerability` | Keeping a vulnerable version out — what the audit does and does not see, the release-age quarantine and the install it does not apply to, resolving a report by raising a transitive dependency, and deciding one no release fixes. |
 | `hoc-npm-publish` | Where a release's version bump sits among the commits, and what to do when it turns out not to be last. Reading the tarball before it goes out belongs to `hoc-npm-publish-audit`; moving the dependency versions a release takes in, to `hoc-npm-raise-deps`. |
 | `hoc-npm-publish-audit` | The last reading of a package before it goes out — the inventory `npm pack` prints rather than the allowlist, the tarball installed into an empty project and used there, the install continuous integration runs, packages released together diffed against each other, the README followed as a reader follows it, the rules no linter enforces, and the report that names what was read and what was not, and closes on what to fix with its verdict in the mark. The order of a release's own commits belongs to `hoc-npm-publish`. |
@@ -100,7 +110,8 @@ Each skill lives at `kit/skills/<name>/`, directly under the skills directory, a
 | `hoc-readme` | The README a project carries — the file it keeps per language, the section order and the fixed text of each, the parts split out under `docs/` and linked back, the API reference, and the naming used in code examples. |
 | `hoc-license` | The `./LICENSE` a project carries, settled by the `license` field of `package.json` — which text each value takes, the placeholders it fills, the deletion `UNLICENSED` calls for, and what an absent field means. |
 | `hoc-boilerplate` | The `about-boilerplate.md` every clone carries — the `## Version` that moves in a boilerplate and is frozen in everything cloned from one, the single-commit bump that closes a boilerplate's release, and the guard holding three statements of that version to one value. |
-| `hoc-documentation` | Documentation writing conventions — what a document may state as fact and what it must reach for instead, how a stated fact follows its source when a change moves it, the language a document written for a reader is in, and the `#instanceMember` / `.staticMember` notation used when referring to class members. |
+| `hoc-documentation` | Documentation writing conventions — what a document may state as fact and what it must reach for instead, and how a stated fact follows its source when a change moves it. |
+| `hoc-writing-language` | Which natural language a piece of writing is in — an explicit instruction first, then the language a file names for itself (`README.ja.md`, `docs/ja/`), then the language an existing document is already in, then the default for its kind: English for code, comments and skills, the reader's language for a document written for them. |
 | `hoc-resolve-shorthand` | Resolving a handle where the reader meets it — the name to write instead of an invented label, the content a phase or issue number carries with it, the origin a label owes when the list goes back to whoever supplied it, and how much of it is enough. |
 | `hoc-requirement-definition` | Turn a rough request into a requirement definition document through conversation — requirements, observable acceptance criteria, out-of-scope list, open questions. |
 | `hoc-deployment-document` | Write a server deployment runbook through conversation — the hosting and process-management profile, the first-time build, the repeatable release, migrations, rollback, and the output that confirms each step worked. |
