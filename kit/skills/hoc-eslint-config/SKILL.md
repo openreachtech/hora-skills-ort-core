@@ -33,7 +33,7 @@ to it, and do the same for every package in the chain — a dependency of the co
 the one that is too young.
 
 Wanting a version the cooldown excludes is a real case, and its handling — an exclusion at
-install time rather than an edit to the setting — belongs to `hoc-npm-vulnerability`.
+install time rather than an edit to the setting — belongs to `/hoc-npm-vulnerability`.
 
 **A major bump is not run autonomously.** What it demands of the local config is not
 knowable from the version number, and the interview in
@@ -169,7 +169,7 @@ gives the objects it returns, an argument a library hands over to be rewritten i
 and it then stops being looked at.
 
 What a change may do to a declaration that already has callers is settled by
-`hoc-retake-declaration`, whatever the reason for making it.
+`/hoc-retake-declaration`, whatever the reason for making it.
 
 **Measure the surface before calling a restructure internal.** A change that looks confined
 can drop a subclass's override silently, and a suite exercising only the base class passes
