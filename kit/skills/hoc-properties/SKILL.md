@@ -9,17 +9,10 @@ This summarizes conventions related to class property definitions.
 
 ## Set properties on `this` within the constructor
 
-- Properties should be set on `this` within the constructor.
-- To write tests against properties, properties should be kept accessible from outside.
-
-```javascript
-// OK: set on this within the constructor
-constructor ({
-  delimiter,
-}) {
-  this.delimiter = delimiter
-}
-```
+- That a property is set only as `this.xxx = xxx` inside the constructor, and why class fields
+  are not used, belong to `/hoc-classes-principles`.
+- It is read here for what it means to tests: a property set that way stays accessible from
+  outside, so a test can read it directly.
 
 ## Classes are immutable / property reassignment is prohibited
 
