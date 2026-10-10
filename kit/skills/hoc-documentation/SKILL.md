@@ -1,6 +1,6 @@
 ---
 name: hoc-documentation
-description: "Documentation writing conventions for READMEs, design documents, comments and any other prose a project carries. Use when writing or updating a document, and when a change moves a fact a document states. The README's own structure belongs to the README convention."
+description: "Documentation writing conventions for READMEs, design documents and any other prose a project carries. Use when writing or updating a document, and when a change moves a fact a document states. The README's own structure belongs to the README convention; which language a document is written in, to the writing-language convention."
 ---
 
 # Documentation
