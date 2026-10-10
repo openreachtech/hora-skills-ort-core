@@ -1,6 +1,6 @@
 ---
 name: hoc-errors
-description: "Conventions for how code reports a failure, from a method that cannot produce its value to an abstract member a subclass has not implemented. Use when a method can fail, or when declaring an abstract member. The string an error carries for its callers belongs to the error-codes convention."
+description: "Conventions for how code reports a failure, from a method that cannot produce its value to an abstract member a subclass has not implemented. Use when a method can fail, when the failure of a call to a delegate is turned into a result, or when declaring an abstract member. The string an error carries for its callers belongs to the error-codes convention; how the call to a delegate is laid out, to the delegation convention."
 ---
 
 # Shared: Errors
