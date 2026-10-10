@@ -227,11 +227,7 @@ plants its spy on that same object, and `afterEach(() => jest.restoreAllMocks())
 function back before the next one runs.
 
 ```js
-/** @type {SomeType.ValidationContext} */
-const mockContext = /** @type {*} */ ({
-  getFragment: () => null,
-  reportError: () => {},
-})
+const mockContext = MockValidationContext.create()
 
 describe('should report each selection over the cap', () => {
   test.each(cases)('...', ({ input, expected }) => {
