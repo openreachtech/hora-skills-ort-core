@@ -11,6 +11,9 @@ This summarizes conventions related to scope references among class members.
 
 - References between static members should use `this` rather than the class name.
   (Using `this` ensures that even when called from an inheriting subclass, the subclass's own definition is referenced.)
+- **This includes a static member referring to its own class**: `new this(...)` in a factory
+  method, `this` handed over where a class is expected. Hardcoding the class name anchors the call
+  to the base class even when a subclass made it, which breaks polymorphism.
 
 ```javascript
 // NG
