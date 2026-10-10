@@ -8,10 +8,7 @@ description: "JSDoc writing conventions shared by backend and frontend. Use when
 Summarizes JSDoc writing conventions. All typing is JSDoc — no TypeScript syntax, no `.ts`
 files — so always annotate types with JSDoc.
 
-The rules in this body apply to every JavaScript file, backend and frontend alike. Conventions
-that only apply when writing Vue / Nuxt (block placement, Furo class and factory typing, Vue
-`PropType`, ambient globals) are in the reference files listed at the end, each marked with
-its scope.
+The rules in this body apply to every JavaScript file, backend and frontend alike.
 
 > How the jsdoc-plugin rules actually in effect under this project's ESLint map to
 > each of this skill's conventions is summarized in
@@ -296,19 +293,24 @@ generate ({
   literal, and the fix is to declare what the literal is. Casting deletes the message rather than
   the defect.
 - **The only `*` cast allowed is the temporary one, against a type the project does not own, and
-  inside the class that supplies the stand-in**: a `MockXxxx` under `tests/mocks/` whose
-  `.create()` declares the real type as its return, so the cast bridges a deliberately partial
-  literal exactly once and every caller holds the real type. The test convention (`/hoc-jest`)
-  settles where that class lives and what tests it.
+  inside the `.create()` of the `MockXxxx` stand-in**, so the cast bridges a deliberately partial
+  literal exactly once and every caller holds the real type. What that class is, where it lives
+  and what tests it belong to `/hoc-jest`.
 - **Against a type the project owns there is no exception.** Build the real thing and hand it
   over. A cast literal standing in for one of ours declares itself complete while holding two
   members, and that claim is one the checker can never test — the type gains a member, the
   literal does not, and nothing reports it. Every place that stood the type in has to be found
   and corrected by hand, and nothing says which places those are. A real instance follows its own
   class instead, so the change reaches the test the way it reaches everything else.
-- **In a test this is absolute.** The implementation exists by the time its test is written, so
-  every type the test needs is already declared somewhere in the code under test. A `*` there is
-  never "the type cannot be narrowed"; it is "the type was not looked up".
+- **The one other `*` cast allowed is a deliberate type violation in a test**: an abnormal-value
+  case that hands the code under test `null`, a missing key or another value its contract
+  refuses, on purpose. The declaration above `cases` states the contract type, and
+  `/** @type {Array<*>} */` on the literal lets the violation through. It is allowed only where
+  the type error is the point of the test and plain to see; the test convention (`/hoc-jest`)
+  settles which `describe()` holds those cases.
+- **Outside these two, in a test this is absolute.** The implementation exists by the time its
+  test is written, so every type the test needs is already declared somewhere in the code under
+  test. A `*` there is never "the type cannot be narrowed"; it is "the type was not looked up".
 
 ```javascript
 // NG: nothing declares the type, and the cast removes the check
@@ -340,22 +342,7 @@ const cases = [
   },
 ]
 
-// OK: the one temporary cast, inside the class standing in for a third-party type
-export default class MockValidationContext {
-  /**
-   * Factory method.
-   *
-   * @returns {GraphqlType.ValidationContext} - Validation context.
-   */
-  static create () {
-    return /** @type {*} */ ({
-      getType: () => null,
-      reportError: () => {},
-    })
-  }
-}
-
-// NG: the same cast written where it is used, instead of in the stand-in
+// NG: the cast written where it is used, instead of inside the MockXxxx stand-in
 /** @type {GraphqlType.ValidationContext} */
 const mockContext = /** @type {*} */ ({
   getType: () => null,
@@ -459,29 +446,9 @@ closing, and **not inside a type literal**.
 
 ## Wrap a JSDoc sentence at a clause boundary
 
-**Where a sentence in a JSDoc block runs past the line, break it where the clause breaks**
-— after a comma, at a conjunction, between two sentences — rather than filling to a column
-and breaking wherever the word count lands.
-
-```javascript
-// NG: filled to the margin, so the line ends mid-clause
-/**
- * A fragment already on the path contributes nothing, which is what stops a
- * cyclic document from being walked forever.
- */
-
-// OK: the break falls where the clause does
-/**
- * A fragment already on the path contributes nothing,
- * which is what stops a cyclic document from being walked forever.
- */
-```
-
-- **The unit a reader takes in is the line.** Broken at a clause, each line is one
-  statement and the comment can be read down the left edge; broken at a column, a line
-  ends on `stops a` and carries no meaning of its own.
-- This governs prose. A type literal is already one property per line, and `@param` /
-  `@returns` descriptions follow the same break where they run long.
+- Where a long comment breaks — at a clause, never at a column — belongs to `/hoc-comments`. It
+  is read here for the `@param` and `@returns` descriptions, which follow the same break where
+  they run long.
 
 ## Do not place a delimiter after each chopped-down property
 
@@ -499,10 +466,11 @@ and breaking wherever the word count lands.
 
 ## Writing `@typedef`
 
-- Write `@typedef` as a block comment of at least three lines. A single-line
-  `@typedef` is also prohibited by lint (`jsdoc/multiline-blocks`).
+- Write `@typedef` as a block comment of at least three lines. A single-line `@typedef` is
+  refused by lint (`jsdoc/multiline-blocks`).
+- The form a multi-line block takes, and the blank line between two blocks, belong to
+  `/hoc-comments`.
 - Define one `@typedef` per block.
-- Separate `@typedef` block comments from one another with a blank line.
 
 ```javascript
 // NG: written on a single line
@@ -535,9 +503,9 @@ and breaking wherever the word count lands.
 - To reference a type declared in another module, use a type-only import. Never use the
   TypeScript `import type` statement — it is not available in a JavaScript-only project.
 - Two styles exist: the `@import` block tag and the inline `import('…')` expression. **Follow
-  the style the repository has established, and do not mix both for the same type.** Furo /
-  Nuxt apps use `@import`; renchan backends use the inline `import('…')` expression. If a
-  repository has established neither, prefer `@import`.
+  the style the repository has established, and do not mix both for the same type.** renchan
+  backends use the inline `import('…')` expression. If a repository has established neither,
+  prefer `@import`.
 - One `@import` tag per JSDoc block, one source module per block — the same rule as `@typedef`
   above.
 
@@ -545,8 +513,8 @@ and breaking wherever the word count lands.
 // OK: the @import block tag
 /**
  * @import {
- *   Reactive,
- * } from 'vue'
+ *   IncomingMessage,
+ * } from 'node:http'
  */
 
 // OK: the inline import('…') expression
@@ -565,6 +533,3 @@ See [import-tag.md](./references/import-tag.md) and
 | [eslint-jsdoc-rules.md](./references/eslint-jsdoc-rules.md) | Common | ESLint (jsdoc plugin) mapping — follow it and `npm run lint` passes / where this skill is stricter than lint / intentionally relaxed rules |
 | [import-tag.md](./references/import-tag.md) | Common | Type-only import via the `@import` block tag — placement, named/default forms, source modules, consuming by bare name |
 | [import-expression.md](./references/import-expression.md) | Common | Type-only import via the inline `import('…')` expression — forms, use sites, trade-offs vs `@import` |
-| [placement.md](./references/placement.md) | Frontend | Where `@typedef` / `@import` blocks go, inline `@type` on reactive declarations, Params / FactoryParams naming |
-| [class-typing.md](./references/class-typing.md) | Frontend | Params / FactoryParams typedef pair, `create()` factory template idiom, `@template` / `@extends` / `@override` / `@property` |
-| [vue-props-and-globals.md](./references/vue-props-and-globals.md) | Frontend | Vue `PropType` on prop definitions, ambient globals used unqualified |
