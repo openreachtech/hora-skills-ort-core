@@ -16,8 +16,7 @@ Procedural rules related to the development workflow.
 2. Design the member composition of each class
 3. Write the tests
 4. Implement the class members
-5. Commit the tests one class at a time
-6. Commit per class
+5. Commit, in the order `/hoc-git-commit-order` sets
 
 ## The existing code is not a template
 
@@ -67,14 +66,14 @@ stop.
 - Before committing, pass `npx eslint <path> <path> …`, naming the files the commit touches.
   Every commit leaves the tree lint-clean. Lint the files, not the repository — `npm run lint`
   walks the whole tree and is too slow to sit in front of every commit.
-- **`npm test` is not a gate on every commit.** Step 5 commits a class's tests before step 6
-  commits its implementation, so that commit fails the suite when it is checked out on its own.
-  That failure is the assertion the test commit makes. Staging the implementation alongside the
-  tests to keep the suite green destroys both the assertion and the split.
+- **`npm test` is not a gate on every commit.** A test commit lands red on purpose — which commit
+  goes first, and why, belongs to `/hoc-git-commit-order` — so staging the implementation
+  alongside the tests to keep the suite green destroys the split. The suite is held to green
+  where the branch is offered for merge, below.
 - Run the commit's own tests all the same — `npm test -- <path> <path> …` — and **read the
   failure**: it must fail on the behavior the tests assert, not on a typo, a bad import or a
-  missing fixture. A test commit that is red for the wrong reason is a defect; a test commit
-  that is green asserts nothing. Note that jest reads those arguments as **regular expressions**
+  missing fixture. A test commit that is red for the wrong reason is a defect; one in which
+  nothing fails asserts nothing. Note that jest reads those arguments as **regular expressions**
   matched against the whole test path, not as literal paths, so a pattern selects every file it
   matches — unlike the eslint arguments above, which are paths.
 - Follow the git commit convention before writing a commit message, and before deciding how to split working-tree changes into commits. It resolves which message format the project uses and defines what belongs in a single commit.
@@ -83,8 +82,17 @@ stop.
 
 - Pass `npx eslint <path> <path> …` over every file the work touched, and pass `npm test` over
   the **whole suite**, before completing the implementation. Narrowing the run to the files just
-  changed here would hide the tests this work broke elsewhere. This is where the suite must be
-  green — step 6 is the commit that turns the tests of step 5 green. Do not consider the
+  changed here would hide the tests this work broke elsewhere. Do not consider the
   implementation complete while either one is failing.
 - The branch structure the commits land on is decided here, once the work is complete, rather
   than before it starts; see the git branch convention.
+
+## Before offering a branch for merge
+
+- **The whole suite is green at the tip of the branch before its pull request is opened, and
+  before it is merged locally into a trunk.** This is the one point the suite is held to green:
+  the red commits a branch carries on purpose have been cleared by then, and a red still standing
+  is unfinished work, cleared before the branch goes on.
+- Run it at the tip that will actually merge — after the branch has been rebased onto its trunk,
+  not before. A rebase brings in the trunk's latest commits, and a suite that passed against the
+  old base says nothing about the new one.

@@ -39,13 +39,9 @@ that both are needed, which is the opposite of the truth.
 
 ### 4. What the release stopped requiring
 
-**A consolidation upstream leaves packages behind.** Where the shared config once needed
-several narrow plugins and now needs one that subsumes them, the narrow ones stay in the
-manifest with nothing importing them.
-
-They are found in the lockfile rather than by reading code: a package requested by the root
-alone, and imported nowhere, is orphaned. Report it — removing it needs another install,
-which the run may not be able to perform.
+**A consolidation upstream leaves packages behind.** What counts as one, and how the lockfile
+finds it, belong to `/hoc-npm-raise-deps`. Here, an orphan the raise left is reported, not
+removed — removing it needs another install, which the run may not be able to perform.
 
 ### 5. Which standing relaxations have gone quiet
 
@@ -87,10 +83,8 @@ though nothing has moved.
 
 ## What a bump costs the manifest
 
-**The version and the lockfile are two commits, not one.** The manifest states the intent;
-the lockfile records what the install resolved. Splitting them lets a reader see the
-resolution separately from the decision, and the lockfile commit takes whatever subject the
-repository's history already uses for it.
+**The version and the lockfile are two commits, not one**, and the lockfile commit takes the
+subject the git commit convention (`/hoc-git-commit`) gives a generated file.
 
 **Confirm the whole chain is available before setting the version.** The named package being
 published where the install will look for it says nothing about its dependencies: a rule-set
