@@ -296,10 +296,9 @@ generate ({
   literal, and the fix is to declare what the literal is. Casting deletes the message rather than
   the defect.
 - **The only `*` cast allowed is the temporary one, against a type the project does not own, and
-  inside the class that supplies the stand-in**: a `MockXxxx` under `tests/mocks/` whose
-  `.create()` declares the real type as its return, so the cast bridges a deliberately partial
-  literal exactly once and every caller holds the real type. The test convention (`/hoc-jest`)
-  settles where that class lives and what tests it.
+  inside the `.create()` of the `MockXxxx` stand-in**, so the cast bridges a deliberately partial
+  literal exactly once and every caller holds the real type. What that class is, where it lives
+  and what tests it belong to `/hoc-jest`.
 - **Against a type the project owns there is no exception.** Build the real thing and hand it
   over. A cast literal standing in for one of ours declares itself complete while holding two
   members, and that claim is one the checker can never test — the type gains a member, the
@@ -340,22 +339,7 @@ const cases = [
   },
 ]
 
-// OK: the one temporary cast, inside the class standing in for a third-party type
-export default class MockValidationContext {
-  /**
-   * Factory method.
-   *
-   * @returns {GraphqlType.ValidationContext} - Validation context.
-   */
-  static create () {
-    return /** @type {*} */ ({
-      getType: () => null,
-      reportError: () => {},
-    })
-  }
-}
-
-// NG: the same cast written where it is used, instead of in the stand-in
+// NG: the cast written where it is used, instead of inside the MockXxxx stand-in
 /** @type {GraphqlType.ValidationContext} */
 const mockContext = /** @type {*} */ ({
   getType: () => null,
