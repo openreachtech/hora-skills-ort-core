@@ -188,10 +188,9 @@ static create (...) {
 
 ### A dependency is built in a factory method of its own
 
-- **A dependency `static create (...)` needs is never built in its default argument.** It is built
-  by a dedicated factory method — `this.createExternalApiClient()` — instantiating through a
-  `[TargetClassName]Ctor` getter. That structure, and the seams it leaves for patching and
-  testing, belong to `/hoc-wire-dependencies`.
+- How a dependency `static create (...)` needs is built belongs to `/hoc-wire-dependencies`. It is
+  read here because the default arguments of `static create (...)` are where a dependency is most
+  often built by hand.
 
 ### When asynchronous creation is needed, define `.createAsync(...)`
 
