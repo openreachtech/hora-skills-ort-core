@@ -130,8 +130,8 @@ addEntry ({
   immutability). Array / Set may be updated but referencing an individual element is prohibited (always use the whole
   at once); use `WeakMap` for association, do not use `Map`
 - Do not directly access members not in the references; do not enumerate instances
-- Do not use `#private` or `decorator` (except when a human explicitly specifies it)
-- A class that has `extends` is out of scope
+- Do not use `Map`, `Object.freeze()`, native private members or decorators (see `/hoc-prohibit-native-features`)
+- Do not share an object literal across scopes (see `/hoc-prohibit-native-features`); capsulize what an API returns
 
 ## Proviso
 
