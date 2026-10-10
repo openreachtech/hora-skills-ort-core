@@ -26,7 +26,7 @@
 | `hoc-prohibit-native-features` | このライブラリが使わない JavaScript の言語機能。`Map`、`Object.freeze()`、ネイティブ private（`#x`、`static #x`）、decorator と、それぞれを使わない理由。 |
 | `hoc-classes-inflators` | inflator(バインドメソッド)の規約。引数で渡されたクラスをバインドし、`BoundCtorRegistry` でメモ化した派生サブクラスを返すパターンと、その命名・引数。 |
 | `hoc-properties` | プロパティの規約。コンストラクタ内で `this` に設定、不変(再代入禁止・`Map` 禁止)、JavaScript ネイティブ private は使いません。 |
-| `hoc-accessors` | アクセサ(getter/setter)の規約。不変性のため setter は禁止、`#get:Ctor` は `this.constructor` 専用、getter 本体は分岐もメソッド呼び出しも持たないプロパティ参照に留めます。 |
+| `hoc-accessors` | アクセサ(getter/setter)の規約。不変性のため setter は禁止、getter 本体は分岐もメソッド呼び出しも持たないプロパティ参照に留めます。 |
 
 ## メンバーとスコープ
 
