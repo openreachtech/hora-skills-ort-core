@@ -9,9 +9,9 @@ a type error**. The purpose of `@type` is to make the type check pass; if the
 correct type can be inferred from the literal and there is no type error
 whether or not you attach it, it is **redundant, so it can be omitted**.
 
-A cast via `@type {Array<*>}` should be limited to suppressing type errors
-**to write irregular values** (`null` / `undefined` / missing keys, etc. that
-violate the declared type). Irregular values are isolated into the
+Whether a cast via `@type {Array<*>}` is allowed at all belongs to `/hoc-jsdoc`:
+only to let through irregular values (`null` / `undefined` / missing keys, etc.
+that violate the declared type) on purpose. Irregular values are isolated into the
 **abnormal-value-series `describe()`** by the valid/invalid separation
 ([Separate Valid / Invalid
 Values](./structure.md#separate-valid--invalid-values)), so **only the
@@ -318,12 +318,9 @@ any lives, i.e. the argument). If it's a property of an object literal, like
 `const args = { deriver: ({ Ctor }) => ... }`, place it **directly above that
 property**; for a standalone `const`, place it directly above that.
 
-Note the ESLint (jsdoc plugin) constraints:
-- Once you write `@param`, **`@returns` is also mandatory**
-  (`jsdoc/require-returns`). It cannot be omitted if the function returns a value.
-- A block containing `@param` **cannot be a single line**
-  (`jsdoc/multiline-blocks`; single-line is only allowed for some tags such as
-  `@type`). → It must always be written as a **multi-line block**.
+- The block follows the JSDoc convention (`/hoc-jsdoc`): **`@returns` is always
+  written**, `{void}` included, and a block holding `@param` is never a single
+  line.
 - A constructor type only needs `new () => *` if it's used only as
   `extends` (no need to go as far as `new (...args: Array<*>) => *`).
 
@@ -351,24 +348,31 @@ statement**. Don't stack a fixed cast inline on the value side.
 
 - Declare the type after assignment (i.e. the type that variable will hold
   from here on) with `@type` on **the line above**.
-- When the right-hand-side value cannot be directly assigned to the declared
-  type (e.g. putting a `jest.spyOn()` result into a function type), bridge the gap with
-  **a single temporary `/** @type {*} */` cast on the value side**. Place
-  the temporary cast right before the value, keeping the declared type
-  separated onto the line above.
 - This way, "what is this variable's type" can be read in one line directly
-  above the declaration, and `*` is understood as playing the role of "a
-  temporary escape hatch just to let the assignment through."
+  above the declaration.
+- **A spy takes no annotation at all.** `jest.spyOn()` keeps the type of the
+  function it spies on, so its calls, its arguments and a stubbed return are
+  checked as they are. Declaring the spy as the spied function's type and
+  casting the value to fit throws that check away.
 
 ```js
-// Good: the type after assignment goes on the line above; the * temporary cast goes on the value side
-/** @type {typeof someFn} */
-const someFnSpy = /** @type {*} */ (jest.spyOn(args, 'someFn'))
+// Good: the type after assignment goes on the line above
+/** @type {Record<string, typeof BaseError>} */
+const errorHash = {
+  Alpha: AlphaError,
+}
 ```
 
 ```js
-// Avoid: stacking a fixed cast on the value side (the declared type gets buried in the right-hand side)
-const someFnSpy = /** @type {typeof someFn} */ (/** @type {*} */ (jest.spyOn(args, 'someFn')))
+// Avoid: a cast stacked on the value side (the declared type gets buried in the right-hand side)
+const errorHash = /** @type {Record<string, typeof BaseError>} */ ({
+  Alpha: AlphaError,
+})
+```
+
+```js
+// Good: the spy keeps the spied function's type without any annotation
+const someFnSpy = jest.spyOn(args, 'someFn')
 ```
 
 ### Resolve dynamic-key types on the `cases` side, keeping the access site and Arrange clean

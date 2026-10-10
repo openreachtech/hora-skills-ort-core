@@ -48,7 +48,7 @@ often removes the need for a body.
 
 ## Naming the target
 
-Name the concrete thing that changed, using the class-member notation given in `SKILL.md`.
+Name the concrete thing that changed, using the notation of `/hoc-classes-member-notation`.
 
 ```
 Bad:  Tidy up the launcher
