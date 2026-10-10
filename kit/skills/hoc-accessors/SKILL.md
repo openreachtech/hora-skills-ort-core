@@ -1,6 +1,6 @@
 ---
 name: hoc-accessors
-description: "Conventions for class accessors, getters and setters alike. Use when adding or reviewing an accessor, a getter that holds a dependency included. Which getter a dependency takes, and the factory method beside it, belong to the dependency-wiring convention; where members sit in the class body, to the class notation convention."
+description: "Conventions for class accessors, getters and setters alike. Use when adding or reviewing an accessor — a getter that holds a dependency included — and when about to write a getter that counts, filters or builds the value it returns. Which getter a dependency takes, and the factory method beside it, belong to the dependency-wiring convention; where members sit in the class body, to the class notation convention."
 ---
 
 # Classes: Members / Accessors
@@ -17,11 +17,10 @@ This summarizes conventions related to class accessor (getter / setter) definiti
   be defined as needed. This is not a reassignment of a class property but the definition of `Proxy` behavior, and
   does not conflict with the intent of immutability.
 
-## Reserve `#get:Ctor` as a conventional getter
+## The `#get:Ctor` getter
 
-- `#get:Ctor` is reserved as the conventional getter that "returns `this.constructor`."
-  (For usage, type resolution, and override details, see the scope-reference convention.)
-- Therefore, do not use the name `Ctor` as a member name for any other purpose.
+- `#get:Ctor` is a getter, so everything below holds for it in full. How it is defined, and why
+  its name is reserved, belong to `/hoc-classes-ctor`.
 
 ## Getters that wire dependencies
 
@@ -38,7 +37,7 @@ This summarizes conventions related to class accessor (getter / setter) definiti
 - One of a getter's responsibilities is **drilling down into properties** to resolve the Law of Demeter. Confine deep property chains within the getter, keeping the caller shallow.
 - A getter must not return `undefined`. When a value cannot be obtained, resolve it to `null` with `?? null`.
   - This `??` is itself a kind of branching, but since the condition is limited solely to "identifying `undefined`," it is permitted as an exception.
-- When drilling down into properties, treat `this.xxxx` as the receiver, and follow "one property chain per line" from the coding-styles convention. That is, chop it down so that there is **at most one receiver per line, and at most one property call per line**.
+- How a chain is chopped while drilling down belongs to "Write one property per line in a property chain" in `/hoc-coding-styles`, with `this.xxxx` standing as the receiver.
 
 ```javascript
 // OK: this.entity is the receiver, one property per line. undefined is resolved to null with ?? null

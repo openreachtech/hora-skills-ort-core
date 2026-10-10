@@ -33,7 +33,7 @@ to it, and do the same for every package in the chain — a dependency of the co
 the one that is too young.
 
 Wanting a version the cooldown excludes is a real case, and its handling — an exclusion at
-install time rather than an edit to the setting — belongs to `hoc-npm-vulnerability`.
+install time rather than an edit to the setting — belongs to `/hoc-npm-vulnerability`.
 
 **A major bump is not run autonomously.** What it demands of the local config is not
 knowable from the version number, and the interview in
@@ -112,7 +112,7 @@ So the stop is an interview, and it is built so that the answer can be a word.
 1. Set the version in `package.json`. Commit.
 2. Install. **This step may not be the machine's to run** — where it is not, hand over and
    resume once the lockfile has moved.
-3. Commit the lockfile, with the subject the repository's history already uses for it.
+3. Commit the lockfile, with the subject the git commit convention (`/hoc-git-commit`) gives a generated file.
 4. Capture the whole report, machine-readable, and keep it. Everything below compares
    against it.
 5. Apply the fixer, check its hunks against the report, and commit what survives.
@@ -169,7 +169,7 @@ gives the objects it returns, an argument a library hands over to be rewritten i
 and it then stops being looked at.
 
 What a change may do to a declaration that already has callers is settled by
-`hoc-retake-declaration`, whatever the reason for making it.
+`/hoc-retake-declaration`, whatever the reason for making it.
 
 **Measure the surface before calling a restructure internal.** A change that looks confined
 can drop a subclass's override silently, and a suite exercising only the base class passes

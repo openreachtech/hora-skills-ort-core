@@ -1,6 +1,6 @@
 ---
 name: hoc-naming
-description: "Naming conventions for the identifiers in code — classes, members, variables and parameters. Use when choosing or reviewing a name. Constants belong to the constants convention; a skill's name, to the skill-updating convention; commit verbs, to the git commit convention."
+description: "Naming conventions for the identifiers in code — classes, members, variables and parameters. Use when choosing or reviewing a name. The super-prefix a method name carries belongs to the method super-prefix convention; constants, to the constants convention; a skill's name, to the skill-updating convention; commit verbs, to the git commit convention."
 ---
 
 # Shared: Naming
@@ -41,29 +41,10 @@ const enabledUsers = users.filter(it => it.enabled)
 const completedPayments = payments.filter(it => it.completed)
 ```
 
-## The `item` parameter of higher-order function callbacks
+## The parameters of a higher-order function's callback
 
-- For a function passed to a higher-order function, use `it` as the parameter name for receiving each item.
-- If a higher-order function is called inside another higher-order function, using `it` for the inner item too would be confusing, so name the inner item's parameter according to the meaning of its value.
-- The first-layer callback argument should basically use `(it, index, array) => ...`.
-- For `reduce()` and `reduceRight()`, name the first argument (the accumulator) appropriately based on the meaning of the value being accumulated (e.g. `total` for a running sum).
-
-```javascript
-// OK: item parameter is it
-const ids = samples
-  .filter(it => it.enabled)
-  .map(it => it.id)
-
-// OK: name the inner nested item by meaning (outer it / inner user, etc.)
-const names = teams
-  .flatMap(it =>
-    it.members.map(user => user.name)
-  )
-
-// OK: name the reduce accumulator by meaning (total for a running sum)
-const total = prices
-  .reduce((total, it) => total + it.amount, 0)
-```
+- How a callback's parameters are named — `it`, and the accumulator of `reduce()` — belongs to
+  `/hoc-higher-order-functions`.
 
 ## Naming abstract classes and derived classes
 
@@ -195,51 +176,12 @@ const modifiedAtTo = ...   // range upper bound
 
 ## Super-prefixes state how a method behaves
 
-**A method name may carry a prefix before its verb, marking what kind of behaviour it is.**
-The verb says what the method does; the super-prefix says how it goes about it, and it is
-what lets one member be told from its siblings at the call site.
-
-| Super-prefix | What it marks |
-| :-- | :-- |
-| `deep~` | The method descends into a nested structure, calling itself as it goes. It is the entry point of that walk |
-| `invoke~` | The method does nothing but call another — a delegate's method, a handler it was given, or one of its own private members |
-| `bulk~` | The method handles many at once, where a single-item member of the same name exists beside it |
-
-```javascript
-// deep~: the entry point of a recursive walk, told apart from the members it recurses through
-deepMeasureSelectionDepth ({ context, selection, visitedFragmentNames = [] }) { /* ... */ }
-
-measureSelectionSetDepth ({ context, selectionSet, visitedFragmentNames }) { /* ... */ }
-
-// invoke~: the body is the call and nothing else
-invokeFetch ({ url }) {
-  return fetch(url)
-}
-
-invokeFetchWithCredentials ({ url }) { /* ... */ }
-
-// bulk~: the many-at-once member, standing beside the one that takes a single item
-bulkSaveCustomers ({ customers }) { /* ... */ }
-
-saveCustomer ({ customer }) { /* ... */ }
-```
-
-- **`deep~` pairs with where the accumulator's default sits.** The entry point is the one
-  member whose accumulator parameter carries a default, so the name and the signature point
-  at the same member — see the method-definition convention. A reader meeting either one can
-  tell the entry from the steps, and a later edit that adds a default to a step contradicts
-  the naming, which is what makes the mistake visible.
-- **`invoke~` says the method holds no logic of its own.** What it wraps may be a delegate's
-  method, a handler passed in, or a private member of the same class; what the prefix
-  promises is that nothing else happens there. A method that also transforms, branches or
-  decides is not an `invoke~`, whatever it wraps.
-- **`bulk~` says a single-item member exists beside it.** The prefix is what tells the two
-  apart at the call site, so it is worn by the many-at-once member and never by the one that
-  takes a single item — a lone `bulk~` with nothing to contrast with is naming a distinction
-  the class does not make.
-- These prefixes come **before** the verb and leave the rest of the name alone: the
-  transitive-verb-plus-object rule above still applies, so it is `deepMeasureSelectionDepth()`
-  rather than `deepMeasure()`.
+- A method that handles many items at once, realizes a recursion, or calls a delegate
+  carries a super-prefix before its verb. Which prefixes there are, and what each one promises,
+  belong to `/hoc-super-prefix-method-name`.
+- **What it is read for here is that the prefix changes nothing behind it.** A prefixed name is
+  still chosen by the rules on this page, so a method's name is settled here first and the
+  prefix is put in front of it afterwards.
 
 ## Accessors (getter / setter)
 

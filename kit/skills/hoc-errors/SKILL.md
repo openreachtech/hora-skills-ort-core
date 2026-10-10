@@ -1,6 +1,6 @@
 ---
 name: hoc-errors
-description: "Conventions for how code reports a failure, from a method that cannot produce its value to an abstract member a subclass has not implemented. Use when a method can fail, or when declaring an abstract member. The string an error carries for its callers belongs to the error-codes convention."
+description: "Conventions for how code reports a failure, from a method that cannot produce its value to an abstract member a subclass has not implemented. Use when a method can fail, when the failure of a call to a delegate is turned into a result, or when declaring an abstract member. The string an error carries for its callers belongs to the error-codes convention; how the call to a delegate is laid out, to the delegation convention."
 ---
 
 # Shared: Errors
@@ -30,6 +30,15 @@ generate ({
   // ...
 }
 ```
+
+## A delegate's failure turned into a result
+
+- Where a class calls a delegate — a client, a repository, a service — and reports the call's
+  failure as a result rather than throwing it, how the call is laid out belongs to
+  `/hoc-classes-delegation`.
+- **What it is read for here is where the `try`/`catch` sits.** The call to the delegate is
+  isolated in an `invoke~` member that catches nothing, and the `try`/`catch` belongs to the
+  public member that calls it.
 
 ## How an abstract member declares itself unimplemented
 
@@ -109,7 +118,7 @@ static get config () {
 
 ### The member is named as the documentation convention names it
 
-- `<member-notation>` follows "Notation of Class Members" from the documentation convention
+- `<member-notation>` follows `/hoc-classes-member-notation`
   (instance method `#instanceMethod()` / static getter `.get:staticGetter` / static method
   `.staticMethod()`, etc.).
 - This holds in the plain error's message and in the `memberName` the module's own error
