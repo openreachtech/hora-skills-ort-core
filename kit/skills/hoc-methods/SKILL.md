@@ -142,43 +142,13 @@ exceedsMaxDocumentDepth ({
   the consumer holds what its absence does. A substitute value inside the extractor merges
   the two, and the merged version reads as though no decision had been made.
 
-## A parameter default belongs to the entry point of a recursion
+## A recursion sits behind an entry point of its own
 
-**Where a recursion carries an accumulator — a visited list, a depth, a path — only the
-member the recursion is entered through gives it a default.** The members reached from
-inside take it as a required parameter.
-
-```javascript
-// The entry point: callers state nothing about the accumulator
-deepMeasureSelectionDepth ({
-  context,
-  selection,
-  visitedFragmentNames = [],
-}) {
-  // ...
-}
-
-// Reached only from inside the recursion: the accumulator is required
-measureSelectionSetDepth ({
-  context,
-  selectionSet,
-  visitedFragmentNames,
-}) {
-  // ...
-}
-```
-
-- **A default on an inner member says it can be entered directly**, which is the one thing
-  it cannot do: called from outside with the accumulator empty, it starts a walk with no
-  record of where it has been. Requiring the parameter is what states that it is a step,
-  not a door.
-- **The initial value stops leaking into the caller.** Before the default existed, the entry
-  point's own caller wrote `visitedFragmentNames: []` — the recursion's internal state
-  stated by code that has nothing to do with the recursion.
-- **Which member is the entry point is readable from its name as well.** The naming
-  convention gives the entry the `deep~` super-prefix, so the name and this default point at
-  the same member — and a default later added to a step contradicts the naming, which is what
-  makes it visible.
+- How a recursion is laid out — the plain-named entry point, the `deep~` member behind it, and
+  where the accumulator's initial value is written — belongs to `/hoc-methods-recursion`.
+- **Both members are methods, so everything on this page holds for them in full.** The entry
+  point and the `deep~` member each take a single named-argument object, the accumulator
+  included.
 
 ## Factory methods must be defined without exception
 
