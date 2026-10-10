@@ -25,8 +25,8 @@ Each skill lives at `kit/skills/<name>/`, directly under the skills directory, a
 | `hoc-classes-prohibits` | Prohibitions in class definitions: static-only classes and classes without state are not allowed, and why. |
 | `hoc-prohibit-native-features` | The native JavaScript features this library does not use — `Map`, `Object.freeze()`, native private members (`#x`, `static #x`) and decorators — and why each is refused. |
 | `hoc-classes-inflators` | The inflator (binding) method pattern — bind the class passed as an argument and return a derived subclass memoized via `BoundCtorRegistry` — plus its naming and arguments. |
-| `hoc-properties` | Property conventions — set on `this` in the constructor, immutable (no reassignment, no `Map`), and no JavaScript native private. |
-| `hoc-accessors` | Getter/setter conventions — setters prohibited for immutability, `#get:Ctor` reserved for `this.constructor`, and getter bodies kept to a property reference, with no branching and no method call. |
+| `hoc-properties` | Property conventions — set on `this` in the constructor, immutable (no reassignment, under the property path too), and a collection built, then used all at once. |
+| `hoc-accessors` | Getter/setter conventions — setters prohibited for immutability, and getter bodies kept to a property reference, with no branching and no method call. |
 
 ## Members and scope
 
@@ -39,7 +39,7 @@ Each skill lives at `kit/skills/<name>/`, directly under the skills directory, a
 | `hoc-functions` | Function conventions. Parameters follow method parameters: named arguments as a principle. |
 | `hoc-constants` | Constant conventions — naming (uppercase `SNAKE_CASE`, singular for enum-like objects), chopping down, and the file organization and placement of object-type constants. |
 | `hoc-contracts` | Type contracts for function and method arguments and return values, and how contract types are defined. |
-| `hoc-scope` | Scope references among class members — `this` between static members, `#get:Ctor` when referring from an instance to a static member, and no destructuring of `this`. |
+| `hoc-scope` | Scope references among class members — `this` between static members, `this.Ctor` from an instance to a static member, and no destructuring of `this`. |
 
 ## Modules
 
@@ -66,8 +66,8 @@ Each skill lives at `kit/skills/<name>/`, directly under the skills directory, a
 | `hoc-naming` | Naming for classes, methods, properties and accessors — datetime suffixes (`At`/`On`, plus `From`/`To` for ranges), abbreviation criteria, American spelling, forbidden words, ASCII only. |
 | `hoc-super-prefix-method-name` | The super-prefixes a method name carries before its verb — `bulk~` for many items at once, `deep~` for the member that realizes a recursion, `invoke~` for a member that only calls a delegate — and what each one promises. |
 | `hoc-vscode-cspell` | The spell checker's vocabulary in `.vscode/cspell.json` — settling a reported word in `words:` or `ignoreWords:` before rewording any code, the fragments a pattern produces that are silenced rather than taught, kicking out entries no tracked file uses, and the order a checklist records it in. |
-| `hoc-comments` | Comments within actual code are written in English unless there is a reason otherwise. |
-| `hoc-jsdoc` | JSDoc writing conventions shared by backend and frontend — type annotations, the casts refused on the right-hand side and the third-party-only exception, `@typedef` and type-only imports, and the layout of the block itself, with the Vue/Nuxt-specific conventions in its references. It is also where a type error reported by a checker is cleared. |
+| `hoc-comments` | Comment-writing conventions — a comment says why rather than restating the code, moves with the code it describes, never leaves code commented out, and writes no annotation but `NOTE:`, filing the rest as issues; an inline comment stands above the code, at a line end only to keep a format such as one element per line, and a comment naming a group stands before it; a comment that runs to several lines breaks at a clause, never at a column, and a multi-line block takes three lines or more; lines are commented out with `//`. Which language a comment is written in — English by default — belongs to `hoc-writing-language`. |
+| `hoc-jsdoc` | JSDoc writing conventions shared by backend and frontend — type annotations, the casts refused on the right-hand side and the third-party-only exception, `@typedef` and type-only imports, and the layout of the block itself. It is also where a type error reported by a checker is cleared. |
 | `hoc-type-errors` | How to read what a type checker reports before deciding what to change — the reported count is not the size of the work while casts are still silencing errors, and an error may be pointing at a value that is wrong rather than an annotation that is missing. |
 
 ## Testing
@@ -84,7 +84,7 @@ Each skill lives at `kit/skills/<name>/`, directly under the skills directory, a
 | :-- | :-- |
 | `hoc-git-branch` | Conventions for the branches a repository carries — which five are trunks and what that obliges, which may be cut from `main` per flow, how a general branch is named, the empty marker commit that opens a trunk, and the `--no-ff` merge that closes a sub-branch, along with the subject that merge commit carries and the `-r` every rebase takes, and what tells whether a branch still carries anything or may be discarded. |
 | `hoc-git-branch-remote` | The branches a repository keeps on its remote — `main` as the default branch, which branches may merge into `main` by kind of repository (npm package, boilerplate or application), and a trunk's published history never rewritten. |
-| `hoc-git-commit` | Commit conventions — what belongs in a single commit and the order commits land in, the message format (imperative or Conventional Commits, chosen per project), and the verb vocabulary shared by both. |
+| `hoc-git-commit` | Commit conventions — what belongs in a single commit, the message format (imperative or Conventional Commits, chosen per project), and the verb vocabulary shared by both. |
 | `hoc-git-commit-order` | The order commits land in — the first commit is the one that turns the suite red (tests first when adding, implementation first when removing or lowering a limit), then behavior, structure and addition. |
 | `hoc-git-push` | What a push takes before it is made — the permission each one needs and how narrowly it counts, the force-push handed to a person rather than run here, the operation whose admissibility was read off the remote and is handed over with the reading, naming the remote and the branch instead of relying on configuration, and why tags and remote-branch deletions are not pushed by hand. |
 
@@ -110,7 +110,7 @@ Each skill lives at `kit/skills/<name>/`, directly under the skills directory, a
 | `hoc-readme` | The README a project carries — the file it keeps per language, the section order and the fixed text of each, the parts split out under `docs/` and linked back, the API reference, and the naming used in code examples. |
 | `hoc-license` | The `./LICENSE` a project carries, settled by the `license` field of `package.json` — which text each value takes, the placeholders it fills, the deletion `UNLICENSED` calls for, and what an absent field means. |
 | `hoc-boilerplate` | The `about-boilerplate.md` every clone carries — the `## Version` that moves in a boilerplate and is frozen in everything cloned from one, the single-commit bump that closes a boilerplate's release, and the guard holding three statements of that version to one value. |
-| `hoc-documentation` | Documentation writing conventions — what a document may state as fact and what it must reach for instead, how a stated fact follows its source when a change moves it, the language a document written for a reader is in, and the `#instanceMember` / `.staticMember` notation used when referring to class members. |
+| `hoc-documentation` | Documentation writing conventions — what a document may state as fact and what it must reach for instead, and how a stated fact follows its source when a change moves it. |
 | `hoc-writing-language` | Which natural language a piece of writing is in — an explicit instruction first, then the language a file names for itself (`README.ja.md`, `docs/ja/`), then the language an existing document is already in, then the default for its kind: English for code, comments and skills, the reader's language for a document written for them. |
 | `hoc-resolve-shorthand` | Resolving a handle where the reader meets it — the name to write instead of an invented label, the content a phase or issue number carries with it, the origin a label owes when the list goes back to whoever supplied it, and how much of it is enough. |
 | `hoc-requirement-definition` | Turn a rough request into a requirement definition document through conversation — requirements, observable acceptance criteria, out-of-scope list, open questions. |
