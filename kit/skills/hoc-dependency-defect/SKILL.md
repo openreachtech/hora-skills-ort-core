@@ -183,7 +183,7 @@ version number or an issue link can be checked. If nobody has told the package a
 **Wrap it.** Add a class in this project that calls the function and corrects its result, and have
 the call sites use that class. The same rules apply: correct the result, do not rewrite the function.
 It is a class rather than another function, because this project writes one class per job (see
-`hoc-modules-exports`).
+`/hoc-modules-exports`).
 
 ## When a subclass cannot reach the broken part
 
