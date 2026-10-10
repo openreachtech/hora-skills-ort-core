@@ -74,14 +74,9 @@ it.** Which branches are trunks, and why their published history is never rewrit
 every legitimate push: a sub-branch goes up so that a base branch can receive it through a
 review.
 
-- **A trunk's tip is advanced by a merged pull request, never by a push of a local merge.**
-  Merging a sub-branch into `main` / `release/x.x.x` / `dev` / `env` locally and pushing the
-  result puts the merge on the remote with no review behind it, and the `main-guard` and
-  release workflows — which fire on pull requests — never run. Where the merge has to
-  happen, it happens on the host.
-  - **A general branch acting as a trunk is the exception**, because it is not one of the
-    named branches. A sub-branch cut from `feature/xxxx` merges back into it locally with
-    `--no-ff`, and that merge is pushed like any other commit.
+- **A local merge into a named trunk is never pushed.** A named trunk advances only by a merged
+  pull request — see `/hoc-git-branch-remote`, which also says which branches merge locally and
+  are pushed instead.
 - **`hotfix/xxxx` is the one trunk whose own commits are pushed directly.** It is worked on
   in place rather than through sub-branches, so pushing commits onto it is the normal thing,
   not a violation of the rule above. What still goes through a pull request is its merge into
