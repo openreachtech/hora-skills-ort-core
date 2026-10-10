@@ -11,6 +11,8 @@ Conventions related to module exports.
 
 - Don't define a file whose only purpose is to named-export a function.
 - If each function has a single responsibility, defining a class one by one is the correct approach.
+- The reason is that a module of functions cannot be overridden in part, where a class can — see
+  `/hoc-classes-principles`.
 
 ```javascript
 // NG: a file that merely named-exports a function
