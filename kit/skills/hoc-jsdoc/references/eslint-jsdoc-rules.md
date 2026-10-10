@@ -91,7 +91,7 @@ conventions in other files reinforce one another.
 | Do not write `undefined` as a type (use `null`) | This skill's own convention (not lint-enforced). `undefined` is a defined type, so `no-undefined-types` allows it. Exception: permitted when a third party requires it |
 | Do not place a delimiter after each chopped-down property | Inside a type literal, so lint does not parse it. This skill's own convention |
 | Write `@typedef` on at least three lines | **Lint-enforced** by `multiline-blocks` (`noSingleLineBlocks: true`); a single-line typedef errors |
-| One `@typedef` per block, separated by a blank line | This skill's own convention (not lint-enforced) |
+| One `@typedef` per block | This skill's own convention (not lint-enforced); the blank line between blocks belongs to `/hoc-comments` |
 
 ## Intentionally relaxed rules (off)
 
