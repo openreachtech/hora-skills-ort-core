@@ -41,29 +41,10 @@ const enabledUsers = users.filter(it => it.enabled)
 const completedPayments = payments.filter(it => it.completed)
 ```
 
-## The `item` parameter of higher-order function callbacks
+## The parameters of a higher-order function's callback
 
-- For a function passed to a higher-order function, use `it` as the parameter name for receiving each item.
-- If a higher-order function is called inside another higher-order function, using `it` for the inner item too would be confusing, so name the inner item's parameter according to the meaning of its value.
-- The first-layer callback argument should basically use `(it, index, array) => ...`.
-- For `reduce()` and `reduceRight()`, name the first argument (the accumulator) appropriately based on the meaning of the value being accumulated (e.g. `total` for a running sum).
-
-```javascript
-// OK: item parameter is it
-const ids = samples
-  .filter(it => it.enabled)
-  .map(it => it.id)
-
-// OK: name the inner nested item by meaning (outer it / inner user, etc.)
-const names = teams
-  .flatMap(it =>
-    it.members.map(user => user.name)
-  )
-
-// OK: name the reduce accumulator by meaning (total for a running sum)
-const total = prices
-  .reduce((total, it) => total + it.amount, 0)
-```
+- How a callback's parameters are named — `it`, and the accumulator of `reduce()` — belongs to
+  `/hoc-higher-order-functions`.
 
 ## Naming abstract classes and derived classes
 
