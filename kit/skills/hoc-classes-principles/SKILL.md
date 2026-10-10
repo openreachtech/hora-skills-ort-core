@@ -73,22 +73,42 @@ Why `static #X` is not used either belongs to `/hoc-prohibit-native-features`.
 
 ## What not to use
 
-### `#private`
+The native features this system does not use — `Map`, `Object.freeze()`, native private members
+and decorators — belong to `/hoc-prohibit-native-features`, with the reason for each. What is
+left here is the plain object, which is a matter of design rather than of a language feature.
 
-Under an immutable property design, **there is no work left that is unique to `#private`**. One might initially evaluate abandoning it as "the biggest cost," but within this system it is not even a cost.
+### Plain objects
 
-- **The write axis that private protected evaporates** — Private answers "who may touch it" (access control); immutability answers "can it change at all" (mutation control). Private's historical main purpose is preventing "invariants being broken by external rewrites," but under deep immutability there is not a single write to protect, inside or out. Private is the strategy of "guarding the hazard (mutable state)," immutability is the strategy of "removing the hazard itself"; with no hazard, the guard is redundant.
-- **The remaining read axis is not `#`'s job either** — The read axis splits in two. (1) Decoupling (hiding the
-  representation to refactor) is carried by references = the contract. Coupling to a member not in the references is
-  outside the contract, so the author's freedom to refactor is guaranteed by the contract without waiting for `#`. (2)
-  Secrecy (hiding the value itself, e.g. keys/passwords) is independent of immutability, but JS's `#` is not a
-  security boundary against memory dumps/debuggers, so it is not a guarantee `#` can reliably provide — that is the
-  job of a separate layer (encryption, not retaining).
-- **Debug visibility actually favors soft-private** — In Node, `#` fields appear neither in `console.log` nor in `util.inspect(obj, { showHidden: true })` (DevTools shows `#` specially, but that is a Node-specific handicap). Soft-private (`this._x`) shows up in logs with zero extra code. For an immutable value object, the `_secret` shown there is not "dirt you want to hide" but "the very state you want to see," so being visible is correct. If you want to shape it, you can curate with `[util.inspect.custom]()` (opt-in).
-- **`#` does not save the incompetent** — A user who does not respect boundaries will, even with `#`, touch public things mutably and break something elsewhere ("a lock only keeps out the honest," "a caveman cannot use a microwave"). In closed / application code, stripping visibility and straightforward description from competent users for the sake of the thin band that accidentally couples is putting the cart before the horse.
-- **Name collisions also vanish via the system** — `#`'s last redeeming value, "safety against name collisions under inheritance," vanishes for your own hierarchy via "Property = a constructor argument of the same name." Since everything that holds a value appears in the arguments = the public signature, no hidden field exists, and the inheriting side necessarily confronts it via `super({...})`. That safety is a value for "the author of the class being inherited (the base)," not something the inheriting side gains by writing `#` in its own code.
+A plain object is avoided wherever it can be. What holds values is a class, so that the values
+arrive with a name and with the members that work on them. The rule that draws the line — an
+object literal is not shared across scopes on the strength of its shape — belongs to
+`/hoc-prohibit-native-features`; what follows is why.
 
-Therefore soft-private (`this._x`) is visible and correct. Do not use `#private` unless a human explicitly specifies it.
+- **What decides it is that a class can be overridden in part.** A subclass replaces one member
+  and keeps every other one as it was, which is how a hotfix, a variant or a test stand-in reaches
+  the one place it needs. A plain object offers nothing to override, and neither does a module of
+  exported functions — which is why a module is never used in place of a class either.
+
+- **A plain object narrows the design.** It cannot be asked, so whoever needs what is behind it
+  reaches through it or takes it apart, and the knowledge of its insides spreads to every place
+  that uses it. A class grows the member that answers — `it.hasActiveAccount()` in place of
+  `it.account.isActive()` — and the design keeps that room.
+
+- **A type declaration does not make a plain object a value object.** `@typedef` writes down a
+  shape, and the name it gives lives in the annotation alone: at run time the value is the same
+  nameless object, with nothing on it to work on what it holds. Calling a plain object something
+  else through its type is writing HTML in nothing but `<div>` and `<span>` — a class attribute
+  does not make a `<div>` an `<article>`.
+- **This is why typing stays in JSDoc and never moves to TypeScript.** A structural type system
+  accepts any object of the right shape, so declaring the shape is enough to pass the check, and
+  the value object is never written. What it would have held — completing an entry, comparing two
+  of them — goes to whoever uses the object, and is written again in each place.
+
+- **Data that arrives from outside is wrapped where it arrives.** The JSON an API returns is never
+  parsed and spread through the application as it is. An API is reached through the Payload /
+  Capsule / Launcher structure, and its response is always capsulized: what the application holds
+  is the capsule, never the parsed object. How the three are built belongs to each stack's API
+  client convention.
 
 ```javascript
 // NG: an entry held as a plain object
