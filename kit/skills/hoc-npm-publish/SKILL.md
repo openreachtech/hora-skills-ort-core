@@ -41,10 +41,8 @@ Update package-lock.json after npm install
 - Splitting them is not a special rule for releases — the git commit convention already
   separates a generated artefact from hand-written source. What is specific here is **the
   order and the single install between them.**
-- **The second names the command, not the version.** That is the git commit convention's
-  form for any regenerated lockfile: the versions are in the diff and the command that
-  resolved them is not, so naming the version here would restate the commit above and lose
-  the only thing a reader cannot recover.
+- **The second names the command, not the version**, in the form the git commit convention
+  (`/hoc-git-commit`) gives a generated file.
 - The bump commit is also the declaration that the release is ready. Reading it in a log
   means the release is imminent, so do not bump a version to keep a branch tidy.
 
