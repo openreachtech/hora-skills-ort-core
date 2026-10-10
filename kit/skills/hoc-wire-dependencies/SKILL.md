@@ -169,9 +169,7 @@ static create ({
   nothing in it belongs to an instance. What decides the kind of a getter is its body, not the
   kind of value it holds — a getter that reaches for no instance state is a static getter,
   whatever it returns.
-- **An instance reaches it through `#get:Ctor`**, as `this.Ctor.fs`. That is what the reserved
-  getter is for, and going through the constructor is what keeps a subclass's override the one
-  that answers.
+- **An instance reaches it through `#get:Ctor`**, as `this.Ctor.fs` — see `/hoc-classes-ctor`.
 - Calling a function of the module from within the getter is prohibited, per the accessors
   convention's rule against calling a method from a getter. The getter must return nothing but the
   module reference itself.
@@ -208,7 +206,7 @@ export default class DeepLoader {
 ## Where this stops
 
 - **How a getter's body is written** — no branching, no method call — belongs to the accessors
-  convention, and so does the reservation of `#get:Ctor`.
+  convention. **`#get:Ctor`, and the reservation of its name**, belong to `/hoc-classes-ctor`.
 - **`static create (...)` in general** — that every class defines one, `new this(...)`, which
   defaults it applies, and when a direct `new` is allowed — belongs to the methods convention.
 - **What an object hands its members** — one shared manifest rather than each member's own values
