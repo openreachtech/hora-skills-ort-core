@@ -1,6 +1,6 @@
 ---
 name: hoc-npm-install-scripts
-description: "How to handle the install scripts npm would run while installing dependencies. Use this skill when an install reports scripts not yet covered by `allowScripts`, when deciding whether a dependency's install script may be denied, when turning the gate on in a project, or when judging whether an upgrade introduces a new script. Advisories belong to the vulnerability convention."
+description: "How to handle the install scripts npm would run while installing dependencies. Use this skill when an install reports scripts not yet covered by `allowScripts`, when deciding whether a dependency's install script may be denied, when turning the gate on in a project, or when judging whether an upgrade introduces a new script. Advisories belong to the vulnerability convention; how `.npmrc` is written, to the npmrc convention."
 ---
 
 # npm Install Scripts
@@ -127,16 +127,8 @@ one line added to `allowScripts` arrives as a diff that also deletes lines nobod
 
 - `overrides` has no subcommand of its own, so it is edited by hand for the same reason.
 
-## The npm configuration file is written `key = value`
+## `strict-allow-scripts` is a line of `.npmrc`
 
-Spaces on both sides of the `=`.
-
-```
-strict-allow-scripts = true
-```
-
-- **Do not use `npm config set` to write it.** It writes the pair without the spaces, and it
-  rewrites the lines already in the file — so applying one setting through it reformats
-  everything else.
-- Edit the file directly. Where the command has already run, the file has to be reformatted
-  by hand afterwards.
+- How the line is written — `key = value`, edited directly and never through `npm config set` —
+  belongs to `/hoc-npm-npmrc`. What the setting does, and that it goes in before the install,
+  are this skill's.

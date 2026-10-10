@@ -1,6 +1,6 @@
 ---
 name: hoc-wire-dependencies
-description: "How a class reaches the modules and classes it depends on, so that a subclass can patch one and a test can swap it. Use when a class imports something it uses, builds a dependency in `static create()` or anywhere else, or a dependency has to be patched or mocked. How a getter's body is written belongs to the accessors convention; `static create()` in general, to the methods convention."
+description: "How a class reaches the modules and classes it depends on: never by the name it imported, always through a static getter, so that a subclass can patch one and a test can swap it. Use when a class imports anything it uses, a native module such as `fs` included, builds a dependency in `static create()` or anywhere else, or a dependency has to be patched or mocked. How a getter's body is written belongs to the accessors convention; `static create()` in general, to the methods convention."
 ---
 
 # Wiring Dependencies
@@ -159,6 +159,29 @@ static create ({
 }
 ```
 
+### A dependency built on the fly goes through the factory method too
+
+- **A class held and used by delegation takes the factory method wherever it is built**, including
+  when an instance method creates one temporarily and discards it. Do not `new` it there either.
+- This holds for a class defined within the application as much as for a third-party one: what
+  decides it is that the instance is used by delegating to it, not where the class comes from.
+
+```javascript
+// NG: a delegate built on the fly with a direct new
+sendRequest () {
+  const client = new ExternalApiClient({ env })
+
+  return client.send()
+}
+
+// OK: built through the dedicated factory method
+sendRequest () {
+  const client = this.createExternalApiClient()
+
+  return client.send()
+}
+```
+
 ## A module used as it is: a static getter that returns it
 
 - When the dependency is a native module such as `fs` — where the module itself is the value and
@@ -169,9 +192,7 @@ static create ({
   nothing in it belongs to an instance. What decides the kind of a getter is its body, not the
   kind of value it holds — a getter that reaches for no instance state is a static getter,
   whatever it returns.
-- **An instance reaches it through `#get:Ctor`**, as `this.Ctor.fs`. That is what the reserved
-  getter is for, and going through the constructor is what keeps a subclass's override the one
-  that answers.
+- **An instance reaches it through `#get:Ctor`**, as `this.Ctor.fs` — see `/hoc-classes-ctor`.
 - Calling a function of the module from within the getter is prohibited, per the accessors
   convention's rule against calling a method from a getter. The getter must return nothing but the
   module reference itself.
@@ -208,8 +229,10 @@ export default class DeepLoader {
 ## Where this stops
 
 - **How a getter's body is written** — no branching, no method call — belongs to the accessors
-  convention, and so does the reservation of `#get:Ctor`.
+  convention. **`#get:Ctor`, and the reservation of its name**, belong to `/hoc-classes-ctor`.
 - **`static create (...)` in general** — that every class defines one, `new this(...)`, which
   defaults it applies, and when a direct `new` is allowed — belongs to the methods convention.
 - **What an object hands its members** — one shared manifest rather than each member's own values
   — belongs to the manifest pattern convention.
+- **How a class calls the delegate once it holds it** — the call isolated in an `invoke~` member,
+  and the failure turned into a result around it — belongs to `/hoc-classes-delegation`.

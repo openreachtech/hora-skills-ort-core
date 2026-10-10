@@ -129,7 +129,7 @@ docs/features/<feature-slug>/
   that everything about one feature is found together.
 - If the project already has an established location for specifications, follow the project and
   keep the file name `requirements.md`.
-- Write it in the language the reader is using, as the documentation convention requires of any document generated for a reader.
+- Write it in the language the reader is using, as `/hoc-writing-language` resolves it for any document written for a reader.
 
 ## Amending an approved document
 

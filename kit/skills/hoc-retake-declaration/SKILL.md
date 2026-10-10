@@ -5,10 +5,9 @@ description: "Conventions for redoing existing code without moving what its call
 
 # Retake a Declaration
 
-A **retake** redoes what is already there — replacing something poor, hurried or a stopgap with
-what should have been written — and **claims no gain beyond that**. That is what separates it from
-an update, which carries a sound implementation forward and leaves it giving something it did not
-give before.
+A **retake** is what the commit verb `Retake` defines in `/hoc-git-commit`: it redoes what is
+already there and **claims no gain beyond that**. That is what separates it from an update, which
+carries a sound implementation forward and leaves it giving something it did not give before.
 
 The distinction is not a nuance of wording. It decides what the work is allowed to do.
 
@@ -61,8 +60,8 @@ a detail. Where the two cannot both be had, the contract wins and the finer prop
 version that may change it.
 
 **Where the member gaining the parameter is the constructor, the default goes on the factory
-method.** A constructor decides no value — it holds what its parameters receive — so the parameter
-it gains stays bare, and `.create()` supplies what the existing calls relied on. The contract is
+method**, since a constructor decides no value (`/hoc-classes-constructor`). The parameter it
+gains stays bare, and `.create()` supplies what the existing calls relied on. The contract is
 kept where callers actually stand: they reach the class through the factory method, never through
 `new`. The class conventions settle that division; this is only where a retake meets it.
 

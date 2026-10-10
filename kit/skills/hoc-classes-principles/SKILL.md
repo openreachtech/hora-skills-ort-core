@@ -1,6 +1,6 @@
 ---
 name: hoc-classes-principles
-description: "Principles of class design — what a class has to hold to exist at all, and the premises the other class conventions rest on. Use when deciding whether something should be a class, when reaching for a `#` private member (a static one included), a decorator or a class field, or when the reason behind a class convention is in question. Specific prohibitions belong to the class prohibitions convention; member order, to the class notation convention."
+description: "Principles of class design — what a class has to hold to exist at all, and the premises the other class conventions rest on. Use when deciding whether something should be a class, when reaching for a class field or a plain object, or when the reason behind a class convention is in question. Native features the system does not use belong to the native-feature prohibition convention; specific prohibitions, to the class prohibitions convention; member order, to the class notation convention."
 ---
 
 # Classes: Principles
@@ -10,12 +10,13 @@ This summarizes the principles for class property declaration and design.
 ## Core principle: Do not create classes without properties
 
 - A class must hold at least one instance property.
-- Do not create a class that is nothing but a collection of static methods / static fields (a static-only class). Design it as a state-holding instance class, or delegate to a single-responsibility class.
-- The class prohibitions convention is the canonical source for the detailed reasons and exceptions of this prohibition (no-properties / static-only). This skill sets that as the core principle and then systematizes the surrounding design conventions on top of it.
+- What the prohibition covers — static-only classes and classes without properties — and its
+  exceptions and reasons belong to `/hoc-classes-prohibits`. This skill takes it as the core
+  principle and builds the surrounding design conventions on top of it.
 
 ## The five points of the system (a bundle of premises)
 
-1. **Deep immutability** — Do not reassign after construction; keep nested values (e.g. instances of other immutable classes) immutable too. **The collection types Array / Set are not deep-frozen; updates (adding/removing elements) are allowed.** The reasons are that "the set of retained items" is premised on being treated as equal regardless of count, and that it also serves to support the Builder Pattern. **However, a structure that references an individual element (e.g. pulling out a single element via `array[i]`) is prohibited** — because it is a circumvention of the prohibition on mutable objects. A collection's value must always be "used all at once" (scanned/transformed/aggregated over every element as a whole). When you need to associate by object, use `WeakMap` (if you need to enumerate, hold the keys in an Array and traverse through them). Do not use `Map` (see the property-definition convention).
+1. **Deep immutability** — Do not reassign after construction; keep nested values (e.g. instances of other immutable classes) immutable too. **The collection types Array / Set are not deep-frozen, because they are built: elements are added while the collection is assembled, and the finished collection is then used all at once.** The reasons are that "the set of retained items" is premised on being treated as equal regardless of count, and that building supports the Builder Pattern, whose editing period runs until `#buildXxxx()` is called. How a collection's value may be used belongs to `/hoc-properties`, and why `Map` gives way to `WeakMap` to `/hoc-prohibit-native-features`.
 2. **Property = a constructor argument of the same name** — Every property that stores a value is passed as a
    constructor argument of the same name. This makes the set of property names a class occupies appear in the
    constructor signature itself, so hidden fields cannot exist in principle.
@@ -53,7 +54,8 @@ class Foo {
 ### Handling of `static` fields
 
 - **`static` fields (`static X = ...`) may be used.** The prohibition on class fields and private fields is a convention **about instance properties**, and `static` fields are out of its scope.
-- However, **do not use `static #X` (the static form of native private).**
+- However, **`static #X` (the static form of native private) is not used** — see
+  `/hoc-prohibit-native-features`.
 
 This is because none of the three grounds for the prohibition apply to `static`.
 
@@ -61,69 +63,95 @@ This is because none of the three grounds for the prohibition apply to `static`.
 - **Initialization order** — `static` fields are initialized in source order at class-definition time, so no problem arises from the interplay of `super()` and the constructor body.
 - **Split-brain** — There is no constructor to override in, so no double declaration occurs.
 
-The reason not to use `static #X` is that the reason not to use native private (a subclass cannot read it, which blocks extension and substitution through inheritance — see the property-definition convention) holds for `static` as well, and its impact is broader: when a `static` method refers to `this.#X`, **a call through a derived class throws a TypeError.**
-
-```javascript
-// NG: a static native private cannot be used from a derived class
-class Base {
-  static #pool = new WeakMap()
-
-  static ensure (key) {
-    return this.#pool.has(key)
-  }
-}
-class Derived extends Base {}
-
-Derived.ensure(key)
-// TypeError: Cannot read private member #pool from an object whose class did not declare it
-```
+Why `static #X` is not used either belongs to `/hoc-prohibit-native-features`.
 
 #### What to put in a `static` field
 
 - **Put accumulating associations, pools, and caches in `static` + `WeakMap`, not in an instance.** Placed on an instance, they participate in equality comparison and serialization as part of the value — but a cache is not a value. With `static` + `WeakMap`, (1) it sits outside the value semantics of instances, (2) it is non-enumerable and key-gated, so a party without the key cannot reach it, and (3) the author can look inside on demand with `util.inspect(Ctor, { showHidden: true })`.
-- **Do not reassign the reference itself.** Deep immutability extends to `static` as well. Only the inside of a collection may change, and that is constrained by the property-definition convention (`Map` is not used, even for `static`).
+- **Do not reassign the reference itself.** Deep immutability extends to `static` as well. Only the inside of a collection may change, and that is constrained by `/hoc-properties` (`Map` is not used, even for `static` — see `/hoc-prohibit-native-features`).
 - **Adding `static` fields does not relax the core principle of not creating classes without properties.** A `static` field is not an instance property, so a class holding only those remains prohibited as a static-only class.
-
-### Handling of derived classes
-
-- A class that has `extends` is out of scope even if it only overrides static members. The responsibility belongs to the base class.
 
 ## What not to use
 
-### `#private`
+The native features this system does not use — `Map`, `Object.freeze()`, native private members
+and decorators — belong to `/hoc-prohibit-native-features`, with the reason for each. What is
+left here is the plain object, which is a matter of design rather than of a language feature.
 
-Under an immutable property design, **there is no work left that is unique to `#private`**. One might initially evaluate abandoning it as "the biggest cost," but within this system it is not even a cost.
+### Plain objects
 
-- **The write axis that private protected evaporates** — Private answers "who may touch it" (access control); immutability answers "can it change at all" (mutation control). Private's historical main purpose is preventing "invariants being broken by external rewrites," but under deep immutability there is not a single write to protect, inside or out. Private is the strategy of "guarding the hazard (mutable state)," immutability is the strategy of "removing the hazard itself"; with no hazard, the guard is redundant.
-- **The remaining read axis is not `#`'s job either** — The read axis splits in two. (1) Decoupling (hiding the
-  representation to refactor) is carried by references = the contract. Coupling to a member not in the references is
-  outside the contract, so the author's freedom to refactor is guaranteed by the contract without waiting for `#`. (2)
-  Secrecy (hiding the value itself, e.g. keys/passwords) is independent of immutability, but JS's `#` is not a
-  security boundary against memory dumps/debuggers, so it is not a guarantee `#` can reliably provide — that is the
-  job of a separate layer (encryption, not retaining).
-- **Debug visibility actually favors soft-private** — In Node, `#` fields appear neither in `console.log` nor in `util.inspect(obj, { showHidden: true })` (DevTools shows `#` specially, but that is a Node-specific handicap). Soft-private (`this._x`) shows up in logs with zero extra code. For an immutable value object, the `_secret` shown there is not "dirt you want to hide" but "the very state you want to see," so being visible is correct. If you want to shape it, you can curate with `[util.inspect.custom]()` (opt-in).
-- **`#` does not save the incompetent** — A user who does not respect boundaries will, even with `#`, touch public things mutably and break something elsewhere ("a lock only keeps out the honest," "a caveman cannot use a microwave"). In closed / application code, stripping visibility and straightforward description from competent users for the sake of the thin band that accidentally couples is putting the cart before the horse.
-- **Name collisions also vanish via the system** — `#`'s last redeeming value, "safety against name collisions under inheritance," vanishes for your own hierarchy via "Property = a constructor argument of the same name." Since everything that holds a value appears in the arguments = the public signature, no hidden field exists, and the inheriting side necessarily confronts it via `super({...})`. That safety is a value for "the author of the class being inherited (the base)," not something the inheriting side gains by writing `#` in its own code.
+A plain object is avoided wherever it can be. What holds values is a class, so that the values
+arrive with a name and with the members that work on them. The rule that draws the line — an
+object literal is not shared across scopes on the strength of its shape — belongs to
+`/hoc-prohibit-native-features`; what follows is why.
 
-Therefore soft-private (`this._x`) is visible and correct. Do not use `#private` unless a human explicitly specifies it.
+- **What decides it is that a class can be overridden in part.** A subclass replaces one member
+  and keeps every other one as it was, which is how a hotfix, a variant or a test stand-in reaches
+  the one place it needs. A plain object offers nothing to override, and neither does a module of
+  exported functions — which is why a module is never used in place of a class either.
 
-### `decorator`
+- **A plain object narrows the design.** It cannot be asked, so whoever needs what is behind it
+  reaches through it or takes it apart, and the knowledge of its insides spreads to every place
+  that uses it. A class grows the member that answers — `it.hasActiveAccount()` in place of
+  `it.account.isActive()` — and the design keeps that room.
 
-- A `decorator` adds no capability at all. It is purely syntactic sugar over a higher-order function + metadata (`@memoize method(){}` ≡ `method = memoize(method)`); everything a decorator can do can be written explicitly.
-- This policy chooses "explicitness > brevity." A decorator's real benefits (co-locating declarative metadata, reducing DI boilerplate) are ergonomics, not capability, and they sell explicitness in return. Augmentation that is implicit, mutating, and action-at-a-distance conflicts with "explicit, immutable, single manifest."
-- A field decorator attaches to a class field, so it does not fit at the syntactic level under this policy, which prohibits class fields.
+- **A type declaration does not make a plain object a value object.** `@typedef` writes down a
+  shape, and the name it gives lives in the annotation alone: at run time the value is the same
+  nameless object, with nothing on it to work on what it holds. Calling a plain object something
+  else through its type is writing HTML in nothing but `<div>` and `<span>` — a class attribute
+  does not make a `<div>` an `<article>`.
+- **This is why typing stays in JSDoc and never moves to TypeScript.** A structural type system
+  accepts any object of the right shape, so declaring the shape is enough to pass the check, and
+  the value object is never written. What it would have held — completing an entry, comparing two
+  of them — goes to whoever uses the object, and is written again in each place.
+
+- **Data that arrives from outside is wrapped where it arrives.** The JSON an API returns is never
+  parsed and spread through the application as it is. An API is reached through the Payload /
+  Capsule / Launcher structure, and its response is always capsulized: what the application holds
+  is the capsule, never the parsed object. How the three are built belongs to each stack's API
+  client convention.
+
+```javascript
+// NG: an entry held as a plain object
+addEntry ({
+  title,
+}) {
+  return this.Ctor.create({
+    entries: [
+      ...this.entries,
+      {
+        title,
+        isDone: false,
+      },
+    ],
+  })
+}
+
+// OK: an entry is an instance of its own class
+addEntry ({
+  title,
+}) {
+  return this.Ctor.create({
+    entries: [
+      ...this.entries,
+      this.Ctor.TodoEntryCtor.create({
+        title,
+      }),
+    ],
+  })
+}
+```
 
 ## Rules
 
-- A class holds at least one instance property (if it cannot, replace it with a method of a state-holding class / delegation to a single-responsibility class)
+- A class holds at least one instance property (see `/hoc-classes-prohibits`)
 - Properties are only `this.xxx = xxx` inside the `constructor`; class fields and private fields are not allowed
 - `static` fields are allowed (`static #X` is not); put accumulating associations, pools, and caches in `static` + `WeakMap`; do not reassign the reference
 - Every property that stores a value is received via a constructor argument of the same name; do not reassign it (deep
-  immutability). Array / Set may be updated but referencing an individual element is prohibited (always use the whole
-  at once); use `WeakMap` for association, do not use `Map`
+  immutability). Array / Set are built, then used all at once; how their value is used follows `/hoc-properties`, and
+  `Map` against `WeakMap` follows `/hoc-prohibit-native-features`
 - Do not directly access members not in the references; do not enumerate instances
-- Do not use `#private` or `decorator` (except when a human explicitly specifies it)
-- A class that has `extends` is out of scope
+- Do not use `Map`, `Object.freeze()`, native private members or decorators (see `/hoc-prohibit-native-features`)
+- Do not share an object literal across scopes (see `/hoc-prohibit-native-features`); capsulize what an API returns
 
 ## Proviso
 

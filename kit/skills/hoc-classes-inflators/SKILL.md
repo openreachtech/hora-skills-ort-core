@@ -49,9 +49,7 @@ export default class UnionScalar extends BaseScalar {
 ## Define the inflator as a static method on the target class being bound itself
 
 - An inflator method should be defined as a **static method on the target class being bound itself**, not as an external utility.
-- Unless there is a specific reason otherwise, pass **`this`** as `BaseCtor` in `BoundCtorRegistry.create({ BaseCtor })`.
-  - By passing `this`, even when the inflator is called from an inheriting subclass, the derived class is generated based on that subclass (respecting the inheritance chain).
-  - Hardcoding the class name (`BaseCtor: UnionScalar`) would always anchor to the base class even when called from a subclass, breaking polymorphism.
+- Unless there is a specific reason otherwise, pass **`this`** as `BaseCtor` in `BoundCtorRegistry.create({ BaseCtor })`, so that an inflator called from a subclass derives from that subclass. Why a static member refers to its own class through `this` belongs to `/hoc-scope`.
 
 ```javascript
 // NG: hardcoding the class name in BaseCtor
@@ -116,7 +114,7 @@ inflateMessageCtor () {
 
 - In the derived class returned by `deriver`, **override the base's abstract member** to return the binding.
 - When the overridden target is "a getter that holds the constructor of the delegate target class," name that getter `[TargetClassName]Ctor` (see `/hoc-wire-dependencies`). If the target is an undetermined abstract target, a generic name expressing the role (e.g. `TargetCtor`) is fine.
-- Annotate overrides with `/** @override */`.
+- Annotate overrides with `@override`, in the form the JSDoc convention (`/hoc-jsdoc`) settles.
 
 ```javascript
 // OK: overriding an abstract static getter within deriver ([TargetClassName]Ctor naming)

@@ -1,6 +1,6 @@
 ---
 name: hoc-properties
-description: "Conventions for class properties — where they are set, whether they may change, and what may hold them. Use when declaring, assigning or reviewing a property of a class, including when a note writes a member as `#alpha` or a value is about to be kept in a `Map`. Accessors belong to the accessors convention; whether a class needs properties at all, to the class design principles convention."
+description: "Conventions for class properties — where they are set, whether they may change, and what may hold them. Use when declaring, assigning or reviewing a property of a class, including when a note writes a member as `#alpha`. `Map` and native private belong to the native-feature prohibition convention; accessors, to the accessors convention; whether a class needs properties at all, to the class design principles convention."
 ---
 
 # Classes: Members / Properties
@@ -9,31 +9,27 @@ This summarizes conventions related to class property definitions.
 
 ## Set properties on `this` within the constructor
 
-- Properties should be set on `this` within the constructor.
-- To write tests against properties, properties should be kept accessible from outside.
-
-```javascript
-// OK: set on this within the constructor
-constructor ({
-  delimiter,
-}) {
-  this.delimiter = delimiter
-}
-```
+- That a property is set only as `this.xxx = xxx` inside the constructor, and why class fields
+  are not used, belong to `/hoc-classes-principles`.
+- It is read here for what it means to tests: a property set that way stays accessible from
+  outside, so a test can read it directly.
 
 ## Classes are immutable / property reassignment is prohibited
 
 - Basically, all classes are implemented as immutable. Once a property is set in the constructor, it must **not be reassigned** thereafter.
 - `this.xxx = ...` within the constructor (the initial set) is permitted. ESLint also does not prohibit this.
-- What is prohibited is **property reassignment outside the constructor**. This is enforced by ESLint.
+- What is prohibited is **property reassignment outside the constructor, including anything under
+  the property's object path** — `this.state.count += 1` as much as `this.state = ...`. ESLint
+  enforces the direct form; what lies under the path is held by this rule alone.
 - Being immutable means that even a property with public access scope is "protected by coding rules." Hence there is
-  no need to make it native private for encapsulation purposes (for details, see "The meaning of `#alpha` notation and
-  the treatment of native private" below).
-- **Updating a collection (Array/Set) itself is permitted. What is prohibited is a structure that references individual elements** — pulling out a single element via `array[i]` and treating it as mutable state. This subverts the prohibition on mutable objects and is not permitted. A collection's value must always be "used all at once" (scanned/transformed/aggregated over every element as a whole). When you want to change scalar state, generate a new instance via a factory method (for the policy of not deep-freezing collections, see the class design principles convention).
+  no need to make it native private for encapsulation purposes (for why, see `/hoc-prohibit-native-features`).
 
 ```javascript
 // NG: reassigning a property after creation
 scalar.normalizedValue = anotherValue
+
+// NG: reassigning under a property's object path
+this.state.count += 1
 
 // OK: if a different state is needed, generate a new instance via a factory method
 const next = Scalar.create({
@@ -41,22 +37,123 @@ const next = Scalar.create({
 })
 ```
 
-### `Map` is prohibited; `WeakMap` is free to use
+### A collection is built, then used all at once
 
-- **`Map` is prohibited (enforced by ESLint).** Do not use it unless there is a special reason in module development. In application code, there has been no case where `Map` was used other than as an evasion.
-- `WeakMap`, on the other hand, may be used freely. Associating objects by identity is `WeakMap`'s responsibility, and enumeration is unnecessary (when you want to enumerate, hold the keys in an Array and traverse through them).
-- Making a `Map`'s key a primitive value (`number` / `string`, etc.) is a circumvention of the reassignment prohibition and the prohibition on mutable objects. An object-keyed `Map` is also unnecessary: if enumeration is not needed, `WeakMap` suffices, and even if it is, an Array of keys + `WeakMap` covers it — so there is no reason to choose `Map`.
-- If a mutable aggregate seems necessary, reconsider the design (assemble it via a higher-order function and return it, or generate a new instance via a factory method).
+**Code that makes an instance mutable is prohibited, uniformly — the reassignment prohibition is
+one means to that, and a collection is no exception.** The one thing an Array or a Set allows is
+being built: elements are added while the collection is assembled, and the finished collection is
+then used all at once, every element together. A collection added to or taken from between reads,
+while the instance is in use, is state that changes; the change goes to a new instance through
+the factory method instead.
+
+This holds wherever the collection sits — a property, or anything under its object path — and a
+Set is held to it exactly as an Array is.
+
+- **A builder edits its collection until it builds.** In the Builder Pattern, the editing period
+  runs until `#buildXxxx()` is called on the values the collection property holds. Until then,
+  elements are added to it; from that call on, it is used all at once like any other.
+
+  ```javascript
+  // OK: the builder's collection is edited until #buildQuery() uses it
+  addCondition ({
+    condition,
+  }) {
+    this.conditions.push(condition)
+  }
+
+  buildQuery () {
+    return this.conditions
+      .map(it => it.toClause())
+      .join(' AND ')
+  }
+  ```
+
+- **Its elements are used through a higher-order function**, as `/hoc-higher-order-functions`
+  settles. Taking an individual element out — `[n]` on an Array, `values().next()` or
+  `[...set][0]` on a Set — is not using the collection all at once.
+- **An element is never replaced in place.** Taking a position — `indexOf()`, `findIndex()` —
+  and replacing what sits there with `splice(index, 1, newEntity)` is `array[index] = newEntity`
+  under another name. The changed collection is another array, built with `map()`.
+- **Its count is asked of the class that holds it.** `.length` / `.size` is read only inside that
+  class, in a member that answers the count — `get entityCount ()` — and whether it is empty is
+  answered the same way, by `isEmpty ()`. A caller handed the collection asks the holder rather
+  than reading its length itself.
+- **A collection is held for its elements.** An array whose only use is its `length` is not
+  being used as an array; what it holds is a number.
+- For the policy of not deep-freezing collections, see the class design principles convention.
+
+```javascript
+// NG: the collection grows while the instance is in use
+addEntity ({
+  title,
+}) {
+  this.entities.push(
+    TodoEntity.create({
+      title,
+    })
+  )
+}
+
+// OK: the changed collection goes to a new instance
+addEntity ({
+  title,
+}) {
+  return this.Ctor.create({
+    entities: [
+      ...this.entities,
+      TodoEntity.create({
+        title,
+      }),
+    ],
+  })
+}
+
+// NG: the element at a position is replaced in place
+markEntityDone ({
+  title,
+}) {
+  const index = this.entities.findIndex(it => it.title === title)
+
+  this.entities.splice(index, 1, this.entities.find(it => it.title === title).generateDone())
+}
+
+// OK: another array, held by a new instance
+markEntityDone ({
+  title,
+}) {
+  return this.Ctor.create({
+    entities: this.entities
+      .map(it => (
+        it.title === title
+          ? it.generateDone()
+          : it
+      )),
+  })
+}
+
+// NG: the caller reads the length of a collection it was handed
+const count = todoList.entities.length
+
+// OK: the holder answers its count and its emptiness
+get entityCount () {
+  return this.entities.length
+}
+
+isEmpty () {
+  return this.entities.length === 0
+}
+```
+
+### `Map` is not used
+
+- A value is never kept in a `Map`; association by object is `WeakMap`'s. Why `Map` is refused
+  belongs to `/hoc-prohibit-native-features`.
 
 ## The meaning of `#alpha` notation and the treatment of native private
 
 - `#` notation such as `#alpha` is not a JavaScript native private designation; it means "instance-private" in member notation.
-  (Member notation follows "Notation of Class Members" in the documentation convention.)
-- **JavaScript native private fields (`#` fields / `#` methods) must never be used unless a human specifically instructs it.**
+  (Member notation follows `/hoc-classes-member-notation`.)
+- **JavaScript native private fields (`#` fields / `#` methods) are not used unless a human specifically instructs it.**
+  That rule, and why it holds, belong to `/hoc-prohibit-native-features`. It is read here for what it
+  means when a property is named.
 - Therefore, even if an instruction says `#alpha`, that alone is not a reason to implement it as a `#` field. It is normally defined as `this.alpha`.
-
-### Reason
-
-- Native private cannot be read even from an inheriting subclass, which blocks extension/substitution via inheritance.
-- This codebase basically implements all classes as immutable and does not permit reassignment of properties at all (this is also prohibited by ESLint). Therefore, even with a public access scope, it is protected by coding rules, and there is no need to make it native private.
-- Rather, it is more beneficial to avoid the disadvantage where, when you want to apply a patch (such as a hotfix) that temporarily changes behavior via inheritance, a parent class's private property would block that.

@@ -5,7 +5,7 @@ description: "Convention for the order members are written in a class body. Use 
 
 # Classes: Notations
 
-Collects the conventions for how a class definition is written in source. Design-level judgments — what a class may hold, what it must not use — are governed by the class design principles convention; this skill establishes only the **way it is written**.
+Collects the conventions for how a class definition is written in source. Design-level judgments — what a class may hold — are governed by `/hoc-classes-principles`, and the native features it must not use by `/hoc-prohibit-native-features`; this skill establishes only the **way it is written**.
 
 ## Placement order of members
 
@@ -20,7 +20,7 @@ Write a class body in the following order.
 7. instance getters
 8. instance methods
 
-Item 3 means the class's own factory methods that are published as API. The convention of placing `.create()` immediately after the `constructor` is governed by the method-definition convention, and the definition and naming of the inflator methods in item 4 by the inflator-methods convention.
+Item 3 means the class's own factory methods that are published as API: `.create()` comes immediately after the `constructor`, and `.createAsync()`, where it is defined, immediately after `.create()`. How a factory method is defined belongs to `/hoc-methods`, and the definition and naming of the inflator methods in item 4 to `/hoc-classes-inflators`.
 
 ### Why `static` fields go at the top
 
@@ -29,7 +29,7 @@ Item 3 means the class's own factory methods that are published as API. The conv
   initialized at class-definition time, and an instance's properties are secured afterwards in the `constructor`.
   Matching the source order to that order makes the order of allocation readable by simply reading the source from top
   to bottom.
-- The conditions for using `static` fields, and what belongs in them (do not use `static #X`; put accumulating associations, pools, and caches in `static` + `WeakMap`, etc.), are governed by the class design principles convention.
+- The conditions for using `static` fields, and what belongs in them (accumulating associations, pools, and caches in `static` + `WeakMap`, etc.), are governed by `/hoc-classes-principles`; that `static #X` is not used, by `/hoc-prohibit-native-features`.
 
 ### Order among getters
 
@@ -39,7 +39,7 @@ Within the getter categories (5 and 7), use the following order.
 2. The rest (getters that compute the value they return).
 3. List abstract getters last, together.
 
-The naming of `~Ctor` is governed by the accessor-definition convention.
+The naming of `~Ctor` is governed by `/hoc-wire-dependencies`.
 
 ### Order among methods
 

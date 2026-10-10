@@ -1,6 +1,6 @@
 ---
 name: hoc-methods
-description: "Conventions for class method definitions and their signatures. Use when defining, calling or reviewing a method. Method names belong to the naming convention; what the body is written with, to the statements convention; how a factory method builds a dependency, to the dependency-wiring convention."
+description: "Conventions for class method definitions and their signatures. Use when defining, calling or reviewing a method. Method names belong to the naming convention; what the body is written with, to the statements convention; how a factory method builds a dependency, to the dependency-wiring convention; how a recursion is laid out, to the method recursion convention."
 ---
 
 # Classes: Members / Methods
@@ -29,42 +29,9 @@ generate ({
 
 ### Exception: binding (inflator) methods pass arguments flat
 
-- Binding (inflator) methods do not use a named-argument object; they receive **the arguments to pass, flat**.
-- An inflator method is a static method that binds the class passed as an argument and returns a memoized derived subclass (following the naming convention described later, such as `.use()` / `.of()` / `.to()`).
-- Basically it receives **a single argument**. Only use multiple/array arguments when dealing with variadic or array input.
-  - Single argument: `use(ConstraintCtor)` / `as(Schema)` / `toKey(MessageKeyCtor)` / `toValue(MessageValueCtor)`
-  - Variadic: `of(...Ctors)`
-  - Single array: `from(Ctors)` (it is standard practice for `from` to delegate to `of`)
-
-```javascript
-// NG: named-argument object
-static use ({
-  ConstraintCtor,
-}) {
-  // ...
-}
-
-// OK: flat single argument
-static use (ConstraintCtor) {
-  // ...
-}
-
-// OK: variadic / array arguments
-static of (...Ctors) {
-  // ...
-}
-
-static from (Ctors) {
-  return this.of(...Ctors)
-}
-```
-
-- Reason: this is so that calls read **declaratively**, as in `Document.as(bindingSchema)` or `UnionScalar.of(A, B)`. Wrapping them in a named-argument object would undermine this declarative feel.
-
-#### Naming convention (short, preposition-like names)
-
-- Inflator methods should be given short, preposition-like names (so that `Receiver.word(binding)` reads declaratively). Examples: `.as()` / `.use()` / `.of()` / `.to()`, etc.
-- These are only representative examples, not the full vocabulary. The full vocabulary — the semantics of each word, its arguments, the forward vs. graft distinction, and how `.toKey()` / `.toValue()` are used — is owned by the inflator-methods convention as its single source of truth; it is not duplicated here.
+- An inflator method — a static method that binds a value to the class and returns a derived
+  subclass, such as `.use()` / `.of()` / `.to()` — is the exception to the rule above. What it
+  receives instead, the exceptions to that, and its naming belong to `/hoc-classes-inflators`.
 
 ## Do not pass properties directly to private methods
 
@@ -142,43 +109,13 @@ exceedsMaxDocumentDepth ({
   the consumer holds what its absence does. A substitute value inside the extractor merges
   the two, and the merged version reads as though no decision had been made.
 
-## A parameter default belongs to the entry point of a recursion
+## A recursion sits behind an entry point of its own
 
-**Where a recursion carries an accumulator — a visited list, a depth, a path — only the
-member the recursion is entered through gives it a default.** The members reached from
-inside take it as a required parameter.
-
-```javascript
-// The entry point: callers state nothing about the accumulator
-deepMeasureSelectionDepth ({
-  context,
-  selection,
-  visitedFragmentNames = [],
-}) {
-  // ...
-}
-
-// Reached only from inside the recursion: the accumulator is required
-measureSelectionSetDepth ({
-  context,
-  selectionSet,
-  visitedFragmentNames,
-}) {
-  // ...
-}
-```
-
-- **A default on an inner member says it can be entered directly**, which is the one thing
-  it cannot do: called from outside with the accumulator empty, it starts a walk with no
-  record of where it has been. Requiring the parameter is what states that it is a step,
-  not a door.
-- **The initial value stops leaking into the caller.** Before the default existed, the entry
-  point's own caller wrote `visitedFragmentNames: []` — the recursion's internal state
-  stated by code that has nothing to do with the recursion.
-- **Which member is the entry point is readable from its name as well.** The naming
-  convention gives the entry the `deep~` super-prefix, so the name and this default point at
-  the same member — and a default later added to a step contradicts the naming, which is what
-  makes it visible.
+- How a recursion is laid out — the plain-named entry point, the `deep~` member behind it, and
+  where the accumulator's initial value is written — belongs to `/hoc-methods-recursion`.
+- **Both members are methods, so everything on this page holds for them in full.** The entry
+  point and the `deep~` member each take a single named-argument object, the accumulator
+  included.
 
 ## Factory methods must be defined without exception
 
@@ -191,8 +128,11 @@ measureSelectionSetDepth ({
 
 ### Division of responsibility between the constructor and `static create (...)`
 
-- The constructor should receive required arguments (e.g. `{ characters }`). It should not have default values.
-- Applying default values for arguments is the responsibility of `static create (...)`.
+- What the constructor decides, and what it leaves to the factory methods, belong to
+  `/hoc-classes-constructor`. It is read here for the two things that land in
+  `static create (...)`: a value the caller did not supply gets its default here, and where the
+  constructor's parameter list divides what goes up to the base from what the class keeps, the
+  factory method's parameter list repeats that division.
 
 ### Variations should be distinguished by suffix
 
@@ -201,8 +141,7 @@ measureSelectionSetDepth ({
 
 ### Placement order
 
-- `static create (...)` should be placed immediately after the constructor.
-- If `static createAsync (...)` is defined, it should in principle be placed immediately after `.create(...)`.
+- Where the factory methods sit in a class body belongs to `/hoc-classes-notations`.
 
 ### JSDoc format
 
@@ -225,8 +164,8 @@ measureSelectionSetDepth ({
 
 ### Instantiation
 
-- Within `.create(...)`, do not call `new` using the class name. Instantiate with `new this(...)`.
-  (Using `this` ensures that even when called from an inheriting subclass, an instance of that subclass is created.)
+- Within `.create(...)`, do not call `new` using the class name. Instantiate with `new this(...)`
+  — why a static member refers to its own class through `this` belongs to `/hoc-scope`.
 - Since every defined class always has a factory method defined, whenever depending on another class, always instantiate it via its factory method (`.create(...)`).
 - Consequently, the form `new Sample(...)` against a defined class never appears outside test files.
   (The exception is `new this(...)` inside `.create(...)`. This creates an instance of the class itself using `this`, not the class name.)
@@ -249,10 +188,9 @@ static create (...) {
 
 ### A dependency is built in a factory method of its own
 
-- **A dependency `static create (...)` needs is never built in its default argument.** It is built
-  by a dedicated factory method — `this.createExternalApiClient()` — instantiating through a
-  `[TargetClassName]Ctor` getter. That structure, and the seams it leaves for patching and
-  testing, belong to `/hoc-wire-dependencies`.
+- How a dependency `static create (...)` needs is built belongs to `/hoc-wire-dependencies`. It is
+  read here because the default arguments of `static create (...)` are where a dependency is most
+  often built by hand.
 
 ### When asynchronous creation is needed, define `.createAsync(...)`
 
