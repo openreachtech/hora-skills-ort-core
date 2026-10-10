@@ -503,6 +503,9 @@ Merge the core/ rename in the repository documents
 
 ## Merging back into a trunk
 
+- **Into a named trunk, the merge is made on the host, through a pull request** — see
+  `/hoc-git-branch-remote`. What follows is how a branch merges back locally, into any other
+  branch acting as a trunk.
 - **Always `--no-ff`, never fast-forward.** A fast-forward leaves no commit a human can point
   at: the branch's commits are strung onto the trunk's line, and the fact that they arrived
   together, as one piece of work, stops being visible at all.
