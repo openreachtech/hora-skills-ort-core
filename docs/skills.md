@@ -23,6 +23,7 @@ Each skill lives at `kit/skills/<name>/`, directly under the skills directory, a
 | `hoc-classes-delegation` | How a class uses a delegate it holds or is handed — the call isolated in an `invoke~` member of its own, the failure turned into a result by the public member around it, and why the test needs that seam. |
 | `hoc-classes-notations` | The order members are written in a class body: the eight-block placement order, the ordering within getters and within methods, and the fallback to source order where none of it decides. |
 | `hoc-classes-prohibits` | Prohibitions in class definitions: static-only classes and classes without state are not allowed, and why. |
+| `hoc-prohibit-native-features` | The native JavaScript features this library does not use — `Map`, `Object.freeze()`, native private members (`#x`, `static #x`) and decorators — and why each is refused. |
 | `hoc-classes-inflators` | The inflator (binding) method pattern — bind the class passed as an argument and return a derived subclass memoized via `BoundCtorRegistry` — plus its naming and arguments. |
 | `hoc-properties` | Property conventions — set on `this` in the constructor, immutable (no reassignment, no `Map`), and no JavaScript native private. |
 | `hoc-accessors` | Getter/setter conventions — setters prohibited for immutability, `#get:Ctor` reserved for `this.constructor`, and getter bodies kept to a property reference, with no branching and no method call. |
