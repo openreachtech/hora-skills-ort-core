@@ -73,5 +73,5 @@ arrived is not decided here.
   settles what a raise compares against, how each move is written down, and where its single
   install sits.
 - What is left once that pass has run — an advisory still in the report, an install script
-  nobody has decided about — belongs to `hoc-npm-vulnerability` and `hoc-npm-install-scripts`
+  nobody has decided about — belongs to `/hoc-npm-vulnerability` and `/hoc-npm-install-scripts`
   respectively.
