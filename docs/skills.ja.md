@@ -33,6 +33,7 @@
 | :-- | :-- |
 | `hoc-manifest-pattern` | manifest パターン（別名 super strategy パターン）。構造は配線を宣言する共有オブジェクトを 1 つ持ち、その構造を成すものはすべてそれを引数に取れます。 |
 | `hoc-methods` | メソッド定義の規約。名前付き引数、private メソッドへのプロパティの渡し方、ファクトリメソッドなど。 |
+| `hoc-methods-recursion` | 再帰メソッドの組み方。無印の入口の後ろに private な `deep~` メンバーを置き、accumulator の初期値は入口の中で渡して、呼び出し側から渡せないようにします。 |
 | `hoc-wire-dependencies` | クラスが依存先に届く経路の規約。インスタンス化する依存クラスには `[TargetClassName]Ctor` の static getter と専用のファクトリメソッド、そのまま使うモジュールには static getter を置き、サブクラスでの差し替えとテストでの置き換えを可能にします。 |
 | `hoc-functions` | 関数の規約。引数はメソッドの引数に準じ、名前付き引数を原則とします。 |
 | `hoc-constants` | 定数の規約。命名(大文字 `SNAKE_CASE`、enum 的オブジェクトは単数形)、chop down、オブジェクト型定数のファイル構成と配置。 |
