@@ -159,6 +159,29 @@ static create ({
 }
 ```
 
+### A dependency built on the fly goes through the factory method too
+
+- **A class held and used by delegation takes the factory method wherever it is built**, including
+  when an instance method creates one temporarily and discards it. Do not `new` it there either.
+- This holds for a class defined within the application as much as for a third-party one: what
+  decides it is that the instance is used by delegating to it, not where the class comes from.
+
+```javascript
+// NG: a delegate built on the fly with a direct new
+sendRequest () {
+  const client = new ExternalApiClient({ env })
+
+  return client.send()
+}
+
+// OK: built through the dedicated factory method
+sendRequest () {
+  const client = this.createExternalApiClient()
+
+  return client.send()
+}
+```
+
 ## A module used as it is: a static getter that returns it
 
 - When the dependency is a native module such as `fs` — where the module itself is the value and
