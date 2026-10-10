@@ -160,7 +160,7 @@ What the key covers, and what it cannot, is in [key-composition.md](./references
 
 ## A failing unit is handed on unchanged
 
-The cache decides nothing about a red run. Exit 1 is where this skill ends and `hoc-test-execution`
+The cache decides nothing about a red run. Exit 1 is where this skill ends and `/hoc-test-execution`
 begins, with its prohibitions intact: reuse of a recorded pass over identical inputs is not one of
 the ways a suite is weakened, and it is never a reason to skip, loosen or delete a test.
 
