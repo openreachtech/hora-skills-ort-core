@@ -84,10 +84,6 @@ Derived.ensure(key)
 - **Do not reassign the reference itself.** Deep immutability extends to `static` as well. Only the inside of a collection may change, and that is constrained by the property-definition convention (`Map` is not used, even for `static`).
 - **Adding `static` fields does not relax the core principle of not creating classes without properties.** A `static` field is not an instance property, so a class holding only those remains prohibited as a static-only class.
 
-### Handling of derived classes
-
-- A class that has `extends` is out of scope even if it only overrides static members. The responsibility belongs to the base class.
-
 ## What not to use
 
 ### `#private`
