@@ -13,7 +13,7 @@ Rules concerning how the README's API reference is written.
   - If splitting out, place the "Notation of Class Members" table at the top of each language's `docs/<lang>/api/index...` (if not splitting out, place it at the top of the README's `## API`).
   - The link from the README (`## API`) to the index should use an absolute GitHub URL (`README.md` → `docs/en/api/index.md`, `README.xx.md` → `docs/<xx>/api/index.xx.md`; content under `docs/` is not bundled — see `usage.md`). Links from the index to each class file are within the same `docs/<lang>/api/` directory, so relative links are fine there. A package distributed privately links relatively from the README as well (see `usage.md`).
 - Class members follow the "Notation of Class Members" notation below. This table is **placed at the top** of the API reference (`## API`). Copy the template below and use it (each table row is shared across languages; only the introductory text differs per language).
-- This notation is **governed by "Notation of Class Members" in the documentation convention**. The template below is the form in which it is transcribed into a README; when the governing table changes, align this template with it.
+- This notation is **governed by `/hoc-classes-member-notation`**. The template below is the form in which it is transcribed into a README; when the governing table changes, align this template with it.
 
 ## Notation of Class Members
 
