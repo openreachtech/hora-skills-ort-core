@@ -37,7 +37,7 @@ This summarizes conventions related to class accessor (getter / setter) definiti
 - One of a getter's responsibilities is **drilling down into properties** to resolve the Law of Demeter. Confine deep property chains within the getter, keeping the caller shallow.
 - A getter must not return `undefined`. When a value cannot be obtained, resolve it to `null` with `?? null`.
   - This `??` is itself a kind of branching, but since the condition is limited solely to "identifying `undefined`," it is permitted as an exception.
-- When drilling down into properties, treat `this.xxxx` as the receiver, and follow "one property chain per line" from the coding-styles convention. That is, chop it down so that there is **at most one receiver per line, and at most one property call per line**.
+- How a chain is chopped while drilling down belongs to "Write one property per line in a property chain" in `/hoc-coding-styles`, with `this.xxxx` standing as the receiver.
 
 ```javascript
 // OK: this.entity is the receiver, one property per line. undefined is resolved to null with ?? null
