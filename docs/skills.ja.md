@@ -93,6 +93,7 @@
 | `hoc-npm-adopt-tool` | サードパーティ製ツールをそもそも導入してよいかを定める。導入の理由として通るものと通らないもの、install 前に tarball を精査する監査、そのツールを名指すモジュールをひとつに閉じるラッパー。導入後の版の移動は `hoc-npm-raise-deps` のもの。 |
 | `hoc-npm-categorize-deps` | パッケージをマニフェストのどの欄に宣言するかを定める。peer が買うもの、両者の範囲が食い違ったときにパッケージマネージャが何をするか、そして 2 本目のコピーがなぜ設計で避けるべき失敗なのか。宣言済みの版を動かすのは `hoc-npm-raise-deps` のもの。 |
 | `hoc-npm-install-scripts` | install スクリプトの実行を許可制で決める仕組み。deny を既定とすること、設定を先に置いて install を後にする順序、スクリプトの有無を実行せずに報告する dry run。 |
+| `hoc-npm-npmrc` | npm の設定ファイル `.npmrc` の書き方。各設定は `=` の両側に空白を置いた `key = value` で書き、`npm config set` は使わず直接編集する。各設定の意味は、それを有効にする規約の担当です。 |
 | `hoc-npm-vulnerability` | 脆弱な版を入れないための規約。audit が見るものと見ないもの、公開日数による検疫とそれが効かないインストール、推移的依存だけを引き上げて報告を解決する方法、修正版のない報告の判断。 |
 | `hoc-npm-publish` | リリースにおける version bump のコミット位置と、それが最後でなくなったときの扱い。公開前に tarball を読むことは `hoc-npm-publish-audit`、リリースが取り込む依存バージョンを動かすことは `hoc-npm-raise-deps` の担当です。 |
 | `hoc-npm-publish-audit` | パッケージが出ていく前の最後の読み取り。allowlist ではなく `npm pack` が出力する inventory、空のプロジェクトに tarball をインストールして使うこと、CI が走らせるインストール、同時に出すパッケージ同士の inventory の差分、読み手と同じ手順でたどる README、linter が見ない規約、そして何を読み何を読まなかったかを明示し、直すべきものの一覧と、記号で示す判定で締める報告。リリース自身のコミットの順序は `hoc-npm-publish` の担当です。 |
