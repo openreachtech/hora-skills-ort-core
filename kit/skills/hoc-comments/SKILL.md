@@ -9,7 +9,166 @@ Conventions related to comment writing. Applies across JSDoc, block comments (`/
 
 ## Language
 
-- Comments in actual code are written in English unless there is a reason otherwise. **Generated code** (such as test code) is also included as actual code.
-- Only when there is a specific reason (such as needing to explain Japanese-specific background), it is acceptable to
-  write in Japanese.
-- **Exception**: Comments within **code examples intended for explanation** in documentation/skills (Markdown ` ``` ` code blocks) are not actual code, so they are exempt from this convention (English) and should be written in the same language as the surrounding explanatory text.
+- Which language a comment is written in belongs to `/hoc-writing-language`. It is read here for
+  the default it gives every comment — English, in source, in the tests generated under `tests/`
+  and in the code examples of a document or a skill — which holds wherever no instruction, and no
+  language code in the file's name, has settled it first.
+
+## What a comment says
+
+**A comment carries what the code cannot say for itself — above all, why.** Where the code makes
+a choice a reader would question, the comment stating the reason is the one that has to be
+there, and it is the one most often missing.
+
+- **A comment that restates the code is not written.** It says nothing the line beside it does
+  not, and it is one more thing to keep in step with that line.
+- **A comment moves with the code it describes.** Where a change makes a comment untrue, the
+  change corrects it; a comment describing code that is no longer there misleads more than no
+  comment would.
+- **Code is not commented out and left.** The history keeps what was removed; a commented-out
+  block keeps only the question of whether it still matters.
+- **No annotation is written but `NOTE:`; what another would mark is filed as an issue.** An
+  issue is seen by whoever plans the work, carries its own discussion, and is closed when the work
+  lands, while an annotation in the code waits for someone to happen to read that line. `NOTE:`
+  is the one left, because it points out something about the code as it stands, not work left to
+  do.
+- **A comment saying why a workaround exists, and what retires it, is not such an annotation.** It
+  explains the code as it stands — see `/hoc-dependency-defect`.
+
+## An inline comment stands on the line above
+
+**An inline comment goes on a line of its own, above the code it describes.** It is put at the
+end of a line only where moving it there keeps the code's format from breaking:
+
+- **A seeder or a test's `cases` written one element per line.** A comment on a line of its own
+  would sit between two elements and break the run of one element per line.
+- **An ESLint option that overrides a default.** The default value goes at the end of the line,
+  written as the value alone, so the option keeps the layout it has everywhere else.
+
+```javascript
+// OK: the default noted at the end of the line, the option keeping its layout
+'max-len': [
+  'error',
+  {
+    code: 120, // 80
+  },
+],
+```
+
+### A comment naming a group stands before the group
+
+- **A comment that names a group of elements goes on the line before the group**, never at the
+  end of its first element.
+- **Where groups are marked, a blank line separates one group from the next.**
+
+```javascript
+// OK: each group named on the line before it, a blank line between groups,
+// and a remark on one element kept at the end of its line
+const invalidDates = [
+  // Days that do not exist
+  '2026-02-30',
+  '2026-04-31',
+
+  // Strings that are not dates
+  'tomorrow', // a word a person would type
+  '',
+]
+```
+
+## A long comment breaks where its sentence does
+
+**Where a comment runs to more than one line, break it at a point the sentence itself offers** —
+after a comma, at a conjunction, between two sentences. A column count such as 80 is not the
+criterion: filling each line to a margin breaks wherever the word count happens to land.
+
+```javascript
+// NG: filled to the margin, so the line ends mid-clause
+/**
+ * A fragment already on the path contributes nothing, which is what stops a
+ * cyclic document from being walked forever.
+ */
+
+// OK: the break falls after the comma, where the clause does
+/**
+ * A fragment already on the path contributes nothing,
+ * which is what stops a cyclic document from being walked forever.
+ */
+```
+
+- **The unit a reader takes in is the line.** Broken at a clause, each line is one statement and
+  the comment can be read down the left edge; broken at a column, a line ends on `stops a` and
+  carries no meaning of its own.
+- **This holds for every comment that runs long** — a JSDoc block, a `/* */` block, and a run of
+  `//` lines alike.
+- This governs prose. A type literal inside a JSDoc tag is already one property per line.
+
+## A block comment that runs to several lines takes at least three
+
+**A block comment written over more than one line takes three lines at the least**: the opening
+marker on a line of its own, the text, and the closing marker on a line of its own. Every line
+between the two markers keeps its leading `*`.
+
+```javascript
+// NG: two lines, with the text sharing a line with each marker
+/* Retries are spaced exponentially,
+   so a struggling server is given room to recover. */
+
+// NG: the leading * dropped from the lines between the markers
+/**
+   Retries are spaced exponentially,
+   so a struggling server is given room to recover.
+ */
+
+// OK: three lines or more, every line between the markers marked
+/**
+ * Retries are spaced exponentially,
+ * so a struggling server is given room to recover.
+ */
+```
+
+- **Two block comments in a row are separated by a blank line.** Placed against each other, the
+  closing marker of one runs straight into the opening marker of the next.
+
+```javascript
+// NG: two blocks with nothing between them
+/**
+ * @typedef {*} BooleanLike
+ */
+/**
+ * @typedef {*} NumberLike
+ */
+
+// OK: a blank line between the two
+/**
+ * @typedef {*} BooleanLike
+ */
+
+/**
+ * @typedef {*} NumberLike
+ */
+```
+
+## Lines are commented out with `//`, never with a block comment
+
+**Where several lines are commented out, each takes its own `//`.** A block comment is not used
+for it: `/* */` does not nest, so a block wrapped around code that already holds a block comment
+ends at that comment's `*/`, and the rest of the code runs again.
+
+```javascript
+// NG: the block ends early, at the */ of the JSDoc inside it
+/*
+/**
+ * @returns {number}
+ */
+computeDelay () { ... }
+*/
+
+// OK: one // per line
+// /**
+//  * @returns {number}
+//  */
+// computeDelay () { ... }
+```
+
+- **This is how lines are commented out while the work is in progress.** What reaches a commit
+  carries no commented-out code at all, as "What a comment says" above holds.
