@@ -10,8 +10,9 @@ This summarizes the principles for class property declaration and design.
 ## Core principle: Do not create classes without properties
 
 - A class must hold at least one instance property.
-- Do not create a class that is nothing but a collection of static methods / static fields (a static-only class). Design it as a state-holding instance class, or delegate to a single-responsibility class.
-- The class prohibitions convention is the canonical source for the detailed reasons and exceptions of this prohibition (no-properties / static-only). This skill sets that as the core principle and then systematizes the surrounding design conventions on top of it.
+- What the prohibition covers — static-only classes and classes without properties — and its
+  exceptions and reasons belong to `/hoc-classes-prohibits`. This skill takes it as the core
+  principle and builds the surrounding design conventions on top of it.
 
 ## The five points of the system (a bundle of premises)
 
@@ -111,7 +112,7 @@ Therefore soft-private (`this._x`) is visible and correct. Do not use `#private`
 
 ## Rules
 
-- A class holds at least one instance property (if it cannot, replace it with a method of a state-holding class / delegation to a single-responsibility class)
+- A class holds at least one instance property (see `/hoc-classes-prohibits`)
 - Properties are only `this.xxx = xxx` inside the `constructor`; class fields and private fields are not allowed
 - `static` fields are allowed (`static #X` is not); put accumulating associations, pools, and caches in `static` + `WeakMap`; do not reassign the reference
 - Every property that stores a value is received via a constructor argument of the same name; do not reassign it (deep
