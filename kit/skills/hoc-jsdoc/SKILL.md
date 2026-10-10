@@ -532,9 +532,9 @@ and breaking wherever the word count lands.
 - To reference a type declared in another module, use a type-only import. Never use the
   TypeScript `import type` statement — it is not available in a JavaScript-only project.
 - Two styles exist: the `@import` block tag and the inline `import('…')` expression. **Follow
-  the style the repository has established, and do not mix both for the same type.** Furo /
-  Nuxt apps use `@import`; renchan backends use the inline `import('…')` expression. If a
-  repository has established neither, prefer `@import`.
+  the style the repository has established, and do not mix both for the same type.** renchan
+  backends use the inline `import('…')` expression. If a repository has established neither,
+  prefer `@import`.
 - One `@import` tag per JSDoc block, one source module per block — the same rule as `@typedef`
   above.
 
@@ -542,8 +542,8 @@ and breaking wherever the word count lands.
 // OK: the @import block tag
 /**
  * @import {
- *   Reactive,
- * } from 'vue'
+ *   IncomingMessage,
+ * } from 'node:http'
  */
 
 // OK: the inline import('…') expression
