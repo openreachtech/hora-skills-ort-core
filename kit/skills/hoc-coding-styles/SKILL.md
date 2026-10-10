@@ -63,34 +63,34 @@ if (
 - Write one method per line.
 - When writing a method chain, allow at most one receiver per line, and at most one method per line.
 - **`this` and `it` do not count as receivers.** They are the context variables: `this` names the
-  object the code is already inside, and `it` is the fixed name the naming convention gives the
+  object the code is already inside, and `it` is the fixed name `/hoc-higher-order-functions` gives the
   current item of a higher-order callback. Neither carries information of its own, so counting
   either would chop a line that states one receiver and one member — `this.converter.toFixed({ value })`
   and `it.name.toUpperCase()` each say one thing, and each stays on one line.
   - **Every other identifier is a receiver**, including the inner item a nested callback names by
     meaning. `manifest.env.isProduction()` is two receivers on one line, and chopping it is not
     the fix — see the next bullet.
-  - **Where a line would otherwise carry two receivers, destructure at the parameter.** Naming
-    the inner object in the parameter list leaves one identifier at the call site, so nothing has
-    to be chopped and nothing is reached through.
+  - **Where a line would otherwise carry two receivers, the outer one answers for itself.** It
+    grows the member that reaches what is behind it, so the line names one receiver and nothing
+    has to be chopped. Destructuring the inner object out is not the fix: an instance is never
+    taken apart — see `/hoc-statements`.
 
     ```javascript
     // Two receivers
     .filter(it => it.account.isActive())
 
-    // One: the parameter names what the body acts on
-    .filter(({ account }) => account.isActive())
+    // One: the item answers for itself
+    .filter(it => it.hasActiveAccount())
     ```
 
   - **Two receivers on a line is usually the Law of Demeter showing through.** Reaching a property
     of a property is yours to do only inside the top-receiver, which is why `this.` reaches one
     further and a named object does not. Where the line is `manifest.env.isProduction()`, what the
-    count is reporting is that the method belongs on `manifest`.
-    - **Destructuring answers the count, not the design.** It is the right move where the object
-      is data the body consumes — an item being iterated, a payload being read. It is a dodge
-      where the object is an interface that should have answered for itself: taking
-      `{ manifest: { env } }` states the same knowledge of the manifest's insides that
-      `manifest.env` did, one line higher up.
+    count is reporting belongs to `/hoc-manifest-pattern`.
+    - **Destructuring answers the count, not the design.** Taking `{ manifest: { env } }` states
+      the same knowledge of the manifest's insides that `manifest.env` did, one line higher up.
+      An item that can only be taken apart, because it has no member to answer with, is a plain
+      object — and why that narrows the design belongs to `/hoc-classes-principles`.
     - **Passing the count is not a clearance.** `it` is excluded from it, so a reach through a
       callback item's field never shows up there at all. What the count catches is a subset; the
       design conventions judge the rest.
