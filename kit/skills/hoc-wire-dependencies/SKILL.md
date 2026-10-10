@@ -234,3 +234,5 @@ export default class DeepLoader {
   defaults it applies, and when a direct `new` is allowed — belongs to the methods convention.
 - **What an object hands its members** — one shared manifest rather than each member's own values
   — belongs to the manifest pattern convention.
+- **How a class calls the delegate once it holds it** — the call isolated in an `invoke~` member,
+  and the failure turned into a result around it — belongs to `/hoc-classes-delegation`.
