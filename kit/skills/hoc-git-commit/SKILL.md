@@ -426,22 +426,8 @@ before.
 
 ### Referring to class members
 
-When a subject or body names a class member, use the project's documentation notation.
-Instance members are prefixed with `#`, static members with `.`.
-
-| notation | member |
-| :-- | :-- |
-| `#instanceProperty` | instance property |
-| `#instanceMethod()` | instance method |
-| `#get:instanceGetter` | instance getter |
-| `#set:instanceSetter` | instance setter |
-| `.staticProperty` | static property |
-| `.staticMethod()` | static method |
-| `.get:staticGetter` | static getter |
-| `.set:staticSetter` | static setter |
-
-With the class name attached, write it as `SampleClass#extractValue()` or
-`SampleClass.createValue()`.
+When a subject or body names a class member, it is written in the notation of
+`/hoc-classes-member-notation`, with the class name attached:
 
 ```
 Update BaseRestfulApiLauncher#extendRequestHooks() to return fulfilled hooks
