@@ -112,7 +112,7 @@ So the stop is an interview, and it is built so that the answer can be a word.
 1. Set the version in `package.json`. Commit.
 2. Install. **This step may not be the machine's to run** — where it is not, hand over and
    resume once the lockfile has moved.
-3. Commit the lockfile, with the subject the repository's history already uses for it.
+3. Commit the lockfile, with the subject the git commit convention (`/hoc-git-commit`) gives a generated file.
 4. Capture the whole report, machine-readable, and keep it. Everything below compares
    against it.
 5. Apply the fixer, check its hunks against the report, and commit what survives.
