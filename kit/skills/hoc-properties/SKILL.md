@@ -30,6 +30,9 @@ This summarizes conventions related to class property definitions.
 // NG: reassigning a property after creation
 scalar.normalizedValue = anotherValue
 
+// NG: reassigning under a property's object path
+this.state.count += 1
+
 // OK: if a different state is needed, generate a new instance via a factory method
 const next = Scalar.create({
   normalizedValue: anotherValue,
