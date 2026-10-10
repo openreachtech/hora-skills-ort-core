@@ -16,8 +16,7 @@ Procedural rules related to the development workflow.
 2. Design the member composition of each class
 3. Write the tests
 4. Implement the class members
-5. Commit the tests one class at a time
-6. Commit per class
+5. Commit, in the order `/hoc-git-commit-order` sets
 
 ## The existing code is not a template
 
@@ -83,7 +82,6 @@ stop.
 - Pass `npx eslint <path> <path> …` over every file the work touched, and pass `npm test` over
   the **whole suite**, before completing the implementation. Narrowing the run to the files just
   changed here would hide the tests this work broke elsewhere. This is where the suite must be
-  green — step 6 is the commit that turns the tests of step 5 green. Do not consider the
-  implementation complete while either one is failing.
+  green. Do not consider the implementation complete while either one is failing.
 - The branch structure the commits land on is decided here, once the work is complete, rather
   than before it starts; see the git branch convention.
