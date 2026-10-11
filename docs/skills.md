@@ -45,6 +45,7 @@ Each skill lives at `kit/skills/<name>/`, directly under the skills directory, a
 | :-- | :-- |
 | `hoc-modules-exports` | Don't define files that merely named-export a function; define a class per responsibility. |
 | `hoc-modules-imports` | Group imports at the top of the file, ordered from farthest to nearest to application development. |
+| `hoc-collect-ctors` | How a set of classes, one per member, is collected into the one place callers ask — a barrel file, or a folder loaded once at startup — chosen by whether an addition reaches its users through a publish. |
 
 ## Statements and style
 
