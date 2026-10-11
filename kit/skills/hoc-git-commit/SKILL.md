@@ -513,17 +513,29 @@ scanning subjects for where a convention changed has to work out which one each 
     scanning subjects. Conventional Commits marks the subject as well, with `!` before the
     colon; the imperative format adds no mark, and needs none.
 
-### The first of a pair is red; the suite is judged where the branch merges
+### Red commits come first; the suite is judged where the branch merges
 
-- **Where an implementation and its tests land as separate commits, the first of them must turn
-  the suite red.** This is the basis of test-driven development, written into the history: the
-  red commit states the claim, and what follows answers it. Added code puts
-  its tests first. **Deleting a file, a class or a method, or lowering a limit, commits the tests
+- **Where an implementation and its tests land as separate commits, the side that turns the
+  suite red must come first.** This is the basis of test-driven development, written into the
+  history: the red commit states the claim, and what follows answers it. Added code puts its
+  tests first. **Deleting a file, a class or a method, or lowering a limit, commits the tests
   second** — the implementation goes first and turns the suite red. Which side that is, case by
   case, belongs to `/hoc-git-commit-order`.
-- **The answer may take more than one commit.** A test that stays red until two classes are both
-  fixed is cleared by one commit per class, and the red stands until the last of them lands.
-- **So a commit is not held to green.** A pair whose first commit passes has proved nothing —
+- **Neither side is limited to one commit.** Several tests may be turned red in a row, one commit
+  each, and the fixes that answer them follow, each turning its own test green. Where one test
+  needs two classes fixed, it takes a commit per class, and stays red until the last lands. This
+  is the shape to aim for:
+
+  | Commit | Test A | Test B | Test C |
+  | :-- | :-- | :-- | :-- |
+  | Update test A | red | green | green |
+  | Update test B | red | red | green |
+  | Update test C | red | red | red |
+  | Fix A | green | red | red |
+  | Fix B | green | green | red |
+  | Fix C | green | green | green |
+
+- **So a commit is not held to green.** A red side whose commit passes has proved nothing —
   the test that should have failed never did. Keeping every commit green would put the claim and
   its answer back into one commit, which is the split this convention asks for undone.
 - **The red has to be gone by the time the branch is offered for merge** — when its pull request
