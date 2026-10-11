@@ -513,12 +513,17 @@ scanning subjects for where a convention changed has to work out which one each 
     scanning subjects. Conventional Commits marks the subject as well, with `!` before the
     colon; the imperative format adds no mark, and needs none.
 
-### Each commit stands alone
+### The suite is judged where the branch merges, not at each commit
 
-- Order commits so that **no commit depends on a later one**. A reader checking out any single
-  commit should find a coherent tree.
-- **What must pass before a commit is not settled here.** Which commands run before a commit,
-  and which before the work is called complete, belongs to the workflows convention. This one
+- **A commit may leave the suite red.** A test commit that states a claim before its
+  implementation, and an implementation removed before its tests, are both red on purpose, and a
+  later commit on the same branch clears them. Keeping every commit green would put the claim and
+  its answer back into one commit, which is the split this convention asks for undone.
+- **The red has to be gone by the time the branch is offered for merge** — when its pull request
+  is opened, or before it is merged locally into a trunk. That is the one point at which the
+  whole suite is held to green; a red still standing there is unfinished work, not an ordering.
+- **What must pass, and when, is not settled here.** Which commands run before a commit, and
+  which before a branch is offered for merge, belongs to the workflows convention. This one
   settles what goes into a commit and how it is worded — never whether a command's result permits
   the commit. The order the commits land in belongs to `/hoc-git-commit-order`.
 
