@@ -518,8 +518,9 @@ scanning subjects for where a convention changed has to work out which one each 
 - **Where an implementation and its tests land as two commits in a row, the first of the two
   must turn the suite red.** This is the basis of test-driven development, written into the
   history: the red commit states the claim, and the commit after it answers it. Added code puts
-  its tests first; removed code puts the implementation first. Which side that is, case by case,
-  belongs to `/hoc-git-commit-order`.
+  its tests first. **Deleting a file, a class or a method, or lowering a limit, commits the tests
+  second** — the implementation goes first and turns the suite red. Which side that is, case by
+  case, belongs to `/hoc-git-commit-order`.
 - **So a commit is not held to green.** A pair whose first commit passes has proved nothing —
   the test that should have failed never did. Keeping every commit green would put the claim and
   its answer back into one commit, which is the split this convention asks for undone.
