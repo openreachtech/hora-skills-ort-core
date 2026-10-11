@@ -434,6 +434,18 @@ Update BaseRestfulApiLauncher#extendRequestHooks() to return fulfilled hooks
 Tidy up the JSDoc of BaseRestfulApiLauncher.get:ResponseBodyParser
 ```
 
+**A commit that changes a member names that member in its subject.** A collective noun in its
+place — `Update the cache members of SessionStore` — is the umbrella the
+[granularity.md](./references/granularity.md) one-line test turns away: it fits the line by
+leaving out which members moved. Where the subject cannot name every member it touched, the
+commit holds more than one decision, and it is split until each subject can.
+
+```
+Bad:  Update the cache members of SessionStore
+Good: Update SessionStore#evictExpired() to skip pinned sessions
+Good: Update SessionStore.get:defaultTtl to read the environment
+```
+
 This is the same notation used throughout documentation and error messages; see the
 documentation convention.
 
