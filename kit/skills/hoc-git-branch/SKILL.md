@@ -537,6 +537,10 @@ Merge the core/ rename in the repository documents
     Measured: a local release trunk stood one pull request behind its remote, and a branch cut
     from it passed the ancestry check against the local ref. Only a comparison with the
     remote-tracking ref showed that a pull request had already merged there.
+- **Before each merge, and before a pull request is opened, the suite is green at the branch's
+  tip.** The commits inside a branch may stand red on purpose, as `/hoc-git-commit-order` lays
+  out; the branch as a whole may not, at the point it goes back. Run the suite after the rebase
+  above, on the tip that will merge — see `/hoc-workflows`.
 - **Delete the branch once it is merged.** Its name was written for whoever watched the work in
   flight, and that reader is gone. This includes a trunk that merges into another trunk —
   `release/x.x.x`, `hotfix/xxxx`, `dev` and `env` are all deleted once they land on `main`.
