@@ -513,38 +513,20 @@ scanning subjects for where a convention changed has to work out which one each 
     scanning subjects. Conventional Commits marks the subject as well, with `!` before the
     colon; the imperative format adds no mark, and needs none.
 
-### Red commits come first; the suite is judged where the branch merges
+### A commit is not held to green; the suite is judged where the branch merges
 
-- **Where an implementation and its tests land as separate commits, the side that turns the
-  suite red must come first.** This is the basis of test-driven development, written into the
-  history: the red commit states the claim, and what follows answers it. Added code puts its
-  tests first. **Deleting a file, a class or a method, or lowering a limit, commits the tests
-  second** — the implementation goes first and turns the suite red. Which side that is, case by
-  case, belongs to `/hoc-git-commit-order`.
-- **Neither side is limited to one commit.** Several tests may be turned red in a row, one commit
-  each, and the fixes that answer them follow, each turning its own test green. Where one test
-  needs two classes fixed, it takes a commit per class, and stays red until the last lands. This
-  is the shape to aim for:
-
-  | Commit | Test A | Test B | Test C |
-  | :-- | :-- | :-- | :-- |
-  | Update test A | red | green | green |
-  | Update test B | red | red | green |
-  | Update test C | red | red | red |
-  | Fix A | green | red | red |
-  | Fix B | green | green | red |
-  | Fix C | green | green | green |
-
-- **So a commit is not held to green.** A red side whose commit passes has proved nothing —
-  the test that should have failed never did. Keeping every commit green would put the claim and
-  its answer back into one commit, which is the split this convention asks for undone.
+- **Where an implementation and its tests land as separate commits, which side goes first, and
+  how many commits each side takes, belongs to `/hoc-git-commit-order`.** Read it before
+  ordering them. Some of those commits leave the suite red on purpose, so a commit is not held
+  to green; keeping every commit green would put the claim and its answer back into one commit,
+  which is the split this convention asks for undone.
 - **The red has to be gone by the time the branch is offered for merge** — when its pull request
   is opened, or before it is merged locally into a trunk. That is the one point at which the
   whole suite is held to green; a red still standing there is unfinished work, not an ordering.
 - **What must pass, and when, is not settled here.** Which commands run before a commit, and
   which before a branch is offered for merge, belongs to the workflows convention. This one
   settles what goes into a commit and how it is worded — never whether a command's result permits
-  the commit. The order the commits land in belongs to `/hoc-git-commit-order`.
+  the commit.
 
 ## The history is a record, never a licence
 

@@ -118,8 +118,8 @@ Registering a new artifact in an index or export barrel is its own commit as wel
 class and exporting it are two decisions, and the export is the one with a public-surface
 consequence.
 
-**A class's tests are a commit apart from its implementation, and the first of the two turns the
-suite red.** Which of the two that is belongs to the commit order convention
+**A class's tests are a commit apart from its implementation.** Which of the two comes first,
+and why it is the one that turns the suite red, belongs to the commit order convention
 (`/hoc-git-commit-order`).
 
 ### One module per commit, and its tests are a commit of their own
