@@ -380,6 +380,64 @@ const mockEngine = /** @type {*} */ ({
 - The rule names `const` because that is the only declaration written: `let` is prohibited
   (see `/hoc-statements`), and `var` errors under lint.
 
+## A type is stated in three places only
+
+**A `@type` annotation or a cast stands in one of three places, and nowhere else:**
+
+- directly above an assignment statement, as the declaration's own `/** @type {T} */`
+- directly before the right-hand side of an assignment, as `const x = /** @type {T} */ (value)`
+- directly before the value of a `return` statement, in a method or a function
+
+**Never inside a statement**: not on an argument, an element of an array, a property value in an
+object literal, or the operand of a property access. **Resolve the type in a line of its own,
+then run the statement with the resolved value.** Resolving a type and using the value are two
+intents; a cast inside the statement packs both into one line, where readability drops sharply.
+
+- **`.create(/** @type {...} */ (...))` is a makeshift dodge, never a resolution.** The intent
+  to resolve a type and the intent to run `.create()` are crammed into one line, and readability
+  drops sharply. The type is resolved in the line above, and `.create()` runs with the value it
+  resolved.
+- **In a test, the abnormal-value cases are already let through by the `Array<*>` on the
+  right-hand side of `cases`.** Nothing inside them is cast again — not the argument of a
+  factory that builds a refused value, not a property of a case.
+
+```javascript
+// NG: a cast on an argument, inside the statement
+return JSON.stringify(
+  value,
+  /** @type {Parameters<typeof JSON.stringify>[1]} */ (this.replacer)
+)
+
+// OK: the type stated where the value is assigned
+const replacer = /** @type {Parameters<typeof JSON.stringify>[1]} */ (this.replacer)
+
+return JSON.stringify(value, replacer)
+
+// NG: a refused value cast again inside an abnormal-value case
+const cases = /** @type {Array<*>} */ ([
+  {
+    input: {
+      request: ReportRequest.create(/** @type {*} */ ({
+        // to: omitted
+        subject: 'subject-0001',
+      })),
+    },
+  },
+])
+
+// OK: the Array<*> on the right-hand side of cases is the only cast
+const cases = /** @type {Array<*>} */ ([
+  {
+    input: {
+      request: ReportRequest.create({
+        // to: omitted
+        subject: 'subject-0001',
+      }),
+    },
+  },
+])
+```
+
 ## An override is reduced to `/** @override */` only where nothing else is stated
 
 A member that overrides another, and whose JSDoc adds nothing the base does not already
