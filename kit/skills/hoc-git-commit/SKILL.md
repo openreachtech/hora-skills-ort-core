@@ -513,11 +513,15 @@ scanning subjects for where a convention changed has to work out which one each 
     scanning subjects. Conventional Commits marks the subject as well, with `!` before the
     colon; the imperative format adds no mark, and needs none.
 
-### The suite is judged where the branch merges, not at each commit
+### The first of a pair is red; the suite is judged where the branch merges
 
-- **A commit may leave the suite red.** A test commit that states a claim before its
-  implementation, and an implementation removed before its tests, are both red on purpose, and a
-  later commit on the same branch clears them. Keeping every commit green would put the claim and
+- **Where an implementation and its tests land as two commits in a row, the first of the two
+  must turn the suite red.** This is the basis of test-driven development, written into the
+  history: the red commit states the claim, and the commit after it answers it. Added code puts
+  its tests first; removed code puts the implementation first. Which side that is, case by case,
+  belongs to `/hoc-git-commit-order`.
+- **So a commit is not held to green.** A pair whose first commit passes has proved nothing —
+  the test that should have failed never did. Keeping every commit green would put the claim and
   its answer back into one commit, which is the split this convention asks for undone.
 - **The red has to be gone by the time the branch is offered for merge** — when its pull request
   is opened, or before it is merged locally into a trunk. That is the one point at which the
