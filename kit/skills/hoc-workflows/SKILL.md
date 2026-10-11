@@ -68,7 +68,8 @@ stop.
   walks the whole tree and is too slow to sit in front of every commit.
 - **`npm test` is not a gate on every commit.** A test commit lands red on purpose — which commit
   goes first, and why, belongs to `/hoc-git-commit-order` — so staging the implementation
-  alongside the tests to keep the suite green destroys the split.
+  alongside the tests to keep the suite green destroys the split. The suite is held to green
+  where the branch is offered for merge, below.
 - Run the commit's own tests all the same — `npm test -- <path> <path> …` — and **read the
   failure**: it must fail on the behavior the tests assert, not on a typo, a bad import or a
   missing fixture. A test commit that is red for the wrong reason is a defect; one in which
@@ -81,7 +82,17 @@ stop.
 
 - Pass `npx eslint <path> <path> …` over every file the work touched, and pass `npm test` over
   the **whole suite**, before completing the implementation. Narrowing the run to the files just
-  changed here would hide the tests this work broke elsewhere. This is where the suite must be
-  green. Do not consider the implementation complete while either one is failing.
+  changed here would hide the tests this work broke elsewhere. Do not consider the
+  implementation complete while either one is failing.
 - The branch structure the commits land on is decided here, once the work is complete, rather
   than before it starts; see the git branch convention.
+
+## Before offering a branch for merge
+
+- **The whole suite is green at the tip of the branch before its pull request is opened, and
+  before it is merged locally into a trunk.** This is the one point the suite is held to green:
+  the red commits a branch carries on purpose have been cleared by then, and a red still standing
+  is unfinished work, cleared before the branch goes on.
+- Run it at the tip that will actually merge — after the branch has been rebased onto its trunk,
+  not before. A rebase brings in the trunk's latest commits, and a suite that passed against the
+  old base says nothing about the new one.
