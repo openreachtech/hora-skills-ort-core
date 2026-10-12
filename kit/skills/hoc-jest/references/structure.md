@@ -1195,6 +1195,8 @@ values)** and **invalid values (abnormal values)**, separate them with two
 - Do not mix both into a single `describe()` (or `cases` / `~Cases`).
 - For a case representing "a missing property", leave the missing property **commented
   out** to make explicit what is being omitted (do not simply leave it out silently).
+- **Before writing the invalid-value `cases`, read [types.md](./types.md).** How those
+  `cases` are typed is settled there.
 
 ```js
 // Make the missing property explicit

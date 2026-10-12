@@ -16,8 +16,8 @@ a major that range excludes is left for a decision of its own. A pass that ends 
 not a project at the latest of everything.
 
 The pass moves **declared versions**. Resolving an advisory is a different errand that uses
-some of the same mechanisms — see `hoc-npm-vulnerability`. Deciding an install script a
-raise happens to bring in belongs to `hoc-npm-install-scripts`.
+some of the same mechanisms — see `/hoc-npm-vulnerability`. Deciding an install script a
+raise happens to bring in belongs to `/hoc-npm-install-scripts`.
 
 ## The comparison reads the declared range, never the lockfile
 
@@ -146,7 +146,7 @@ Uninstall delta-package
   an oversight.** A reader checking one of them out finds a manifest ahead of its lockfile,
   which is the same state the project sits in whenever a range is widened.
 - The lockfile commit's own subject names the command that produced it, not the versions:
-  `hoc-git-commit` settles its wording, and the same convention keeps generated artefacts
+  `/hoc-git-commit` settles its wording, and the same convention keeps generated artefacts
   out of the commits that carry hand-written source.
 - Concentrating the install into one run at the end is the same shape a release takes when
   its version bump is left until last, and the same shape the install-scripts gate takes
@@ -160,7 +160,7 @@ a native package as a regular — not optional — dependency of something two l
 
 - **Settling it is part of this pass.** Leaving it means every later install reports a
   decision outstanding, and a project whose gate is strict stops instead.
-- **How to settle it is not this convention's** — `hoc-npm-install-scripts` covers reviewing
+- **How to settle it is not this convention's** — `/hoc-npm-install-scripts` covers reviewing
   the script, denying or approving it, and what the record looks like.
 
 ## A raise can also orphan one
@@ -196,7 +196,7 @@ the case the vulnerability convention opens with, and the override is its instru
   pass is about to replace, and every finding the raises are about to clear is still in it.
 - **A finding that remains does not hold up the pass.** The declared versions moved and the
   lockfile records the resolution; what is left is a separate errand against the same tree.
-- **How to settle it is not this convention's** — `hoc-npm-vulnerability` covers the override,
+- **How to settle it is not this convention's** — `/hoc-npm-vulnerability` covers the override,
   scoping its key, and checking that the version it names clears the quarantine.
 
 ## Read the deprecation flag on the version the project declares

@@ -5,24 +5,8 @@ Referenced from `SKILL.md`.
 
 ## Notation of Class Members
 
-The `describe()` name of a member follows the notation in the table below. Prefix
-instance members with `#` and static members with `.`. Getters / setters use a
-`get:` / `set:` prefix (e.g. `.get:schema` instead of `.schema`).
-
-This notation is **governed by "Notation of Class Members" in the documentation
-convention**. The table below restates it in the context of jest; when the
-governing table changes, align this one with it.
-
-| notation | members |
-| :-- | :-- |
-| `#instanceProperty` | instance property |
-| `#instanceMethod()` | instance method |
-| `#get:instanceGetter` | instance getter |
-| `#set:instanceSetter` | instance setter |
-| `.staticProperty` | static property |
-| `.staticMethod()` | static method |
-| `.get:staticGetter` | static getter |
-| `.set:staticSetter` | static setter |
+The `describe()` name of a member is written in the notation of
+`/hoc-classes-member-notation` — a getter included, as `.get:schema` rather than `.schema`.
 
 When referring to a member **within the prose** of `describe()` / `test()` at the
 behavior layer, **follow the 2nd-level `describe()` format** as well (append `()`
