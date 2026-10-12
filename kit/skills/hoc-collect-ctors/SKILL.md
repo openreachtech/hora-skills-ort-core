@@ -79,8 +79,9 @@ folder, and by nothing else.** No list, no barrel and no existing file is edited
 - **Callers ask the collection, never the folder or the barrel.** It answers whether a member
   exists, which class it is, and what the members are.
 - **A member is found by asking the classes**, with `find()` over the collected classes and a
-  static member each class answers through. No dictionary keyed by a string is built to look them
-  up; `Map` and an object literal shared across scopes are refused by `/hoc-prohibit-native-features`.
+  static member each class answers through. The classes are held in an Array, and no dictionary
+  keyed by a string is built beside it: classes defined in the source code are never so many that
+  `find()` over them is slow — see `/hoc-prohibit-native-features`.
 - **A list handed to a caller is a new array each time**, so what a caller does with it never
   reaches the collection.
 - **The collection reaches the loader through a static getter**, so a subclass or a test can
