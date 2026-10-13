@@ -30,8 +30,9 @@ Four were measured, and not one of them asked:
   repository still holds an object for, and this one removes what the repository never held. What
   it is reached for is reached another way — `git stash -u` empties the tree of untracked files
   without destroying them — and the operations said to need a clean tree largely do not: a
-  rebase, measured, is not blocked by an untracked file at all. A working practice that never
-  runs it loses nothing, which is what makes the bar costless to hold.
+  rebase, measured, runs straight past an untracked file it has no use for, and where it would
+  have to overwrite one it aborts rather than removing it. A working practice that never runs
+  `git clean` loses nothing, which is what makes the bar costless to hold.
 - **A command that prints what it removed has still not asked.** `git clean -fd` names each path
   as it goes, into a scrollback nobody is reading at that moment. A line after the fact is not a
   confirmation before it.

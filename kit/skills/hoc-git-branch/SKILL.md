@@ -67,8 +67,9 @@ is the one trunk worked on directly, as described under the trunk branch below.
     git stash pop
     ```
 
-    - **`-u`, so that untracked files go with it.** They do not stop the rebase, but they are
-      part of the open work, and leaving them behind splits it across two places.
+    - **`-u`, so that untracked files go with it.** Only one the rebase would have to overwrite
+      stops it, but all of them are part of the open work, and leaving any behind splits it
+      across two places.
     - **The pop happens on `<branch>`, not back where the stash was taken.** The stray commits
       changed the tree, the open edits may touch what they changed, and the rewound trunk no
       longer carries any of it while `<branch>` still does. This is where the ordinary
