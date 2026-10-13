@@ -14,9 +14,11 @@ specified in full below, because what they say is inseparable from what they are
 
 ## No commit is made directly on `main`, `release/x.x.x`, `dev` or `env`
 
-**A commit made while one of these four is checked out is forbidden, whatever it holds.** The
-only way a change reaches them is a branch merged back. `hotfix/xxxx` is not among the four; it
-is the one trunk worked on directly, as described under the trunk branch below.
+**A commit that carries a change of its own is never made while one of these four is checked
+out, whatever the change is.** The only way a change reaches them is a branch merged back. The
+two a trunk makes about itself carry none, and the bullet below names them. `hotfix/xxxx` is
+not among the four; it is the one trunk worked on directly, as described under the trunk branch
+below.
 
 - **Read the branch name before the first edit, and again before every commit.** Run
   `git branch --show-current`. Where the answer is one of the four, cut a branch for the change
