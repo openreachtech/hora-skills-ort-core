@@ -30,8 +30,9 @@ Four were measured, and not one of them asked:
   repository still holds an object for, and this one removes what the repository never held. What
   it is reached for is reached another way — `git stash -u` empties the tree of untracked files
   without destroying them — and the operations said to need a clean tree largely do not: a
-  rebase, measured, is not blocked by an untracked file at all. A working practice that never
-  runs it loses nothing, which is what makes the bar costless to hold.
+  rebase, measured, runs straight past an untracked file it has no use for, and where it would
+  have to overwrite one it aborts rather than removing it. A working practice that never runs
+  `git clean` loses nothing, which is what makes the bar costless to hold.
 - **A command that prints what it removed has still not asked.** `git clean -fd` names each path
   as it goes, into a scrollback nobody is reading at that moment. A line after the fact is not a
   confirmation before it.
@@ -71,8 +72,9 @@ opposite.
 
 ## Setting it aside instead
 
-**`git stash -u` is the preserving form of all four.** It takes the modifications and the
-untracked files together, leaves the tree clean for whatever needed it, and gives them back.
+**`git stash -u` is the preserving form of what those four do to the tree.** It takes the
+modifications and the untracked files together, leaves the tree clean for whatever needed it,
+and gives them back.
 
 ```bash
 git stash -u
@@ -83,9 +85,19 @@ git stash pop
 - **`-u` is part of the command rather than an option to it.** Without it the untracked files
   stay in the tree — which is the half a plain stash does not cover, and the half that has no
   other home.
-- **A stash is popped at the commit it was taken at.** It applies against the tree it came from,
-  so where the operation moved the branch away from that commit, the pop belongs on whichever ref
-  still holds it rather than on the branch that moved.
+- **Where the point was to move a ref, the stash is only half the answer.**
+  `git reset --hard <target>` clears the tree and moves the branch, and a stash replaces the
+  first of those alone. What replaces the second is `git rebase --onto <target> @`, which moves
+  the branch and refuses where a tracked file is modified; the git branch convention writes the
+  recovery it belongs to.
+- **A stash is popped as a merge, not as a replay.** It carries the diff from the commit it was
+  taken at, so a pop at some other commit succeeds while that commit still agrees about what the
+  stash touched, and conflicts where it does not — leaving the entry in place. Where an operation
+  moved the branch away, the pop therefore belongs on whichever ref still holds the commit it was
+  taken at, which is the one place nothing can disagree.
+  - Measured, popping at a different commit: clean where the edited file stood unchanged at both;
+    `UU` where the file's content had moved under the edit; `DU` where the file existed only at
+    the commit the stash was taken at. The entry was kept in both failing cases.
 
 ## A commit holds what a stash cannot
 
@@ -114,7 +126,8 @@ the object leaves every name resolving to nothing.
 | `git branch -D`, `git reflog expire` | A name. The object stands, reachable by any other |
 | `git stash drop`, `git stash clear` | A name — the stash entry. The commit it pointed at stands |
 | `git worktree prune` | A name — a worktree's `HEAD` and its reflog, which may be a commit's only one |
-| `git gc`, `git prune`, `git repack -a -d` | The object. Every name for it is now a string that resolves to nothing |
+| `git gc`, `git prune` | The object, once the expiry has passed over it. Every name for it is then a string that resolves to nothing |
+| `git repack -a -d` | The object, at once. No expiry stands between the command and it |
 
 **No command that deletes an unreachable object is run**, and the default grace period is not
 what makes one safe. It protects what was lost recently, while the hash still on somebody's
