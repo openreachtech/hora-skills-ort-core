@@ -72,8 +72,9 @@ opposite.
 
 ## Setting it aside instead
 
-**`git stash -u` is the preserving form of all four.** It takes the modifications and the
-untracked files together, leaves the tree clean for whatever needed it, and gives them back.
+**`git stash -u` is the preserving form of what those four do to the tree.** It takes the
+modifications and the untracked files together, leaves the tree clean for whatever needed it,
+and gives them back.
 
 ```bash
 git stash -u
@@ -84,6 +85,11 @@ git stash pop
 - **`-u` is part of the command rather than an option to it.** Without it the untracked files
   stay in the tree — which is the half a plain stash does not cover, and the half that has no
   other home.
+- **Where the point was to move a ref, the stash is only half the answer.**
+  `git reset --hard <target>` clears the tree and moves the branch, and a stash replaces the
+  first of those alone. What replaces the second is `git rebase --onto <target> @`, which moves
+  the branch and refuses where a tracked file is modified; the git branch convention writes the
+  recovery it belongs to.
 - **A stash is popped as a merge, not as a replay.** It carries the diff from the commit it was
   taken at, so a pop at some other commit succeeds while that commit still agrees about what the
   stash touched, and conflicts where it does not — leaving the entry in place. Where an operation
