@@ -540,13 +540,19 @@ git commit --allow-empty -m 'Start updating the domains a repository selects'
   sub-branch is the second piece of work the bullet above describes.
   - **The verbs do not have to match.** A trunk-scale verb gathers several commit verbs beneath
     it: an update of things that already exist takes `Add`, `Kick out` and `Fulfill` as parts of
-    itself. The question is whether the marker's verb still names what each of them did. A verb
-    that brings a new thing into being — `Author`, `Declare`, `Build` — does not sit under one
-    that changes things already there.
+    itself. The question is whether the marker's verb still names what each of them did.
+  - **A marker verb taken from the commit table keeps its commit meaning**, and speaks only for
+    what that meaning reaches: `Start updating the skills` cannot speak for an `Author` commit,
+    because an update carries forward what was already there. **`Enhance` and `Implement` are
+    kept out of that table for this reason** — each names a whole piece of work rather than what
+    one commit did, so a thing written for the first time is part of one. The git commit
+    convention says why they are kept out.
   - **Measured.** A trunk opened with `Start updating the skills by feedback` took in a sub-branch
     whose commits opened with `Author`: a skill written for the first time, which no update of
     the existing skills covers. The issue written at the trunk's altitude inherited the marker and
-    took the new skill in under it, so the mismatch outlived the branch.
+    took the new skill in under it, so the mismatch outlived the branch. The marker's verb was
+    `updating`, and that is where it failed: `Start enhancing the skills` would have held the
+    same sub-branch.
 - The subject names **what is being started**, which depends on the kind of trunk.
   - A **`dev` trunk** is named directly: `Start dev`. Here `dev` is the branch, not a
     placeholder word.
