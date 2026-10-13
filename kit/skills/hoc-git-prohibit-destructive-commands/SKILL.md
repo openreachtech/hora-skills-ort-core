@@ -114,7 +114,8 @@ the object leaves every name resolving to nothing.
 | `git branch -D`, `git reflog expire` | A name. The object stands, reachable by any other |
 | `git stash drop`, `git stash clear` | A name — the stash entry. The commit it pointed at stands |
 | `git worktree prune` | A name — a worktree's `HEAD` and its reflog, which may be a commit's only one |
-| `git gc`, `git prune`, `git repack -a -d` | The object. Every name for it is now a string that resolves to nothing |
+| `git gc`, `git prune` | The object, once the expiry has passed over it. Every name for it is then a string that resolves to nothing |
+| `git repack -a -d` | The object, at once. No expiry stands between the command and it |
 
 **No command that deletes an unreachable object is run**, and the default grace period is not
 what makes one safe. It protects what was lost recently, while the hash still on somebody's
