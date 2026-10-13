@@ -83,9 +83,14 @@ git stash pop
 - **`-u` is part of the command rather than an option to it.** Without it the untracked files
   stay in the tree — which is the half a plain stash does not cover, and the half that has no
   other home.
-- **A stash is popped at the commit it was taken at.** It applies against the tree it came from,
-  so where the operation moved the branch away from that commit, the pop belongs on whichever ref
-  still holds it rather than on the branch that moved.
+- **A stash is popped as a merge, not as a replay.** It carries the diff from the commit it was
+  taken at, so a pop at some other commit succeeds while that commit still agrees about what the
+  stash touched, and conflicts where it does not — leaving the entry in place. Where an operation
+  moved the branch away, the pop therefore belongs on whichever ref still holds the commit it was
+  taken at, which is the one place nothing can disagree.
+  - Measured, popping at a different commit: clean where the edited file stood unchanged at both;
+    `UU` where the file's content had moved under the edit; `DU` where the file existed only at
+    the commit the stash was taken at. The entry was kept in both failing cases.
 
 ## A commit holds what a stash cannot
 

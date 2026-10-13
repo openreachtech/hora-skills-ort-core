@@ -69,11 +69,11 @@ is the one trunk worked on directly, as described under the trunk branch below.
 
     - **`-u`, so that untracked files go with it.** They do not stop the rebase, but they are
       part of the open work, and leaving them behind splits it across two places.
-    - **The pop happens on `<branch>`, not back where the stash was taken.** A stash applies
-      against the tree it came from, and that tree is the tip — which `<branch>` still holds and
-      the trunk, rewound past it, no longer does. This is where the ordinary stash-rebase-pop
-      order does not reach: there the branch comes back to the work, and here the trunk is moved
-      away from it.
+    - **The pop happens on `<branch>`, not back where the stash was taken.** The stray commits
+      changed the tree, the open edits may touch what they changed, and the rewound trunk no
+      longer carries any of it while `<branch>` still does. This is where the ordinary
+      stash-rebase-pop order does not reach: there the branch comes back to the work, and here
+      the trunk is moved away from it.
     - Measured: with the open edit touching a file one of the stray commits had added, popping
       on the rewound trunk came back `DU` and kept the stash entry, while popping on `<branch>`
       applied clean.
