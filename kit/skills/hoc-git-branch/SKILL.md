@@ -280,6 +280,21 @@ What the finished line is looked at for:
     - Which half merges first follows the ordering rules below — the adoption cannot land before
       what it adopts.
 
+- **A difference of kind puts a level between siblings.** Where the pieces are siblings by the
+  test above, and one of them is an artefact written for the first time while the rest change
+  what already stands, they do not sit side by side. The like ones gather under a nested trunk
+  of their own, and the levels then hold the two kinds apart.
+  - **It is not the sibling test failing.** Each piece still stands as work in its own right,
+    and each still takes a sub-branch. What the difference of kind settles is the level one sits
+    at, which the sibling test does not reach.
+  - **The boundary is the commit convention's vocabulary.** `Declare`, `Define`, `Author` and
+    `Build` name what did not exist before; `Update`, `Retake` and `Fix` name what did. A trunk
+    whose sub-branches take verbs from both sides is what this bullet turns away.
+  - **What the levels buy is a merge list that sorts itself.** A trunk's merges are read as the
+    list of what the work did, and one mixing a thing that was made with three adjustments to
+    things that already stood gives the reader nothing to sort by. Gathered, the adjustments
+    arrive as one entry and the new thing stands beside it.
+
 ### The order the sub-branches merge in
 
 **Merge the cheap ones first and the substantial ones last.** Where one sub-branch changes a line
