@@ -192,6 +192,10 @@ git push --force-with-lease --force-if-includes origin <branch>
 - **The local rewrite itself is not restricted.** `rebase`, `squash`, `commit --amend` and
   `reset` stay reachable through the reflog, and they are done when asked. What stops here is
   only the push that publishes the rewrite.
+  - **`git reset --hard` is not one of them, and the sentence above says why.** What it takes is
+    the working tree, which no reflog holds, so the reason the others are reachable does not
+    reach it. `/hoc-git-prohibit-destructive-commands` refuses it outright, and that refusal is not
+    relaxed by the rewrite being local.
 - **Hand over what the remote stands to lose**: the branch, and the commits `origin/<branch>`
   holds that the local branch does not. Preparing that costs nothing and needs no permission,
   and it is the material the person actually decides on.
