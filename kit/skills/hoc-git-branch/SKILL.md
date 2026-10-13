@@ -51,6 +51,11 @@ is the one trunk worked on directly, as described under the trunk branch below.
     nothing is replayed and the branch simply arrives at `<target>`. Where a tracked file is
     modified the rebase refuses and moves nothing, which is the whole of what separates it from
     `git reset --hard`.
+  - **Why the reset is refused rather than merely preferred against belongs next door.**
+    `/hoc-git-prohibit-destructive-commands` is the convention that bars it, and the stash below
+    is that convention's mechanism, borrowed here. What this one settles is the shape of the
+    recovery: which ref holds the commits, where the trunk returns to, and which branch the pop
+    happens on.
   - **That refusal is what asks for `git stash`.** The open edits belong to the work rather than
     to the trunk, so they are set aside before the rebase and taken back after the switch:
 
