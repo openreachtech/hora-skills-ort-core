@@ -1,13 +1,14 @@
 ---
 name: hoc-git-prohibit-destructive-commands
-description: "Work that is not committed — a modified file, a staged change, an untracked note — and how it survives an operation that would otherwise discard it. Use before any command that would clear the working tree or delete an object, and whenever something else needs the tree clean before it can run. What becomes of work once it is committed belongs to the git commit and git branch conventions."
+description: "The git commands this library does not run, because what they destroy cannot be given back — a modified file, an untracked note, an object no ref still names — and what is reached for instead. Use before any command that would clear the working tree, discard a change or delete an object, and whenever something else needs the tree clean before it can run. Destroying what the remote holds belongs to the git push convention."
 ---
 
 # Git: Prohibit Destructive Commands
 
-**The working tree is not the agent's to clear.** What is in it was put there by whoever is
-working, and an agent that did not write a file cannot read what it is worth. So the tree is
-carried through an operation rather than emptied before one.
+**What a repository still holds is not the agent's to destroy.** It was put there by whoever is
+working, and an agent that did not write a file cannot read what it is worth. The commands below
+take it away with nothing left to recover from, so the work is carried through an operation
+rather than cleared before one.
 
 ## Nothing that discards uncommitted work is run
 
@@ -144,3 +145,7 @@ stopped covering.
 ref holds it, in what order the commits land — belongs to the git commit and git branch
 conventions. Recovering a trunk that has commits on it by mistake is the branch convention's,
 and it reaches for the same mechanisms described here.
+
+**Destroying what the remote holds is the push convention's.** A force-push takes commits off a
+branch somebody else may be standing on, and the local work survives it — so what that costs, and
+why it is handed to a person rather than run here, belong to `/hoc-git-push`.
