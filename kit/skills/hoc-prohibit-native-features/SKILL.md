@@ -79,71 +79,37 @@ computeRegionTotals () {
 
 ### Looking up by a string or a number
 
-A lookup by a string or a number is what `Map` has been reached for, and it needs no `Map`.
+A lookup by a string or a number is what `Map` has been reached for, and it needs no `Map`. The
+elements are held in an Array, and the one asked for is found with `find()`.
 
-- **Within one method, build a lookup object and use it up there.** It never leaves the method,
-  so nothing is shared across scopes.
-- **For a collection looked up call after call, hold its index in a `static` `WeakMap` keyed by
-  the collection.** A collection is built first and looked up after — a builder is never read
-  mid-build — so the index is made once, at the first lookup, and stays valid. It never leaves the
-  method that reads it, and it goes when the collection is released.
-- **When the collection gains or loses an element, delete its entry; never update it.** The next
-  lookup builds the index again from the elements, so the two cannot disagree.
-- **A table that grows while it is looked up, call after call, is the mutable aggregate refused
-  above.** Where a linear `find()` over the elements is too slow, the records are too many for the
-  process to hold, and they belong to a database.
+- **No object keyed by a string is built to look elements up**, inside a method or kept beside
+  the collection. Built within a method, it walks every element to answer one lookup, which is
+  already more than `find()` does. Kept beside the collection, it is a copy built again whenever
+  the elements change — the mutable aggregate refused above, reached by another route.
+- **Speed is not a reason to avoid `find()`.** Entries written in the source code are never so
+  many that walking them is worth a second structure, and a `Map` is not reached for to make it
+  faster.
+- **Entries too many for `find()` to keep up with belong in a database**, and are looked up
+  there.
 
 ```javascript
-export default class MemberCollection {
-  static indexPerCollection = new WeakMap()
+// NG: an index object is built again from the elements on every lookup
+extractMemberByEmail ({
+  email,
+}) {
+  const memberPerEmail = Object.fromEntries(
+    this.members.map(it => [it.email, it])
+  )
 
-  constructor ({
-    members,
-  }) {
-    this.members = members
-  }
+  return memberPerEmail[email]
+}
 
-  static create ({
-    members,
-  }) {
-    return new this({
-      members,
-    })
-  }
-
-  get Ctor () {
-    return /** @type {typeof MemberCollection} */ (this.constructor)
-  }
-
-  addMember ({
-    member,
-  }) {
-    this.members.push(member)
-
-    this.Ctor.indexPerCollection.delete(this)
-
-    return this
-  }
-
-  extractMemberByEmail ({
-    email,
-  }) {
-    const indexPerCollection = this.Ctor.indexPerCollection
-
-    if (!indexPerCollection.has(this)) {
-      indexPerCollection.set(
-        this,
-        Object.assign(
-          Object.create(null),
-          Object.fromEntries(
-            this.members.map(it => [it.email, it])
-          )
-        )
-      )
-    }
-
-    return indexPerCollection.get(this)[email]
-  }
+// OK: the elements are asked directly
+extractMemberByEmail ({
+  email,
+}) {
+  return this.members
+    .find(it => it.email === email)
 }
 ```
 
