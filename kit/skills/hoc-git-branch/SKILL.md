@@ -1,6 +1,6 @@
 ---
 name: hoc-git-branch
-description: "Conventions for the branches a repository carries — trunks, general branches, and the commits that open and merge them. Use before cutting a branch, merging one back, carrying a change onto one, or discarding one. What a commit holds belongs to the git commit convention; pushing, to the git push convention."
+description: "Conventions for the branches a repository carries — trunks, general branches, and the commits that open and merge them. Use before cutting a branch, merging one back, carrying a change onto one, or discarding one, and before the first edit or commit while `main`, `release/x.x.x`, `dev` or `env` is checked out. What a commit holds belongs to the git commit convention; pushing, to the git push convention."
 ---
 
 # Git Branch
@@ -11,6 +11,76 @@ branch is called, the commit that opens a trunk and the commit that closes a sub
 What belongs in a single commit, and how a subject is worded, are settled by the git commit
 convention. The two commits described here are the exception it points at: their subjects are
 specified in full below, because what they say is inseparable from what they are for.
+
+## No commit is made directly on `main`, `release/x.x.x`, `dev` or `env`
+
+**A commit made while one of these four is checked out is forbidden, whatever it holds.** The
+only way a change reaches them is a branch merged back. `hotfix/xxxx` is not among the four; it
+is the one trunk worked on directly, as described under the trunk branch below.
+
+- **Read the branch name before the first edit, and again before every commit.** Run
+  `git branch --show-current`. Where the answer is one of the four, cut a branch for the change
+  before touching a file, and commit there. Uncommitted edits travel with `git switch -c`, so
+  noticing late costs nothing as long as nothing has been committed yet.
+- **Where no branch other than those four exists, a new one is created, without exception.**
+  There is no branch to work on, so the work does not start until one exists. A repository
+  whose branches are all trunks, or a checkout sitting on one with nothing else cut yet, is not
+  a case for committing there. The work always goes onto a newly created branch, and its
+  commits are made on that branch, with no exception.
+- **Size, speed and tidiness are not exceptions.** "One line", "a typo", "the tree is clean",
+  "I will move it to a branch afterwards" — none of them makes a direct commit permissible, and
+  a commit that is going to be moved is still a commit made on the trunk.
+- **Two commits are the only ones a trunk makes itself**, and neither carries a change of its own:
+  the marker that opens it and the `Merge …` commit that brings a sub-branch in. Both are
+  described below.
+- **A commit already made on one of the four is recovered, and the recovery is not optional.**
+  Noticing late does not end the work at a report. Say which branch and which commits, then put
+  the line back: the commits are given a branch of their own, and the trunk returns to where it
+  stood.
+
+  ```bash
+  git branch <branch>                   # the commits are held by a ref of their own
+  git rebase --onto origin/<trunk> @    # the trunk goes back
+  git switch <branch>
+  ```
+
+  - **The branch is made before anything moves.** `git branch` names the tip without switching,
+    so the commits are held before the trunk is touched. Stopped after that one command, the
+    recovery has lost nothing and can be picked up again.
+  - **`git rebase --onto <target> @` rather than a reset.** The range `@..HEAD` is empty, so
+    nothing is replayed and the branch simply arrives at `<target>`. Where a tracked file is
+    modified the rebase refuses and moves nothing, which is the whole of what separates it from
+    `git reset --hard`.
+  - **That refusal is what asks for `git stash`.** The open edits belong to the work rather than
+    to the trunk, so they are set aside before the rebase and taken back after the switch:
+
+    ```bash
+    git branch <branch>
+    git stash -u
+    git rebase --onto origin/<trunk> @
+    git switch <branch>
+    git stash pop
+    ```
+
+    - **`-u`, so that untracked files go with it.** They do not stop the rebase, but they are
+      part of the open work, and leaving them behind splits it across two places.
+    - **The pop happens on `<branch>`, not back where the stash was taken.** A stash applies
+      against the tree it came from, and that tree is the tip — which `<branch>` still holds and
+      the trunk, rewound past it, no longer does. This is where the ordinary stash-rebase-pop
+      order does not reach: there the branch comes back to the work, and here the trunk is moved
+      away from it.
+    - Measured: with the open edit touching a file one of the stray commits had added, popping
+      on the rewound trunk came back `DU` and kept the stash entry, while popping on `<branch>`
+      applied clean.
+  - **Where the trunk stood is `origin/<trunk>`** while the commits are unpublished. The trunk's
+    reflog answers the same question where the remote is not the reference.
+  - **Where they are already pushed, the recovery is asked for rather than made.** Putting the
+    trunk back then means rewriting published history, which is nobody's to do from here. Report
+    the branch and the commits, and ask for the trunk to be recovered before anything else is
+    taken up — `/hoc-git-branch-remote` settles what the trunk may do afterwards.
+- **Why the rule is this strict.** A trunk's published history is never rewritten, so a commit
+  that lands on one cannot be taken back, and a change that skipped the branch skipped the one
+  step at which it could be read before it became part of the trunk.
 
 ## Every rebase takes `-r`
 
@@ -190,7 +260,10 @@ Flow, and cutting from `main` is what it wants.
 
 ## When the structure is decided
 
-**Commit the work in one line first, and shape the branches once it is finished.** How many
+**Commit the work in one line first, and shape the branches once it is finished.** The line is a
+branch cut from the trunk for the purpose, never the trunk itself — a line committed onto
+`main`, `release/x.x.x`, `dev` or `env` is the direct commit the first section forbids, and
+cutting the markers afterwards cannot undo it. How many
 sub-branches the work wants, and whether it wants a trunk at all, are answers the work itself
 gives — and it cannot give them before it exists. A structure chosen in advance is a guess, and
 a guess that turns out wrong costs a rebuild of everything already committed under it.

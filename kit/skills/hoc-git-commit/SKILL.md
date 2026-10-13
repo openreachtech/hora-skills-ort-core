@@ -110,10 +110,11 @@ inseparable from what they are for. Here they surface only in the verb table bel
 `Start`, `Release` and `Merge` are reserved for them.
 
 - **A marker made on the wrong branch is taken back with `git reset --soft HEAD~1`, while it is
-  still local.** The marker is empty, so the soft reset leaves the tree exactly as it was.
-  `git reset --hard` and `git branch -D` reach the same state by discarding, and a session run
-  under a permission classifier refuses both as irreversible. Once the commit is pushed it
-  stays, and a new commit corrects it.
+  still local.** The marker is empty, so the soft reset leaves the tree exactly as it was. The
+  two commands that reach the same state are not used for it: `git reset --hard` takes the
+  working tree with it, which `/hoc-git-preserve-uncommitted-work` refuses outright, and
+  `git branch -D` takes the branch and everything else standing on it, when what is being taken
+  back is one empty commit. Once the commit is pushed it stays, and a new commit corrects it.
 
 ### Verbs
 
