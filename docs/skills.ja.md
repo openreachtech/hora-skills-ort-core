@@ -87,7 +87,7 @@
 | `hoc-git-branch-remote` | リポジトリが remote に持つブランチ。default branch は `main` とし、`main` に merge できるブランチはリポジトリの種別（npm package、boilerplate、application）で決まり、trunk の公開済みの履歴は書き換えません。 |
 | `hoc-git-commit` | コミットの規約。1 コミットに含める粒度、メッセージ形式(命令形 / Conventional Commits をプロジェクト単位で選択)、両者で共通の動詞語彙。 |
 | `hoc-git-commit-order` | コミットを並べる順序。最初のコミットでテストを赤にする（足すならテストが先、消す・上限を下げるなら実装が先）。そのあとは振る舞い、構造、追加の順。 |
-| `hoc-git-preserve-uncommitted-work` | 未コミットの作業が、それを捨てる操作を生き延びる方法。変更や未追跡ファイルを消すコマンドと、そのどれも実行しない理由（とりわけ `git reset --hard` と `git clean`）、代わりに作業を保持する `git stash -u` と一時コミット、そして一度書かれた object を消さない理由。 |
+| `hoc-git-prohibit-destructive-commands` | 未コミットの作業が、それを捨てる操作を生き延びる方法。変更や未追跡ファイルを消すコマンドと、そのどれも実行しない理由（とりわけ `git reset --hard` と `git clean`）、代わりに作業を保持する `git stash -u` と一時コミット、そして一度書かれた object を消さない理由。 |
 | `hoc-git-push` | push を行う前に要るもの。1 回ごとに要る許可とその狭さ、ここでは実行せず人に渡す force-push、remote を読んだ結果を根拠に可否が決まる操作をその読み取りごと人に渡すこと、設定に頼らず remote とブランチを明示すること、そしてタグと remote ブランチの削除を手で push しない理由。 |
 
 ## 依存と公開

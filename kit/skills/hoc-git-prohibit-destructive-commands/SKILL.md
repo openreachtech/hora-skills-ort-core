@@ -1,9 +1,9 @@
 ---
-name: hoc-git-preserve-uncommitted-work
+name: hoc-git-prohibit-destructive-commands
 description: "Work that is not committed — a modified file, a staged change, an untracked note — and how it survives an operation that would otherwise discard it. Use before any command that would clear the working tree or delete an object, and whenever something else needs the tree clean before it can run. What becomes of work once it is committed belongs to the git commit and git branch conventions."
 ---
 
-# Git: Preserve Uncommitted Work
+# Git: Prohibit Destructive Commands
 
 **The working tree is not the agent's to clear.** What is in it was put there by whoever is
 working, and an agent that did not write a file cannot read what it is worth. So the tree is
