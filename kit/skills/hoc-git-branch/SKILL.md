@@ -51,6 +51,11 @@ is the one trunk worked on directly, as described under the trunk branch below.
     nothing is replayed and the branch simply arrives at `<target>`. Where a tracked file is
     modified the rebase refuses and moves nothing, which is the whole of what separates it from
     `git reset --hard`.
+  - **Why the reset is refused rather than merely preferred against belongs next door.**
+    `/hoc-git-prohibit-destructive-commands` is the convention that bars it, and the stash below
+    is that convention's mechanism, borrowed here. What this one settles is the shape of the
+    recovery: which ref holds the commits, where the trunk returns to, and which branch the pop
+    happens on.
   - **That refusal is what asks for `git stash`.** The open edits belong to the work rather than
     to the trunk, so they are set aside before the rebase and taken back after the switch:
 
@@ -62,13 +67,14 @@ is the one trunk worked on directly, as described under the trunk branch below.
     git stash pop
     ```
 
-    - **`-u`, so that untracked files go with it.** They do not stop the rebase, but they are
-      part of the open work, and leaving them behind splits it across two places.
-    - **The pop happens on `<branch>`, not back where the stash was taken.** A stash applies
-      against the tree it came from, and that tree is the tip — which `<branch>` still holds and
-      the trunk, rewound past it, no longer does. This is where the ordinary stash-rebase-pop
-      order does not reach: there the branch comes back to the work, and here the trunk is moved
-      away from it.
+    - **`-u`, so that untracked files go with it.** Only one the rebase would have to overwrite
+      stops it, but all of them are part of the open work, and leaving any behind splits it
+      across two places.
+    - **The pop happens on `<branch>`, not back where the stash was taken.** The stray commits
+      changed the tree, the open edits may touch what they changed, and the rewound trunk no
+      longer carries any of it while `<branch>` still does. This is where the ordinary
+      stash-rebase-pop order does not reach: there the branch comes back to the work, and here
+      the trunk is moved away from it.
     - Measured: with the open edit touching a file one of the stray commits had added, popping
       on the rewound trunk came back `DU` and kept the stash entry, while popping on `<branch>`
       applied clean.
