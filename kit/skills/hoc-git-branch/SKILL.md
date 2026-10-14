@@ -392,11 +392,11 @@ which costs little: the diff of a small commit is often what its message already
   what gets checked, so the diff is what ranks the branches. A branch of four commits that raise
   versions and regenerate a lock file is cheaper to read than one of two commits that change a
   procedure.
-- **An octopus merge ranks its legs by commit count instead, fewest first.** Its branches arrive
-  in one merge commit, side by side, and `git log --graph` draws each as a leg of its own — so
-  the reader takes the structure in from the shape of the legs before reading any diff, and legs
-  that lengthen from left to right are the shape that reads at a glance. How the octopus merge
-  is made is under `## Merging back into a trunk`.
+- **An octopus merge takes the same order as the sequence.** Its branches arrive in one merge
+  commit, but `git log --graph` stacks their commits in the order the arguments are given — the
+  first argument at the bottom, the last on top, whatever the dates of the commits — so listing
+  the branches in the order the sequence would merge them gives the same graph. How the octopus
+  merge is made is under `## Merging back into a trunk`.
 - **This is not an argument about risk.** Ordering by cost so that the cheap gains survive if the
   expensive work is rejected reaches the same order by another route, and it is not the reason.
 - **A change that only becomes possible once the others land goes last, whatever it costs.** Where
@@ -760,14 +760,15 @@ Merge the core/ rename in the repository documents
 
   ```bash
   git switch <trunk>
-  git merge --no-ff -m 'Merge …' <fewest commits> <more> <most>
+  git merge --no-ff -m 'Merge …' <merged first> <merged next> <merged last>
   ```
 
   - **Every branch sits on the trunk's current tip before it starts.** No tip moves between
     merges, so no rebase happens in the middle — but each branch is checked against the tip
     first, with `--is-ancestor` and with a count above zero, exactly as in the cycle.
-  - **The branches are listed by commit count, fewest first**, as `### The order the sub-branches
-    merge in` says. The order of the arguments is the order of the legs in the graph.
+  - **The branches are listed in the order the sequence would merge them**, as `### The order the
+    sub-branches merge in` says. The first argument sits at the bottom of the graph and the last
+    on top, and the legs run left to right in the same order.
   - **The subject names the whole the trunk gathers**, at the altitude of its opening marker,
     since one commit now stands for every branch it received.
 
