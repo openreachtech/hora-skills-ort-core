@@ -1,6 +1,6 @@
 ---
 name: hoc-eslint-config
-description: "Conventions and procedure for `eslint.config.js` and the shared config package it spreads. Use when raising that package, changing a rule or its options, or tempted to relax a rule rather than change the code. Scope is settled by the package name carrying `eslint`. Dependencies in general belong to the npm conventions."
+description: "Conventions and procedure for `eslint.config.js` and the shared config package it spreads. Use when raising that package, changing a rule or its options, reading what a rule reported, reaching for a disabling comment, or weighing a relaxation against the code change that would clear the rule. Scope is settled by the package name carrying `eslint`. Dependencies in general belong to the npm conventions."
 ---
 
 # ESLint Config
