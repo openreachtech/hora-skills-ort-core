@@ -186,6 +186,15 @@ and its usual workaround, leaving no third spelling: one rule against writing a 
 the same thing. Establish that an alternative exists before concluding the code can absorb
 the fix.
 
+**One file holding every candidate answers that in a single run.** Write the same construct
+once per spelling under consideration, lint it, and read the report: a spelling that drew
+nothing is available, and a spelling that drew something is refused by whichever rule the
+report names beside it, which is not always the rule the search began with. Editing the real
+call sites to find out costs a pass per candidate and leaves the rejected ones to be undone.
+
+The probe is deleted once its report has been read. It exists to produce that report and
+nothing else.
+
 **Measure the floor the rule leaves that code before promising the code can clear it.** A
 threshold rule counts what the signature carries as well as what the body does — cyclomatic
 complexity counts every defaulted parameter — so a method declaring eight of them stands at nine
