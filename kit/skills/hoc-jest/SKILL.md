@@ -146,6 +146,12 @@ the argument passed to the subject under test is `input`.
   files predating this convention record when they were written, and the
   workflow convention settles what to follow where the code around you and a
   convention disagree.
+  - **A file carried over from elsewhere was written on the day it was carried.**
+    What the exemption covers is a file that already stood, never content copied
+    into a new one: a port rewrites every line it moves, so the names it keeps are
+    names chosen now. Measured on one migration: test files arrived from a
+    repository with a different vocabulary, kept it, and passed lint — the
+    prohibition is deliberately not a rule — and they carry it still.
 
 ## Core principle: index the first and second levels by definition name (class/member)
 
