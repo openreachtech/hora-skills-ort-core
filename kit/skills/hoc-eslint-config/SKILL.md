@@ -138,6 +138,15 @@ last, and only once no change to the code will do. A relaxation hides, for as lo
 stands, whatever else that rule would have caught in that scope — a cost paid by every
 later reader rather than by whoever wrote it.
 
+**An inline suppression comment is not a third route.** Where the shared config carries a rule
+against directive comments, a disabling comment of any form is itself a violation, and where a
+second rule requires every directive to carry a description, one comment is reported twice. A
+run that reaches for one has added violations rather than cleared the one it started with. The
+routes are changing the code and narrowing the rule in the config
+([rule-option-subtraction.md](./references/rule-option-subtraction.md)), and there is no other —
+so a rule that looks unanswerable is answered by looking harder at the code, never by annotating
+past it.
+
 ### Which way to go
 
 **Relax only where the code's shape is already right and the rule is wrong about it.** Where
