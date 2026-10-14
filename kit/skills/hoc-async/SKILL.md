@@ -1,6 +1,6 @@
 ---
 name: hoc-async
-description: "Conventions for writing asynchronous code. When writing Promises, use async/await whenever possible."
+description: "Conventions for writing asynchronous code: how a promise is written, and what becomes of a value that crosses the boundary one makes. Use when writing or awaiting a promise, when making an existing member async, or when a value returned through one stops behaving like itself. Test doubles for async members belong to the Jest convention."
 ---
 
 # Shared: Async
