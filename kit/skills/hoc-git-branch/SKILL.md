@@ -1,6 +1,6 @@
 ---
 name: hoc-git-branch
-description: "Conventions for the branches a repository carries — trunks, general branches, and the commits that open and merge them. Use before cutting a branch, merging one back, carrying a change onto one, or discarding one. What a commit holds belongs to the git commit convention; pushing, to the git push convention."
+description: "Conventions for the branches a repository carries — trunks, general branches, and the commits that open and merge them. Use before cutting a branch, merging one back, carrying a change onto one, or discarding one, and before the first edit or commit while `main`, `release/x.x.x`, `dev` or `env` is checked out. What a commit holds belongs to the git commit convention; pushing, to the git push convention."
 ---
 
 # Git Branch
@@ -11,6 +11,84 @@ branch is called, the commit that opens a trunk and the commit that closes a sub
 What belongs in a single commit, and how a subject is worded, are settled by the git commit
 convention. The two commits described here are the exception it points at: their subjects are
 specified in full below, because what they say is inseparable from what they are for.
+
+## No commit is made directly on `main`, `release/x.x.x`, `dev` or `env`
+
+**A commit that carries a change of its own is never made while one of these four is checked
+out, whatever the change is.** The only way a change reaches them is a branch merged back. The
+two a trunk makes about itself carry none, and the bullet below names them. `hotfix/xxxx` is
+not among the four; it is the one trunk worked on directly, as described under the trunk branch
+below.
+
+- **Read the branch name before the first edit, and again before every commit.** Run
+  `git branch --show-current`. Where the answer is one of the four, cut a branch for the change
+  before touching a file, and commit there. Uncommitted edits travel with `git switch -c`, so
+  noticing late costs nothing as long as nothing has been committed yet.
+- **Where no branch other than those four exists, a new one is created, without exception.**
+  There is no branch to work on, so the work does not start until one exists. A repository
+  whose branches are all trunks, or a checkout sitting on one with nothing else cut yet, is not
+  a case for committing there. The work always goes onto a newly created branch, and its
+  commits are made on that branch, with no exception.
+- **Size, speed and tidiness are not exceptions.** "One line", "a typo", "the tree is clean",
+  "I will move it to a branch afterwards" — none of them makes a direct commit permissible, and
+  a commit that is going to be moved is still a commit made on the trunk.
+- **Two commits are the only ones a trunk makes itself**, and neither carries a change of its own:
+  the marker that opens it and the `Merge …` commit that brings a sub-branch in. Both are
+  described below.
+- **A commit already made on one of the four is recovered, and the recovery is not optional.**
+  Noticing late does not end the work at a report. Say which branch and which commits, then put
+  the line back: the commits are given a branch of their own, and the trunk returns to where it
+  stood.
+
+  ```bash
+  git branch <branch>                   # the commits are held by a ref of their own
+  git rebase --onto origin/<trunk> @    # the trunk goes back
+  git switch <branch>
+  ```
+
+  - **The branch is made before anything moves.** `git branch` names the tip without switching,
+    so the commits are held before the trunk is touched. Stopped after that one command, the
+    recovery has lost nothing and can be picked up again.
+  - **`git rebase --onto <target> @` rather than a reset.** The range `@..HEAD` is empty, so
+    nothing is replayed and the branch simply arrives at `<target>`. Where a tracked file is
+    modified the rebase refuses and moves nothing, which is the whole of what separates it from
+    `git reset --hard`.
+  - **Why the reset is refused rather than merely preferred against belongs next door.**
+    `/hoc-git-prohibit-destructive-commands` is the convention that bars it, and the stash below
+    is that convention's mechanism, borrowed here. What this one settles is the shape of the
+    recovery: which ref holds the commits, where the trunk returns to, and which branch the pop
+    happens on.
+  - **That refusal is what asks for `git stash`.** The open edits belong to the work rather than
+    to the trunk, so they are set aside before the rebase and taken back after the switch:
+
+    ```bash
+    git branch <branch>
+    git stash -u
+    git rebase --onto origin/<trunk> @
+    git switch <branch>
+    git stash pop
+    ```
+
+    - **`-u`, so that untracked files go with it.** Only one the rebase would have to overwrite
+      stops it, but all of them are part of the open work, and leaving any behind splits it
+      across two places.
+    - **The pop happens on `<branch>`, not back where the stash was taken.** The stray commits
+      changed the tree, the open edits may touch what they changed, and the rewound trunk no
+      longer carries any of it while `<branch>` still does. This is where the ordinary
+      stash-rebase-pop order does not reach: there the branch comes back to the work, and here
+      the trunk is moved away from it.
+    - Measured: with the open edit touching a file one of the stray commits had added, popping
+      on the rewound trunk came back `DU` and kept the stash entry, while popping on `<branch>`
+      applied clean.
+  - **Where the trunk stood is `origin/<trunk>`** while the commits are unpublished. The trunk's
+    reflog answers the same question where the remote is not the reference.
+  - **Where they are already pushed, the recovery is asked for rather than made.** Putting the
+    trunk back then means rewriting published history, which is nobody's to do from here. Report
+    the branch and the commits, and ask for the trunk to be recovered before anything else is
+    taken up — `/hoc-git-branch-remote` settles what the trunk may do afterwards.
+- **Why the rule is this strict.** A trunk's published history is never rewritten, so a commit
+  that lands on one cannot be taken back, and a change that skipped the branch skipped the one
+  step at which it could be read before it became part of the trunk.
 
 ## Every rebase takes `-r`
 
@@ -116,13 +194,13 @@ A **trunk branch** is one that other branches are cut from and merged back into.
 **Five are trunks by name, in every repository: `main`, and the four branches that may merge
 into it.**
 
-| branch | what it carries | may merge into `main` |
-| :-- | :-- | :-- |
-| `main` | the mainline every other branch descends from | — |
-| `release/x.x.x` | one version's work, until it merges into `main` | yes |
-| `hotfix/xxxx` | one fix that cannot wait for a release | yes |
-| `dev` | long-lived integration. **Legacy** | yes |
-| `env` | the initial environment setup, and changes that leave the released artefact untouched | yes |
+| branch | what it carries |
+| :-- | :-- |
+| `main` | the mainline every other branch descends from |
+| `release/x.x.x` | one version's work, until it merges into `main` |
+| `hotfix/xxxx` | one fix that cannot wait for a release |
+| `dev` | long-lived integration. **Legacy** |
+| `env` | the initial environment setup, and changes that leave the released artefact untouched |
 
 **Every other branch is a general branch, and takes the role rather than holding it.** A
 general branch behaves as a trunk for as long as work is split off it. The five above behave as
@@ -130,11 +208,9 @@ trunks whether anything is outstanding against them or not.
 
 - **`dev` is legacy.** It stays in the set for backward compatibility, and nothing new is opened
   on it. A repository still carrying one holds it to every rule here.
-- **Which of the four a given repository actually uses is narrower than the set**, and it is
-  decided by what that repository releases rather than by this convention. A repository that
-  ships its own contents to whoever clones it merges nothing but `release/x.x.x` into `main`;
-  one that publishes a tarball can also merge `env`, because a change the tarball does not carry
-  needs no version. **The set here is the ceiling, not the instruction.**
+- **Which of the four a given repository may merge into `main` is narrower than the set**, and
+  it is decided by the kind of repository — see `/hoc-git-branch-remote`. **The set here is the
+  ceiling, not the instruction.**
 
 The shape of the name settles nothing. `release/x.x.x` is a trunk and
 `retake/save-of-UserRepository` is not, and the two are the same shape.
@@ -163,33 +239,8 @@ The shape of the name settles nothing. `release/x.x.x` is a trunk and
     going to read on a branch holding one fix.
   - **It is a trunk in every other respect.** Its history is not rewritten once pushed, it
     reaches `main` through a pull request like the rest, and it is deleted on merge.
-- **A trunk's published history is never rewritten.** `git push --force` and
-  `--force-with-lease` are not operations these branches take, and neither are the local
-  rewrites that would make one necessary — `rebase`, `commit --amend`, `reset` onto an already
-  pushed commit. There is no permission that unlocks this; it is what the names mean.
-  - **On a `main` that something releases from, it goes further.** The branch is the record of
-    what was published, handed to whoever cloned it, or put in front of users, and rewriting it
-    rewrites when each of those happened.
-  - **The reason is who else is holding the branch.** A trunk is what every other branch is cut
-    from, so its commits are already in clones, in merge commits' parents, and in whatever CI
-    recorded against them. Rewriting it does not correct a mistake — it makes everyone else's
-    copy disagree with the remote, silently, until they try to push.
-  - **A mistake already merged into a trunk is corrected by a new commit**, on a branch that
-    merges in like any other. A subject worded badly, a value that turned out wrong, a file that
-    should not have gone in: the trunk gains a commit that says so, and the record of the
-    mistake stays. A history a reader can trust is worth more than one that is tidy.
-  - **A trunk may be re-cut while nothing on the remote descends from it, and both halves of
-    that are a person's.** Where no branch has been pushed from it and no pull request is open
-    against it, the commits the rule protects are held by nobody, and the reason above does not
-    reach the case.
-    - **What may be run here is `git fetch`, and nothing past it.** The condition is read at an
-      instant and the push is not, so a check that passed is not a check that still holds — and
-      a verdict handed over as settled is one the operation gets run on. Refresh the
-      remote-tracking refs, show what they now hold, and leave both the judgement and the push
-      where they belong.
-    - **Local branches cut from it are recovered afterwards**, by `--onto` naming the commit
-      each was cut from. That half is ordinary work and asks no permission of its own.
-    - **A single pushed branch, or one open pull request, ends it** and the rule is back whole.
+- **A trunk's published history is never rewritten** — what that forbids, why, and the one case a
+  trunk may be re-cut belong to `/hoc-git-branch-remote`.
   - **A sub-branch is the opposite**, until it is pushed and opened for review: rewriting it is
     how the structure described below gets cut at all. Nobody else is holding it, so nothing
     disagrees.
@@ -217,7 +268,10 @@ Flow, and cutting from `main` is what it wants.
 
 ## When the structure is decided
 
-**Commit the work in one line first, and shape the branches once it is finished.** How many
+**Commit the work in one line first, and shape the branches once it is finished.** The line is a
+branch cut from the trunk for the purpose, never the trunk itself — a line committed onto
+`main`, `release/x.x.x`, `dev` or `env` is the direct commit the first section forbids, and
+cutting the markers afterwards cannot undo it. How many
 sub-branches the work wants, and whether it wants a trunk at all, are answers the work itself
 gives — and it cannot give them before it exists. A structure chosen in advance is a guess, and
 a guess that turns out wrong costs a rebuild of everything already committed under it.
@@ -275,9 +329,8 @@ What the finished line is looked at for:
   the work allows.** Its merge restates the one commit beneath it, which is the cost the bullet
   above weighs against having a trunk at all; deciding for the trunk does not make that cost go
   away for the sub-branch.
-  - **A commit touching a pair of files is split into one commit per file.** `README.md` and
-    `README.ja.md`, `docs/x.md` and `docs/x.ja.md`: the change to each is a commit of its own,
-    and the sub-branch carries two where it would have carried one.
+  - **A translation pair that would be the sub-branch's only commit splits by language** —
+    when, and when it folds back, belong to `granularity.md` of `/hoc-git-commit`.
   - **This is decided after the trunk, never before it.** Splitting a commit to give a
     sub-branch two is not a reason to cut a trunk; the bullets above settle whether there is one.
 - **A sub-branch of its own is decided twice over: by what the piece carries, and by whether it
@@ -308,6 +361,21 @@ What the finished line is looked at for:
     - Which half merges first follows the ordering rules below — the adoption cannot land before
       what it adopts.
 
+- **A difference of kind puts a level between siblings.** Where the pieces are siblings by the
+  test above, and one of them is an artefact written for the first time while the rest change
+  what already stands, they do not sit side by side. The like ones gather under a nested trunk
+  of their own, and the levels then hold the two kinds apart.
+  - **It is not the sibling test failing.** Each piece still stands as work in its own right,
+    and each still takes a sub-branch. What the difference of kind settles is the level one sits
+    at, which the sibling test does not reach.
+  - **The boundary is the commit convention's vocabulary.** `Declare`, `Define`, `Author` and
+    `Build` name what did not exist before; `Update`, `Retake` and `Fix` name what did. A trunk
+    whose sub-branches take verbs from both sides is what this bullet turns away.
+  - **What the levels buy is a merge list that sorts itself.** A trunk's merges are read as the
+    list of what the work did, and one mixing a thing that was made with three adjustments to
+    things that already stood gives the reader nothing to sort by. Gathered, the adjustments
+    arrive as one entry and the new thing stands beside it.
+
 ### The order the sub-branches merge in
 
 **Merge the cheap ones first and the substantial ones last.** Where one sub-branch changes a line
@@ -319,6 +387,14 @@ whatever sits on top is what they see first and read hardest. Put a one-line cha
 substantial one is buried beneath it; put the substantial one there and the small changes sit
 where they cost nothing, at the bottom, passed over on the way.
 
+- **Size is read off the diff, never off the commit count.** What sits on top is read as a diff,
+  so the diff is what ranks the branches. A branch of four commits that raise versions and
+  regenerate a lock file is cheaper to read than one of two commits that change a procedure.
+- **An octopus merge ranks its legs by commit count instead, fewest first.** Its branches arrive
+  in one merge commit, side by side, and `git log --graph` draws each as a leg of its own — so
+  the reader takes the structure in from the shape of the legs before reading any diff, and legs
+  that lengthen from left to right are the shape that reads at a glance. How the octopus merge
+  is made is under `## Merging back into a trunk`.
 - **This is not an argument about risk.** Ordering by cost so that the cheap gains survive if the
   expensive work is rejected reaches the same order by another route, and it is not the reason.
 - **A change that only becomes possible once the others land goes last, whatever it costs.** Where
@@ -379,9 +455,8 @@ is deliberately descriptive. Nothing reads it after the branch is gone.
   class and `Define` names a member, a function or a constant, which is why
   `declare/AlphaClass` and `define/sendMessage-of-AlphaClass` say what they carry without any
   further explanation. The verbs are listed in the git commit convention.
-  - **A verb of two words joins into one, with no hyphen** — `Tidy up` gives `tidyup/xxxx`,
-    `Kick out` gives `kickout/xxxx`, `Turn off` gives `turnoff/xxxx`. The slash ends the token,
-    so nothing inside it has to.
+  - **A verb of two words joins into one**, as `/hoc-git-commit` says — `Tidy up` gives
+    `tidyup/xxxx`.
 - **A member is written `<member>-of-<class>`.** The slash is already spent on the verb, so what
   is left spells the relation out instead of punctuating it.
 - **Work of a scale that will make the branch a trunk takes a category at a higher level of
@@ -465,13 +540,19 @@ git commit --allow-empty -m 'Start updating the domains a repository selects'
   sub-branch is the second piece of work the bullet above describes.
   - **The verbs do not have to match.** A trunk-scale verb gathers several commit verbs beneath
     it: an update of things that already exist takes `Add`, `Kick out` and `Fulfill` as parts of
-    itself. The question is whether the marker's verb still names what each of them did. A verb
-    that brings a new thing into being — `Author`, `Declare`, `Build` — does not sit under one
-    that changes things already there.
+    itself. The question is whether the marker's verb still names what each of them did.
+  - **A marker verb taken from the commit table keeps its commit meaning**, and speaks only for
+    what that meaning reaches: `Start updating the skills` cannot speak for an `Author` commit,
+    because an update carries forward what was already there. **`Enhance` and `Implement` are
+    kept out of that table for this reason** — each names a whole piece of work rather than what
+    one commit did, so a thing written for the first time is part of one. The git commit
+    convention says why they are kept out.
   - **Measured.** A trunk opened with `Start updating the skills by feedback` took in a sub-branch
     whose commits opened with `Author`: a skill written for the first time, which no update of
     the existing skills covers. The issue written at the trunk's altitude inherited the marker and
-    took the new skill in under it, so the mismatch outlived the branch.
+    took the new skill in under it, so the mismatch outlived the branch. The marker's verb was
+    `updating`, and that is where it failed: `Start enhancing the skills` would have held the
+    same sub-branch.
 - The subject names **what is being started**, which depends on the kind of trunk.
   - A **`dev` trunk** is named directly: `Start dev`. Here `dev` is the branch, not a
     placeholder word.
@@ -495,10 +576,10 @@ git commit --allow-empty -m 'Start updating the domains a repository selects'
   - A **`release/x.x.x` trunk** is opened by its version alone: `Release 0.2.0`. The word
     `Start` does not appear, because the version is the whole of what is being started.
   - **Where the work carries content in from elsewhere, the marker names the origin** — `Start
-    migrating the mail templates from lunas-ec-cart-backend`. Stated once here, it covers every
+    migrating the mail templates from sample-app`. Stated once here, it covers every
     commit on the branch, and the merge commit keeps it in the history after the branch is gone.
-- **The marker takes no type prefix, in either message format.** Repositories on Conventional
-  Commits write `Start dev`, not `chore: start dev`. The marker sits outside the format.
+- **The marker takes no type prefix, in either message format** — see `format-conventional.md`
+  of `/hoc-git-commit`.
 
 ## The merge commit
 
@@ -516,14 +597,16 @@ Merge the core/ rename in the repository documents
 - **It stands in for the message a host would have written.** A merge that goes through a pull
   request is described for free — `Merge pull request #53 from …`. A merge made locally has no
   such author, and this subject fills the gap.
-- **It takes no type prefix, in either message format**, for the same reason the branch-opening
-  marker takes none: it carries no change of its own. Repositories on Conventional Commits
-  write `Merge …`, not `chore: merge …`.
+- **It takes no type prefix, in either message format** — see `format-conventional.md` of
+  `/hoc-git-commit`.
 - **A merge made through a pull request is left alone.** The host writes it, and no one here
   chooses its wording.
 
 ## Merging back into a trunk
 
+- **Into a named trunk, the merge is made on the host, through a pull request** — see
+  `/hoc-git-branch-remote`. What follows is how a branch merges back locally, into any other
+  branch acting as a trunk.
 - **Always `--no-ff`, never fast-forward.** A fast-forward leaves no commit a human can point
   at: the branch's commits are strung onto the trunk's line, and the fact that they arrived
   together, as one piece of work, stops being visible at all.
@@ -556,6 +639,10 @@ Merge the core/ rename in the repository documents
     Measured: a local release trunk stood one pull request behind its remote, and a branch cut
     from it passed the ancestry check against the local ref. Only a comparison with the
     remote-tracking ref showed that a pull request had already merged there.
+- **Before each merge, and before a pull request is opened, the suite is green at the branch's
+  tip.** The commits inside a branch may stand red on purpose, as `/hoc-git-commit-order` lays
+  out; the branch as a whole may not, at the point it goes back. Run the suite after the rebase
+  above, on the tip that will merge — see `/hoc-workflows`.
 - **Delete the branch once it is merged.** Its name was written for whoever watched the work in
   flight, and that reader is gone. This includes a trunk that merges into another trunk —
   `release/x.x.x`, `hotfix/xxxx`, `dev` and `env` are all deleted once they land on `main`.
@@ -665,6 +752,22 @@ Merge the core/ rename in the repository documents
       success without committing — a `cherry-pick` refused for a bad flag, a patch that did not
       apply, a copied file identical to the one already there. The check does not care which.
   - **Two branches are the smallest case of this, not a rule of their own.**
+- **An octopus merge takes the sub-branches in one merge commit instead of the cycle.** Where one
+  is asked for, it is the shape to make, and the cycle is not offered as another reading of the
+  request.
+
+  ```bash
+  git switch <trunk>
+  git merge --no-ff -m 'Merge …' <fewest commits> <more> <most>
+  ```
+
+  - **Every branch sits on the trunk's current tip before it starts.** No tip moves between
+    merges, so no rebase happens in the middle — but each branch is checked against the tip
+    first, with `--is-ancestor` and with a count above zero, exactly as in the cycle.
+  - **The branches are listed by commit count, fewest first**, as `### The order the sub-branches
+    merge in` says. The order of the arguments is the order of the legs in the graph.
+  - **The subject names the whole the trunk gathers**, at the altitude of its opening marker,
+    since one commit now stands for every branch it received.
 
 ## Carrying a change onto a branch by hand
 

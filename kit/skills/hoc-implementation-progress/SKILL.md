@@ -87,8 +87,8 @@ file, then give:
 2. The status table.
 3. What is happening right now, and what is blocking anything blocked.
 
-Write the document, and this summary, in the language the reader is using, as the documentation
-convention requires of any document generated for a reader.
+Write the document, and this summary, in the language the reader is using, as
+`/hoc-writing-language` resolves it for any document written for a reader.
 
 ```
 Progress: 7/12 done (58%), 1 blocked

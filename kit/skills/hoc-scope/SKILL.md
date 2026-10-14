@@ -1,6 +1,6 @@
 ---
 name: hoc-scope
-description: "Conventions for how class members refer to one another across the static and instance sides. Use when a member refers to another member, to its own class, or to a property of `this`. What a class may hold belongs to the class design principles convention; how a getter is written, to the accessors convention."
+description: "Conventions for how class members refer to one another across the static and instance sides. Use when a member refers to another member, to its own class, or to a property of `this`. How an instance reaches its own class through `#get:Ctor` belongs to the Ctor convention; what a class may hold, to the class design principles convention; how a getter is written, to the accessors convention."
 ---
 
 # Classes: Shared / Scope
@@ -11,6 +11,9 @@ This summarizes conventions related to scope references among class members.
 
 - References between static members should use `this` rather than the class name.
   (Using `this` ensures that even when called from an inheriting subclass, the subclass's own definition is referenced.)
+- **This includes a static member referring to its own class**: `new this(...)` in a factory
+  method, `this` handed over where a class is expected. Hardcoding the class name anchors the call
+  to the base class even when a subclass made it, which breaks polymorphism.
 
 ```javascript
 // NG
@@ -30,65 +33,17 @@ static create ({
 
 ## When referencing a static member from an instance member, go through `#get:Ctor`
 
-- When referencing a static member from an instance method or getter, go through `this.constructor` rather than hardcoding the class name.
-- Define the conventional getter `#get:Ctor`, which returns `this.constructor`, and reference the member in the form `this.Ctor.staticMember`.
-- Using `this.constructor` ensures that even when called from an inheriting subclass, the subclass's own static definition is referenced. Hardcoding the class name would fix it to the base class's definition.
-- In the body of `#get:Ctor`, **type resolution (a type cast) is needed** between `return` and `this.constructor`. Since the type of `this.constructor` is broad, cast it to the type of the class in question.
-
-```javascript
-/**
- * get: Constructor of this class.
- *
- * @returns {typeof SampleClass} Constructor of this class.
- */
-get Ctor () {
-  return /** @type {typeof SampleClass} */ (this.constructor)
-}
-
-someInstanceMethod () {
-  return this.Ctor.someStaticMethod()
-}
-```
-
-### When a derived class has more static members to reference, override `#get:Ctor`
-
-- When a derived class gains additional "static members referenced from instance members," override and redefine `#get:Ctor` in the derived class, resolving the type to the derived class's type.
-
-```javascript
-class DerivedSample extends BaseSample {
-  /** @override */
-  get Ctor () {
-    return /** @type {typeof DerivedSample} */ (this.constructor)
-  }
-
-  someDerivedMethod () {
-    return this.Ctor.derivedStaticMethod()
-  }
-}
-```
-
-### Do not define a `#get:xxxx` shortcut for `this.Ctor.xxxx`
-
-- Do not define a getter (`#get:xxxx`) solely to access `this.Ctor.xxxx` (a static member). Write static member access explicitly as `this.Ctor.xxxx`.
-- Reason: inserting such a getter makes it **implicit, from the caller's `this.xxxx`, that this is a static-member call**.
-
-```javascript
-// NG: a shortcut getter for this.Ctor.DEFAULT_VALUE (makes the static reference implicit)
-get defaultValue () {
-  return this.Ctor.DEFAULT_VALUE
-}
-
-// OK: reference static members explicitly via this.Ctor
-someInstanceMethod () {
-  return this.Ctor.DEFAULT_VALUE
-}
-```
+- An instance member reaches a static member as `this.Ctor.staticMember`. How `#get:Ctor` is
+  defined, typed and overridden, and why `this.constructor` is never written outside it, belong
+  to `/hoc-classes-ctor`.
+- It is read here as the instance-side counterpart of the section above: both keep a call from an
+  inheriting subclass on the subclass's own static definition.
 
 ## Do not destructure `this`
 
-**`this` never stands alone on the right of a destructuring assignment.** Taking a property
-out of it (`const { alpha } = this`) is prohibited; a property is read where it is used, as
-`this.alpha`.
+**`this` never stands alone on the right of a destructuring assignment.** That an instance is
+never taken apart belongs to `/hoc-statements`; it is read here for `this`, where a property is
+read where it is used, as `this.alpha`, rather than taken out into a local.
 
 ```javascript
 // NG: the property taken into a local first

@@ -1,6 +1,6 @@
 ---
 name: hoc-npm-publish
-description: "How a package release is ordered and checked before it goes out. Use this skill when preparing a release, bumping a package's own version, when work lands after the bump, or deciding whether a package is ready to publish. Moving the dependency versions a release takes in belongs to the dependency-raising convention."
+description: "How a package release orders the commits it makes about itself. Use this skill when preparing a release, bumping a package's own version, or when work lands after the bump. Reading the tarball before it goes out belongs to the publish audit convention; moving the dependency versions a release takes in, to the dependency-raising convention."
 ---
 
 # npm Publish
@@ -14,9 +14,8 @@ So a release is guarded twice.
 
 - **Nothing unfinished can get out.** The ordering rules below make a premature publish fail
   rather than succeed.
-- **Nothing goes out unread.** The audit in
-  [pre-publish-audit.md](./references/pre-publish-audit.md) reads the artefact a consumer
-  will receive, not the repository it was built from.
+- **Nothing goes out unread.** The tarball a consumer will receive is read before it goes out,
+  not the repository it was built from. That reading is `/hoc-npm-publish-audit`.
 
 ## The version bump is the last commit of the release
 
@@ -42,10 +41,8 @@ Update package-lock.json after npm install
 - Splitting them is not a special rule for releases — the git commit convention already
   separates a generated artefact from hand-written source. What is specific here is **the
   order and the single install between them.**
-- **The second names the command, not the version.** That is the git commit convention's
-  form for any regenerated lockfile: the versions are in the diff and the command that
-  resolved them is not, so naming the version here would restate the commit above and lose
-  the only thing a reader cannot recover.
+- **The second names the command, not the version**, in the form the git commit convention
+  (`/hoc-git-commit`) gives a generated file.
 - The bump commit is also the declaration that the release is ready. Reading it in a log
   means the release is imminent, so do not bump a version to keep a branch tidy.
 
@@ -72,9 +69,9 @@ trunk?**
 lockfile that follows it. Everything the release carries arrived before that, and how it
 arrived is not decided here.
 
-- **Moving the dependency versions a release takes in belongs to `hoc-npm-raise-deps`**, which
+- **Moving the dependency versions a release takes in belongs to `/hoc-npm-raise-deps`**, which
   settles what a raise compares against, how each move is written down, and where its single
   install sits.
 - What is left once that pass has run — an advisory still in the report, an install script
-  nobody has decided about — belongs to `hoc-npm-vulnerability` and `hoc-npm-install-scripts`
+  nobody has decided about — belongs to `/hoc-npm-vulnerability` and `/hoc-npm-install-scripts`
   respectively.

@@ -1,6 +1,6 @@
 {
   "name": "@openreachtech/hora-skills-ort-core",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "Distributes the ORT JavaScript coding skills used to develop with Hora Kit.",
   "type": "module",
   "files": [
@@ -57,8 +57,7 @@
     "brace-expansion@5": "^5.0.12",
     "flatted": "^3.4.2",
     "glob": "^13.0.6",
-    "js-yaml@3": "^3.15.2",
-    "js-yaml@4": "^4.3.2"
+    "js-yaml": "^4.3.2"
   },
   "allowScripts": {
     "unrs-resolver": false,
