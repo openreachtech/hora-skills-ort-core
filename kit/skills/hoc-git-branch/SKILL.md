@@ -427,6 +427,20 @@ which costs little: the diff of a small commit is often what its message already
     is the first thing it should show.
   - **It stands ahead of the orderings above.** A `Base~` branch larger than the rest still goes
     first, as the first merge of a sequence and as the first argument of an octopus merge.
+- **An octopus merge bundles branches of equal standing, and a module that only declares types
+  does not stand equal to what it declares.** Where one trunk gathers both the implementation of
+  a class family and such a module, the implementation branches are what the bundle holds, and
+  the declaring branch is not among them.
+  - **In a sequence of local merges it goes last**, after every implementation branch.
+  - **In an octopus merge it is not a leg.** Bundle the implementation branches, then merge the
+    declaring branch on its own, onto the tip the octopus has just made.
+  - **The suite settles nothing here.** A module read only by the annotations around it is
+    depended on by nothing at run time, so it stands wherever it is put and no merge commit
+    fails. Where the rule above takes its answer from the suite, this one has only the reading.
+  - **The commit verbs settle nothing either.** The declaring branch and the branches it declares
+    for can both open with verbs for what did not exist before, so the difference of kind that
+    puts a level between siblings does not reach this. What parts them is that one is implemented
+    and the other describes it.
 - **The order reverses where the sub-branches reach the trunk through pull requests.** Then the
   substantial one goes first and the cheap ones follow it. The reason above does not reach that
   case: a pull request is read on its own rather than as a diff from the newest commit, so there
