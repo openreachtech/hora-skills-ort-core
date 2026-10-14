@@ -12,6 +12,27 @@ into the collaborator's type, or a `jest.fn()` standing where a member should be
 exception is a module the project does not own, and it is taken outside the test entirely (see
 below).
 
+## A stub answers; a mock expects
+
+**The two words name different jobs, and this convention keeps them in different places.**
+
+| | What it does | What it can do to a test |
+| :-- | :-- | :-- |
+| Stub | Answers with whatever it was written to answer | Nothing. It cannot fail a test |
+| Mock | Holds what it expects of its caller | Fails the test where that expectation is not met |
+
+**What a test builds is the stub half** — the real collaborator, an instance configured for
+the case, a `MockXxxx` where the type cannot be built here. None of them asserts anything.
+They answer.
+
+**The expectation is carried by the spy**, and stated in the matcher beside it: `jest.spyOn()`
+watching a member, `toHaveBeenCalledWith()` saying what it was to receive. That is the mock
+half, and it sits in Assert, where a reader looks for what the test claims.
+
+- **`MockXxxx` is named for the role it fills, not for what it is.** By the table above it is
+  a stub: `.create()` hands back canned answers and expects nothing of its caller. The
+  expectation still comes from the spy planted on it.
+
 ## Override with jest.spyOn() Instead of Defining a Derived Class
 
 When you need a stub implementation of an abstract method, or need to swap out
