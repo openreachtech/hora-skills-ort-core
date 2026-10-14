@@ -101,8 +101,12 @@ So the stop is an interview, and it is built so that the answer can be a word.
   Measured: an interview offering only general shapes was answered with a word taken from the
   file's own vocabulary, which neither shape covered — and that word had been in the file's
   documentation and in two function names the whole time.
-- **Check every candidate against the rule's list before offering it.** A candidate the same rule
-  denies spends a round saying nothing.
+- **Check every candidate against the whole ruleset, not only the rule that denied the original.**
+  A candidate the same rule denies spends a round saying nothing. One a *different* rule denies
+  spends the same round while looking like a clean escape, and the commonest shape of that is a
+  set which denies a word and, under a separate rule, denies the identifiers built from it: a
+  replacement that keeps the denied word and merely prefixes or suffixes it is refused on its
+  second reading rather than its first.
 - **The run does not choose among its own candidates**, and a list of them is not a ballot: the
   answer may be a word none of them carries. Offering them narrows the work of answering; it does
   not narrow what may be answered.
