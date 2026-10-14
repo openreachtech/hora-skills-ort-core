@@ -195,6 +195,17 @@ call sites to find out costs a pass per candidate and leaves the rejected ones t
 The probe is deleted once its report has been read. It exists to produce that report and
 nothing else.
 
+**Where no spelling survives, the move before relaxing is to stop needing the value.** Such a
+rule denies a way of writing something, never the thing itself, so a shape that never writes
+it is outside the rule's reach: normalise the value away at the boundary that produces it, so
+that no caller downstream has anything to compare against, or put the question to the type
+rather than to the value. Both leave the rule in force everywhere, and both tend to leave the
+code saying more plainly what it was testing for.
+
+- **Where neither will do, the route left is narrowing the rule to the files that need it**,
+  which flat config makes less simple than it sounds
+  ([rule-option-subtraction.md](./references/rule-option-subtraction.md)).
+
 **Measure the floor the rule leaves that code before promising the code can clear it.** A
 threshold rule counts what the signature carries as well as what the body does — cyclomatic
 complexity counts every defaulted parameter — so a method declaring eight of them stands at nine
