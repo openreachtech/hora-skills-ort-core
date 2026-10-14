@@ -382,14 +382,16 @@ What the finished line is looked at for:
 of configuration and another changes the code behind it, the line of configuration goes in first
 and the code last.
 
-**The reason is how a diff is read.** A reader starts at the newest commit and works down, so
-whatever sits on top is what they see first and read hardest. Put a one-line change there and the
-substantial one is buried beneath it; put the substantial one there and the small changes sit
-where they cost nothing, at the bottom, passed over on the way.
+**The reason is what a diff from the newest commit holds.** Commits run from the earliest at the
+bottom to the latest on top. The sub-branch merged last is the largest, so a diff taken from the
+newest commit is that branch's alone, with none of the small sub-branches' noise mixed in, and
+checking it costs less. Merged earlier, the small ones sit beneath and stay out of that diff,
+which costs little: the diff of a small commit is often what its message already says.
 
-- **Size is read off the diff, never off the commit count.** What sits on top is read as a diff,
-  so the diff is what ranks the branches. A branch of four commits that raise versions and
-  regenerate a lock file is cheaper to read than one of two commits that change a procedure.
+- **Size is read off the diff, never off the commit count.** A diff from the newest commit is
+  what gets checked, so the diff is what ranks the branches. A branch of four commits that raise
+  versions and regenerate a lock file is cheaper to read than one of two commits that change a
+  procedure.
 - **An octopus merge ranks its legs by commit count instead, fewest first.** Its branches arrive
   in one merge commit, side by side, and `git log --graph` draws each as a leg of its own — so
   the reader takes the structure in from the shape of the legs before reading any diff, and legs
@@ -408,9 +410,9 @@ where they cost nothing, at the bottom, passed over on the way.
     after the code sub-branches, however many of them moved what it states.
 - **The order reverses where the sub-branches reach the trunk through pull requests.** Then the
   substantial one goes first and the cheap ones follow it. The reason above does not reach that
-  case: a pull request is read on its own rather than as one diff worked down from the top, so
-  there is no top for a small change to occupy. What the order decides instead is which piece of
-  work the reviewer meets first, and that is the one the rest depends on.
+  case: a pull request is read on its own rather than as a diff from the newest commit, so there
+  is nothing for an earlier merge to be hidden beneath. What the order decides instead is which
+  piece of work the reviewer meets first, and that is the one the rest depends on.
   - **The two rules are told apart by the route, never by the work.** The same pair of branches
     takes one order merged locally and the other order opened as pull requests, so the question
     to ask is how they reach the trunk — not how large they are, which is what both rules
