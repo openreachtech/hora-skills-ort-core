@@ -183,3 +183,28 @@ import BaseAuthorizationBuilder from '../../../../../lib/request/authorization-b
 import BasicAuthorizationBuilder from '.../concretes/BasicAuthorizationBuilder.js'
 import BaseAuthorizationBuilder from '.../BaseAuthorizationBuilder.js'
 ```
+
+## A Path the Test Hands Over Comes from `import.meta`
+
+The sections above cover the paths a test **imports**. A test also hands paths to the code
+under test — a directory a loader is pointed at, a file a reader opens — and those are
+written as a value rather than as a specifier.
+
+**An ESM test file has no `__dirname`.** The module's own location comes from
+`import.meta.dirname`, and the path is built from there.
+
+```js
+const poolPath = path.join(import.meta.dirname, '../haystacks/concretes')
+```
+
+- **It is a value, so it goes inside the `describe()` that uses it**, like everything else a
+  test defines ([anti-pattern.md](./anti-pattern.md#do-not-apply-dry-to-test-code-define-things-inside-each-describe)).
+  Lifting it to file scope to save repeating it is exactly the DRY this convention refuses,
+  and no lint rule reports it.
+- **`__dirname` does not fail at the line that reads it; the suite fails to start.**
+  `ReferenceError: __dirname is not defined` is thrown while the module is being evaluated,
+  so every test in the file is reported as not run. What the report names is the line that
+  built the path, which reads as one broken case rather than as a file that never loaded.
+- **`fileURLToPath(new URL('../haystacks/concretes', import.meta.url))` is the same path.**
+  Measured: the two forms returned identical strings. Prefer the first — the `path` module is
+  usually imported already, and the second spends an import on `url` to say the same thing.
