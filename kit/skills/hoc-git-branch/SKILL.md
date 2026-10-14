@@ -408,6 +408,17 @@ which costs little: the diff of a small commit is often what its message already
     update exists only because the code moved. It is not placed in the sub-branch that moved it,
     nor in that sub-branch's commit: it gathers into a documentation sub-branch of its own, merged
     after the code sub-branches, however many of them moved what it states.
+- **Where the sub-branches gather a class family, the `Base~` class goes first.** A feature
+  trunk bundling the implementation of a family merges the branch carrying the `Base~` class
+  before any branch carrying a class derived from it, whether the merges are made as a sequence
+  of local merges or as an octopus.
+  - **In a sequence of local merges the reason is the suite.** Merge a derived class first and
+    the suite fails at that merge commit, because the class it extends is not on the trunk yet.
+  - **In an octopus merge the reason is the reading.** The branches arrive in one commit, so
+    nothing fails at the merge. Read the tree from the bottom up, though, and the `Base~` class
+    is the first thing it should show.
+  - **It stands ahead of the orderings above.** A `Base~` branch larger than the rest still goes
+    first, as the first merge of a sequence and as the first argument of an octopus merge.
 - **The order reverses where the sub-branches reach the trunk through pull requests.** Then the
   substantial one goes first and the cheap ones follow it. The reason above does not reach that
   case: a pull request is read on its own rather than as a diff from the newest commit, so there
