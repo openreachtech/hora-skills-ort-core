@@ -193,6 +193,22 @@ composition done inline, and naming that step — extracting it into a member of
 leaving the constructor with its assignment — improves the code whichever way the rule had
 gone.
 
+**A clean run after the change is not evidence the change was right.** The rule that fired is
+one of the things governing that file; the convention for its kind is the other, and that one
+is not all enforced. A test convention, a class convention, a naming convention — each carries
+prohibitions no rule implements, so a shape they forbid draws nothing from the linter either
+before the change or after it.
+
+Measured: a rule refusing a named function expression under a differently-keyed property was
+cleared by lifting the function to the top of the file and referring to it by name. The run
+came back clean. The file was a test, and its convention allows nothing but imports at that
+level — a prohibition deliberately left out of the ruleset, so nothing reported the trade. It
+surfaced only when that convention was later read in full for an unrelated reason, and the
+files carrying it are still in the tree.
+
+- **The rule names the construct it refuses, never where the replacement may go.** Both halves
+  of the change are decisions, and only the first of them is the one being reported on.
+
 **A published surface is not reshaped to satisfy a rule.** Where the only code change that
 clears a rule would alter what callers rely on — a constructor's parameters, a member other
 repositories override, a factory's contract — narrow the rule instead.
