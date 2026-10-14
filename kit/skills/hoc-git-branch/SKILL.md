@@ -325,6 +325,14 @@ What the finished line is looked at for:
   individually.
 - **One sub-branch with something to group is enough to decide for a trunk.** What makes the
   trunk worth having is that at least one merge names a piece of work assembled from parts.
+  - **The commonest piece assembled from parts is a pair whose halves mean nothing apart** — a
+    test and the implementation it checks, an export barrel and the test naming what it exports,
+    a registration removed and the file it pointed at rewritten. Neither commit says on its own
+    that the two are one piece, and neither says where the piece ends.
+  - **What the merge names is that boundary, never a summary of the commits beneath it.** Read as
+    a summary it looks redundant over two commits whose subjects are already plain, and the
+    sub-branch is then given up for a cost it was not paying: the bullet above turns away a merge
+    that *restates* one commit, which a pair's merge does not do.
 - **Once the line is to be a trunk, a sub-branch carrying a single commit is avoided as far as
   the work allows.** Its merge restates the one commit beneath it, which is the cost the bullet
   above weighs against having a trunk at all; deciding for the trunk does not make that cost go
