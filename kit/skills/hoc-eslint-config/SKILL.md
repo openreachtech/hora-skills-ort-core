@@ -147,6 +147,13 @@ routes are changing the code and narrowing the rule in the config
 so a rule that looks unanswerable is answered by looking harder at the code, never by annotating
 past it.
 
+**Two rules reporting one construct at once is a signal to look before writing.** A hand-written
+construct that draws a shadowing complaint and a shape complaint together is usually standing
+where the project has already put something — a helper its setup assigns, a base its tooling
+ships. The local declaration shadows the provided name, and the hand-rolled shape trips the rule
+the provided one was built to satisfy. Read what is there before writing the replacement the
+first rule asked for.
+
 ### Which way to go
 
 **Relax only where the code's shape is already right and the rule is wrong about it.** Where
