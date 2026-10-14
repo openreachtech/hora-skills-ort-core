@@ -80,6 +80,22 @@ for each group whether a code change or a relaxation is indicated. A group of on
 eight violations and a group of six files with seven are different pieces of work, and the
 spread is what tells them apart.
 
+### A message names the construct an entry was written for, not the span it matched
+
+**Where a rule is a list of entries, each carrying its own message, that message is display text
+for the case the entry was added for.** It is not a description of what the entry matches, and a
+single entry routinely matches more of a statement than its wording names.
+
+So **the reported location is what says what tripped the rule**, and it is read before the
+message is believed. Measured on one such entry: a message naming a construct in the head of a
+statement was reported against a line inside that statement's body, and the fix was to lift the
+offending work out into a member of its own rather than to touch the head the message named. A
+run that had trusted the wording would have concluded the rule was wrong about the code.
+
+This is the reader's half of the rule that a subtraction predicate matches on an entry's
+selector rather than on its message. The message moves without the entry moving, in both
+directions.
+
 ### A denied identifier stops for the name, not for its shape
 
 **The decision is the identifier itself, and an answer giving its shape has not made it.** Told
