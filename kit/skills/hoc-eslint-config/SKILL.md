@@ -147,6 +147,12 @@ the newest side without wading through them.
 **Commits that touch the config go last among the code.** A relaxation is answerable for
 being the thing that remained, and the order is what shows it was.
 
+**One commit per rule removed, unless the removals empty the block.** Each relaxation that goes
+is a commit of its own, so the history shows which went and which stayed. Where removing them
+one by one leaves a whole block empty, the block may go in a single commit instead: every rule
+is still measured on its own first, and an emptied block has nothing left whose staying the
+history would need to show. This is permitted, not required — per-rule commits stay correct.
+
 ## Relaxing the config is the last resort
 
 **A rule that fires is answered by changing the code.** Editing `eslint.config.js` comes
