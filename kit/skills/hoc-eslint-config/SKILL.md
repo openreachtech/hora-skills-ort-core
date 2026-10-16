@@ -1,6 +1,6 @@
 ---
 name: hoc-eslint-config
-description: "Conventions and procedure for `eslint.config.js` and the shared config package it spreads. Use when raising that package, changing a rule or its options, or tempted to relax a rule rather than change the code. Scope is settled by the package name carrying `eslint`. Dependencies in general belong to the npm conventions."
+description: "Conventions and procedure for `eslint.config.js` and the shared config package it spreads. Use when raising that package, changing a rule or its options, reading what a rule reported, reaching for a disabling comment, or weighing a relaxation against the code change that would clear the rule. Scope is settled by the package name carrying `eslint`. Dependencies in general belong to the npm conventions."
 ---
 
 # ESLint Config
@@ -80,6 +80,22 @@ for each group whether a code change or a relaxation is indicated. A group of on
 eight violations and a group of six files with seven are different pieces of work, and the
 spread is what tells them apart.
 
+### A message names the construct an entry was written for, not the span it matched
+
+**Where a rule is a list of entries, each carrying its own message, that message is display text
+for the case the entry was added for.** It is not a description of what the entry matches, and a
+single entry routinely matches more of a statement than its wording names.
+
+So **the reported location is what says what tripped the rule**, and it is read before the
+message is believed. Measured on one such entry: a message naming a construct in the head of a
+statement was reported against a line inside that statement's body, and the fix was to lift the
+offending work out into a member of its own rather than to touch the head the message named. A
+run that had trusted the wording would have concluded the rule was wrong about the code.
+
+This is the reader's half of the rule that a subtraction predicate matches on an entry's
+selector rather than on its message. The message moves without the entry moving, in both
+directions.
+
 ### A denied identifier stops for the name, not for its shape
 
 **The decision is the identifier itself, and an answer giving its shape has not made it.** Told
@@ -101,8 +117,12 @@ So the stop is an interview, and it is built so that the answer can be a word.
   Measured: an interview offering only general shapes was answered with a word taken from the
   file's own vocabulary, which neither shape covered — and that word had been in the file's
   documentation and in two function names the whole time.
-- **Check every candidate against the rule's list before offering it.** A candidate the same rule
-  denies spends a round saying nothing.
+- **Check every candidate against the whole ruleset, not only the rule that denied the original.**
+  A candidate the same rule denies spends a round saying nothing. One a *different* rule denies
+  spends the same round while looking like a clean escape, and the commonest shape of that is a
+  set which denies a word and, under a separate rule, denies the identifiers built from it: a
+  replacement that keeps the denied word and merely prefixes or suffixes it is refused on its
+  second reading rather than its first.
 - **The run does not choose among its own candidates**, and a list of them is not a ballot: the
   answer may be a word none of them carries. Offering them narrows the work of answering; it does
   not narrow what may be answered.
@@ -127,12 +147,34 @@ the newest side without wading through them.
 **Commits that touch the config go last among the code.** A relaxation is answerable for
 being the thing that remained, and the order is what shows it was.
 
+**One commit per rule removed, unless the removals empty the block.** Each relaxation that goes
+is a commit of its own, so the history shows which went and which stayed. Where removing them
+one by one leaves a whole block empty, the block may go in a single commit instead: every rule
+is still measured on its own first, and an emptied block has nothing left whose staying the
+history would need to show. This is permitted, not required — per-rule commits stay correct.
+
 ## Relaxing the config is the last resort
 
 **A rule that fires is answered by changing the code.** Editing `eslint.config.js` comes
 last, and only once no change to the code will do. A relaxation hides, for as long as it
 stands, whatever else that rule would have caught in that scope — a cost paid by every
 later reader rather than by whoever wrote it.
+
+**An inline suppression comment is not a third route.** Where the shared config carries a rule
+against directive comments, a disabling comment of any form is itself a violation, and where a
+second rule requires every directive to carry a description, one comment is reported twice. A
+run that reaches for one has added violations rather than cleared the one it started with. The
+routes are changing the code and narrowing the rule in the config
+([rule-option-subtraction.md](./references/rule-option-subtraction.md)), and there is no other —
+so a rule that looks unanswerable is answered by looking harder at the code, never by annotating
+past it.
+
+**Two rules reporting one construct at once is a signal to look before writing.** A hand-written
+construct that draws a shadowing complaint and a shape complaint together is usually standing
+where the project has already put something — a helper its setup assigns, a base its tooling
+ships. The local declaration shadows the provided name, and the hand-rolled shape trips the rule
+the provided one was built to satisfy. Read what is there before writing the replacement the
+first rule asked for.
 
 ### Which way to go
 
@@ -156,6 +198,22 @@ A constructor that calls one of its own methods is the second. The rule is point
 composition done inline, and naming that step — extracting it into a member of its own,
 leaving the constructor with its assignment — improves the code whichever way the rule had
 gone.
+
+**A clean run after the change is not evidence the change was right.** The rule that fired is
+one of the things governing that file; the convention for its kind is the other, and that one
+is not all enforced. A test convention, a class convention, a naming convention — each carries
+prohibitions no rule implements, so a shape they forbid draws nothing from the linter either
+before the change or after it.
+
+Measured: a rule refusing a named function expression under a differently-keyed property was
+cleared by lifting the function to the top of the file and referring to it by name. The run
+came back clean. The file was a test, and its convention allows nothing but imports at that
+level — a prohibition deliberately left out of the ruleset, so nothing reported the trade. It
+surfaced only when that convention was later read in full for an unrelated reason, and the
+files carrying it are still in the tree.
+
+- **The rule names the construct it refuses, never where the replacement may go.** Both halves
+  of the change are decisions, and only the first of them is the one being reported on.
 
 **A published surface is not reshaped to satisfy a rule.** Where the only code change that
 clears a rule would alter what callers rely on — a constructor's parameters, a member other
@@ -181,6 +239,26 @@ and its usual workaround, leaving no third spelling: one rule against writing a 
 `undefined` and another against writing `void 0` between them rule out every way of saying
 the same thing. Establish that an alternative exists before concluding the code can absorb
 the fix.
+
+**One file holding every candidate answers that in a single run.** Write the same construct
+once per spelling under consideration, lint it, and read the report: a spelling that drew
+nothing is available, and a spelling that drew something is refused by whichever rule the
+report names beside it, which is not always the rule the search began with. Editing the real
+call sites to find out costs a pass per candidate and leaves the rejected ones to be undone.
+
+The probe is deleted once its report has been read. It exists to produce that report and
+nothing else.
+
+**Where no spelling survives, the move before relaxing is to stop needing the value.** Such a
+rule denies a way of writing something, never the thing itself, so a shape that never writes
+it is outside the rule's reach: normalise the value away at the boundary that produces it, so
+that no caller downstream has anything to compare against, or put the question to the type
+rather than to the value. Both leave the rule in force everywhere, and both tend to leave the
+code saying more plainly what it was testing for.
+
+- **Where neither will do, the route left is narrowing the rule to the files that need it**,
+  which flat config makes less simple than it sounds
+  ([rule-option-subtraction.md](./references/rule-option-subtraction.md)).
 
 **Measure the floor the rule leaves that code before promising the code can clear it.** A
 threshold rule counts what the signature carries as well as what the body does — cyclomatic

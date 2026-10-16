@@ -12,6 +12,27 @@ into the collaborator's type, or a `jest.fn()` standing where a member should be
 exception is a module the project does not own, and it is taken outside the test entirely (see
 below).
 
+## A stub answers; a mock expects
+
+**The two words name different jobs, and this convention keeps them in different places.**
+
+| | What it does | What it can do to a test |
+| :-- | :-- | :-- |
+| Stub | Answers with whatever it was written to answer | Nothing. It cannot fail a test |
+| Mock | Holds what it expects of its caller | Fails the test where that expectation is not met |
+
+**What a test builds is the stub half** — the real collaborator, an instance configured for
+the case, a `MockXxxx` where the type cannot be built here. None of them asserts anything.
+They answer.
+
+**The expectation is carried by the spy**, and stated in the matcher beside it: `jest.spyOn()`
+watching a member, `toHaveBeenCalledWith()` saying what it was to receive. That is the mock
+half, and it sits in Assert, where a reader looks for what the test claims.
+
+- **`MockXxxx` is named for the role it fills, not for what it is.** By the table above it is
+  a stub: `.create()` hands back canned answers and expects nothing of its caller. The
+  expectation still comes from the spy planted on it.
+
 ## Override with jest.spyOn() Instead of Defining a Derived Class
 
 When you need a stub implementation of an abstract method, or need to swap out
@@ -96,6 +117,31 @@ test.each(cases)('source: $input.source', ({ override, input }) => {
     .toBeInstanceOf(DerivedAuthorizationBuilder)
 })
 ```
+
+## An async member is stubbed with `mockResolvedValue()`
+
+**Where the member being spied is `async`, the stub answers with `mockResolvedValue()`.**
+`mockReturnValue()` is not a longer way of writing the same thing: it hands back a plain value
+where the real member hands back a promise, and that difference is what the test was relying on.
+
+**A plain value passes through `await` unchanged.** So a subject that awaits the member and a
+subject that forgot to both come out of a `mockReturnValue()` stub with the same result: the
+test goes on passing, having stopped being able to tell the two apart.
+
+Measured, one subject written both ways against one collaborator:
+
+| The stub | Subject awaits | Subject dropped its `await` |
+| :-- | :-- | :-- |
+| `mockResolvedValue('loaded-value')` | passes | **fails** — `"loaded": Promise {}` |
+| `mockReturnValue('loaded-value')` | passes | **passes** |
+
+- **The stale stub arrives by a member turning `async`**, not by being written wrong. The test
+  was right when the member was synchronous and says nothing when it stops being so, which is
+  the second row above: nothing marks the files that now need looking at.
+- **Lint does not reach it.** `jest/prefer-mock-promise-shorthand` fires on
+  `mockImplementation(() => Promise.resolve(x))` and never on a `mockReturnValue()` that has
+  gone stale, because nothing in the test says the member is `async`. The run that produced
+  the table above drew no rule at either spy.
 
 ## Combining with constructorSpy
 
