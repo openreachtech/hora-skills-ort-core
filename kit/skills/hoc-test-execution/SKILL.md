@@ -69,6 +69,16 @@ re-run the whole suite ──▶ back to the top
 
 1. **Discover how this project runs its tests.** Read `package.json` scripts and the test
    configuration. Use the project's own command; do not invent one.
+   - **A subset runs through that same command**, with the filter passed to it rather than to a
+     runner invoked directly — `<the project's test script> -- <path or pattern>`. The script is
+     not a convenience wrapper; it carries what the runner needs, and a runner started beside it
+     starts without it.
+   - **An invented command does not fail by saying so.** Measured: a runner invoked directly,
+     without the flag its project's script exports, reported a file under `node_modules` as
+     unloadable and offered three fixes — add a compiler, widen a configuration key, raise the
+     platform version. All three are work on the project; none was the cause. The symptoms are
+     an environment problem's, so triage sends the reader hunting a setup that was never broken.
+     **Confirm the command was the project's own before classifying any failure.**
 2. **Discover whether the project has more than one suite and whether order matters.** Many
    projects separate tests that touch no persistent state from tests that write to a store, and
    require them to run in a defined order. Running them the wrong way produces failures that

@@ -108,6 +108,15 @@ class InstanceClass {
 Exception:
 
 - A design such as an abstract base class that holds no state itself while its derived classes hold the properties (state) is not considered a class without state (treated the same as the Template Pattern).
+  - **The exception is for derived classes that differ in what they do, not in a value they each
+    hard-code.** A base can look stateless because what it should have held was written into each
+    derived class instead — most visibly as one member every derived class overrides to return a
+    constant of its own. That constant is the base's property: it varies by derived class, which
+    is what a property is for, and the override exists only because the property is missing.
+  - **Lifting it ends the exception rather than uses it.** The base holds the state, and the
+    derived classes lose the member entirely. Measured on one such base: two derived classes each
+    overrode a member to return a fixed value; the value became a constructor argument of the
+    base, and both overrides went with it.
 
 Reason:
 
