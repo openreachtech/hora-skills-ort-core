@@ -452,6 +452,19 @@ Good: Update SessionStore#evictExpired() to skip pinned sessions
 Good: Update SessionStore.get:defaultTtl to read the environment
 ```
 
+**The subject says where, and the branch name says why.** A commit message is read afterwards,
+quickly, by someone looking for where a definition was fixed, so the member it fixed is what the
+subject has to carry. What the whole piece of work is for — a rename, a retake — is what the
+branch is named for. A test commit names the member it covers in the same notation, and the
+prefix tells an instance member from a static one:
+
+```
+Update test for SampleClass#extractValue()
+Update test for SampleClass.createValue()
+Update test for SampleClass.get:ParserCtor
+Rename SampleClass#extractValue() to #pickValue()
+```
+
 This is the same notation used throughout documentation and error messages; see the
 documentation convention.
 
