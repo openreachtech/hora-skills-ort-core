@@ -264,6 +264,11 @@ before.
   point. `Retake` replaces what was poor, hurried or a stopgap with what should have been there,
   and claims no gain beyond that. Neither is `Fix`: that one is for behavior that was wrong,
   where `Retake` is for an implementation that worked and was not good enough.
+- **A test that follows an identifier change is `Update`, never `Rename`.** `Rename` is the
+  commit that changes the identifier where it is declared. The commit that carries the test along
+  changes what the test expects, which is an update of the test, so it opens `Update test for
+  SampleClass#extractValue()`. The two commits sit side by side on one branch and take different
+  verbs because each met something different, as the paragraph on matched pairs above says.
 - **A member's inputs and outputs are `Update`'s ground.** A parameter it now takes, a return
   value it now gives — the member itself is what changed. That a parameter is something which
   appeared does not make it `Add`: addition takes `Add` where what appeared stands as an item of
