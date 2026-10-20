@@ -1,15 +1,15 @@
 ---
 name: hoc-deployment-document
 description: >
-  Write a server deployment runbook through conversation with whoever will run it. Use when the user
-  asks for deployment steps, a release procedure or a server setup document. Executing the
-  deployment and building the CI/CD pipeline are out of scope.
+  Write a deployment runbook through conversation with whoever will run it, for a server you manage,
+  a managed container service or a serverless function. Use when the user asks for deployment steps,
+  a release procedure or a hosting setup document. Executing the deployment and building the CI/CD
+  pipeline are out of scope.
 ---
 
 # Deployment Document
 
-A skill for writing a **server deployment runbook**, through conversation with the person who will
-run it.
+A skill for writing a **deployment runbook**, through conversation with the person who will run it.
 
 The output is not a description of the finished server. It is a document someone follows **line by
 line, on a system that is already serving real traffic**. Each line says what to run, what the
@@ -50,7 +50,7 @@ Work through the five phases in order. Do not skip to drafting.
 
 | # | Phase | What happens |
 | :-- | :-- | :-- |
-| 1 | Settle the profile | Ask what the target actually is — hosting, OS, edge, process manager, database, secrets, TLS. See [interview.md](./references/interview.md). |
+| 1 | Settle the profile | Ask what the target actually is: hosting, what runs the application (a server you manage, a managed container service or a serverless function), then the rows that follow from it. Those are OS, edge and process manager for a server, and database, secrets and TLS for all. See [interview.md](./references/interview.md). |
 | 2 | Read what exists | If the system is already running, read its current unit files, edge configuration, applied migrations and deployed tag before asking about them. |
 | 3 | Design for compatibility | Decide, per step, whether it is reversible, whether it interrupts service, and whether it can coexist with the code already deployed. See [compatibility.md](./references/compatibility.md). |
 | 4 | Draft | Produce the document from the template. See [document-template.md](./references/document-template.md). |
@@ -64,8 +64,8 @@ Work through the five phases in order. Do not skip to drafting.
 
 - **Group questions by topic and ask about five at a time.** A list of twenty gets one answer.
 - **Give every question a suggested answer**, so the operator can agree instead of writing. This
-  skill assumes Ubuntu LTS, nginx, systemd, git on the server, a `.env` file and Let's Encrypt —
-  see [interview.md](./references/interview.md).
+  skill assumes a server you manage with Ubuntu LTS, nginx, systemd, git on the server, a `.env` file
+  and Let's Encrypt, see [interview.md](./references/interview.md).
 - **Always ask two questions**, because no default is safe for either. Is this a first build, or a
   release onto a system already running? And how much downtime is allowed?
 - If you ask something and get no answer, put it in the document as an **open question**. Never
@@ -111,6 +111,9 @@ came from.
   (TLS termination, upstream address, host name) easy to spot.
 - Say in the chapter that it is the original. If nobody knows a file is copied elsewhere, they edit
   it as though it were theirs alone.
+- On a managed container service or a serverless function there is no proxy file. The chapter then
+  records the settings the platform fixes (port, body size, timeouts, health-check path), and that
+  record is what the local copy takes.
 
 ## Where the document lives
 
@@ -132,7 +135,7 @@ docs/deployment/
 | In scope | Out of scope |
 | :-- | :-- |
 | Writing the runbook | Executing the deployment |
-| The server-side steps, whoever runs them | Implementing the CI/CD pipeline |
+| The steps on the hosting, whoever runs them | Implementing the CI/CD pipeline |
 | One section on what changes when CI runs the steps instead of a person — key handling, the executing user, and what replaces an interactive confirmation | Pipeline configuration, runner setup, workflow files |
 
 Deployment is where a wrong guess costs the most, so the line matters. This skill writes the
@@ -148,6 +151,7 @@ document. Someone allowed to break production runs it.
 | One document for both production and staging | People read the differences as optional, and apply the wrong one under pressure | One document per environment |
 | Rollback written as "revert the commit and redeploy" | It says nothing about the data, and the data is the part you cannot revert | Say how far back you can go, where the limit is, and put the backup before it |
 | Rotating a secret by replacing the value | Every token issued so far stops working at once, so the rotation causes an outage | Accept old and new together, then drop the old |
+| Migrations in the serving container's start command | Every instance runs them, at once, and a restart runs them again | Run them once as a one-off job from the image being released |
 | A first-build step left in the release part | It runs again on a live system, a year after anyone remembers what it does | Part I once, part II every time |
 
 ## Detail files
