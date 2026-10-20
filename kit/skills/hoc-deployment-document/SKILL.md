@@ -111,6 +111,9 @@ came from.
   (TLS termination, upstream address, host name) easy to spot.
 - Say in the chapter that it is the original. If nobody knows a file is copied elsewhere, they edit
   it as though it were theirs alone.
+- On a managed container service or a serverless function there is no proxy file. The chapter then
+  records the settings the platform fixes (port, body size, timeouts, health-check path), and that
+  record is what the local copy takes.
 
 ## Where the document lives
 
