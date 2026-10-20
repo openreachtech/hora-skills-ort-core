@@ -36,7 +36,9 @@ Read by everyone, part of neither part.
 
 ## Part I — first-time build
 
-Read once. Every chapter here is skipped on a system that already exists.
+Read once. Every chapter here is skipped on a system that already exists. On a managed container
+service or a serverless function, the server chapters below are replaced, and
+[interview.md](./interview.md) lists by chapter what replaces each.
 
 | # | Chapter | Holds |
 | :-- | :-- | :-- |

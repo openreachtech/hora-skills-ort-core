@@ -325,6 +325,14 @@ What the finished line is looked at for:
   individually.
 - **One sub-branch with something to group is enough to decide for a trunk.** What makes the
   trunk worth having is that at least one merge names a piece of work assembled from parts.
+  - **The commonest piece assembled from parts is a pair whose halves mean nothing apart** — a
+    test and the implementation it checks, an export barrel and the test naming what it exports,
+    a registration removed and the file it pointed at rewritten. Neither commit says on its own
+    that the two are one piece, and neither says where the piece ends.
+  - **What the merge names is that boundary, never a summary of the commits beneath it.** Read as
+    a summary it looks redundant over two commits whose subjects are already plain, and the
+    sub-branch is then given up for a cost it was not paying: the bullet above turns away a merge
+    that *restates* one commit, which a pair's merge does not do.
 - **Once the line is to be a trunk, a sub-branch carrying a single commit is avoided as far as
   the work allows.** Its merge restates the one commit beneath it, which is the cost the bullet
   above weighs against having a trunk at all; deciding for the trunk does not make that cost go
@@ -382,19 +390,21 @@ What the finished line is looked at for:
 of configuration and another changes the code behind it, the line of configuration goes in first
 and the code last.
 
-**The reason is how a diff is read.** A reader starts at the newest commit and works down, so
-whatever sits on top is what they see first and read hardest. Put a one-line change there and the
-substantial one is buried beneath it; put the substantial one there and the small changes sit
-where they cost nothing, at the bottom, passed over on the way.
+**The reason is what a diff from the newest commit holds.** Commits run from the earliest at the
+bottom to the latest on top. The sub-branch merged last is the largest, so a diff taken from the
+newest commit is that branch's alone, with none of the small sub-branches' noise mixed in, and
+checking it costs less. Merged earlier, the small ones sit beneath and stay out of that diff,
+which costs little: the diff of a small commit is often what its message already says.
 
-- **Size is read off the diff, never off the commit count.** What sits on top is read as a diff,
-  so the diff is what ranks the branches. A branch of four commits that raise versions and
-  regenerate a lock file is cheaper to read than one of two commits that change a procedure.
-- **An octopus merge ranks its legs by commit count instead, fewest first.** Its branches arrive
-  in one merge commit, side by side, and `git log --graph` draws each as a leg of its own — so
-  the reader takes the structure in from the shape of the legs before reading any diff, and legs
-  that lengthen from left to right are the shape that reads at a glance. How the octopus merge
-  is made is under `## Merging back into a trunk`.
+- **Size is read off the diff, never off the commit count.** A diff from the newest commit is
+  what gets checked, so the diff is what ranks the branches. A branch of four commits that raise
+  versions and regenerate a lock file is cheaper to read than one of two commits that change a
+  procedure.
+- **An octopus merge takes the same order as the sequence.** Its branches arrive in one merge
+  commit, but `git log --graph` stacks their commits in the order the arguments are given — the
+  first argument at the bottom, the last on top, whatever the dates of the commits — so listing
+  the branches in the order the sequence would merge them gives the same graph. How the octopus
+  merge is made is under `## Merging back into a trunk`.
 - **This is not an argument about risk.** Ordering by cost so that the cheap gains survive if the
   expensive work is rejected reaches the same order by another route, and it is not the reason.
 - **A change that only becomes possible once the others land goes last, whatever it costs.** Where
@@ -406,11 +416,36 @@ where they cost nothing, at the bottom, passed over on the way.
     update exists only because the code moved. It is not placed in the sub-branch that moved it,
     nor in that sub-branch's commit: it gathers into a documentation sub-branch of its own, merged
     after the code sub-branches, however many of them moved what it states.
+- **Where the sub-branches gather a class family, the `Base~` class goes first.** A feature
+  trunk bundling the implementation of a family merges the branch carrying the `Base~` class
+  before any branch carrying a class derived from it, whether the merges are made as a sequence
+  of local merges or as an octopus.
+  - **In a sequence of local merges the reason is the suite.** Merge a derived class first and
+    the suite fails at that merge commit, because the class it extends is not on the trunk yet.
+  - **In an octopus merge the reason is the reading.** The branches arrive in one commit, so
+    nothing fails at the merge. Read the tree from the bottom up, though, and the `Base~` class
+    is the first thing it should show.
+  - **It stands ahead of the orderings above.** A `Base~` branch larger than the rest still goes
+    first, as the first merge of a sequence and as the first argument of an octopus merge.
+- **An octopus merge bundles branches of equal standing, and a module that only declares types
+  does not stand equal to what it declares.** Where one trunk gathers both the implementation of
+  a class family and such a module, the implementation branches are what the bundle holds, and
+  the declaring branch is not among them.
+  - **In a sequence of local merges it goes last**, after every implementation branch.
+  - **In an octopus merge it is not a leg.** Bundle the implementation branches, then merge the
+    declaring branch on its own, onto the tip the octopus has just made.
+  - **The suite settles nothing here.** A module read only by the annotations around it is
+    depended on by nothing at run time, so it stands wherever it is put and no merge commit
+    fails. Where the rule above takes its answer from the suite, this one has only the reading.
+  - **The commit verbs settle nothing either.** The declaring branch and the branches it declares
+    for can both open with verbs for what did not exist before, so the difference of kind that
+    puts a level between siblings does not reach this. What parts them is that one is implemented
+    and the other describes it.
 - **The order reverses where the sub-branches reach the trunk through pull requests.** Then the
   substantial one goes first and the cheap ones follow it. The reason above does not reach that
-  case: a pull request is read on its own rather than as one diff worked down from the top, so
-  there is no top for a small change to occupy. What the order decides instead is which piece of
-  work the reviewer meets first, and that is the one the rest depends on.
+  case: a pull request is read on its own rather than as a diff from the newest commit, so there
+  is nothing for an earlier merge to be hidden beneath. What the order decides instead is which
+  piece of work the reviewer meets first, and that is the one the rest depends on.
   - **The two rules are told apart by the route, never by the work.** The same pair of branches
     takes one order merged locally and the other order opened as pull requests, so the question
     to ask is how they reach the trunk — not how large they are, which is what both rules
@@ -758,14 +793,15 @@ Merge the core/ rename in the repository documents
 
   ```bash
   git switch <trunk>
-  git merge --no-ff -m 'Merge …' <fewest commits> <more> <most>
+  git merge --no-ff -m 'Merge …' <merged first> <merged next> <merged last>
   ```
 
   - **Every branch sits on the trunk's current tip before it starts.** No tip moves between
     merges, so no rebase happens in the middle — but each branch is checked against the tip
     first, with `--is-ancestor` and with a count above zero, exactly as in the cycle.
-  - **The branches are listed by commit count, fewest first**, as `### The order the sub-branches
-    merge in` says. The order of the arguments is the order of the legs in the graph.
+  - **The branches are listed in the order the sequence would merge them**, as `### The order the
+    sub-branches merge in` says. The first argument sits at the bottom of the graph and the last
+    on top, and the legs run left to right in the same order.
   - **The subject names the whole the trunk gathers**, at the altitude of its opening marker,
     since one commit now stands for every branch it received.
 

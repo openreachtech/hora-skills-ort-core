@@ -109,6 +109,44 @@ here where `lib/` never does.
 What the class holds, and why the stand-in is a class at all, is in
 [mocks.md](./mocks.md#a-third-party-module-is-stood-in-for-by-a-mockxxxx-class).
 
+### A folder the subject reads lives under `tests/haystacks/`
+
+**Where the subject takes a path and settles its behaviour by what that folder holds** — a
+loader building a registry out of the classes under it — the folder the test points it at
+lives under `tests/haystacks/`. What it holds are stubs: classes of the kind the subject
+loads, written for the test and loaded exactly as any others would be. Nothing here is
+substituted for anything — the folder is content, and the subject reads it whole.
+
+**These are stubs, and never mocks** — the distinction is
+[mocks.md](./mocks.md#a-stub-answers-a-mock-expects)'s. A class written here that began
+asserting would have taken over the job of the test that loaded it.
+
+This is the test's side of the directory-as-registry contract the top of this file describes.
+The implementation declares a set by putting files in a folder, so a test exercising that has
+to declare one of its own, and this is where it declares it.
+
+**Below `tests/haystacks/` the layout is free.** Nothing is mirrored here — not the source
+tree, not the test tree — because nothing is being indexed: the folder is an argument, read by
+the subject rather than looked up by a person. Lay it out however the reading needs, and name
+the path from the test that hands it over
+([A Path the Test Hands Over Comes from `import.meta`](#a-path-the-test-hands-over-comes-from-importmeta)).
+
+- **This is the one place in this file where a path is not derived.** Everywhere else the two
+  trees answer each other — `lib/` stripped, `tests/` carried whole — so a reader arriving here
+  looks for the rule that produces the path, and there is none to find.
+
+**A stub here is static, and needs no test of its own.** It is read and nothing else, and
+what it was read for is asserted where the reading happens: in the test of the module that
+loaded it, against what that module made of the folder. The stub promises a caller nothing,
+so there is nothing of its own for a test to hold.
+
+- **Where one is written anyway, it mirrors like everything that is not `lib/`** — the
+  `tests/` segment carried whole, as `tests/mocks/` and `tests/tools/` are.
+
+| Stub | Its test |
+| --- | --- |
+| `tests/haystacks/concretes/AlphaRenderer.js` | `tests/__tests__/tests/haystacks/concretes/AlphaRenderer.js` |
+
 ## One Source File, One Test File
 
 A source file's tests live in **the single test file its path mirrors**, and
@@ -183,3 +221,28 @@ import BaseAuthorizationBuilder from '../../../../../lib/request/authorization-b
 import BasicAuthorizationBuilder from '.../concretes/BasicAuthorizationBuilder.js'
 import BaseAuthorizationBuilder from '.../BaseAuthorizationBuilder.js'
 ```
+
+## A Path the Test Hands Over Comes from `import.meta`
+
+The sections above cover the paths a test **imports**. A test also hands paths to the code
+under test — a directory a loader is pointed at, a file a reader opens — and those are
+written as a value rather than as a specifier.
+
+**An ESM test file has no `__dirname`.** The module's own location comes from
+`import.meta.dirname`, and the path is built from there.
+
+```js
+const poolPath = path.join(import.meta.dirname, '../haystacks/concretes')
+```
+
+- **It is a value, so it goes inside the `describe()` that uses it**, like everything else a
+  test defines ([anti-pattern.md](./anti-pattern.md#do-not-apply-dry-to-test-code-define-things-inside-each-describe)).
+  Lifting it to file scope to save repeating it is exactly the DRY this convention refuses,
+  and no lint rule reports it.
+- **`__dirname` does not fail at the line that reads it; the suite fails to start.**
+  `ReferenceError: __dirname is not defined` is thrown while the module is being evaluated,
+  so every test in the file is reported as not run. What the report names is the line that
+  built the path, which reads as one broken case rather than as a file that never loaded.
+- **`fileURLToPath(new URL('../haystacks/concretes', import.meta.url))` is the same path.**
+  Measured: the two forms returned identical strings. Prefer the first — the `path` module is
+  usually imported already, and the second spends an import on `url` to say the same thing.
