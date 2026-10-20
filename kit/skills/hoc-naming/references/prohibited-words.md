@@ -13,7 +13,15 @@ The following words are prohibited as prefixes or suffixes in naming.
 - `item`: Since an element of a List is already expressed as `item`, there is no need to include it in the name.
 - `list`: Name array variables with "the plural form of the word denoting the element" (an array of `User` should be `users`, not `UserList`).
 - `util` (`utils`): Adds no new information to responsibility/role.
+- `wrapper`: Names the mechanism, not the role. Name what the wrapping is for (`PaymentGatewayAdapter`, not `PaymentGatewayWrapper`).
 - `type`: Prohibited as a suffix. Use `Category` instead (`granteeCategory` / `GranteeCategory`, `eventCategory`). `type` collides with the JSDoc type annotation, so a reader cannot tell whether the name means "a JavaScript type" or "a business classification." **The only exception is a name borrowed verbatim from an external vocabulary**, where renaming would cost a translation table between the code and the standard it implements: `mimeType` is the MIME standard's own term, `contentType` is the HTTP `Content-Type` header, and a constant mirrored from an external package keeps that package's word (an external `COLUMN_TYPE` stays `columnTypeName`).
+
+## When ESLint reports a prohibited word
+
+- The lint message says only that the word is not allowed. **Rename by the reason above, never to the nearest synonym the rule does not catch.**
+  - `userList` becomes `users`, not `userArray` or `userCollection`.
+  - `FileUtil` becomes the one duty it does, such as `FileNameCollector`, not `FileTool`.
+- When no name fits without the word, the code usually holds more than one duty. Split it before naming it.
 
 ## Do not use redundant compound words
 
