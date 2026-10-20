@@ -95,6 +95,38 @@ and part II becomes build, deploy a revision, and move traffic.
 
 Ask early. Find out while drafting and you rewrite parts I and II.
 
+## When the answer is a serverless function
+
+AWS Lambda, or Cloud Run functions. The chapter changes are those of a managed container service,
+except these:
+
+| Chapter | Becomes |
+| :-- | :-- |
+| 3 Git access | Build the package or image and publish it as a version |
+| 6 The edge | Which of the function URL or the gateway terminates TLS, and what it forwards |
+| 7 Process management | The function configuration: memory, timeout, concurrency limits, the trigger |
+| 8 Updating the code | Publish a version, then move the alias or the traffic to it |
+| 11 Rollback | Point the alias at the previous version (Cloud Run functions deploy as Cloud Run services, so they roll back by revision) |
+
+A function adds three questions that a long-running service answers by itself.
+
+- **Cold start.** The first request after idle is slower. Time it as its own verification step, and
+  say whether warm instances are kept: provisioned concurrency on Lambda, which needs a published
+  version or alias, or minimum instances on Cloud Run.
+- **Concurrency.** Each concurrent request can hold its own database connection. Chapter 2 says what
+  stands between the function and the database, such as a connection proxy or a concurrency cap, so
+  a traffic spike does not use up the database's connections.
+- **Timeouts.** The function and every gateway in front of it each have a maximum. Confirm both
+  against the longest request, and write the numbers in chapter 0. Work that outlasts them moves to
+  a job or a queue.
+
+Two more rules follow from the same model.
+
+- **Keep no state on the instance.** Local disk and memory disappear between instances, and work
+  started before the response may never finish after it.
+- **Never run migrations from the function.** Its timeout bounds them. Chapter 9 runs them as a
+  one-off container job, or from a machine with a network path to the database.
+
 ## When CI runs the steps
 
 The runbook still covers the server. One section says what changes when a pipeline runs the steps
