@@ -151,6 +151,7 @@ document. Someone allowed to break production runs it.
 | One document for both production and staging | People read the differences as optional, and apply the wrong one under pressure | One document per environment |
 | Rollback written as "revert the commit and redeploy" | It says nothing about the data, and the data is the part you cannot revert | Say how far back you can go, where the limit is, and put the backup before it |
 | Rotating a secret by replacing the value | Every token issued so far stops working at once, so the rotation causes an outage | Accept old and new together, then drop the old |
+| Migrations in the serving container's start command | Every instance runs them, at once, and a restart runs them again | Run them once as a one-off job from the image being released |
 | A first-build step left in the release part | It runs again on a live system, a year after anyone remembers what it does | Part I once, part II every time |
 
 ## Detail files
