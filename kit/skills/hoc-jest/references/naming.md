@@ -307,3 +307,19 @@ const btoaSpy = jest.spyOn(globalThis, 'btoa')
 expect(btoaSpy)
   .toHaveBeenCalledWith(expected.source)
 ```
+
+## Variables That Hold a Test Double
+
+A variable holding a stand-in the test builds — a `MockXxxx.create()` result, a callback that
+only has to be passable, an object that answers canned values — takes the prefix `mock`:
+`mockContext`, `mockNext`. The prefix says that the value is a stand-in, so a reader never has
+to look up whether it is the real thing.
+
+- **The prefix is dropped where the name already says so.** A value named with a Greek letter
+  (`alphaNext`, `betaNext`) is a test value by its name alone, because those words are never used
+  for a real thing in code.
+- **A name that could belong to a real thing keeps the prefix**, however individual it looks.
+  `mockRequestHandler` is not made safe by being specific; only the Greek letters mark a value
+  as invented.
+- **The prefix does not depend on how close the stand-in is to the real thing.** A stand-in backed
+  by the real prototype is still a stand-in, and keeps `mock`.
