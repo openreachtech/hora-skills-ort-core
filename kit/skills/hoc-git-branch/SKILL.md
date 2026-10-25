@@ -428,17 +428,43 @@ which costs little: the diff of a small commit is often what its message already
     update exists only because the code moved. It is not placed in the sub-branch that moved it,
     nor in that sub-branch's commit: it gathers into a documentation sub-branch of its own, merged
     after the code sub-branches, however many of them moved what it states.
-- **Where the sub-branches gather a class family, the `Base~` class goes first.** A feature
-  trunk bundling the implementation of a family merges the branch carrying the `Base~` class
-  before any branch carrying a class derived from it, whether the merges are made as a sequence
-  of local merges or as an octopus.
+- **The settings a change needs in order to be accepted go in before the change, each as a
+  sub-branch of its own under a trunk for the environment.** A lint rule turned off for a file,
+  an entry in the spelling dictionary, an editor setting: whatever the tooling has to allow for
+  the new code to pass. Settings of different kinds are different pieces of work, not steps of one
+  — a linter's and a dictionary's are siblings — so each takes a sub-branch however small, and the
+  group is gathered under a nested trunk named for the environment, merged ahead of the code it
+  serves.
+  - **Single-commit sub-branches are kept here.** They are siblings that
+    differ in kind from the code and from each other, and bundled into one octopus merge under the
+    environment trunk they cost the reader a single line.
+- **A dependency install never shares a sub-branch with an environment setting.** An install
+  changes what the project depends on and regenerates the lock file; a setting changes how the
+  tooling reads the code. They are different pieces of work, and each answers to a different
+  rollback. The install is a sub-branch of its own, never one of the settings under the
+  environment trunk.
+- **A piece that directly serves the implementation stands immediately before it, whatever its
+  size.** The order by cost ranks pieces that have no bearing on one another. Where one piece
+  exists for the implementation — the packages its classes import — it is placed next to the
+  implementation, and nothing unrelated is put between them: a test double that only the suite
+  uses stands further back than the packages the classes depend on. A reader walking the merges
+  then meets the implementation straight after what it needs, rather than reading past a merge
+  that has nothing to do with either.
+- **Where the sub-branches gather a class family, the `Base~` class goes first, and goes alone.**
+  A feature trunk bundling the implementation of a family merges the branch carrying the `Base~`
+  class on its own, before any branch carrying a class derived from it.
   - **In a sequence of local merges the reason is the suite.** Merge a derived class first and
     the suite fails at that merge commit, because the class it extends is not on the trunk yet.
-  - **In an octopus merge the reason is the reading.** The branches arrive in one commit, so
-    nothing fails at the merge. Read the tree from the bottom up, though, and the `Base~` class
-    is the first thing it should show.
+  - **An octopus merge never carries it.** An octopus bundles branches of equal standing that
+    stand in parallel, and a `Base~` class does not stand equal to the classes derived from it:
+    they are built on it. It is merged first, by itself, and the derived classes that remain,
+    independent of one another, may then go as an octopus on the tip that merge made.
   - **It stands ahead of the orderings above.** A `Base~` branch larger than the rest still goes
-    first, as the first merge of a sequence and as the first argument of an octopus merge.
+    first.
+- **A family's barrel belongs inside the family's trunk, as the last sub-branch.** The barrel
+  registers the classes of the family, so it depends on every one of them and has no meaning
+  without them. Merged as a sibling of the family at the top level, it stands apart from what it
+  registers; inside the family's trunk it comes after the last class and closes the trunk.
 - **An octopus merge bundles branches of equal standing, and a module that only declares types
   does not stand equal to what it declares.** Where one trunk gathers both the implementation of
   a class family and such a module, the implementation branches are what the bundle holds, and
