@@ -173,6 +173,7 @@ const modifiedAtTo = ...   // range upper bound
 - For static methods, since the class name supplements the context, a single-word name is exceptionally allowed (`CardNumbersLoader.load()`).
 - For a method name that serves as an entry point, interpret it as a transitive verb wherever possible and give it an object (e.g. for `ChunkBuilder`, use `#buildChunks()` instead of `#build()`).
   - Reason: if the instance is held in a short-scoped variable or property, the context supplementation from the class name is lost. If held as in `const builder = ChunkBuilder.create()`, then `builder.build()` doesn't reveal what is being built. Including the object, as in `builder.buildChunks()`, conveys it to the reader.
+  - **The verb is the verb of the class's role.** A class named for what it does speaks that verb at its entry point: a `Builder` builds (`#buildChunks()`), a `Composer` composes (`#composeMiddleware()`). An entry point that does not begin with the class's own verb leaves the reader wondering what else the class does. `create~` is not available for it: that verb is for instantiating (see [references/verbs.md](./references/verbs.md)).
 
 ## Super-prefixes state how a method behaves
 
