@@ -144,6 +144,17 @@ class 😂 {
 - Avoid single-word class names wherever possible; use a compound name containing two or more words.
 - If this is pointed out in a review, always change it to a compound word to save discussion time.
 
+## Spell out the full role
+
+- A name states the role in full: what the thing handles and what it does to it. Do not shorten it by dropping words.
+- A qualifier may be dropped only where no second thing could ever need it to be told apart. `PdfRenderingInvoiceAdapter` may become `InvoiceAdapter` where only one kind of invoice adapter can exist.
+- The same holds for method and function names.
+
+## Name a value for what it is, not for how it was made
+
+- A variable is named for its role. `wrappedNext` says how the value came about, which is a description of the technique; `receivedNext` or `definedNext` say what the value is.
+- This is the rule behind the prohibition of `wrapper` (see [references/prohibited-words.md](./references/prohibited-words.md)), applied to a variable: a name that explains the mechanism tells the reader nothing about the part the value plays.
+
 ## Use American spelling
 
 - The correspondence between American and British spellings is collected in [references/spelling.md](./references/spelling.md).
