@@ -524,3 +524,40 @@ const reportErrorSpy = jest.spyOn(mockContext, 'reportError')
   hand the instance over, then take what the case needs from it with
   `jest.spyOn()`. The stand-in exists because a third-party type cannot be built
   here, which is a reason a class of ours never has.
+
+### Back the stand-in with the real prototype where one exists
+
+**Where the third-party type has a real prototype to stand on, `.create()` returns a literal
+whose `__proto__` is that prototype and writes out only the members the case overrides.** Every
+member that is not written out is the real one, so the literal shows at a glance which members
+are fake and which are not.
+
+```js
+// tests/mocks/MockRequest.js
+import express from 'express'
+
+export default class MockRequest {
+  /**
+   * Factory method.
+   *
+   * @param {{ headers: Record<string, string> }} params - Parameters of this factory method.
+   * @returns {express.request} - Request that carries the given headers.
+   */
+  static create ({ headers }) {
+    return /** @type {*} */ ({
+      __proto__: express.request,
+      headers,
+    })
+  }
+}
+```
+
+- **The nearer a stand-in is to the real thing, the better.** Override what the case needs and
+  let the rest be real. A bare `{}` cast to the type is the farthest stand-in there is, and a
+  literal that carries only the overridden members on the real prototype is the nearest.
+- **Never copy a member off the real object into the literal** (`is: express.request.is`): the
+  copy is cut off from its receiver and is no longer the real member. Nor is the stand-in built
+  with `Object.create()` and a property-descriptor map: the descriptors bury the one thing the
+  literal exists to show, which members are overridden.
+- **The cast stays in `.create()`.** A literal `__proto__` is typed as an ordinary property, so
+  the checker needs the one cast, and it is spent there like the one in the section above.
