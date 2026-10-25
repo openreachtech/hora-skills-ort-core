@@ -27,4 +27,13 @@ Update-related:
 | `send~` | Access an external API to update external data |
 | `set~` | Property update (rarely used since setters are prohibited) |
 
+Processing-related:
+
+| Verb | Usage |
+| :-- | :-- |
+| `process~` | A hook that transforms a value on its way to where it is used; its default does nothing (`#processHandlerArguments()`) |
+| `filter~` | A hook that narrows a collection on its way; its default keeps everything |
+
+- A hook does not take `build~`. That verb belongs to the entry point of a class that builds, and a hook inside such a class speaking it too leaves two members saying they produce the class's result.
+
 - For other verbs, choose a word that is faithful to the method's responsibility.
