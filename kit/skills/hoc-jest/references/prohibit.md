@@ -73,7 +73,10 @@ value is pinned by the assertion beside it, it is the right matcher.
 expect(core.rules)
   .toHaveProperty(expected, expect.any(Array))
 expect(core.rules)
-  .toHaveProperty([expected, 0], 'error')
+  .toHaveProperty(
+    [expected, 0],
+    'error'
+  )
 ```
 
 - The test is whether the type **excludes the wrong value**. `Array` excludes the bare
