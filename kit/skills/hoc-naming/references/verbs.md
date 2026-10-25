@@ -10,6 +10,10 @@ Creation-related:
 | `generate~` | Generate a primitive value |
 | `build~` | Generate a temporary object |
 | `make~` | Not used |
+| `define~` | Define a function (a handler, a callback) that is called later |
+| `wrap~` | Not used. It names the mechanism, not what the function is for; name the function with `define~` |
+
+- `build~` produces an object. A method that returns a function is `define~`, never `build~`.
 
 Retrieval-related:
 
