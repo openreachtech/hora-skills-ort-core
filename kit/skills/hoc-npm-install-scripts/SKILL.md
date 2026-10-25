@@ -116,6 +116,10 @@ printed.
   take it in a tree shaped like the one the rule will be applied to.
 - **Recording a denial does not move `package-lock.json`.** The work is two commits — the
   setting, then the denials — with no lockfile commit between them.
+- **A denial recorded in the same pass as a raise goes in before that pass's lockfile
+  commit.** The order is the raise convention's: the lockfile commit comes last, whatever the
+  commits before it touched, so nobody has to know whether recording a denial moves the
+  lockfile.
 - Installing once, after the settings are complete, is the same shape as concentrating the
   install into a single run at the end of a release.
 
