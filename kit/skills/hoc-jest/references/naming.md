@@ -278,6 +278,10 @@ observe calls to a function"**, and any variable meeting that criterion must
 - Name variables holding a spy function with a `~Spy` suffix (e.g. `btoaSpy`,
   `fetchSpy`). Do not use other terms like `tally`. This makes it explicit by
   name that the subject of call verification "is a function spy."
+- **The word before `Spy` is the name of the member the spy watches, written whole.**
+  `jest.spyOn(builder, 'buildPathname')` is held as `buildPathnameSpy`, never as `buildSpy`
+  or `pathnameSpy`. A shortened name belongs to no member, so a reader of the assertion cannot
+  tell which call is being observed, and a search for the member never lands on the line.
 - If held in a constant (upper snake case), also uppercase the suffix, giving
   `XXXX_XXX_SPY` (e.g. `BTOA_SPY`, `FETCH_HANDLER_SPY`). This matches the naming
   convention's casing while still conveying the `~Spy` meaning via `_SPY`.
