@@ -67,10 +67,17 @@ Items that overlap with conventions in other files reinforce one another.
 - **Pin arguments whenever possible (`toHaveBeenCalledWith(...)`)**. Do not settle
   for just "was it called" (`toHaveBeenCalled()`). — `jest/prefer-called-with`
 - **`toHaveBeenCalledTimes(n)` (count verification) may be used only when argument
-  verification is present alongside it.** To verify the count, line up
-  `toHaveBeenNthCalledWith(1, ...)` … `toHaveBeenNthCalledWith(n, ...)` n times,
-  pinning the arguments of every call. Verifying only the count lets arguments pass
-  through (QA stance; a convention of this skill, not lint-enforced).
+  verification is present alongside it, and only where the spy can be called more than once.**
+  To verify the count, line up `toHaveBeenNthCalledWith(1, ...)` …
+  `toHaveBeenNthCalledWith(n, ...)` n times, pinning the arguments of every call. Verifying
+  only the count lets arguments pass through (QA stance; a convention of this skill, not
+  lint-enforced).
+  - **Where a call happened, `toHaveBeenCalledWith()` is the primary check and is never left
+    out.** What a call was given is the first thing a test about a call has to say.
+  - **Ask whether this spy can be called more than once for one run of the subject.** Where it
+    cannot, no count is written: a count on a spy that can only be called once makes the reader
+    wonder whether the implementation cares about the number, and whether it could be called
+    twice. The count is written where the number is part of what the subject promises.
 - **A call count never stands in for the outcome the subject produces.** Where the
   member under test leaves a result behind — a value it returns, a file it removes, a
   directory it leaves empty — the test reads that result. Asserting that a member it
