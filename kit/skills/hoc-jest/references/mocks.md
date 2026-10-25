@@ -143,6 +143,39 @@ Measured, one subject written both ways against one collaborator:
   gone stale, because nothing in the test says the member is `async`. The run that produced
   the table above drew no rule at either spy.
 
+## A Member That Has to Do Nothing Is Silenced with `.mockImplementation(() => {})`
+
+**Where a spy only has to stop a member from doing its work, it is overwritten with
+`.mockImplementation(() => {})`.** `.mockReturnValue(undefined)` is not the same sentence: it
+declares a value the member returns, and a member that returns nothing has none to declare. The
+empty implementation says what is meant — nothing happens here — and says nothing else.
+
+```js
+// Avoid: states a return value the member does not have
+jest.spyOn(surrogate, 'invokeHandler')
+  .mockReturnValue(undefined)
+
+// Good: the member does nothing
+jest.spyOn(surrogate, 'invokeHandler')
+  .mockImplementation(() => {})
+```
+
+## A Function That Has to Do Nothing Is `() => {}`
+
+**A function a test hands over that only has to be callable — a `next`, a callback no assertion
+reads, a member of a stand-in — is written `() => {}`, never `() => undefined`.** The arrow that
+returns `undefined` states a return value; the empty body states that nothing happens, which is
+all the test means. The form is the same wherever the function appears: in a fixture, in a case,
+and inside a `MockXxxx.create()`.
+
+```js
+// Avoid: names a value the function is not asked to return
+const nextFunction = () => undefined
+
+// Good
+const nextFunction = () => {}
+```
+
 ## Combining with constructorSpy
 
 When verifying delegation to a constructor, combine an `jest.spyOn()` override
