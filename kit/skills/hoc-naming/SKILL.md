@@ -65,6 +65,11 @@ class AlphaSample extends BaseSample {}
 class BetaSample extends BaseAppSample {}
 ```
 
+## An interface name carries no distinguishing prefix
+
+- Where a module accepts a set from its caller and also holds a set of its own, the name on the side the caller sees is the plain one (`MiddlewareCtors`), and the distinguishing word goes to the module's own side (`BundledMiddlewareCtors`).
+- A word such as `extra` on the caller's side leaks the module's internal split into every call site. The module is the one that knows it holds two sets, so the module is the one that names the difference.
+
 ## Method names are "predicates," not "complete sentences"
 
 - A method call `receiver.method()` has a structure resembling a sentence: "subject (receiver) + predicate (method)."
