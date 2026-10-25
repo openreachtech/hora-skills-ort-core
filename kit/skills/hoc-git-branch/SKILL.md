@@ -479,6 +479,11 @@ which costs little: the diff of a small commit is often what its message already
     for can both open with verbs for what did not exist before, so the difference of kind that
     puts a level between siblings does not reach this. What parts them is that one is implemented
     and the other describes it.
+  - **Type declarations are not written into the implementation sub-branches at all.** A change
+    to the declarations — a global type, the type-level exports of the classes — is not folded
+    into the sub-branch of the class it describes. All of the work's type changes gather into one
+    independent sub-branch, merged last: after the implementation, and after the run-time export
+    of the same classes, which the type-level export mirrors.
 - **The order reverses where the sub-branches reach the trunk through pull requests.** Then the
   substantial one goes first and the cheap ones follow it. The reason above does not reach that
   case: a pull request is read on its own rather than as a diff from the newest commit, so there
