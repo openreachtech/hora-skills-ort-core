@@ -189,5 +189,10 @@ This skill's patterns pass lint precisely because they are off.
 - **`require-top-level-describe` / `require-hook` / `no-hooks` (all hooks allowed) /
   `max-expects` / `prefer-expect-assertions` = off**.
 - Under `tests/**/*.js`, `no-undefined` / `max-classes-per-file` / the no-static-class
-  `no-restricted-syntax` selector are **off** (test code may write `undefined`
-  literally, define multiple classes per file, and have classes without properties).
+  `no-restricted-syntax` selector are **off** (test code may define multiple classes per file
+  and have classes without properties, and lint lets `undefined` be written anywhere).
+  - **The convention is narrower than the rule: `undefined` is written only as the right-hand
+    side of an element of `cases`**, where it stands for an argument that is omitted
+    (`input: { value: undefined }`). Anywhere else in a test — an argument, a return value, a
+    stub such as `.mockReturnValue(undefined)` — it is not written. The rule is off because that
+    one use needs it, not so that `undefined` may go wherever it fits.
