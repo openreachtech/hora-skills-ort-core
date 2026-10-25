@@ -206,6 +206,25 @@ test.each(cases)('value: $input.value', ({ input, expected }) => {
 })
 ```
 
+## A matcher with two arguments is chopped down when one of them is an array
+
+**A matcher call with two arguments is written one argument per line when one of the arguments
+is an array** — the key path handed to `toHaveProperty()`. A name and a variable stay on one
+line.
+
+```js
+// Chopped down: the first argument is a key path
+expect(tally)
+  .toHaveProperty(
+    ['request', 'headers', 'content-type'],
+    expected
+  )
+
+// One line: a name and a variable
+expect(received)
+  .toHaveProperty('headers', expected)
+```
+
 ## Write expected-value literals inline if single-line, bind to `const expected` if multi-line
 
 When writing an expected value **as a literal in the test body** (a single
