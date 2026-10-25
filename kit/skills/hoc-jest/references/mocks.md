@@ -339,6 +339,58 @@ const args = {
 }
 ```
 
+## An Object Built Only to Be Spied Is a Throwaway
+
+**A spy goes on the object the subject receives, never on one made so that `jest.spyOn()` has
+something to watch.** An object built in the test body, given a function member and handed to
+`jest.spyOn()` — while the subject is passed a different object, or only the member pulled out
+of it — is a way around the rule against `jest.fn()`, and it is removed rather than tidied.
+
+- **The test is where the variable goes.** A variable that reaches the subject (the constructor,
+  the method under test) is part of the arrangement. A variable that nothing but `jest.spyOn()`
+  receives is a throwaway.
+- **The function lives on the value the subject is handed.** Where a case's `input` is that
+  value, `input` carries the function and the spy goes on it in place. Where the subject reads
+  the member when it is created, the spy is planted before the subject is.
+- **The rule is about the variable that reaches only `jest.spyOn()`.** A value that is also
+  handed to `.mockReturnValue()` reaches the implementation through the stub's return, so it
+  does not fall under this rule.
+
+```js
+// Avoid: a holder made only so that jest.spyOn() has an object to watch
+const callbackHash = {
+  next: input.next,
+}
+const nextSpy = jest.spyOn(callbackHash, 'next')
+
+// Good: input is what the subject receives, and the spy goes on it
+const nextSpy = jest.spyOn(input, 'next')
+```
+
+## A Spy Planted to Watch a Call Is Asserted
+
+**A spy does one of two jobs, and each is written its own way.** A stub makes a member answer, and
+needs no variable: nothing is asserted about it. A spy that watches whether a call happened is
+bound to a `~Spy` variable and passed to `expect()`.
+
+```js
+// Stub: the member answers; nothing is asserted about the spy, so nothing is bound
+jest.spyOn(builder, 'buildPathname')
+  .mockReturnValue(override.pathname)
+
+// Watch: bound, and passed to expect()
+const generateCredentialSpy = jest.spyOn(builder, 'generateCredential')
+
+builder.run(args)
+
+expect(generateCredentialSpy)
+  .toHaveBeenCalledWith(expected)
+```
+
+- **A bound spy that no `expect()` reads is a claim the test never checks.** The title says the
+  member is called with something, and nothing fails when it is not. Either assert it or leave the
+  binding out and write the stub.
+
 ## Exception (When It Is Acceptable to Define a Derived Class)
 
 A derived class may be defined only in cases that cannot be expressed with
