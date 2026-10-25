@@ -1328,6 +1328,113 @@ describe('#isValid()', () => {
 })
 ```
 
+### When the result is about one decided value, hang both describes under it
+
+Where the member answers whether an input matches **one decided value** (a key the class
+answers to, a fixed schema), that value is the outer axis. It is written once, as
+`describe.each()` over the cases that hold it, and `describe('should be truthy')` and
+`describe('should be falsy')` sit **inside** it, each running `test.each()` over its own inner
+cases (`truthyCases` / `falsyCases`, the prefixed `~Cases` of
+[naming.md](./naming.md#test-case-variables)). Neither behavior describe repeats the value.
+
+```js
+describe('SomeBase', () => {
+  describe('.matchesKey()', () => {
+    const cases = [
+      {
+        override: {
+          key: 'alpha',
+        },
+        truthyCases: [
+          { input: { key: 'alpha' } },
+        ],
+        falsyCases: [
+          { input: { key: 'beta' } },
+          { input: { key: 'ALPHA' } },
+        ],
+      },
+      {
+        override: {
+          key: 'beta',
+        },
+        truthyCases: [
+          { input: { key: 'beta' } },
+        ],
+        falsyCases: [
+          { input: { key: 'alpha' } },
+          { input: { key: 'BETA' } },
+        ],
+      },
+    ]
+
+    describe.each(cases)('key: $override.key', ({ override, truthyCases, falsyCases }) => {
+      describe('should be truthy', () => {
+        test.each(truthyCases)('key: $input.key', ({ input }) => {
+          jest.spyOn(SomeBase, 'key', 'get')
+            .mockReturnValue(override.key)
+
+          const received = SomeBase.matchesKey(input)
+
+          expect(received)
+            .toBeTruthy()
+        })
+      })
+
+      describe('should be falsy', () => {
+        test.each(falsyCases)('key: $input.key', ({ input }) => {
+          jest.spyOn(SomeBase, 'key', 'get')
+            .mockReturnValue(override.key)
+
+          const received = SomeBase.matchesKey(input)
+
+          expect(received)
+            .toBeFalsy()
+        })
+      })
+    })
+  })
+})
+```
+
+- **A flat list of truthy pairs and a separate list of falsy pairs hides the relation.** Each
+  falsy case is a way of failing to match *this* value, and hanging it under the value is what
+  lets a reader see which input is the counterpart of which. Written apart, the value is repeated
+  in two places and the counterpart has to be found by comparing them.
+- **The value's `describe.each()` stands outside the two behaviors, never inside each of them.**
+  Repeating it in both behavior describes writes the same decision twice and lets the two drift.
+- **A single truthy case is allowed here**, as the "only one can be truthy" exception of
+  [test-cases.md](./test-cases.md): one value is matched by exactly one input.
+
+## Two results of one call are one behavior
+
+**Where one call leaves two things to check — a delegate was called with the arguments, and what
+it returned is what the member returns — they are one behavior with two assertions, not two
+behaviors that each repeat the call.** The behavior is named for what the member does
+(`should delegate to <delegate>()`), and its test asserts both results.
+
+```js
+describe('should delegate to JSON.stringify()', () => {
+  test.each(cases)('value: $override.value', ({ override, tally, expected }) => {
+    const stringifySpy = jest.spyOn(JSON, 'stringify')
+      .mockReturnValue(override.value)
+
+    const received = SomeStringifier.stringify(tally)
+
+    expect(received)
+      .toBe(expected) // same reference
+    expect(stringifySpy)
+      .toHaveBeenCalledWith(tally)
+  })
+})
+```
+
+- **An assertion made in one behavior describe is not made again in another.** Two describes
+  that both assert the same spy against the same arguments say one thing twice, and when one
+  changes the other is left holding the old claim. A describe asserts what its title says and
+  nothing a sibling already asserts.
+- **A second describe is warranted only by a second thing the member does**, never by a second
+  assertion on the same call.
+
 ## Methods that memoize and return the same reference (`should be memoized`)
 
 For a method that, when called multiple times with the same argument, returns the
