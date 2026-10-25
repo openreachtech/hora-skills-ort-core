@@ -844,6 +844,10 @@ Merge the core/ rename in the repository documents
   git merge --no-ff -m 'Merge …' <merged first> <merged next> <merged last>
   ```
 
+  - **An octopus is for branches of equal standing that stand in parallel**: independent of one
+    another, and of one kind. Where several such branches would otherwise be merged one by one,
+    the octopus is the shape to take, and it shortens the graph. Branches with a dependency between them — one built on another, one that others stand
+    on — merge one by one, in the order of the dependency.
   - **Every branch sits on the trunk's current tip before it starts.** No tip moves between
     merges, so no rebase happens in the middle — but each branch is checked against the tip
     first, with `--is-ancestor` and with a count above zero, exactly as in the cycle.
