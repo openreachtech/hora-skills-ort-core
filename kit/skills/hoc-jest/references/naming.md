@@ -212,6 +212,20 @@ test.each(cases)('replacer: $tally.replacer', ({ tally }) => {
 })
 ```
 
+## A Case Property That Holds a Class Takes `Ctor`
+
+A property of a case — under `override`, `input` or `tally` — whose value is a class is named
+`<ClassName>Ctor`: `override: { SurrogateCtor: BetaSurrogate }`,
+`input: { MiddlewareCtor: AlphaMiddleware }`. `Ctor` is the library's word for a class held as a
+value, and a case holds one the same way a class property does. The title
+(`$input.MiddlewareCtor.name`), the `@type` of `cases` and every use of the property in the
+test body carry the same name.
+
+- **Examples elsewhere in this skill name some such properties without the suffix** (`Builder:`,
+  `Registry:`, `Stringifier:`). They stand as they were written; every new case takes the suffix.
+- **The suffix marks a class, not a role.** A property holding an instance or a plain value does
+  not take it.
+
 ## Act's Return Value
 
 - The variable that receives the return value in the Act step of the AAA pattern
