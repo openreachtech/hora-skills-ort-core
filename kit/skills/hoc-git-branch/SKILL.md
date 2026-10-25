@@ -302,6 +302,10 @@ split the line into sub-branches.
 - **This holds only while the commits are unshared.** Folding and splitting both rewrite
   history. Once the work has been pushed, the line stands as it is, and a structure it did not
   get is a structure it does not get.
+- **A finished line is turned into the structure by going back to a diff.** The line is kept
+  under a tag before anything moves, so that the original is one `git switch` away. The branch
+  is then reset to its base without touching the working tree, which turns the commits back into
+  a diff, and the pieces are committed afresh, each sub-branch cut from the trunk.
 - **A change found after the structure is built is folded by kind, never by cause.** A
   documentation fix that surfaces once the code and documentation sub-branches exist goes onto the
   documentation sub-branch, as one more commit beneath its single merge. It does not go into the
