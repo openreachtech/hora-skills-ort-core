@@ -121,9 +121,14 @@ printed.
 
 ## Write `allowScripts` with the install-scripts command, never with `npm pkg`
 
-`approve` and `deny` edit `package.json` in place and leave the rest of it alone. **`npm pkg
-set` and `npm pkg delete` do not: they silently drop the dependency fields that are empty**, so
-one line added to `allowScripts` arrives as a diff that also deletes lines nobody asked it to.
+`approve` and `deny` edit `package.json` in place, and **the change they make is the
+`allowScripts` lines and nothing else.** Read the diff before staging it: `deny` has been seen
+to respell an empty object written across two lines as `{}`, and a line like that is not part
+of the change, so only the `allowScripts` lines are staged.
+
+**`npm pkg set` and `npm pkg delete` go further: they silently drop the dependency fields that
+are empty**, so one line added to `allowScripts` arrives as a diff that also deletes lines
+nobody asked it to.
 
 - `overrides` has no subcommand of its own, so it is edited by hand for the same reason.
 
