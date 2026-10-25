@@ -63,6 +63,12 @@ Use **only** the following four top-level properties on the element objects of
 | `tally` | A value that **serves as both** `input` and `expected`. When the same value is both passed in and used as the expected value, combine it into a single `tally` instead of splitting it into `input` and `expected` (e.g. pass it to `create(tally)` and also verify it with `toHaveBeenCalledWith(tally)`). The name means "tally" in the sense of a matching token, expressing the intent that the passed value and the expected value are **checked to be identical**. This name was chosen as a short word that does not collide with common domain vocabulary. Use it **only when the passed value and the expected value are the same**; if the implementation transforms the argument such that the two differ, do not use `tally` — split it into `input` / `expected`. |
 | `expected` | The expected return value / property value. |
 
+**The properties are written in the order of the phase that first uses them:** `override`
+(Arrange), `input` (Arrange, then Act), `tally` (Act and Assert), `expected` (Assert).
+`override` is used in Arrange alone, so it stands before every property that reaches Act or
+Assert; a case that opens with `tally` and puts `override` after it reads as though the stub
+were part of what is asserted.
+
 ### `tally` is only for when the "value passed to the subject" and "expected value" are the **same object reference / same value**
 
 **Mechanical check (highest priority; if this is not satisfied, it is not `tally`)**:
