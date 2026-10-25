@@ -41,6 +41,16 @@ const enabledUsers = users.filter(it => it.enabled)
 const completedPayments = payments.filter(it => it.completed)
 ```
 
+## A variable holding constructors starts with a capital
+
+- A variable or property that holds an array of constructors starts with a capital, as a class name does (`MiddlewareCtors`): its elements are classes, and `Ctor` is the word for a class held as a value.
+- A variable that holds a plain object starts lowercase, however it was imported. A capital initial tells the reader that the value is made of classes.
+
+```javascript
+import MiddlewareCtors from './middleware-ctors.js' // an array of classes
+import middlewareHash from './middleware-hash.js' // a plain object
+```
+
 ## The parameters of a higher-order function's callback
 
 - How a callback's parameters are named — `it`, and the accumulator of `reduce()` — belongs to
