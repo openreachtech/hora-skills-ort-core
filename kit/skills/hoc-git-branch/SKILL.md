@@ -373,6 +373,11 @@ What the finished line is looked at for:
     - Which half merges first follows the ordering rules below — the adoption cannot land before
       what it adopts.
 
+- **A helper written for one class travels with that class.** A class that exists only to serve
+  another — a workaround the class calls, a collaborator no other class uses — is not a sibling of
+  the classes around it. The two are gathered under a nested trunk named for the class they
+  serve, with the helper's sub-branch first and the served class's after it. Each keeps its own
+  sub-branch, so the trunk groups two pieces of work rather than folding them into one.
 - **A difference of kind puts a level between siblings.** Where the pieces are siblings by the
   test above, and one of them is an artefact written for the first time while the rest change
   what already stands, they do not sit side by side. The like ones gather under a nested trunk
