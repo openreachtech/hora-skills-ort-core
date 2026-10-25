@@ -501,6 +501,11 @@ is deliberately descriptive. Nothing reads it after the branch is gone.
   abstraction** — `implement/xxx`, `setup/xxx`, `feature/xxx`, `retake/xxx`, `update/xxx`. A
   branch that is about to have six branches cut from it cannot be named for one narrow verb
   without lying about five of them.
+- **A branch whose work has outgrown its name is renamed before the structure is shaped.** A
+  branch opened for one tidy-up that has grown into the implementation of a whole mechanism still
+  says `tidyup/xxxx`, and the name is now a claim about the work that is false. `git branch -m`
+  brings it to the altitude of the work, the one its opening marker is written at, and the label
+  and the marker then say the same thing.
 - **A sub-branch cut from a general branch acting as a trunk is named the same way**, and the
   nesting adds no constraint of its own: `<verb | category>/xxxx`, free. The narrow verbs
   belong here, where each branch really does carry one thing.
