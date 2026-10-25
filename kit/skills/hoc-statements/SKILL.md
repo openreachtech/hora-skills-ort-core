@@ -154,6 +154,30 @@ static get factory () {
 - **An ESM named import has no receiver.** `import { json } from '…'` binds a name and is not a
   detachment.
 
+## A dependency an instance needs is built in a statement of its own
+
+**A statement holds one logic.** Where an instance is made from a dependency that itself has to be
+built, the dependency is built in a `const` of its own, and the instance is made in the next
+statement from that `const`. The call that builds the dependency is not written inside the argument
+of the `new`: one statement would then both build the dependency and build the instance.
+
+```javascript
+// NG: building the dependency and building the instance, in one statement
+return new this({
+  invoker: this.createInvoker({ handlerArguments }),
+})
+
+// OK: the dependency first, then the instance
+const invoker = this.createInvoker({ handlerArguments })
+
+return new this({
+  invoker,
+})
+```
+
+- **It is the call that builds a dependency that is taken out.** A value read from a property, or a
+  plain value, written in the argument is not what this refuses.
+
 ## Sequential processing is prohibited; write with higher-order functions
 
 - Sequential processing (imperative loops) using `for` and the like is prohibited.
