@@ -118,6 +118,12 @@ const {
   with `this` unbound, and the first line of it that reaches `this` fails.
 - **A member taken out states what the instance holds inside.** The local is a second name for one
   value from then on, and the code around it now depends on the instance's insides.
+- **The named-argument object is opened at the entry of a method, and what lies beneath it is
+  not, unless it is certainly a value object.** `{ request, response, next }` is destructured
+  where the method begins: a method whose arguments could not be opened would be tedious to call.
+  The `request` beneath it is not opened. An object that carries methods and the state of one
+  thing is an instance, and "a payload being read" does not make it data. Where it cannot be said
+  for certain that the value is a value object, it is not taken apart.
 - **Where the body needs something behind the instance, the instance grows the member that
   answers.** `it.hasActiveAccount()` keeps what an account is to the item that holds it.
 - **`this` is the case met most often**, and why a property of `this` is read where it is used
