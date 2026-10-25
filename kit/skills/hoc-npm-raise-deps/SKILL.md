@@ -142,6 +142,10 @@ Uninstall delta-package
   commit rather than after it: one install resolved the removal and the raises together, so one
   lockfile commit records them together. Putting it after would need a second install, which is
   what this section refuses.
+- **Whether a manifest change moves the lockfile is never the question.** A commit that
+  records a decision in the manifest with no install behind it — a denied install script, say —
+  goes before the lockfile commit as well. The position is fixed by the shape of the pass, so
+  nobody has to know, change by change, whether the lockfile would have moved.
 - **The intermediate commits carry no matching lockfile, and that is the shape rather than
   an oversight.** A reader checking one of them out finds a manifest ahead of its lockfile,
   which is the same state the project sits in whenever a range is widened.

@@ -264,6 +264,11 @@ before.
   point. `Retake` replaces what was poor, hurried or a stopgap with what should have been there,
   and claims no gain beyond that. Neither is `Fix`: that one is for behavior that was wrong,
   where `Retake` is for an implementation that worked and was not good enough.
+- **A test that follows an identifier change is `Update`, never `Rename`.** `Rename` is the
+  commit that changes the identifier where it is declared. The commit that carries the test along
+  changes what the test expects, which is an update of the test, so it opens `Update test for
+  SampleClass#extractValue()`. The two commits sit side by side on one branch and take different
+  verbs because each met something different, as the paragraph on matched pairs above says.
 - **A member's inputs and outputs are `Update`'s ground.** A parameter it now takes, a return
   value it now gives — the member itself is what changed. That a parameter is something which
   appeared does not make it `Add`: addition takes `Add` where what appeared stands as an item of
@@ -445,6 +450,19 @@ commit holds more than one decision, and it is split until each subject can.
 Bad:  Update the cache members of SessionStore
 Good: Update SessionStore#evictExpired() to skip pinned sessions
 Good: Update SessionStore.get:defaultTtl to read the environment
+```
+
+**The subject says where, and the branch name says why.** A commit message is read afterwards,
+quickly, by someone looking for where a definition was fixed, so the member it fixed is what the
+subject has to carry. What the whole piece of work is for — a rename, a retake — is what the
+branch is named for. A test commit names the member it covers in the same notation, and the
+prefix tells an instance member from a static one:
+
+```
+Update test for SampleClass#extractValue()
+Update test for SampleClass.createValue()
+Update test for SampleClass.get:ParserCtor
+Rename SampleClass#extractValue() to #pickValue()
 ```
 
 This is the same notation used throughout documentation and error messages; see the
