@@ -420,6 +420,22 @@ describe('when schema is array', () => {
 })
 ```
 
+## A base class test and a derived class test each verify only their own part
+
+**Where a base class does the work and a derived class only chooses what the work is done
+with, the two tests divide the claim between them.** The base class test verifies the shared
+delegation: that the function the derived class names was given the arguments, and that what it
+returned reaches the caller. The derived class test verifies only what the derived class
+adds — which function it names — and does not run the delegation again.
+
+| Test | What it verifies |
+| :-- | :-- |
+| Base class | The delegation: the named function is called with the arguments and its result is returned |
+| Derived class | The choice: the member names the function that belongs to this class |
+
+- **A derived class that repeats the base class's delegation test tests the base class twice**,
+  and the second copy is the one that falls out of step when the delegation changes.
+
 ## When the subject is not a class
 
 The rule above fixes level 1 to a class name and level 2 to a member name. Some
