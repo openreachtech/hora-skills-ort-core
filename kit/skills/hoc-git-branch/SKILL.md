@@ -397,7 +397,9 @@ What the finished line is looked at for:
 
 **Merge the cheap ones first and the substantial ones last.** Where one sub-branch changes a line
 of configuration and another changes the code behind it, the line of configuration goes in first
-and the code last.
+and the code last. That is the order for a trunk that only groups pieces of work standing apart
+from each other. A trunk named for one logical piece of work is ordered by what the work needs,
+and the first bullet below sets that out.
 
 **The reason is what a diff from the newest commit holds.** Commits run from the earliest at the
 bottom to the latest on top. The sub-branch merged last is the largest, so a diff taken from the
@@ -405,6 +407,23 @@ newest commit is that branch's alone, with none of the small sub-branches' noise
 checking it costs less. Merged earlier, the small ones sit beneath and stay out of that diff,
 which costs little: the diff of a small commit is often what its message already says.
 
+- **A trunk named for one logical piece of work merges its sub-branches in the order the work
+  needs, and size does not enter.** Where the sub-branches are the steps of one resolution — the
+  declared dependencies raised, then the locked versions moved within their ranges, then what an
+  audit still reports overridden, then the install-script settings decided against the tree that
+  results — each step presupposes what the one before settled. The order of necessity is the order
+  the work is read in, and ranking by diff cuts it.
+  - **The test is what the trunk is named for.** A trunk named for a purpose, such as resolving an
+    audit, is logical work and takes this order. A trunk that gathers pieces any of which could
+    be taken and the rest left follows the size order above.
+  - **The order is read off the issue's `# Checklist`.** Its `##` headings already stand in the
+    order of necessity, so the merge list reproduces them, and a merge list that disagrees with
+    them is the one to suspect.
+  - **Measured.** A trunk resolving an audit was ordered by diff, and the sub-branch settling the
+    install-script entries merged first, ahead of the dependencies those entries are decided
+    against. Ordered by necessity, the same sub-branches read as the work does.
+  - **The rule below still holds inside it.** A change that only becomes possible once the others
+    land goes last, and the entries decided against the settled tree are the plain case.
 - **Size is read off the diff, never off the commit count.** A diff from the newest commit is
   what gets checked, so the diff is what ranks the branches. A branch of four commits that raise
   versions and regenerate a lock file is cheaper to read than one of two commits that change a
