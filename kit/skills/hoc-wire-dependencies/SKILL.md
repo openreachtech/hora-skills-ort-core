@@ -219,6 +219,40 @@ export default class DeepLoader {
 }
 ```
 
+## A function a module holds as a member: a getter that returns a call-time wrapper
+
+- When the seam has to hand out **a function that a module holds as one of its members** —
+  `express.json` out of `express`, for example — the getter returns an arrow function that calls
+  the member on the module. It never returns the bare member.
+- **The member is not detached from its module.** A bare `return express.json` hands out a function
+  that no longer has `express` behind it, and whoever calls it as `this.Ctor.factory(...)` runs it
+  with `this` set to something else. Whether the member reads `this` today does not decide it: the
+  version a consumer installs may differ, and the failure then surfaces in their environment, far
+  from its cause.
+- **"Change the getter if that ever happens" is not an answer.** The module is installed by the
+  consumer, so a correction to the getter reaches them only after they update.
+- **The getter itself calls nothing.** The call sits inside the returned arrow and runs when the
+  seam's function is used, so this does not break the rule that a getter never calls a method.
+- A function that is not a member of anything — a package's default export, such as `cors` — has no
+  receiver to lose, and is returned as it is.
+
+```javascript
+// NG: the member is cut off from its module
+static get factory () {
+  return express.json
+}
+
+// OK: the call is made on the module, each time the function is used
+static get factory () {
+  return (...args) => express.json(...args)
+}
+
+// OK: a default export has no receiver
+static get factory () {
+  return cors
+}
+```
+
 ## Consolidating the creation of a frequently used class
 
 - The `XxxxFactory` pattern for consolidating creation of a frequently used dependency class (with
