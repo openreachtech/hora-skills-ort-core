@@ -1,6 +1,6 @@
 ---
 name: hoc-statements
-description: "Conventions for statements and control flow inside a function or method body, test files included. Use when writing or reviewing any body of code, a destructuring included. How a higher-order function is used belongs to the higher-order function convention; where an expression is wrapped across lines, to the coding style convention; a method's signature, to the methods convention."
+description: "Conventions for statements and control flow inside a function or method body, test files included. Use when writing or reviewing any body of code, a destructuring or a method read out of its receiver included. How a higher-order function is used belongs to the higher-order function convention; where an expression is wrapped across lines, to the coding style convention; a method's signature, to the methods convention."
 ---
 
 # Shared: Statements
@@ -118,12 +118,65 @@ const {
   with `this` unbound, and the first line of it that reaches `this` fails.
 - **A member taken out states what the instance holds inside.** The local is a second name for one
   value from then on, and the code around it now depends on the instance's insides.
+- **The named-argument object is opened at the entry of a method, and what lies beneath it is
+  not, unless it is certainly a value object.** `{ request, response, next }` is destructured
+  where the method begins: a method whose arguments could not be opened would be tedious to call.
+  The `request` beneath it is not opened. An object that carries methods and the state of one
+  thing is an instance, and "a payload being read" does not make it data. Where it cannot be said
+  for certain that the value is a value object, it is not taken apart.
 - **Where the body needs something behind the instance, the instance grows the member that
   answers.** `it.hasActiveAccount()` keeps what an account is to the item that holds it.
 - **`this` is the case met most often**, and why a property of `this` is read where it is used
   belongs to `/hoc-scope`.
-- **A class or a module is not an instance.** Taking a named export or a static member out of one
-  is not what this rule refuses.
+
+## A method is never detached from its receiver
+
+**A method is not detached from its receiver, whatever the receiver is.** An instance, a class and
+a module are receivers alike. A method read out of one runs without it — whether it was taken out
+by destructuring, or read as a bare value that is returned or passed on. Whether the method uses
+`this` today is not the question: the code behind it may start to tomorrow, and a bare reference
+is a bet that it never will.
+
+```javascript
+// NG: the method is cut off from its receiver
+static get factory () {
+  return express.json
+}
+
+// OK: the receiver stays attached, and the call happens where the method is used
+static get factory () {
+  return (...args) => express.json(...args)
+}
+```
+
+- **A property that holds data may be read out of a value object.** Only a method has a receiver
+  to lose.
+- **An ESM named import has no receiver.** `import { json } from '…'` binds a name and is not a
+  detachment.
+
+## A dependency an instance needs is built in a statement of its own
+
+**A statement holds one logic.** Where an instance is made from a dependency that itself has to be
+built, the dependency is built in a `const` of its own, and the instance is made in the next
+statement from that `const`. The call that builds the dependency is not written inside the argument
+of the `new`: one statement would then both build the dependency and build the instance.
+
+```javascript
+// NG: building the dependency and building the instance, in one statement
+return new this({
+  invoker: this.createInvoker({ handlerArguments }),
+})
+
+// OK: the dependency first, then the instance
+const invoker = this.createInvoker({ handlerArguments })
+
+return new this({
+  invoker,
+})
+```
+
+- **It is the call that builds a dependency that is taken out.** A value read from a property, or a
+  plain value, written in the argument is not what this refuses.
 
 ## Sequential processing is prohibited; write with higher-order functions
 
