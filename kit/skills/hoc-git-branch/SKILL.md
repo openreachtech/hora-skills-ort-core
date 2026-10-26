@@ -302,6 +302,10 @@ split the line into sub-branches.
 - **This holds only while the commits are unshared.** Folding and splitting both rewrite
   history. Once the work has been pushed, the line stands as it is, and a structure it did not
   get is a structure it does not get.
+- **A finished line is turned into the structure by going back to a diff.** The line is kept
+  under a tag before anything moves, so that the original is one `git switch` away. The branch
+  is then reset to its base without touching the working tree, which turns the commits back into
+  a diff, and the pieces are committed afresh, each sub-branch cut from the trunk.
 - **A change found after the structure is built is folded by kind, never by cause.** A
   documentation fix that surfaces once the code and documentation sub-branches exist goes onto the
   documentation sub-branch, as one more commit beneath its single merge. It does not go into the
@@ -369,6 +373,11 @@ What the finished line is looked at for:
     - Which half merges first follows the ordering rules below — the adoption cannot land before
       what it adopts.
 
+- **A helper written for one class travels with that class.** A class that exists only to serve
+  another — a workaround the class calls, a collaborator no other class uses — is not a sibling of
+  the classes around it. The two are gathered under a nested trunk named for the class they
+  serve, with the helper's sub-branch first and the served class's after it. Each keeps its own
+  sub-branch, so the trunk groups two pieces of work rather than folding them into one.
 - **A difference of kind puts a level between siblings.** Where the pieces are siblings by the
   test above, and one of them is an artefact written for the first time while the rest change
   what already stands, they do not sit side by side. The like ones gather under a nested trunk
@@ -388,7 +397,9 @@ What the finished line is looked at for:
 
 **Merge the cheap ones first and the substantial ones last.** Where one sub-branch changes a line
 of configuration and another changes the code behind it, the line of configuration goes in first
-and the code last.
+and the code last. That is the order for a trunk that only groups pieces of work standing apart
+from each other. A trunk named for one logical piece of work is ordered by what the work needs,
+and the first bullet below sets that out.
 
 **The reason is what a diff from the newest commit holds.** Commits run from the earliest at the
 bottom to the latest on top. The sub-branch merged last is the largest, so a diff taken from the
@@ -396,6 +407,23 @@ newest commit is that branch's alone, with none of the small sub-branches' noise
 checking it costs less. Merged earlier, the small ones sit beneath and stay out of that diff,
 which costs little: the diff of a small commit is often what its message already says.
 
+- **A trunk named for one logical piece of work merges its sub-branches in the order the work
+  needs, and size does not enter.** Where the sub-branches are the steps of one resolution — the
+  declared dependencies raised, then the locked versions moved within their ranges, then what an
+  audit still reports overridden, then the install-script settings decided against the tree that
+  results — each step presupposes what the one before settled. The order of necessity is the order
+  the work is read in, and ranking by diff cuts it.
+  - **The test is what the trunk is named for.** A trunk named for a purpose, such as resolving an
+    audit, is logical work and takes this order. A trunk that gathers pieces any of which could
+    be taken and the rest left follows the size order above.
+  - **The order is read off the issue's `# Checklist`.** Its `##` headings already stand in the
+    order of necessity, so the merge list reproduces them, and a merge list that disagrees with
+    them is the one to suspect.
+  - **Measured.** A trunk resolving an audit was ordered by diff, and the sub-branch settling the
+    install-script entries merged first, ahead of the dependencies those entries are decided
+    against. Ordered by necessity, the same sub-branches read as the work does.
+  - **The rule below still holds inside it.** A change that only becomes possible once the others
+    land goes last, and the entries decided against the settled tree are the plain case.
 - **Size is read off the diff, never off the commit count.** A diff from the newest commit is
   what gets checked, so the diff is what ranks the branches. A branch of four commits that raise
   versions and regenerate a lock file is cheaper to read than one of two commits that change a
@@ -419,17 +447,43 @@ which costs little: the diff of a small commit is often what its message already
     update exists only because the code moved. It is not placed in the sub-branch that moved it,
     nor in that sub-branch's commit: it gathers into a documentation sub-branch of its own, merged
     after the code sub-branches, however many of them moved what it states.
-- **Where the sub-branches gather a class family, the `Base~` class goes first.** A feature
-  trunk bundling the implementation of a family merges the branch carrying the `Base~` class
-  before any branch carrying a class derived from it, whether the merges are made as a sequence
-  of local merges or as an octopus.
+- **The settings a change needs in order to be accepted go in before the change, each as a
+  sub-branch of its own under a trunk for the environment.** A lint rule turned off for a file,
+  an entry in the spelling dictionary, an editor setting: whatever the tooling has to allow for
+  the new code to pass. Settings of different kinds are different pieces of work, not steps of one
+  — a linter's and a dictionary's are siblings — so each takes a sub-branch however small, and the
+  group is gathered under a nested trunk named for the environment, merged ahead of the code it
+  serves.
+  - **Single-commit sub-branches are kept here.** They are siblings that
+    differ in kind from the code and from each other, and bundled into one octopus merge under the
+    environment trunk they cost the reader a single line.
+- **A dependency install never shares a sub-branch with an environment setting.** An install
+  changes what the project depends on and regenerates the lock file; a setting changes how the
+  tooling reads the code. They are different pieces of work, and each answers to a different
+  rollback. The install is a sub-branch of its own, never one of the settings under the
+  environment trunk.
+- **A piece that directly serves the implementation stands immediately before it, whatever its
+  size.** The order by cost ranks pieces that have no bearing on one another. Where one piece
+  exists for the implementation — the packages its classes import — it is placed next to the
+  implementation, and nothing unrelated is put between them: a test double that only the suite
+  uses stands further back than the packages the classes depend on. A reader walking the merges
+  then meets the implementation straight after what it needs, rather than reading past a merge
+  that has nothing to do with either.
+- **Where the sub-branches gather a class family, the `Base~` class goes first, and goes alone.**
+  A feature trunk bundling the implementation of a family merges the branch carrying the `Base~`
+  class on its own, before any branch carrying a class derived from it.
   - **In a sequence of local merges the reason is the suite.** Merge a derived class first and
     the suite fails at that merge commit, because the class it extends is not on the trunk yet.
-  - **In an octopus merge the reason is the reading.** The branches arrive in one commit, so
-    nothing fails at the merge. Read the tree from the bottom up, though, and the `Base~` class
-    is the first thing it should show.
+  - **An octopus merge never carries it.** An octopus bundles branches of equal standing that
+    stand in parallel, and a `Base~` class does not stand equal to the classes derived from it:
+    they are built on it. It is merged first, by itself, and the derived classes that remain,
+    independent of one another, may then go as an octopus on the tip that merge made.
   - **It stands ahead of the orderings above.** A `Base~` branch larger than the rest still goes
-    first, as the first merge of a sequence and as the first argument of an octopus merge.
+    first.
+- **A family's barrel belongs inside the family's trunk, as the last sub-branch.** The barrel
+  registers the classes of the family, so it depends on every one of them and has no meaning
+  without them. Merged as a sibling of the family at the top level, it stands apart from what it
+  registers; inside the family's trunk it comes after the last class and closes the trunk.
 - **An octopus merge bundles branches of equal standing, and a module that only declares types
   does not stand equal to what it declares.** Where one trunk gathers both the implementation of
   a class family and such a module, the implementation branches are what the bundle holds, and
@@ -444,6 +498,11 @@ which costs little: the diff of a small commit is often what its message already
     for can both open with verbs for what did not exist before, so the difference of kind that
     puts a level between siblings does not reach this. What parts them is that one is implemented
     and the other describes it.
+  - **Type declarations are not written into the implementation sub-branches at all.** A change
+    to the declarations — a global type, the type-level exports of the classes — is not folded
+    into the sub-branch of the class it describes. All of the work's type changes gather into one
+    independent sub-branch, merged last: after the implementation, and after the run-time export
+    of the same classes, which the type-level export mirrors.
 - **The order reverses where the sub-branches reach the trunk through pull requests.** Then the
   substantial one goes first and the cheap ones follow it. The reason above does not reach that
   case: a pull request is read on its own rather than as a diff from the newest commit, so there
@@ -501,6 +560,11 @@ is deliberately descriptive. Nothing reads it after the branch is gone.
   abstraction** — `implement/xxx`, `setup/xxx`, `feature/xxx`, `retake/xxx`, `update/xxx`. A
   branch that is about to have six branches cut from it cannot be named for one narrow verb
   without lying about five of them.
+- **A branch whose work has outgrown its name is renamed before the structure is shaped.** A
+  branch opened for one tidy-up that has grown into the implementation of a whole mechanism still
+  says `tidyup/xxxx`, and the name is now a claim about the work that is false. `git branch -m`
+  brings it to the altitude of the work, the one its opening marker is written at, and the label
+  and the marker then say the same thing.
 - **A sub-branch cut from a general branch acting as a trunk is named the same way**, and the
   nesting adds no constraint of its own: `<verb | category>/xxxx`, free. The narrow verbs
   belong here, where each branch really does carry one thing.
@@ -799,6 +863,10 @@ Merge the core/ rename in the repository documents
   git merge --no-ff -m 'Merge …' <merged first> <merged next> <merged last>
   ```
 
+  - **An octopus is for branches of equal standing that stand in parallel**: independent of one
+    another, and of one kind. Where several such branches would otherwise be merged one by one,
+    the octopus is the shape to take, and it shortens the graph. Branches with a dependency between them — one built on another, one that others stand
+    on — merge one by one, in the order of the dependency.
   - **Every branch sits on the trunk's current tip before it starts.** No tip moves between
     merges, so no rebase happens in the middle — but each branch is checked against the tip
     first, with `--is-ancestor` and with a count above zero, exactly as in the cycle.
