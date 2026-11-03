@@ -106,6 +106,16 @@ concluding that a change is not in the history.
   the path. A file name that doubles as the description of the thing itself — `package.json`,
   `package-lock.json`, `eslint.config.js` — is not counted as writing a path, and is written as it
   is. Any other file name or path is written only where the commit renames or moves that file.
+- **A subject that changes something that stands opens with the verb and the thing it changes, and
+  a phrase after them says what was done.** The thing is whatever the commit acts on — a skill, a
+  class, a member, a document, a test — written as its own notation says, and the phrase is an
+  infinitive or a gerund:
+  `Update SessionStore#evictExpired() to skip pinned sessions`,
+  `Update test for SessionStore#evictExpired() to cover pinned sessions`,
+  `Update /hoc-git-commit to name the work, not the paths, in a subject`,
+  `Fix SessionStore#evict() by skipping pinned sessions`. A kind of target takes no rule of its own,
+  and commits on one target open alike, so a reader of the log sees at a glance that a range is
+  work on that target.
 - Do not record **how the change came to be asked for**: no "as requested", no "per review
   comment", no tool attribution. Where the content itself came from is a different matter — that
   belongs in the subject wherever it is part of what the work is.
