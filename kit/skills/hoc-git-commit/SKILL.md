@@ -162,8 +162,8 @@ where one file already held the rule and the other did not, `Update` and `Add` a
 answer.
 
 ```
-Update what decides whether a section takes H2s in /hoc-alpha   a rule was there, and was replaced
-Add    what decides whether a section takes H2s to /hoc-beta    nothing was there
+Update /hoc-alpha to replace the rule on H2s in a section    a rule was there, and was replaced
+Add    the rule on H2s in a section to /hoc-beta             nothing was there
 ```
 
 A matched pair says the two files were in the same state when they were not, and that is the one
@@ -517,8 +517,8 @@ A skill named in a subject or body carries the **leading slash it is invoked wit
 
 ```
 Author /hoc-git-branch skill
-Fulfill the article rule for a branch name in /hoc-git-branch
-Add the notation for a skill name in /hoc-git-commit
+Fulfill /hoc-git-branch to state the article rule for a branch name
+Update /hoc-git-commit to state the notation for a skill name
 ```
 
 The slash is what marks the word as a skill. Without it the same string reads as a directory,
