@@ -257,12 +257,12 @@ before.
 
     ```
     Move index.js to lib/index.js
-    Update the import in tests/__tests__/index.js to lib/index.js
-    Update main: in package.json to lib/index.js
+    Update test for index to follow its move
+    Update main: in package.json to follow its move
     ```
 
-    Folded into the move, those edits sit under a subject that names none of the files they
-    touch, and a reviewer can no longer check each reference on its own. Measured: a move
+    Folded into the move, those edits sit under a subject that says nothing of what they
+    change, and a reviewer can no longer check each reference on its own. Measured: a move
     carrying its test's import and the manifest's `main:` in one commit was asked back as
     mixed; split per file, the tree at the tip came out identical.
   - **The commits in between leave a reference pointing at the old place**, until the last of
