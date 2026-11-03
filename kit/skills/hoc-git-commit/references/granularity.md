@@ -204,12 +204,12 @@ renamed ones is invisible.
     ```
     Kick out the levers reference check from the CI workflow
     Kick out check:levers from package.json
-    Purge scripts/check-levers.mjs
+    Purge the levers reference check script
     ```
 
     The subjects come apart as cleanly as the commits do, because `SKILL.md` gives a removal
     two verbs instead of one — `Kick out <what> from <where>` for the file that stays without
-    it, and `Purge <path>` for the file that goes. That pair is the tool for splitting one
+    it, and `Purge <what>` for the file that goes. That pair is the tool for splitting one
     removal across several commits; a single `Remove` would hide the seam it makes visible.
 - A rename and **every call site it touches**. Half a rename is a broken tree.
 - **One document's translations, where the edit is the same edit.** A `README.md` and its
