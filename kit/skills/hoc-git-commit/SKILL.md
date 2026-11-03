@@ -220,8 +220,8 @@ before.
   announces; a commit that changed the build's configuration changed a config, and takes the
   verb for that.
 - **`Purge` and `Kick out` split on what survives.** `Purge` is for a file or a folder that is
-  gone whole — `Purge tests/legacy/OldValidator.js`, `Purge tests/legacy/`. `Kick out` takes the
-  shape `Kick out <what> from <where>`, because the point is that `<where>` is still there
+  gone whole — `Purge OldValidator`, `Purge test for OldValidator`, `Purge /npm-init`. `Kick out`
+  takes the shape `Kick out <what> from <where>`, because the point is that `<where>` is still there
   without `<what>` — a member of a class, a section of a document, an entry of a manifest:
   `Kick out main: from package.json`. The pair mirrors `Declare` and `Define`.
 - **`Tidy up` is the cleanup that is not a removal.** It takes the shape `Tidy up <where>` —
