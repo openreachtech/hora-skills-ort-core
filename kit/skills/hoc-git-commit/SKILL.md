@@ -213,7 +213,7 @@ before.
   it applies `Add` is the vaguer choice. Editing one that already exists is not `Author` — that
   is `Update`, `Fulfill` or `Tidy up`, whichever names what was done.
 - **`Build` is the `Declare` of markup.** A component, a page, the HTML skeleton of one:
-  `Build TalkroomMessage component`, `Build HTML skeleton for pages/settings/security.vue`. It
+  `Build TalkroomMessage component`, `Build HTML skeleton for the security settings page`. It
   is the fourth of the family — `Declare` for a class, `Define` for a member, `Author` for an
   AI element, `Build` for markup — and each is a specific form of `Add`. **It never means
   running a build.** `npm run build` produces output, and output is not what a subject
