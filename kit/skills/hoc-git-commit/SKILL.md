@@ -97,6 +97,15 @@ concluding that a change is not in the history.
   nothing about what the tree now does differently. (Two commits are deliberate exceptions: the
   branch-opening marker below, which carries no changes at all, and the throwaway save point in
   [granularity.md](./references/granularity.md), which is deleted before anyone reads it.)
+- **A subject names the work, never the paths it touched.** A path is where the change landed,
+  and a list of paths is the diff's own table of contents, which the reader already holds.
+  `Add the API reference of AlphaClass` says what was done, and `Add docs/en/api/AlphaClass.md`
+  says only where it ended up; a subject written that way grows one path for every file the work
+  reaches. What an `Add` brings and what a `Purge` takes away are named by what they are —
+  `Add README`, `Purge OldValidator`, `Purge test for OldValidator`, `Purge /npm-init` — never by
+  the path. A file name that doubles as the description of the thing itself — `package.json`,
+  `package-lock.json`, `eslint.config.js` — is not counted as writing a path, and is written as it
+  is. Any other file name or path is written only where the commit renames or moves that file.
 - Do not record **how the change came to be asked for**: no "as requested", no "per review
   comment", no tool attribution. Where the content itself came from is a different matter — that
   belongs in the subject wherever it is part of what the work is.
