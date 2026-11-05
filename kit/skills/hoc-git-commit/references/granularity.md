@@ -141,9 +141,9 @@ second fact goes missing.
   time somebody wants to know. **A test nobody can watch fail is a test nobody has grounds to
   trust**, and that — not tidiness — is what the split buys.
 - **The count is per file, not per folder.** Five route classes arriving in a package are five
-  `Declare` commits and five `Add tests for` commits, not one of each covering the set. The
+  `Declare` commits and five `Add test for` commits, not one of each covering the set. The
   collective subject that lets such a commit fit one line — `Declare the express routes`,
-  `Add tests for the express routes` — is the umbrella noun this file already turns away, and
+  `Add test for the express routes` — is the umbrella noun this file already turns away, and
   the plural is precisely what hides the count from the reader.
 - **Size is not what the split is for.** Not a class of eight lines, not a subclass that
   overrides nothing, not a pair of files small enough that separating them feels like ceremony.
@@ -151,7 +151,7 @@ second fact goes missing.
   extraction exactly as a large one does.
 - **Carrying a module in from elsewhere bundles nothing.** Migration is bracketed by the branch,
   whose opening marker names the origin once; the commits beneath it are the ordinary `Declare`
-  and `Add tests for`, one apiece. That the files were copied in a single operation describes how
+  and `Add test for`, one apiece. That the files were copied in a single operation describes how
   the work was done, which is the thing a subject never records. See the git branch convention.
 
 ## What to keep together
