@@ -290,6 +290,18 @@ before.
   The renames of the class and of its members follow, one definition at a time. The order keeps
   the changes to imports apart from the changes to definition names. Renaming a member leaves the
   file name alone, so it has no file-name commit.
+  - **What pointed at the old file name from another file is not part of the file-name commit.**
+    Each such file takes a commit of its own, after the file-name commits and one file apiece, and
+    it changes the path and nothing else:
+
+    ```
+    Update test for SampleAuditor to follow the filename change of RenamedClass
+    Update SampleAuditor to follow the filename change of RenamedClass
+    ```
+
+    The name of the definition inside the same file is a different change and takes a commit
+    later, with the rename of the definition. A file that imports the class therefore takes two
+    commits, one for the path and one for the name.
 - **`Update` and `Retake` split on what was there before.** `Update` carries a sound
   implementation forward and leaves it giving something it did not give before — the gain is the
   point. `Retake` replaces what was poor, hurried or a stopgap with what should have been there,
