@@ -99,7 +99,7 @@
 | `hoc-npm-install` | `npm install` でパッケージを追加するときの規約。コマンドの前に何を決めておくか、停止は迂回せず読むこと、公開日数の検疫をコマンド全体では決して外さないこと、同一セッションの安全確認を経たときだけ開く 1 パッケージの例外。停止が何を求めるかは `hoc-npm-vulnerability` と `hoc-npm-install-scripts`、パッケージを採用してよいかは `hoc-npm-adopt-tool`、どのマニフェストの欄に書くかは `hoc-npm-categorize-deps` の担当です。 |
 | `hoc-npm-install-scripts` | install スクリプトの実行を許可制で決める仕組み。deny を既定とすること、設定を先に置いて install を後にする順序、スクリプトの有無を実行せずに報告する dry run。 |
 | `hoc-npm-npmrc` | npm の設定ファイル `.npmrc` の書き方。各設定は `=` の両側に空白を置いた `key = value` で書き、`npm config set` は使わず直接編集する。各設定の意味は、それを有効にする規約の担当です。 |
-| `hoc-npm-vulnerability` | 脆弱な版を入れないための規約。audit が見るものと見ないもの、公開日数による検疫とそれが効かないインストール、推移的依存だけを引き上げて報告を解決する方法、修正版のない報告の判断。 |
+| `hoc-npm-vulnerability` | `npm audit` が報告したときの作業順。宣言済みの版を範囲内で上げる、推移的依存を `overrides` で上げる、検疫期間内の修正版、修正版のない報告。後者は、パッケージの経路と重大度から、登録とコードの組み直しのどちらにするかをユーザーが決め、登録は親のない issue で後日見直す。audit だけでは足りない理由と、audit は install して測ること。止められた版を例外として入れることは `hoc-npm-install` の担当です。 |
 | `hoc-npm-publish` | リリースにおける version bump のコミット位置と、それが最後でなくなったときの扱い。公開前に tarball を読むことは `hoc-npm-publish-audit`、リリースが取り込む依存バージョンを動かすことは `hoc-npm-raise-deps` の担当です。 |
 | `hoc-npm-publish-audit` | パッケージが出ていく前の最後の読み取り。allowlist ではなく `npm pack` が出力する inventory、空のプロジェクトに tarball をインストールして使うこと、CI が走らせるインストール、同時に出すパッケージ同士の inventory の差分、読み手と同じ手順でたどる README、linter が見ない規約、そして何を読み何を読まなかったかを明示し、直すべきものの一覧と、記号で示す判定で締める報告。リリース自身のコミットの順序は `hoc-npm-publish` の担当です。 |
 | `hoc-npm-raise-deps` | 宣言済みの依存バージョンを、各レンジが既に許す最新版まで引き上げる規約。レンジの外にある major は対象外とし、パッケージごとの別判断に回します。lockfile ではなく宣言レンジを突合すること、版の移動を暗黙の update ではなくマニフェストへ書き下すこと、新しい版が別の registry へ移ったパッケージを入れ直すこと、そしてパスを閉じる一度の install と一つの lockfile コミット。 |
