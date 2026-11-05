@@ -162,6 +162,13 @@ accept it in one place and reject it in another, so splitting hands them one jud
 times over and buys nothing. The cases below are instances of this rather than exemptions from
 it — a rename followed into every call site, a term respelt wherever it appears.
 
+**In code, the one modification that bundles files is a change to one definition name.** The same
+rename of one class, one method or one constant, followed into every file that refers to it, is one
+decision. Nothing else in a sweep joins it: a different definition renamed in the same work, the
+file's own name, and the imports that follow a file name each take a commit of their own, one file
+apiece. **Bundling is permitted, not required.** Where the hunks are many, the files take a commit
+apiece under a sub-branch or a trunk, because a reviewer checks them one file at a time.
+
 **A relocation is not one of them.** The paths other files hold to a moved file follow it one
 file per commit, after the move, and the move commit carries the moved file alone. `SKILL.md`
 states it under the `Move` row.
