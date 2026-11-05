@@ -278,6 +278,18 @@ before.
   - **The commits in between leave a reference pointing at the old place**, until the last of
     them lands. The sub-branch carrying them merges as one, so the trunk never holds that
     state.
+- **A class lives in a file of its own name, so renaming a class always renames its file, and the
+  file name is changed in commits that carry nothing else.** They come first, the test's file and
+  then the implementation's, under the `Rename` verb:
+
+  ```
+  Rename filename of test for SampleClass.js to RenamedClass.js
+  Rename filename of SampleClass.js to RenamedClass.js
+  ```
+
+  The renames of the class and of its members follow, one definition at a time. The order keeps
+  the changes to imports apart from the changes to definition names. Renaming a member leaves the
+  file name alone, so it has no file-name commit.
 - **`Update` and `Retake` split on what was there before.** `Update` carries a sound
   implementation forward and leaves it giving something it did not give before — the gain is the
   point. `Retake` replaces what was poor, hurried or a stopgap with what should have been there,
