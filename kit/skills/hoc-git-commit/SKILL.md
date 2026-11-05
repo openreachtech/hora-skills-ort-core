@@ -214,7 +214,7 @@ before.
   Declare SkillsInstaller to replace the installed skills
   Define SkillsInstaller#replaceInstalledSkills() to swap the tree in one pass
   Define SKILL_DOMAIN naming the domains a repository can select
-  Add tests for SkillsInstaller
+  Add test for SkillsInstaller
   ```
 
 - **`Author` is the `Declare` of an AI element.** A skill, an agent, a command — whatever is
@@ -283,6 +283,12 @@ before.
   point. `Retake` replaces what was poor, hurried or a stopgap with what should have been there,
   and claims no gain beyond that. Neither is `Fix`: that one is for behavior that was wrong,
   where `Retake` is for an implementation that worked and was not good enough.
+- **A test's subject opens `<Verb> test for <target>`, without exception.** `test` is singular and
+  the target is one definition or one file: `Add test for SkillsInstaller`, `Update test for
+  SkillsInstaller#replaceInstalledSkills()`, `Purge test for OldValidator`. `Add tests for` and
+  `Update tests for` are never written, and neither is a collective target such as `the express
+  routes`: each says that several tests were committed together, which the one-file-per-commit
+  rule refuses.
 - **A test that follows an identifier change is `Update`, never `Rename`.** `Rename` is the
   commit that changes the identifier where it is declared. The commit that carries the test along
   changes what the test expects, which is an update of the test, so it opens `Update test for
