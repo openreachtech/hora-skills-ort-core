@@ -572,9 +572,11 @@ is deliberately descriptive. Nothing reads it after the branch is gone.
   same work, and the shorter one is what a reader scanning `git branch` gets through faster.
   What comes after the slash is a label, not a sentence.
 - **The label names the whole at one altitude, and never lists what the branch carries.** A
-  branch holding two changes is still one branch, and `and` in the label hands the reader the
-  division before the thing. Where several changes land on one thing, the label is that thing and
-  the changes are what the commits are for.
+  branch holding two changes is still one branch, and a connector in the label hands the reader
+  the division before the thing. Where several changes land on one thing, the label is that thing
+  and the changes are what the commits are for. That a text never enumerates, whatever the
+  connector, belongs to `/hoc-notation`; this is the one place the rule bites for the reader
+  scanning `git branch`.
 
   ```
   Bad   add/retry-and-timeout-options-to-AlphaClient
@@ -582,7 +584,7 @@ is deliberately descriptive. Nothing reads it after the branch is gone.
   ```
 
   The altitude to find is the one the changes sit beneath, and it is usually already named —
-  the class, the module, the document they all touch. A label that reaches for `and` is one
+  the class, the module, the document they all touch. A label that reaches for a connector is one
   written before that name was looked for.
 
 ## The branch-opening marker commit
