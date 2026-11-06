@@ -24,8 +24,8 @@ A commit is scoped right when **one plain subject line states everything it does
 question runs in both directions.
 
 - **It lets a mixed-looking commit through.** Items resting on different justifications may
-  travel together, so long as one line takes them all without strain. What a commit holds is
-  one decision, and a decision often lands as a list.
+  travel together, so long as one name takes them all without strain. What a commit holds is
+  one decision, and the subject names that decision rather than listing the parts it landed as.
 - **It turns away a commit that will not fit.** A subject that cannot be written in one line is
   reporting that the changes beneath it never cohered into a decision — the line is long
   because the commit is several.
@@ -44,9 +44,11 @@ re-anchored to the repository root, and the only risky change on its branch. Not
 line points at it. Said as well, the subject runs past one line, which is the answer: the
 behavior change is its own commit.
 
-### The "and" test
+### A subject names the decision, never a list
 
-If an accurate subject line needs the word "and", the commit is two commits.
+A subject that lists — with `and`, `or`, a comma or any other connector — is an enumeration, and
+the refusal belongs to `/hoc-notation`. This section reads it for a commit subject: what the list
+holds is either one decision that one name states, or two commits.
 
 ```
 Bad:  Add LockEmployeeSignInInputValidator and tidy up an unrelated JSDoc typo
@@ -54,29 +56,40 @@ Good: Add LockEmployeeSignInInputValidator
       Tidy up the JSDoc of EmployeeSignInMutationResolver#resolve()
 ```
 
-**Unless the two sides it joins belong to one decision.** The word is a symptom often enough to
-be worth noticing, and it settles nothing on its own.
+**One covering name is the only way a list survives.** Where the parts belong to one decision, the
+subject names the decision at the altitude the parts sit beneath. The connector is a symptom, and
+it settles nothing on its own.
 
 ```
-Good: Add coverage, tgz and eslintcache to Regenerable output
-Good: Rename environment to Regenerable output and absorb Build output
+Bad:  Add coverage, tgz and eslintcache to Regenerable output
+Good: Add the regenerable files to Regenerable output
+Bad:  Rename environment to Regenerable output and absorb Build output
+Good: Consolidate the output sections into Regenerable output
 ```
 
-The first is one decision — everything confirmed regenerable goes in — written as a list. The
-second is one structural change, where the rename and the absorption cannot be taken apart:
-half of it leaves a section named for what it no longer holds.
+The first is one decision — everything confirmed regenerable goes in — and `the regenerable files`
+states it without listing them. The second is one structural change that cannot be taken apart:
+half of it leaves a section named for what it no longer holds, and `Consolidate` states the whole.
 
-The same applies to a subject that reaches for a vague umbrella noun to cover several
-changes — `Update auth handling`, `Various fixes`, `Cleanup`. The umbrella is the "and" in
-disguise, and it is also how a subject fits one line without saying everything.
+**A covering name that cannot be found is the finding.** Where no one name states everything the
+commit did, the parts are different hunks mixed together, and the commit is split until each
+subject can be written. Reaching for a connector to carry two parts is how two decisions pass as
+one.
 
-So `and` is a prompt to look, never the verdict. The verdict comes from the test it sits under.
+The vague umbrella noun is the other way to fail — `Update auth handling`, `Various fixes`,
+`Cleanup`. It covers several changes without stating what any of them was, and it is also how a
+subject fits one line without saying everything. A covering name states a decision. An umbrella
+noun states a place.
 
-**The verbs are the mechanical tell.** Where the items an `and` joins would take different verbs
-because one met something that was already there and the other met something that was not — an
-entry replaced beside an entry that never existed — the list is not one decision. The verb is the
-only record of what the target held before, and one commit carries one such record: written as
-`Update` it says both were there, written as `Add` it says neither was.
+So the connector is a prompt to look, never the verdict. The verdict is whether one name states
+everything the commit did.
+
+**The verbs are the mechanical tell.** Where the items a covering name would gather take different
+verbs because one met something that was already there and the other met something that was not —
+an entry replaced beside an entry that never existed — no covering name exists, and the list is
+not one decision. The verb is the only record of what the target held before, and one commit
+carries one such record: written as `Update` it says both were there, written as `Add` it says
+neither was.
 
 ```
 Bad:  Update the catalog for /hoc-alpha and /hoc-beta
@@ -85,12 +98,11 @@ Good: Update the summary of /hoc-alpha in the catalog
 ```
 
 This is the tell that catches what the one-line test lets through, because two entries of one
-table read exactly like the list one decision is allowed to land as.
+table read exactly like parts that one covering name is allowed to cover.
 
-**Two verbs are not by themselves the signal.** `Rename environment to Regenerable output and
-absorb Build output` takes two and is one decision, and both of them met something that was
-already there. What splits a list is the prior state differing across it, never the count of
-verbs.
+**Two verbs are not by themselves the signal.** The structural change above would take two verbs,
+and each of them met something that was already there. What splits a list is the prior state
+differing across it, never the count of verbs.
 
 ## Scale
 
@@ -225,9 +237,9 @@ renamed ones is invisible.
     translation, and nothing wider — a rule stated once in two origin documents is two decisions
     that happen to read alike, not one decision written twice.
     - **The subject is the mechanical tell.** The form above names *the* document, extension
-      dropped. A subject that cannot name one, and reaches for `and` to carry two, is describing
-      a commit this rule never licensed — and the `and` test above will not catch it, because a
-      list of documents reads exactly like the list one decision is allowed to land as.
+      dropped. A subject that cannot name one, and reaches for a connector to carry two, is
+      describing a commit this rule never licensed — and the covering-name test above catches it,
+      because no one name covers two documents.
     - **An edit no document owns is the exception, and it gathers.** The same typo corrected in
       four documents, a term respelt everywhere it appears, a moved link followed in each place
       that pointed at it — the change belongs to none of them in particular, so a per-document
