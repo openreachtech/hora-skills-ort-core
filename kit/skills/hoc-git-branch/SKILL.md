@@ -546,7 +546,9 @@ tidyup/environment-files
 ```
 
 **The name is written for whoever scans `git branch` while the work is still in flight**, so it
-is deliberately descriptive. Nothing reads it after the branch is gone.
+is deliberately descriptive. It outlasts the branch, too: the merge commit a host writes records
+it, as `Merge pull request #<number> from <owner>/<branch>`, and that line is read in `git log`
+long after the branch is deleted.
 
 - **The verb is the word the branch's own commits would use, lowercased.** `Declare` names a
   class and `Define` names a member, a function or a constant, which is why
@@ -556,6 +558,22 @@ is deliberately descriptive. Nothing reads it after the branch is gone.
     `tidyup/xxxx`.
 - **A member is written `<member>-of-<class>`.** The slash is already spent on the verb, so what
   is left spells the relation out instead of punctuating it.
+- **Work that recurs carries the value that tells one occurrence from the next.** Raising a
+  package's own version is done once per release, so a label naming only the thing touched
+  returns, unchanged, for every release, and the merge commits it leaves in the history read
+  alike. The version, or the package and its version, goes into the label, as `install/date-fns-4.1.0`
+  already does.
+
+  ```
+  Bad   update/package-version
+  Good  update/package-version-0.2.0
+  ```
+
+  - **The test is whether the same label could be cut again for other work.** Where it could, the
+    label is missing the value that would stop it.
+  - **A value that tells occurrences apart is not a connector.** It names which occurrence this
+    is, where a connector joins two things the branch carries, which the rule on altitude below
+    turns away.
 - **Work of a scale that will make the branch a trunk takes a category at a higher level of
   abstraction** — `implement/xxx`, `setup/xxx`, `feature/xxx`, `retake/xxx`, `update/xxx`. A
   branch that is about to have six branches cut from it cannot be named for one narrow verb
