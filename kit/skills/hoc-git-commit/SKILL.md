@@ -474,7 +474,7 @@ A configuration file's own field, named in a subject or body, carries **its trai
 
 ```
 Fulfill name: in package.json
-Fulfill repository:, bugs: and homepage: in package.json
+Fulfill repository: in package.json
 Kick out main: from package.json
 ```
 
@@ -561,8 +561,9 @@ amends what is written here.
   as surely as in the one it was copied to, and citing it names a second offence rather than
   excusing the first.
 - **A precedent may be correct and still not transfer.** `Start`, `Release` and `Merge` carry no
-  change of their own, so nothing in their subjects answers to granularity — an `and` in one of
-  them joins nothing that could have been two commits. Citing such a subject for one that does
+  change of their own, so nothing in their subjects answers to granularity — a list in one of
+  them joins nothing that could have been two commits, though it is still an enumeration that
+  `/hoc-notation` refuses. Citing such a subject for one that does
   carry changes borrows a licence resting on that exemption, and the commit being written does
   not hold it. This is the harder of the two to catch, because nothing in the commit cited is
   wrong.
