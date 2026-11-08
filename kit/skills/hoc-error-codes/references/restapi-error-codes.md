@@ -46,7 +46,7 @@ errors a `POST` can return are `203.P000.001`, `203.P000.002`, and on.
 | `192.X000.004` | the request was aborted before the response arrived |
 
 - The bands divide by when the client noticed, and they are the same three a GraphQL client
-  fills: `190` unknown, `191` before the request left, `192` after the response came back.
+  fills: `190` unknown, `191` before the request left, `192` after the request left.
 - `X000` throughout: the client raised these on its own behalf, so there is no method to name.
 
 ## `193` — the status errors

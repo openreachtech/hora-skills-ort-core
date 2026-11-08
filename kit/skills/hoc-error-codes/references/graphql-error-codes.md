@@ -58,5 +58,5 @@ under one. For a resolver registered as `M001`:
 | `192.X000.004` | the request was aborted before the response arrived |
 
 - The bands divide by when the client noticed: `190` is unknown, `191` is before the request left,
-  and `192` is after the response came back.
+  and `192` is after the request left.
 - `X000` throughout: no resolver raised these, so there is none to name.
