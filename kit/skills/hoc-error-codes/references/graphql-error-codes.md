@@ -54,6 +54,8 @@ under one. For a resolver registered as `M001`:
 | `191.X000.002` | the headers did not pass theirs |
 | `192.X000.001` | the request never completed — a network failure |
 | `192.X000.002` | the response arrived and did not parse |
+| `192.X000.003` | the request timed out before the response arrived |
+| `192.X000.004` | the request was aborted before the response arrived |
 
 - The bands divide by when the client noticed: `190` is unknown, `191` is before the request left,
   and `192` is after the response came back.

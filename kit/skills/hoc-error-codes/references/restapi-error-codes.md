@@ -42,6 +42,8 @@ errors a `POST` can return are `203.P000.001`, `203.P000.002`, and on.
 | `191.X000.001` | the arguments did not pass their check before the request left |
 | `192.X000.001` | the request never completed — a network failure |
 | `192.X000.002` | the response arrived and did not parse |
+| `192.X000.003` | the request timed out before the response arrived |
+| `192.X000.004` | the request was aborted before the response arrived |
 
 - The bands divide by when the client noticed, and they are the same three a GraphQL client
   fills: `190` unknown, `191` before the request left, `192` after the response came back.
