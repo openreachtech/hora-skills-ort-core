@@ -696,6 +696,12 @@ Merge the core/ rename in the repository documents
 - **It names the work, never the branch.** `Merge rename/FormElementClerk` says only what
   `git log --graph` already shows, and the branch is deleted moments later. What it carried is
   the part that has to survive it.
+- **It is one short sentence saying what the sub-branch did, and it enumerates nothing.** A
+  sub-branch under a trunk is the thing that sentence says, so a subject needing `and`, or any
+  connector that lists what the branch carried, describes two sub-branches written as one, and
+  the branch is split until each has a sentence of its own. The commits that one sentence covers
+  stand in one sub-branch and merge once. That a text never enumerates, whatever the connector,
+  belongs to `/hoc-notation`; this is where the rule bites for a merge subject.
 - **It stands in for the message a host would have written.** A merge that goes through a pull
   request is described for free — `Merge pull request #53 from …`. A merge made locally has no
   such author, and this subject fills the gap.
