@@ -373,6 +373,12 @@ What the finished line is looked at for:
     - Which half merges first follows the ordering rules below — the adoption cannot land before
       what it adopts.
 
+- **Pieces that are one commit each and share a reason stand in one sub-branch, in a line.**
+  Where every one of the commits was made for the sake of the sub-branches that follow, the pieces
+  are not siblings to be merged one by one or bundled in an octopus: they stack in one sub-branch
+  and merge once, and the merge says the shared reason in one sentence, as `## The merge commit`
+  requires. **A piece that takes more than one commit does not stack.** Where even one of the
+  pieces is several commits, none of them is stacked, and each keeps a sub-branch of its own.
 - **A helper written for one class travels with that class.** A class that exists only to serve
   another — a workaround the class calls, a collaborator no other class uses — is not a sibling of
   the classes around it. The two are gathered under a nested trunk named for the class they
@@ -451,12 +457,13 @@ which costs little: the diff of a small commit is often what its message already
   sub-branch of its own under a trunk for the environment.** A lint rule turned off for a file,
   an entry in the spelling dictionary, an editor setting: whatever the tooling has to allow for
   the new code to pass. Settings of different kinds are different pieces of work, not steps of one
-  — a linter's and a dictionary's are siblings — so each takes a sub-branch however small, and the
+  — a linter's and a dictionary's are siblings — so each takes a sub-branch of its own, and the
   group is gathered under a nested trunk named for the environment, merged ahead of the code it
-  serves.
-  - **Single-commit sub-branches are kept here.** They are siblings that
-    differ in kind from the code and from each other, and bundled into one octopus merge under the
-    environment trunk they cost the reader a single line.
+  serves. Where they are one commit each and were all made for the sake of what follows, the
+  stacking rule under `## When the structure is decided` puts them in one sub-branch instead.
+  - **Where that rule does not apply, single-commit sub-branches are kept.** They are siblings
+    that differ in kind from the code and from each other, and bundled into one octopus merge
+    under the environment trunk they cost the reader a single line.
 - **A dependency install never shares a sub-branch with an environment setting.** An install
   changes what the project depends on and regenerates the lock file; a setting changes how the
   tooling reads the code. They are different pieces of work, and each answers to a different
@@ -871,7 +878,9 @@ Merge the core/ rename in the repository documents
 
   - **An octopus is for branches of equal standing that stand in parallel**: independent of one
     another, and of one kind. Where several such branches would otherwise be merged one by one,
-    the octopus is the shape to take, and it shortens the graph. Branches with a dependency between them — one built on another, one that others stand
+    the octopus is the shape to take, and it shortens the graph. Pieces that are one commit each
+    and share a reason need neither: they stack in one sub-branch, as `## When the structure is
+    decided` says. Branches with a dependency between them — one built on another, one that others stand
     on — merge one by one, in the order of the dependency.
   - **Every branch sits on the trunk's current tip before it starts.** No tip moves between
     merges, so no rebase happens in the middle — but each branch is checked against the tip
