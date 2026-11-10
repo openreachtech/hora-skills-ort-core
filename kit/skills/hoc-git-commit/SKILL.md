@@ -383,13 +383,22 @@ before.
   right there, and which of `install`, `update` or `audit fix` resolved them is not. Naming the
   version or the packages instead would restate what the commit before it already said, and
   lose the operation.
-  - **This is the second of the two commits that a change to `package.json` makes**, and the
-    shape is the same whether the version moved is a dependency's or the project's own. The
-    first moves `package.json` and names the decision — `Install date-fns 4.1.0` for a
-    dependency, `Update the package version to 0.8.0 in package.json` for the project's own
-    bump. The second moves the lock file and names the command that regenerated it. Neither
-    stands in for the other, and folding them together would hide which of the two a later
-    revert has to undo.
+  - **A change to `package.json` is followed by the commit that moves the lock file, and one lock
+    commit serves everything that goes out as one pull request.** The shape is the same whether
+    the version moved is a dependency's or the project's own. Each change moves `package.json` in
+    a commit of its own and names the decision — `Install date-fns 4.1.0` for a dependency,
+    `Update the package version to 0.8.0 in package.json` for the project's own bump. The lock
+    commit moves the lock file once, after the last of those changes, and names the command that
+    regenerated it. Neither stands in for the other, and folding them together would hide which
+    of the two a later revert has to undo.
+    - **The command runs once, when `package.json` is complete for the pull request.** Measured:
+      a lock file regenerated once at the end came out identical to the one built up change by
+      change, so a lock commit after each change recorded nothing the last one does not, and
+      each cost a regeneration.
+    - **The commits between leave `package.json` and the lock file out of step**, until the lock
+      commit lands, and the branch is not offered for review before it does. Nothing runs an
+      install from a commit in the middle, which is the test `granularity.md` sets for what
+      counts as broken.
   - **The pair is owed by every field the lock file mirrors, not by versions alone.** A lock
     file carries the package's own `name:` as well, in its root object and again in the entry
     for the project itself, so renaming a package leaves it stale in two places and the same
