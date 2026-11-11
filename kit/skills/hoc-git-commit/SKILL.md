@@ -103,9 +103,13 @@ concluding that a change is not in the history.
   says only where it ended up; a subject written that way grows one path for every file the work
   reaches. What an `Add` brings and what a `Purge` takes away are named by what they are —
   `Add README`, `Purge OldValidator`, `Purge test for OldValidator`, `Purge /npm-init` — never by
-  the path. A file name that doubles as the description of the thing itself — `package.json`,
-  `package-lock.json`, `eslint.config.js` — is not counted as writing a path, and is written as it
-  is. Any other file name or path is written only where the commit renames or moves that file.
+  the path.
+  - **A path means the folders a file sits in; a file name is not one.** A bare file name stays in
+    the subject wherever it names the thing the commit changes —
+    `Turn on strict-allow-scripts in .npmrc`, `Use major tags of actions in test.yml`,
+    `Update jest version to 30.4.2 in package.json`. Leaving it out costs the reader the one fact
+    the subject was for, which file's setting moved. What stays out is the folder part:
+    `.github/workflows/test.yml` says where the file sits, which the diff already shows.
 - **A subject that changes something that stands opens with the verb and the thing it changes, and
   a phrase after them says what was done.** The thing is whatever the commit acts on — a skill, a
   class, a member, a document, a test — written as its own notation says, and the phrase is an
