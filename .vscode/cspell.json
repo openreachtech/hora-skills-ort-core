@@ -13,5 +13,8 @@
     "regenerable",
 
     "esac"
+  ],
+  "ignoreWords": [
+    "gcqx"
   ]
 }
