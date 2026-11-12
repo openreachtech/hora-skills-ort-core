@@ -18,6 +18,8 @@
     "javascript"
   ],
   "scripts": {
+    "audit:actions": "node node_modules/@openreachtech/mentsu-github-actions-inspector/scripts/audit-action-version.js",
+    "audit:npm": "node node_modules/@openreachtech/mentsu-npm-audit-gate/scripts/npm-audit-gate.js scripts/stopgap-audit/IGNORED_ADVISORIES.js",
     "build": "node .claude/skills/build/scripts/build.js",
     "l": "npm run lint",
     "lint": "eslint .",
@@ -45,8 +47,10 @@
     "@openreachtech/jest-constructor-spy": "^1.1.2",
     "@openreachtech/jest-deep-containing": "^1.0.2",
     "@openreachtech/jest-expect-each": "^1.0.3",
+    "@openreachtech/mentsu-github-actions-inspector": "^0.1.0",
+    "@openreachtech/mentsu-npm-audit-gate": "^0.1.1",
     "@openreachtech/mentsu-rootpath": "^1.1.3",
-    "@openreachtech/renchan-env": "^1.0.6",
+    "@openreachtech/renchan-env": "^1.1.0",
     "@types/jest": "^30.0.0",
     "eslint": "^9.39.5",
     "jest": "^30.5.2"
@@ -56,8 +60,9 @@
     "brace-expansion@1": "^1.1.21",
     "brace-expansion@5": "^5.0.12",
     "flatted": "^3.4.2",
-    "glob": "^13.0.6",
-    "js-yaml": "^4.3.2"
+    "glob": "^14.0.2",
+    "js-yaml": "^4.3.2",
+    "minimatch": "^11.0.1"
   },
   "allowScripts": {
     "unrs-resolver": false,
