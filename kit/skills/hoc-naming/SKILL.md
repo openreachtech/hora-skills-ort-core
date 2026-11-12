@@ -41,6 +41,16 @@ const enabledUsers = users.filter(it => it.enabled)
 const completedPayments = payments.filter(it => it.completed)
 ```
 
+## A variable holding constructors starts with a capital
+
+- A variable or property that holds an array of constructors starts with a capital, as a class name does (`MiddlewareCtors`): its elements are classes, and `Ctor` is the word for a class held as a value.
+- A variable that holds a plain object starts lowercase, however it was imported. A capital initial tells the reader that the value is made of classes.
+
+```javascript
+import MiddlewareCtors from './middleware-ctors.js' // an array of classes
+import middlewareHash from './middleware-hash.js' // a plain object
+```
+
 ## The parameters of a higher-order function's callback
 
 - How a callback's parameters are named — `it`, and the accumulator of `reduce()` — belongs to
@@ -64,6 +74,11 @@ class BaseAppSample extends BaseSample {}
 class AlphaSample extends BaseSample {}
 class BetaSample extends BaseAppSample {}
 ```
+
+## An interface name carries no distinguishing prefix
+
+- Where a module accepts a set from its caller and also holds a set of its own, the name on the side the caller sees is the plain one (`MiddlewareCtors`), and the distinguishing word goes to the module's own side (`BundledMiddlewareCtors`).
+- A word such as `extra` on the caller's side leaks the module's internal split into every call site. The module is the one that knows it holds two sets, so the module is the one that names the difference.
 
 ## Method names are "predicates," not "complete sentences"
 
@@ -129,6 +144,17 @@ class 😂 {
 - Avoid single-word class names wherever possible; use a compound name containing two or more words.
 - If this is pointed out in a review, always change it to a compound word to save discussion time.
 
+## Spell out the full role
+
+- A name states the role in full: what the thing handles and what it does to it. Do not shorten it by dropping words.
+- A qualifier may be dropped only where no second thing could ever need it to be told apart. `PdfRenderingInvoiceAdapter` may become `InvoiceAdapter` where only one kind of invoice adapter can exist.
+- The same holds for method and function names.
+
+## Name a value for what it is, not for how it was made
+
+- A variable is named for its role. `wrappedNext` says how the value came about, which is a description of the technique; `receivedNext` or `definedNext` say what the value is.
+- This is the rule behind the prohibition of `wrapper` (see [references/prohibited-words.md](./references/prohibited-words.md)), applied to a variable: a name that explains the mechanism tells the reader nothing about the part the value plays.
+
 ## Use American spelling
 
 - The correspondence between American and British spellings is collected in [references/spelling.md](./references/spelling.md).
@@ -173,6 +199,7 @@ const modifiedAtTo = ...   // range upper bound
 - For static methods, since the class name supplements the context, a single-word name is exceptionally allowed (`CardNumbersLoader.load()`).
 - For a method name that serves as an entry point, interpret it as a transitive verb wherever possible and give it an object (e.g. for `ChunkBuilder`, use `#buildChunks()` instead of `#build()`).
   - Reason: if the instance is held in a short-scoped variable or property, the context supplementation from the class name is lost. If held as in `const builder = ChunkBuilder.create()`, then `builder.build()` doesn't reveal what is being built. Including the object, as in `builder.buildChunks()`, conveys it to the reader.
+  - **The verb is the verb of the class's role.** A class named for what it does speaks that verb at its entry point: a `Builder` builds (`#buildChunks()`), a `Composer` composes (`#composeMiddleware()`). An entry point that does not begin with the class's own verb leaves the reader wondering what else the class does. `create~` is not available for it: that verb is for instantiating (see [references/verbs.md](./references/verbs.md)).
 
 ## Super-prefixes state how a method behaves
 

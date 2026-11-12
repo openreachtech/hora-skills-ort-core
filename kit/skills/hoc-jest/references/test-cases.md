@@ -39,7 +39,9 @@ Each behavior defines `const cases = [ ... ]` and runs it with `test.each(cases)
     (`'alpha:0001'` / `'beta:0002'`), and do not use a separator other than `-`.
   - Even if you're tempted to use a domain-plausible-looking value (e.g. an
     input that resembles Basic auth like `'username:password'`), do not break
-    this format. Prioritize keeping the index readable.
+    this format. Prioritize keeping the index readable. The exception is a value
+    that has a real counterpart
+    ([Where a real value exists, use it](#where-a-real-value-exists-use-it)).
 - When `expected` is an **opaque value derived from the input** (Base64, hash,
   signature, etc. — a value that cannot embed a readable index), have the
   **`input` side** carry the index instead. `expected` is written as the raw
@@ -196,6 +198,24 @@ test.each(cases)('<prop>: $input.<field>.<prop>', ({ input, expected }) => {
   // ...
 })
 ```
+
+## Where a real value exists, use it
+
+The index-suffix scheme above is for **values with no identity of their own**: a placeholder
+whose content does not matter. Where a value is **a name registered in the subject's own world**
+(a key a class answers to, the name of a middleware, an enum member) or **an argument of a real
+function the subject forwards to** (the path a static-file middleware serves, the options of a
+cross-origin middleware), the realistic value is used instead. A placeholder says nothing about
+whether the subject handles real input, and it cannot match a name that is registered for real.
+
+- **The reason for the index suffix is still met.** Distinct real values (`'cors'`, `'json'`,
+  `'static'`) are distinct, and they print in a title as readily as an index does. Where the real shape has room for an index, the index stays inside it
+  (`'./root-001/'`, `'./root-002/'`).
+- **Look for the real examples first.** Where the subject's world already offers many, inventing
+  `'key-0001'` or `{ id: 100001 }` in their place is the choice that needs a reason.
+- **Real does not mean arbitrary.** The values are still unique across cases and still listed
+  normal first. Identifiers and opaque placeholders, which have no real counterpart, keep the
+  index form.
 
 ## When a sample string needs to be a "run of words," mechanically line up alpha, beta, … omega
 

@@ -143,6 +143,39 @@ Measured, one subject written both ways against one collaborator:
   gone stale, because nothing in the test says the member is `async`. The run that produced
   the table above drew no rule at either spy.
 
+## A Member That Has to Do Nothing Is Silenced with `.mockImplementation(() => {})`
+
+**Where a spy only has to stop a member from doing its work, it is overwritten with
+`.mockImplementation(() => {})`.** `.mockReturnValue(undefined)` is not the same sentence: it
+declares a value the member returns, and a member that returns nothing has none to declare. The
+empty implementation says what is meant — nothing happens here — and says nothing else.
+
+```js
+// Avoid: states a return value the member does not have
+jest.spyOn(surrogate, 'invokeHandler')
+  .mockReturnValue(undefined)
+
+// Good: the member does nothing
+jest.spyOn(surrogate, 'invokeHandler')
+  .mockImplementation(() => {})
+```
+
+## A Function That Has to Do Nothing Is `() => {}`
+
+**A function a test hands over that only has to be callable — a `next`, a callback no assertion
+reads, a member of a stand-in — is written `() => {}`, never `() => undefined`.** The arrow that
+returns `undefined` states a return value; the empty body states that nothing happens, which is
+all the test means. The form is the same wherever the function appears: in a fixture, in a case,
+and inside a `MockXxxx.create()`.
+
+```js
+// Avoid: names a value the function is not asked to return
+const nextFunction = () => undefined
+
+// Good
+const nextFunction = () => {}
+```
+
 ## Combining with constructorSpy
 
 When verifying delegation to a constructor, combine an `jest.spyOn()` override
@@ -339,6 +372,58 @@ const args = {
 }
 ```
 
+## An Object Built Only to Be Spied Is a Throwaway
+
+**A spy goes on the object the subject receives, never on one made so that `jest.spyOn()` has
+something to watch.** An object built in the test body, given a function member and handed to
+`jest.spyOn()` — while the subject is passed a different object, or only the member pulled out
+of it — is a way around the rule against `jest.fn()`, and it is removed rather than tidied.
+
+- **The test is where the variable goes.** A variable that reaches the subject (the constructor,
+  the method under test) is part of the arrangement. A variable that nothing but `jest.spyOn()`
+  receives is a throwaway.
+- **The function lives on the value the subject is handed.** Where a case's `input` is that
+  value, `input` carries the function and the spy goes on it in place. Where the subject reads
+  the member when it is created, the spy is planted before the subject is.
+- **The rule is about the variable that reaches only `jest.spyOn()`.** A value that is also
+  handed to `.mockReturnValue()` reaches the implementation through the stub's return, so it
+  does not fall under this rule.
+
+```js
+// Avoid: a holder made only so that jest.spyOn() has an object to watch
+const callbackHash = {
+  next: input.next,
+}
+const nextSpy = jest.spyOn(callbackHash, 'next')
+
+// Good: input is what the subject receives, and the spy goes on it
+const nextSpy = jest.spyOn(input, 'next')
+```
+
+## A Spy Planted to Watch a Call Is Asserted
+
+**A spy does one of two jobs, and each is written its own way.** A stub makes a member answer, and
+needs no variable: nothing is asserted about it. A spy that watches whether a call happened is
+bound to a `~Spy` variable and passed to `expect()`.
+
+```js
+// Stub: the member answers; nothing is asserted about the spy, so nothing is bound
+jest.spyOn(builder, 'buildPathname')
+  .mockReturnValue(override.pathname)
+
+// Watch: bound, and passed to expect()
+const generateCredentialSpy = jest.spyOn(builder, 'generateCredential')
+
+builder.run(args)
+
+expect(generateCredentialSpy)
+  .toHaveBeenCalledWith(expected)
+```
+
+- **A bound spy that no `expect()` reads is a claim the test never checks.** The title says the
+  member is called with something, and nothing fails when it is not. Either assert it or leave the
+  binding out and write the stub.
+
 ## Exception (When It Is Acceptable to Define a Derived Class)
 
 A derived class may be defined only in cases that cannot be expressed with
@@ -439,3 +524,40 @@ const reportErrorSpy = jest.spyOn(mockContext, 'reportError')
   hand the instance over, then take what the case needs from it with
   `jest.spyOn()`. The stand-in exists because a third-party type cannot be built
   here, which is a reason a class of ours never has.
+
+### Back the stand-in with the real prototype where one exists
+
+**Where the third-party type has a real prototype to stand on, `.create()` returns a literal
+whose `__proto__` is that prototype and writes out only the members the case overrides.** Every
+member that is not written out is the real one, so the literal shows at a glance which members
+are fake and which are not.
+
+```js
+// tests/mocks/MockRequest.js
+import express from 'express'
+
+export default class MockRequest {
+  /**
+   * Factory method.
+   *
+   * @param {{ headers: Record<string, string> }} params - Parameters of this factory method.
+   * @returns {express.request} - Request that carries the given headers.
+   */
+  static create ({ headers }) {
+    return /** @type {*} */ ({
+      __proto__: express.request,
+      headers,
+    })
+  }
+}
+```
+
+- **The nearer a stand-in is to the real thing, the better.** Override what the case needs and
+  let the rest be real. A bare `{}` cast to the type is the farthest stand-in there is, and a
+  literal that carries only the overridden members on the real prototype is the nearest.
+- **Never copy a member off the real object into the literal** (`is: express.request.is`): the
+  copy is cut off from its receiver and is no longer the real member. Nor is the stand-in built
+  with `Object.create()` and a property-descriptor map: the descriptors bury the one thing the
+  literal exists to show, which members are overridden.
+- **The cast stays in `.create()`.** A literal `__proto__` is typed as an ordinary property, so
+  the checker needs the one cast, and it is spent there like the one in the section above.

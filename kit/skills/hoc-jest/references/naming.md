@@ -63,6 +63,12 @@ Use **only** the following four top-level properties on the element objects of
 | `tally` | A value that **serves as both** `input` and `expected`. When the same value is both passed in and used as the expected value, combine it into a single `tally` instead of splitting it into `input` and `expected` (e.g. pass it to `create(tally)` and also verify it with `toHaveBeenCalledWith(tally)`). The name means "tally" in the sense of a matching token, expressing the intent that the passed value and the expected value are **checked to be identical**. This name was chosen as a short word that does not collide with common domain vocabulary. Use it **only when the passed value and the expected value are the same**; if the implementation transforms the argument such that the two differ, do not use `tally` — split it into `input` / `expected`. |
 | `expected` | The expected return value / property value. |
 
+**The properties are written in the order of the phase that first uses them:** `override`
+(Arrange), `input` (Arrange, then Act), `tally` (Act and Assert), `expected` (Assert).
+`override` is used in Arrange alone, so it stands before every property that reaches Act or
+Assert; a case that opens with `tally` and puts `override` after it reads as though the stub
+were part of what is asserted.
+
 ### `tally` is only for when the "value passed to the subject" and "expected value" are the **same object reference / same value**
 
 **Mechanical check (highest priority; if this is not satisfied, it is not `tally`)**:
@@ -206,6 +212,20 @@ test.each(cases)('replacer: $tally.replacer', ({ tally }) => {
 })
 ```
 
+## A Case Property That Holds a Class Takes `Ctor`
+
+A property of a case — under `override`, `input` or `tally` — whose value is a class is named
+`<ClassName>Ctor`: `override: { SurrogateCtor: BetaSurrogate }`,
+`input: { MiddlewareCtor: AlphaMiddleware }`. `Ctor` is the library's word for a class held as a
+value, and a case holds one the same way a class property does. The title
+(`$input.MiddlewareCtor.name`), the `@type` of `cases` and every use of the property in the
+test body carry the same name.
+
+- **Examples elsewhere in this skill name some such properties without the suffix** (`Builder:`,
+  `Registry:`, `Stringifier:`). They stand as they were written; every new case takes the suffix.
+- **The suffix marks a class, not a role.** A property holding an instance or a plain value does
+  not take it.
+
 ## Act's Return Value
 
 - The variable that receives the return value in the Act step of the AAA pattern
@@ -278,6 +298,10 @@ observe calls to a function"**, and any variable meeting that criterion must
 - Name variables holding a spy function with a `~Spy` suffix (e.g. `btoaSpy`,
   `fetchSpy`). Do not use other terms like `tally`. This makes it explicit by
   name that the subject of call verification "is a function spy."
+- **The word before `Spy` is the name of the member the spy watches, written whole.**
+  `jest.spyOn(builder, 'buildPathname')` is held as `buildPathnameSpy`, never as `buildSpy`
+  or `pathnameSpy`. A shortened name belongs to no member, so a reader of the assertion cannot
+  tell which call is being observed, and a search for the member never lands on the line.
 - If held in a constant (upper snake case), also uppercase the suffix, giving
   `XXXX_XXX_SPY` (e.g. `BTOA_SPY`, `FETCH_HANDLER_SPY`). This matches the naming
   convention's casing while still conveying the `~Spy` meaning via `_SPY`.
@@ -297,3 +321,19 @@ const btoaSpy = jest.spyOn(globalThis, 'btoa')
 expect(btoaSpy)
   .toHaveBeenCalledWith(expected.source)
 ```
+
+## Variables That Hold a Test Double
+
+A variable holding a stand-in the test builds — a `MockXxxx.create()` result, a callback that
+only has to be passable, an object that answers canned values — takes the prefix `mock`:
+`mockContext`, `mockNext`. The prefix says that the value is a stand-in, so a reader never has
+to look up whether it is the real thing.
+
+- **The prefix is dropped where the name already says so.** A value named with a Greek letter
+  (`alphaNext`, `betaNext`) is a test value by its name alone, because those words are never used
+  for a real thing in code.
+- **A name that could belong to a real thing keeps the prefix**, however individual it looks.
+  `mockRequestHandler` is not made safe by being specific; only the Greek letters mark a value
+  as invented.
+- **The prefix does not depend on how close the stand-in is to the real thing.** A stand-in backed
+  by the real prototype is still a stand-in, and keeps `mock`.

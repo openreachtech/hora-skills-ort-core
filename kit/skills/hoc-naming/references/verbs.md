@@ -10,6 +10,10 @@ Creation-related:
 | `generate~` | Generate a primitive value |
 | `build~` | Generate a temporary object |
 | `make~` | Not used |
+| `define~` | Define a function (a handler, a callback) that is called later |
+| `wrap~` | Not used. It names the mechanism, not what the function is for; name the function with `define~` |
+
+- `build~` produces an object. A method that returns a function is `define~`, never `build~`.
 
 Retrieval-related:
 
@@ -26,5 +30,14 @@ Update-related:
 | `save~` | Wraps processing that persists to the DB |
 | `send~` | Access an external API to update external data |
 | `set~` | Property update (rarely used since setters are prohibited) |
+
+Processing-related:
+
+| Verb | Usage |
+| :-- | :-- |
+| `process~` | A hook that transforms a value on its way to where it is used; its default does nothing (`#processHandlerArguments()`) |
+| `filter~` | A hook that narrows a collection on its way; its default keeps everything |
+
+- A hook does not take `build~`. That verb belongs to the entry point of a class that builds, and a hook inside such a class speaking it too leaves two members saying they produce the class's result.
 
 - For other verbs, choose a word that is faithful to the method's responsibility.

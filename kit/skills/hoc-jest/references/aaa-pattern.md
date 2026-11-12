@@ -206,6 +206,25 @@ test.each(cases)('value: $input.value', ({ input, expected }) => {
 })
 ```
 
+## A matcher with two arguments is chopped down when one of them is an array
+
+**A matcher call with two arguments is written one argument per line when one of the arguments
+is an array** — the key path handed to `toHaveProperty()`. A name and a variable stay on one
+line.
+
+```js
+// Chopped down: the first argument is a key path
+expect(tally)
+  .toHaveProperty(
+    ['request', 'headers', 'content-type'],
+    expected
+  )
+
+// One line: a name and a variable
+expect(received)
+  .toHaveProperty('headers', expected)
+```
+
 ## Write expected-value literals inline if single-line, bind to `const expected` if multi-line
 
 When writing an expected value **as a literal in the test body** (a single
@@ -399,3 +418,51 @@ test.each(cases)('BaseCtor: $input.BaseCtor.name', ({ input, expected }) => {
     .toHaveBeenCalledWith(expected)
 })
 ```
+
+## A change is checked before and after Act, with one `expected`
+
+**Where a test claims that the subject changes something, or leaves it alone, the claim is checked
+on both sides of Act, against the same `expected`.** An assertion made only after Act cannot tell
+a change from a state that already held.
+
+| The claim | Before Act | After Act |
+| :-- | :-- | :-- |
+| Changes | `.not` against `expected` | straight against the same `expected` |
+| Leaves it alone | straight against `expected` | straight against the same `expected` |
+
+```js
+// Changes: before Act it is not yet so; after Act it is
+test.each(cases)('content-type: $tally.request.headers.content-type', ({ tally, expected }) => {
+  const resolver = SomeResolver.create()
+
+  expect(tally)
+    .not
+    .toHaveProperty('request.headers', expected)
+
+  resolver.resolveContentType(tally)
+
+  expect(tally)
+    .toHaveProperty('request.headers', expected)
+})
+
+// Leaves it alone: it holds before Act and still holds after
+test.each(cases)('content-type: $tally.request.headers.content-type', ({ tally, expected }) => {
+  const resolver = SomeResolver.create()
+
+  expect(tally)
+    .toHaveProperty('request.headers', expected)
+
+  resolver.resolveContentType(tally)
+
+  expect(tally)
+    .toHaveProperty('request.headers', expected)
+})
+```
+
+- **The two tests share one skeleton and differ in one line**, the `.not`. Read side by side they
+  read as the specification: *this case changes it, that case does not.*
+- **The "leaves it alone" side adds nothing.** No second constant for the unchanged state and no
+  negation: the same `expected` standing on both sides of Act is what says that nothing happened.
+- **The subject that mutates the argument it is handed makes that argument the `tally`**: it is
+  passed to the call and read in the assertion, so it appears on both sides, which is the
+  mechanical check of `tally` in [naming.md](./naming.md).
