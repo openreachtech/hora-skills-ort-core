@@ -373,6 +373,12 @@ What the finished line is looked at for:
     - Which half merges first follows the ordering rules below — the adoption cannot land before
       what it adopts.
 
+- **Pieces that are one commit each and share a reason stand in one sub-branch, in a line.**
+  Where every one of the commits was made for the sake of the sub-branches that follow, the pieces
+  are not siblings to be merged one by one or bundled in an octopus: they stack in one sub-branch
+  and merge once, and the merge says the shared reason in one sentence, as `## The merge commit`
+  requires. **A piece that takes more than one commit does not stack.** Where even one of the
+  pieces is several commits, none of them is stacked, and each keeps a sub-branch of its own.
 - **A helper written for one class travels with that class.** A class that exists only to serve
   another — a workaround the class calls, a collaborator no other class uses — is not a sibling of
   the classes around it. The two are gathered under a nested trunk named for the class they
@@ -451,12 +457,13 @@ which costs little: the diff of a small commit is often what its message already
   sub-branch of its own under a trunk for the environment.** A lint rule turned off for a file,
   an entry in the spelling dictionary, an editor setting: whatever the tooling has to allow for
   the new code to pass. Settings of different kinds are different pieces of work, not steps of one
-  — a linter's and a dictionary's are siblings — so each takes a sub-branch however small, and the
+  — a linter's and a dictionary's are siblings — so each takes a sub-branch of its own, and the
   group is gathered under a nested trunk named for the environment, merged ahead of the code it
-  serves.
-  - **Single-commit sub-branches are kept here.** They are siblings that
-    differ in kind from the code and from each other, and bundled into one octopus merge under the
-    environment trunk they cost the reader a single line.
+  serves. Where they are one commit each and were all made for the sake of what follows, the
+  stacking rule under `## When the structure is decided` puts them in one sub-branch instead.
+  - **Where that rule does not apply, single-commit sub-branches are kept.** They are siblings
+    that differ in kind from the code and from each other, and bundled into one octopus merge
+    under the environment trunk they cost the reader a single line.
 - **A dependency install never shares a sub-branch with an environment setting.** An install
   changes what the project depends on and regenerates the lock file; a setting changes how the
   tooling reads the code. They are different pieces of work, and each answers to a different
@@ -546,7 +553,9 @@ tidyup/environment-files
 ```
 
 **The name is written for whoever scans `git branch` while the work is still in flight**, so it
-is deliberately descriptive. Nothing reads it after the branch is gone.
+is deliberately descriptive. It outlasts the branch, too: the merge commit a host writes records
+it, as `Merge pull request #<number> from <owner>/<branch>`, and that line is read in `git log`
+long after the branch is deleted.
 
 - **The verb is the word the branch's own commits would use, lowercased.** `Declare` names a
   class and `Define` names a member, a function or a constant, which is why
@@ -556,6 +565,22 @@ is deliberately descriptive. Nothing reads it after the branch is gone.
     `tidyup/xxxx`.
 - **A member is written `<member>-of-<class>`.** The slash is already spent on the verb, so what
   is left spells the relation out instead of punctuating it.
+- **Work that recurs carries the value that tells one occurrence from the next.** Raising a
+  package's own version is done once per release, so a label naming only the thing touched
+  returns, unchanged, for every release, and the merge commits it leaves in the history read
+  alike. The version, or the package and its version, goes into the label, as `install/date-fns-4.1.0`
+  already does.
+
+  ```
+  Bad   update/package-version
+  Good  update/package-version-0.2.0
+  ```
+
+  - **The test is whether the same label could be cut again for other work.** Where it could, the
+    label is missing the value that would stop it.
+  - **A value that tells occurrences apart is not a connector.** It names which occurrence this
+    is, where a connector joins two things the branch carries, which the rule on altitude below
+    turns away.
 - **Work of a scale that will make the branch a trunk takes a category at a higher level of
   abstraction** — `implement/xxx`, `setup/xxx`, `feature/xxx`, `retake/xxx`, `update/xxx`. A
   branch that is about to have six branches cut from it cannot be named for one narrow verb
@@ -572,9 +597,11 @@ is deliberately descriptive. Nothing reads it after the branch is gone.
   same work, and the shorter one is what a reader scanning `git branch` gets through faster.
   What comes after the slash is a label, not a sentence.
 - **The label names the whole at one altitude, and never lists what the branch carries.** A
-  branch holding two changes is still one branch, and `and` in the label hands the reader the
-  division before the thing. Where several changes land on one thing, the label is that thing and
-  the changes are what the commits are for.
+  branch holding two changes is still one branch, and a connector in the label hands the reader
+  the division before the thing. Where several changes land on one thing, the label is that thing
+  and the changes are what the commits are for. That a text never enumerates, whatever the
+  connector, belongs to `/hoc-notation`; this is the one place the rule bites for the reader
+  scanning `git branch`.
 
   ```
   Bad   add/retry-and-timeout-options-to-AlphaClient
@@ -582,7 +609,7 @@ is deliberately descriptive. Nothing reads it after the branch is gone.
   ```
 
   The altitude to find is the one the changes sit beneath, and it is usually already named —
-  the class, the module, the document they all touch. A label that reaches for `and` is one
+  the class, the module, the document they all touch. A label that reaches for a connector is one
   written before that name was looked for.
 
 ## The branch-opening marker commit
@@ -696,6 +723,12 @@ Merge the core/ rename in the repository documents
 - **It names the work, never the branch.** `Merge rename/FormElementClerk` says only what
   `git log --graph` already shows, and the branch is deleted moments later. What it carried is
   the part that has to survive it.
+- **It is one short sentence saying what the sub-branch did, and it enumerates nothing.** A
+  sub-branch under a trunk is the thing that sentence says, so a subject needing `and`, or any
+  connector that lists what the branch carried, describes two sub-branches written as one, and
+  the branch is split until each has a sentence of its own. The commits that one sentence covers
+  stand in one sub-branch and merge once. That a text never enumerates, whatever the connector,
+  belongs to `/hoc-notation`; this is where the rule bites for a merge subject.
 - **It stands in for the message a host would have written.** A merge that goes through a pull
   request is described for free — `Merge pull request #53 from …`. A merge made locally has no
   such author, and this subject fills the gap.
@@ -865,7 +898,9 @@ Merge the core/ rename in the repository documents
 
   - **An octopus is for branches of equal standing that stand in parallel**: independent of one
     another, and of one kind. Where several such branches would otherwise be merged one by one,
-    the octopus is the shape to take, and it shortens the graph. Branches with a dependency between them — one built on another, one that others stand
+    the octopus is the shape to take, and it shortens the graph. Pieces that are one commit each
+    and share a reason need neither: they stack in one sub-branch, as `## When the structure is
+    decided` says. Branches with a dependency between them — one built on another, one that others stand
     on — merge one by one, in the order of the dependency.
   - **Every branch sits on the trunk's current tip before it starts.** No tip moves between
     merges, so no rebase happens in the middle — but each branch is checked against the tip

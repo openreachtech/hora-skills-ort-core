@@ -97,6 +97,29 @@ concluding that a change is not in the history.
   nothing about what the tree now does differently. (Two commits are deliberate exceptions: the
   branch-opening marker below, which carries no changes at all, and the throwaway save point in
   [granularity.md](./references/granularity.md), which is deleted before anyone reads it.)
+- **A subject names the work, never the paths it touched.** A path is where the change landed,
+  and a list of paths is the diff's own table of contents, which the reader already holds.
+  `Add the API reference of AlphaClass` says what was done, and `Add docs/en/api/AlphaClass.md`
+  says only where it ended up; a subject written that way grows one path for every file the work
+  reaches. What an `Add` brings and what a `Purge` takes away are named by what they are —
+  `Add README`, `Purge OldValidator`, `Purge test for OldValidator`, `Purge /npm-init` — never by
+  the path.
+  - **A path means the folders a file sits in; a file name is not one.** A bare file name stays in
+    the subject wherever it names the thing the commit changes —
+    `Turn on strict-allow-scripts in .npmrc`, `Use major tags of actions in test.yml`,
+    `Update jest version to 30.4.2 in package.json`. Leaving it out costs the reader the one fact
+    the subject was for, which file's setting moved. What stays out is the folder part:
+    `.github/workflows/test.yml` says where the file sits, which the diff already shows.
+- **A subject that changes something that stands opens with the verb and the thing it changes, and
+  a phrase after them says what was done.** The thing is whatever the commit acts on — a skill, a
+  class, a member, a document, a test — written as its own notation says, and the phrase is an
+  infinitive or a gerund:
+  `Update SessionStore#evictExpired() to skip pinned sessions`,
+  `Update test for SessionStore#evictExpired() to cover pinned sessions`,
+  `Update /hoc-git-commit to name the work, not the paths, in a subject`,
+  `Fix SessionStore#evict() by skipping pinned sessions`. A kind of target takes no rule of its own,
+  and commits on one target open alike, so a reader of the log sees at a glance that a range is
+  work on that target.
 - Do not record **how the change came to be asked for**: no "as requested", no "per review
   comment", no tool attribution. Where the content itself came from is a different matter — that
   belongs in the subject wherever it is part of what the work is.
@@ -143,8 +166,8 @@ where one file already held the rule and the other did not, `Update` and `Add` a
 answer.
 
 ```
-Update what decides whether a section takes H2s in /hoc-alpha   a rule was there, and was replaced
-Add    what decides whether a section takes H2s to /hoc-beta    nothing was there
+Update /hoc-alpha to replace the rule on H2s in a section    a rule was there, and was replaced
+Add    the rule on H2s in a section to /hoc-beta             nothing was there
 ```
 
 A matched pair says the two files were in the same state when they were not, and that is the one
@@ -195,7 +218,7 @@ before.
   Declare SkillsInstaller to replace the installed skills
   Define SkillsInstaller#replaceInstalledSkills() to swap the tree in one pass
   Define SKILL_DOMAIN naming the domains a repository can select
-  Add tests for SkillsInstaller
+  Add test for SkillsInstaller
   ```
 
 - **`Author` is the `Declare` of an AI element.** A skill, an agent, a command — whatever is
@@ -204,15 +227,15 @@ before.
   it applies `Add` is the vaguer choice. Editing one that already exists is not `Author` — that
   is `Update`, `Fulfill` or `Tidy up`, whichever names what was done.
 - **`Build` is the `Declare` of markup.** A component, a page, the HTML skeleton of one:
-  `Build TalkroomMessage component`, `Build HTML skeleton for pages/settings/security.vue`. It
+  `Build TalkroomMessage component`, `Build HTML skeleton for the security settings page`. It
   is the fourth of the family — `Declare` for a class, `Define` for a member, `Author` for an
   AI element, `Build` for markup — and each is a specific form of `Add`. **It never means
   running a build.** `npm run build` produces output, and output is not what a subject
   announces; a commit that changed the build's configuration changed a config, and takes the
   verb for that.
 - **`Purge` and `Kick out` split on what survives.** `Purge` is for a file or a folder that is
-  gone whole — `Purge tests/legacy/OldValidator.js`, `Purge tests/legacy/`. `Kick out` takes the
-  shape `Kick out <what> from <where>`, because the point is that `<where>` is still there
+  gone whole — `Purge OldValidator`, `Purge test for OldValidator`, `Purge /npm-init`. `Kick out`
+  takes the shape `Kick out <what> from <where>`, because the point is that `<where>` is still there
   without `<what>` — a member of a class, a section of a document, an entry of a manifest:
   `Kick out main: from package.json`. The pair mirrors `Declare` and `Define`.
 - **`Tidy up` is the cleanup that is not a removal.** It takes the shape `Tidy up <where>` —
@@ -248,22 +271,52 @@ before.
 
     ```
     Move index.js to lib/index.js
-    Update the import in tests/__tests__/index.js to lib/index.js
-    Update main: in package.json to lib/index.js
+    Update test for index to follow its move
+    Update main: in package.json to follow its move
     ```
 
-    Folded into the move, those edits sit under a subject that names none of the files they
-    touch, and a reviewer can no longer check each reference on its own. Measured: a move
+    Folded into the move, those edits sit under a subject that says nothing of what they
+    change, and a reviewer can no longer check each reference on its own. Measured: a move
     carrying its test's import and the manifest's `main:` in one commit was asked back as
     mixed; split per file, the tree at the tip came out identical.
   - **The commits in between leave a reference pointing at the old place**, until the last of
     them lands. The sub-branch carrying them merges as one, so the trunk never holds that
     state.
+- **A class lives in a file of its own name, so renaming a class always renames its file, and the
+  file name is changed in commits that carry nothing else.** They come first, the test's file and
+  then the implementation's, under the `Rename` verb:
+
+  ```
+  Rename filename of test for SampleClass.js to RenamedClass.js
+  Rename filename of SampleClass.js to RenamedClass.js
+  ```
+
+  The renames of the class and of its members follow, one definition at a time. The order keeps
+  the changes to imports apart from the changes to definition names. Renaming a member leaves the
+  file name alone, so it has no file-name commit.
+  - **What pointed at the old file name from another file is not part of the file-name commit.**
+    Each such file takes a commit of its own, after the file-name commits and one file apiece, and
+    it changes the path and nothing else:
+
+    ```
+    Update test for SampleAuditor to follow the filename change of RenamedClass
+    Update SampleAuditor to follow the filename change of RenamedClass
+    ```
+
+    The name of the definition inside the same file is a different change and takes a commit
+    later, with the rename of the definition. A file that imports the class therefore takes two
+    commits, one for the path and one for the name.
 - **`Update` and `Retake` split on what was there before.** `Update` carries a sound
   implementation forward and leaves it giving something it did not give before — the gain is the
   point. `Retake` replaces what was poor, hurried or a stopgap with what should have been there,
   and claims no gain beyond that. Neither is `Fix`: that one is for behavior that was wrong,
   where `Retake` is for an implementation that worked and was not good enough.
+- **A test's subject opens `<Verb> test for <target>`, without exception.** `test` is singular and
+  the target is one definition or one file: `Add test for SkillsInstaller`, `Update test for
+  SkillsInstaller#replaceInstalledSkills()`, `Purge test for OldValidator`. `Add tests for` and
+  `Update tests for` are never written, and neither is a collective target such as `the express
+  routes`: each says that several tests were committed together, which the one-file-per-commit
+  rule refuses.
 - **A test that follows an identifier change is `Update`, never `Rename`.** `Rename` is the
   commit that changes the identifier where it is declared. The commit that carries the test along
   changes what the test expects, which is an update of the test, so it opens `Update test for
@@ -383,13 +436,22 @@ before.
   right there, and which of `install`, `update` or `audit fix` resolved them is not. Naming the
   version or the packages instead would restate what the commit before it already said, and
   lose the operation.
-  - **This is the second of the two commits that a change to `package.json` makes**, and the
-    shape is the same whether the version moved is a dependency's or the project's own. The
-    first moves `package.json` and names the decision — `Install date-fns 4.1.0` for a
-    dependency, `Update the package version to 0.8.0 in package.json` for the project's own
-    bump. The second moves the lock file and names the command that regenerated it. Neither
-    stands in for the other, and folding them together would hide which of the two a later
-    revert has to undo.
+  - **A change to `package.json` is followed by the commit that moves the lock file, and one lock
+    commit serves everything that goes out as one pull request.** The shape is the same whether
+    the version moved is a dependency's or the project's own. Each change moves `package.json` in
+    a commit of its own and names the decision — `Install date-fns 4.1.0` for a dependency,
+    `Update the package version to 0.8.0 in package.json` for the project's own bump. The lock
+    commit moves the lock file once, after the last of those changes, and names the command that
+    regenerated it. Neither stands in for the other, and folding them together would hide which
+    of the two a later revert has to undo.
+    - **The command runs once, when `package.json` is complete for the pull request.** Measured:
+      a lock file regenerated once at the end came out identical to the one built up change by
+      change, so a lock commit after each change recorded nothing the last one does not, and
+      each cost a regeneration.
+    - **The commits between leave `package.json` and the lock file out of step**, until the lock
+      commit lands, and the branch is not offered for review before it does. Nothing runs an
+      install from a commit in the middle, which is the test `granularity.md` sets for what
+      counts as broken.
   - **The pair is owed by every field the lock file mirrors, not by versions alone.** A lock
     file carries the package's own `name:` as well, in its root object and again in the entry
     for the project itself, so renaming a package leaves it stale in two places and the same
@@ -474,7 +536,7 @@ A configuration file's own field, named in a subject or body, carries **its trai
 
 ```
 Fulfill name: in package.json
-Fulfill repository:, bugs: and homepage: in package.json
+Fulfill repository: in package.json
 Kick out main: from package.json
 ```
 
@@ -498,8 +560,8 @@ A skill named in a subject or body carries the **leading slash it is invoked wit
 
 ```
 Author /hoc-git-branch skill
-Fulfill the article rule for a branch name in /hoc-git-branch
-Add the notation for a skill name in /hoc-git-commit
+Fulfill /hoc-git-branch to state the article rule for a branch name
+Update /hoc-git-commit to state the notation for a skill name
 ```
 
 The slash is what marks the word as a skill. Without it the same string reads as a directory,
@@ -561,8 +623,9 @@ amends what is written here.
   as surely as in the one it was copied to, and citing it names a second offence rather than
   excusing the first.
 - **A precedent may be correct and still not transfer.** `Start`, `Release` and `Merge` carry no
-  change of their own, so nothing in their subjects answers to granularity — an `and` in one of
-  them joins nothing that could have been two commits. Citing such a subject for one that does
+  change of their own, so nothing in their subjects answers to granularity — a list in one of
+  them joins nothing that could have been two commits, though it is still an enumeration that
+  `/hoc-notation` refuses. Citing such a subject for one that does
   carry changes borrows a licence resting on that exemption, and the commit being written does
   not hold it. This is the harder of the two to catch, because nothing in the commit cited is
   wrong.

@@ -65,6 +65,10 @@ saveCustomer ({ customer }) { /* ... */ }
 - **What it calls is a method of a delegate**, and calling it is the member's whole body. What a
   delegate is, why its call is isolated in a member of its own, where the `try`/`catch` goes and
   why the member stays private belong to `/hoc-classes-delegation`.
+- **The rest of the name is the delegate's own method name, unchanged.** `invokeLaunchRequest()`
+  calls the delegate's `launchRequest()`, and `invokeValidate()` calls its `validate()`. A member
+  that calls a delegate's method under a name of its own, with a verb or an object the delegate
+  does not use, is not an `invoke~`: it takes the name the naming convention gives it.
 - **What it is read for here is the name.** `invoke~` is worn by the member the delegation
   convention isolates, and by nothing else: a member that also builds what it passes on or
   handles what comes back is not an `invoke~`, whatever it calls.
