@@ -247,10 +247,23 @@ The shape of the name settles nothing. `release/x.x.x` is a trunk and
 
 ### What may be cut from `main`
 
-**Under Git flow, the only branches cut from `main` are the trunks that may merge into it.**
-Everything else is cut from one of those. A general branch taken straight off `main` has nowhere
-to land: the four are what `main` accepts, a guard on `main` refuses the rest, and the branch
-arrives at a base it is not allowed to merge into.
+**Under Git flow, only a branch whose name is one of these is cut from `main` or `origin/main`:**
+
+| Kind of repository | Cut from `main` |
+| :-- | :-- |
+| boilerplate | `release/x.x.x` |
+| npm package | `release/x.x.x`, `env` |
+| application | `release/x.x.x`, `env`, `hotfix/xxxx` — and `dev`, in an older application only |
+
+Every other branch is cut from one of these. **Where the one it needs does not exist yet, it is
+opened first**, and its version is asked rather than assumed; no branch is cut from `main` in its
+place.
+
+The list repeats the table of `/hoc-git-branch-remote`, which stays its source, so that it stands
+where a branch is cut and not a skill away.
+
+A general branch taken straight off `main` has nowhere to land: the four are what `main` accepts, a
+guard on `main` refuses the rest, and the branch arrives at a base it is not allowed to merge into.
 
 **Under GitHub Flow every branch is cut from `main` and returns to it**, because there is no
 other trunk to cut from. So one and the same branch is correct in one repository and stranded in
